@@ -1,11 +1,13 @@
 # msc-project
 A static code analysis tool (for visualizing architectural metics and trends)
 
-## Architecture design in C4 model
+## Architecture design
 
-**Context**
+### Context
 ![C4](./design/C4-Context.png)
-**Container/Module**
+
+### Container/Module**
 ![C4](./design/C4-Container.png)
-**Component**
+
+### Component
 ![C4](./design/C4-Component.png)
