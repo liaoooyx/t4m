@@ -11,3 +11,6 @@ A static code analysis tool (for visualizing architectural metics and trends)
 
 ### Component
 ![C4](./design/C4-Component.png)
+
+## Workflow
+![Flowchart](./design/Flowchart-Draft.png)
