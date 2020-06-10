@@ -1,14 +1,14 @@
-# ---- Gradle
+# Gradle
 build/
 .gradle/
 .gradletasknamecache
 classes/
 out/
 
-# ---- Maven (in integration tests)
+# Maven (in integration tests)
 target/
 
-# ---- IntelliJ IDEA
+# IntelliJ IDEA
 *.iws
 *.iml
 *.ipr
@@ -16,22 +16,25 @@ target/
 .attach_pid*
 out/
 
-# ---- Eclipse
+# Eclipse
 .classpath
 .project
 .settings
 .externalToolBuilders
 
-# ---- Mac OS X
+# Mac OS X
 .DS_Store
 # Thumbnails
 ._*
 
-# ---- Windows
+# Windows
 # Windows image file caches
 Thumbs.db 
 # Folder config file
 Desktop.ini
 
-# ---- Linux
+# Linux
 .directory
+
+# JavaDoc
+.buildProfile/
