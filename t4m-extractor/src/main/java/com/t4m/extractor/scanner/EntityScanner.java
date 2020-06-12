@@ -105,6 +105,12 @@ public class EntityScanner {
 		return packageInfoList;
 	}
 
+	private List<ModuleInfo> extractModuleFromPackageList(List<ModuleInfo> moduleInfos) {
+		List<ModuleInfo> moduleInfoList = new ArrayList<>();
+
+		return moduleInfoList;
+	}
+
 	/**
 	 * 从项目跟路径开始查找所有.java文件，指定的{@code exclusions}目录将被排除
 	 *
