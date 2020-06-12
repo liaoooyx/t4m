@@ -15,7 +15,7 @@ public class PackageInfo {
 	private Set<PackageInfo> childrenPackage;
 	private Set<ClassInfo> classSet; // direct classes
 
-	private String fullPackageName;
+	private String fullPackageName; // = (null), if doesn't have package
 	private String absolutePath;
 
 	private String[] packagePathChain;
