@@ -13,7 +13,7 @@ public class ClassInfo {
 	private ClassType classType;
 
 	private PackageInfo packageInfo;
-	private String packageFullName = "(null)"; // default to be (null) if a class don't have package.
+	private String packageFullName = "(null)"; // default to be (null) if a class doesn't have package.
 
 	private String absolutePath;
 
