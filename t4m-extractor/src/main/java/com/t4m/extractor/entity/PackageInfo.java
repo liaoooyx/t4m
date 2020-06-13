@@ -1,19 +1,18 @@
 package com.t4m.extractor.entity;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-06-09 22:55.
  */
 public class PackageInfo {
 
+	public static String EMPTY_IDENTIFIER = "(null)";
+
 	private PackageInfo parentPackage;
-	private Set<PackageInfo> childrenPackage;
-	private Set<ClassInfo> classSet; // direct classes
+	private Set<PackageInfo> childrenPackageSet = new HashSet<>();
+	private Set<ClassInfo> classSet = new HashSet<>();
+	; // direct classes
 
 	private String fullPackageName; // = (null), if doesn't have package
 	private String absolutePath;
@@ -24,6 +23,13 @@ public class PackageInfo {
 	private Map<PackageInfo, Integer> dependsOn;
 	private Map<PackageInfo, Integer> dependedBy;
 
+	public PackageInfo() {
+	}
+
+	public PackageInfo(String absolutePath) {
+		this.absolutePath = absolutePath;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -31,12 +37,12 @@ public class PackageInfo {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		PackageInfo that = (PackageInfo) o;
-		return fullPackageName.equals(that.fullPackageName) && absolutePath.equals(that.absolutePath);
+		return Objects.equals(absolutePath, that.absolutePath);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fullPackageName, absolutePath);
+		return Objects.hash(absolutePath);
 	}
 
 	public PackageInfo getParentPackage() {
@@ -47,12 +53,16 @@ public class PackageInfo {
 		this.parentPackage = parentPackage;
 	}
 
-	public Set<PackageInfo> getChildrenPackage() {
-		return childrenPackage;
+	public Set<PackageInfo> getChildrenPackageSet() {
+		return childrenPackageSet;
 	}
 
-	public void setChildrenPackage(Set<PackageInfo> childrenPackage) {
-		this.childrenPackage = childrenPackage;
+	public void setChildrenPackageSet(Set<PackageInfo> childrenPackageSet) {
+		this.childrenPackageSet = childrenPackageSet;
+	}
+
+	public void addChildrenPackage(PackageInfo packageInfo) {
+		this.childrenPackageSet.add(packageInfo);
 	}
 
 	public Set<ClassInfo> getClassSet() {
@@ -61,6 +71,10 @@ public class PackageInfo {
 
 	public void setClassSet(Set<ClassInfo> classSet) {
 		this.classSet = classSet;
+	}
+
+	public void addClassSet(ClassInfo classInfo) {
+		this.classSet.add(classInfo);
 	}
 
 	public String getFullPackageName() {
@@ -101,5 +115,13 @@ public class PackageInfo {
 
 	public void setDependedBy(Map<PackageInfo, Integer> dependedBy) {
 		this.dependedBy = dependedBy;
+	}
+
+	@Override
+	public String toString() {
+		return "PackageInfo{" + "parentPackage=" + parentPackage + ", childrenPackage=" + childrenPackageSet +
+				", classSet=" + classSet + ", fullPackageName='" + fullPackageName + '\'' + ", absolutePath='" +
+				absolutePath + '\'' + ", packagePathChain=" + Arrays.toString(packagePathChain) + ", dependsOn=" +
+				dependsOn + ", dependedBy=" + dependedBy + '}';
 	}
 }

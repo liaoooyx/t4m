@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * Created by Yuxiang Liao on 2020-06-09 14:02.
  */
 public class ProjectInfo {
@@ -14,15 +13,10 @@ public class ProjectInfo {
 	private String projectName;
 
 	private ModuleInfo rootModule;
+
 	private List<ModuleInfo> moduleList;
-
-	public ProjectInfo() {
-		this.moduleList = new ArrayList<>();
-	}
-
-	public ProjectInfo(List<ModuleInfo> moduleList) {
-		this.moduleList = moduleList;
-	}
+	private List<PackageInfo> packageList;
+	private List<ClassInfo> classList;
 
 	public String getRootPath() {
 		return rootPath;
@@ -56,7 +50,23 @@ public class ProjectInfo {
 		this.moduleList = moduleList;
 	}
 
-	public void addModuleList(ModuleInfo moduleInfo){
+	public void addModuleList(ModuleInfo moduleInfo) {
 		moduleList.add(moduleInfo);
+	}
+
+	public List<ClassInfo> getClassList() {
+		return classList;
+	}
+
+	public void setClassList(List<ClassInfo> classList) {
+		this.classList = classList;
+	}
+
+	public List<PackageInfo> getPackageList() {
+		return packageList;
+	}
+
+	public void setPackageList(List<PackageInfo> packageList) {
+		this.packageList = packageList;
 	}
 }

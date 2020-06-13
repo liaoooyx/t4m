@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Construct all of the entities Created by Yuxiang Liao on 2020-06-11 09:46.
@@ -23,39 +24,31 @@ public class EntityScanner {
 		this.projectInfo = projectInfo;
 	}
 
-	public void scan() {
+	public ProjectInfo scan() {
 		File root = new File(projectInfo.getRootPath());
 		List<File> javaFileList = new ArrayList<>();
 		getAllJavaFiles(root, javaFileList);
 		// 初始化所有Class
 		List<ClassInfo> classInfoList = extractClassFromFileList(javaFileList);
+		System.out.printf("类总数: %d%n", classInfoList.size());
 		// 初始化所有Package
 		List<PackageInfo> packageInfoList = extractPackageFromClassList(classInfoList);
-		packageInfoList.forEach(i -> System.out
-				.printf("(%d)%s   %s %n", i.getPackagePathChain().length, i.getFullPackageName(), i.getAbsolutePath()));
-
-	}
-
-	public void getAllModules(File file) {
-		if ("src".equals(file.getName())) {
-			ModuleInfo moduleInfo = new ModuleInfo();
-			moduleInfo.setModuleName(file.getParentFile().getName());
-			moduleInfo.setModulePath(file.getParentFile().getPath());
-			projectInfo.addModuleList(moduleInfo);
-		}
-		if (file.isDirectory()) {
-			File[] fileArray = file.listFiles(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return !"build".equals(name);
-				}
-			});
-			Arrays.stream(fileArray).forEach(this::getAllModules);
-		}
-	}
-
-	public void getAllPackages() {
-
+		System.out.printf("包总数: %d%n", packageInfoList.size());
+		// packageInfoList.forEach(i -> System.out
+		// 		.printf("(%d)%s   %s %n", i.getPackagePathChain().length, i.getFullPackageName(), i.getAbsolutePath()));
+		List<ModuleInfo> moduleInfoList = extractModuleFromPackageList(packageInfoList);
+		System.out.printf("模块总数: %d%n", moduleInfoList.size());
+		moduleInfoList.forEach(m -> {
+			System.out.println(m.getPackageSet().size());
+			// m.getPackageSet().forEach(p -> {
+			// 	System.out.print(p + " | ");
+			// });
+			System.out.println(m);
+		});
+		projectInfo.setModuleList(moduleInfoList);
+		projectInfo.setPackageList(packageInfoList);
+		projectInfo.setClassList(classInfoList);
+		return projectInfo;
 	}
 
 	/**
@@ -65,14 +58,14 @@ public class EntityScanner {
 		List<ClassInfo> classInfoList = new ArrayList<>();
 		javaFileList.forEach(javaFile -> {
 			ClassInfo classInfo = new ClassInfo();
-			classInfo.setAbsolutePath(javaFile.getAbsolutePath());
+			classInfo.setAbsolutePath(javaFile.getAbsolutePath().strip());
 			try {
 				String line;
 				BufferedReader reader = new BufferedReader(new FileReader(javaFile));
 				while ((line = reader.readLine()) != null) {
 					// 去读java文件的包路径
 					if (line.startsWith("package")) {
-						classInfo.setPackageFullName(line.replaceFirst("package", "").strip());
+						classInfo.setPackageFullName(line.replaceFirst("package", "").replace(";", "").strip());
 						break;
 					}
 				}
@@ -95,19 +88,53 @@ public class EntityScanner {
 		classInfoList.forEach(classInfo -> {
 			PackageInfo packageInfo = new PackageInfo();
 			String pkgFullName = classInfo.getPackageFullName();
+			// 添加包全限定名
 			packageInfo.setFullPackageName(pkgFullName);
+			// 添加包全限定名，数组方式
 			packageInfo.setPackagePathChain(pkgFullName.split("\\."));
-			packageInfo.setAbsolutePath(classInfo.getAbsolutePath().replaceFirst("/{1}?[^/]*?\\.java", ""));
-			if (!packageInfoList.contains(packageInfo)) {
+			// 添加包的绝对路径
+			packageInfo.setAbsolutePath(classInfo.getAbsolutePath().replaceFirst("/{1}?[^/]*?\\.java", "").strip());
+			// 避免包重复
+			int index;
+			if ((index = packageInfoList.indexOf(packageInfo)) == -1) {
 				packageInfoList.add(packageInfo);
+			} else {
+				packageInfo = packageInfoList.get(index);
 			}
+			// 添加直接子类信息
+			packageInfo.addClassSet(classInfo);
 		});
 		return packageInfoList;
 	}
 
-	private List<ModuleInfo> extractModuleFromPackageList(List<ModuleInfo> moduleInfos) {
+	private List<ModuleInfo> extractModuleFromPackageList(List<PackageInfo> packageInfoList) {
 		List<ModuleInfo> moduleInfoList = new ArrayList<>();
+		packageInfoList.forEach(packageInfo -> {
+			ModuleInfo moduleInfo = new ModuleInfo();
+			String pkgFullName = packageInfo.getFullPackageName();
+			String pkgPath = packageInfo.getAbsolutePath();
+			// 去除包路径，并添加模块路径
+			String regx = "";
+			if (!PackageInfo.EMPTY_IDENTIFIER.equals(packageInfo.getFullPackageName())) {
+				regx = File.separator + pkgFullName.replaceAll("\\.", File.separator) + "$";
+			}
+			if (!"".equals(regx)) {
+				moduleInfo.setModulePath(pkgPath.replaceAll(regx, "").strip());
+			} else {
+				moduleInfo.setModulePath(pkgPath.strip());
+			}
+			// 避免模块重复
+			int index;
+			if ((index = moduleInfoList.indexOf(moduleInfo)) == -1) {
+				moduleInfoList.add(moduleInfo);
+			} else {
+				moduleInfo = moduleInfoList.get(index);
+			}
+			// 为模块添加子包
+			// 去除包路径后，最大公共路径相同的包，将属于同一个模块
+			moduleInfo.addPackageSet(packageInfo);
 
+		});
 		return moduleInfoList;
 	}
 
@@ -117,7 +144,7 @@ public class EntityScanner {
 	 * @param file 项目根目录
 	 * @param javaList 储存所有.java文件
 	 */
-	public void getAllJavaFiles(File file, List<File> javaList) {
+	private void getAllJavaFiles(File file, List<File> javaList) {
 		if (file.isDirectory()) {
 			File[] fileArray = file.listFiles(new FileFilter() {
 				@Override
@@ -139,24 +166,19 @@ public class EntityScanner {
 		}
 	}
 
-
-	/**
-	 * Assumming the current directory name is "src", the module name should be two directory layers before.<br> For
-	 * root module, check the name of two directory layers before "src" and the last name of root project path.
-	 *
-	 * @return {@code true} if current file belongs to root module.
-	 */
-	private boolean checkRootModule(File currentFile) {
-		File projectFile = new File(projectInfo.getRootPath());
-		return currentFile.getParentFile().equals(projectFile.getName());
+	public ProjectInfo getProjectInfo() {
+		return projectInfo;
 	}
 
+	public void setProjectInfo(ProjectInfo projectInfo) {
+		this.projectInfo = projectInfo;
+	}
 
 	public static void main(String[] args) {
 
 		ProjectInfo projectInfo = new ProjectInfo();
-		// projectInfo.setRootPath("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-		projectInfo.setRootPath("/Users/liao/myProjects/IdeaProjects/sonarqube");
+		projectInfo.setRootPath("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
+		// projectInfo.setRootPath("/Users/liao/myProjects/IdeaProjects/sonarqube");
 		projectInfo.setProjectName("CustomizedName");
 
 		EntityScanner entityScanner = new EntityScanner(projectInfo);
