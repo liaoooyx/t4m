@@ -1,6 +1,8 @@
 package com.t4m.extractor.entity;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by Yuxiang Liao on 2020-06-11 09:29.
@@ -10,11 +12,26 @@ public class ModuleInfo {
 	private String moduleName;
 	private String modulePath;
 
-	private ModuleScope moduleScope;
+	private boolean isMainScope; // 只有为scr->main->java的情况下，才视为正在开发的模块；
 
-	private List<PackageInfo> packageList;
+	private Set<PackageInfo> packageSet = new HashSet<>();
 
 	private boolean isRootModule = false;
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ModuleInfo that = (ModuleInfo) o;
+		return Objects.equals(modulePath, that.modulePath);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(modulePath);
+	}
 
 	public String getModuleName() {
 		return moduleName;
@@ -32,20 +49,24 @@ public class ModuleInfo {
 		this.modulePath = modulePath;
 	}
 
-	public ModuleScope getModuleScope() {
-		return moduleScope;
+	public boolean isMainScope() {
+		return isMainScope;
 	}
 
-	public void setModuleScope(ModuleScope moduleScope) {
-		this.moduleScope = moduleScope;
+	public void setMainScope(boolean mainScope) {
+		isMainScope = mainScope;
 	}
 
-	public List<PackageInfo> getPackageList() {
-		return packageList;
+	public Set<PackageInfo> getPackageSet() {
+		return packageSet;
 	}
 
-	public void setPackageList(List<PackageInfo> packageList) {
-		this.packageList = packageList;
+	public void setPackageSet(Set<PackageInfo> packageSet) {
+		this.packageSet = packageSet;
+	}
+
+	public void addPackageSet(PackageInfo packageInfo) {
+		this.packageSet.add(packageInfo);
 	}
 
 	public boolean isRootModule() {
@@ -59,7 +80,7 @@ public class ModuleInfo {
 	@Override
 	public String toString() {
 		return "ModuleInfo{" + "moduleName='" + moduleName + '\'' + ", modulePath='" + modulePath + '\'' +
-				", moduleScope=" + moduleScope + ", packageList=" + packageList + ", isRootModule=" + isRootModule +
-				'}';
+				", isMainScope=" + isMainScope + ", packageSet=" + packageSet + ", isRootModule=" + isRootModule + '}';
 	}
+
 }
