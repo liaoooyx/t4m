@@ -63,7 +63,7 @@ public class PackageDependency {
 
 		// 建立模块层级关系
 		projectInfo.getModuleList().forEach(moduleInfo -> {
-			String suffixPath = moduleInfo.getModulePath().replace(rootPath, "").replaceFirst(File.separator, "")
+			String suffixPath = moduleInfo.getAbsolutePath().replace(rootPath, "").replaceFirst(File.separator, "")
 			                              .strip();
 			// 递归生成路径节点
 			if (!"".equals(suffixPath)) {
@@ -73,5 +73,7 @@ public class PackageDependency {
 		});
 
 		System.out.println(rootNode);
+
+
 	}
 }

@@ -9,12 +9,20 @@ import java.util.Set;
  */
 public class ModuleInfo {
 
-	private String moduleName;
-	private String modulePath;
+	private String shortName;
+	private String pathName;
+	private String absolutePath;
 
-	private boolean isMainScope; // 只有为scr->main->java的情况下，才视为正在开发的模块；
+	private Set<ModuleInfo> subModuleSet = new HashSet<>();
+	private ModuleInfo previousModuleInfo;
 
-	private Set<PackageInfo> packageSet = new HashSet<>();
+	private Set<PackageInfo> mainPackageSet = new HashSet<>();
+	private Set<PackageInfo> testPackageSet = new HashSet<>();
+	private Set<PackageInfo> otherPackageSet = new HashSet<>();
+
+	private String mainScopePath;
+	private String testScopePath;
+	private String otherScopePath;
 
 	private boolean isRootModule = false;
 
@@ -25,48 +33,92 @@ public class ModuleInfo {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ModuleInfo that = (ModuleInfo) o;
-		return Objects.equals(modulePath, that.modulePath);
+		return Objects.equals(absolutePath, that.absolutePath);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(modulePath);
+		return Objects.hash(absolutePath);
 	}
 
-	public String getModuleName() {
-		return moduleName;
+	public String getShortName() {
+		return shortName;
 	}
 
-	public void setModuleName(String moduleName) {
-		this.moduleName = moduleName;
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
 	}
 
-	public String getModulePath() {
-		return modulePath;
+	public ModuleInfo getPreviousModuleInfo() {
+		return previousModuleInfo;
 	}
 
-	public void setModulePath(String modulePath) {
-		this.modulePath = modulePath;
+	public void setPreviousModuleInfo(ModuleInfo previousModuleInfo) {
+		this.previousModuleInfo = previousModuleInfo;
 	}
 
-	public boolean isMainScope() {
-		return isMainScope;
+	public String getPathName() {
+		return pathName;
 	}
 
-	public void setMainScope(boolean mainScope) {
-		isMainScope = mainScope;
+	public void setPathName(String pathName) {
+		this.pathName = pathName;
 	}
 
-	public Set<PackageInfo> getPackageSet() {
-		return packageSet;
+	public Set<ModuleInfo> getSubModuleSet() {
+		return subModuleSet;
 	}
 
-	public void setPackageSet(Set<PackageInfo> packageSet) {
-		this.packageSet = packageSet;
+	public void setSubModuleSet(Set<ModuleInfo> subModuleSet) {
+		this.subModuleSet = subModuleSet;
 	}
 
-	public void addPackageSet(PackageInfo packageInfo) {
-		this.packageSet.add(packageInfo);
+	public void addSubModuleSet(ModuleInfo moduleInfo){
+		this.subModuleSet.add(moduleInfo);
+	}
+
+	public String getAbsolutePath() {
+		return absolutePath;
+	}
+
+	public void setAbsolutePath(String absolutePath) {
+		this.absolutePath = absolutePath;
+	}
+
+	public String getMainScopePath() {
+		return mainScopePath;
+	}
+
+	public void setMainScopePath(String mainScopePath) {
+		this.mainScopePath = mainScopePath;
+	}
+
+	public String getTestScopePath() {
+		return testScopePath;
+	}
+
+	public void setTestScopePath(String testScopePath) {
+		this.testScopePath = testScopePath;
+	}
+
+	public String getOtherScopePath() {
+		return otherScopePath;
+	}
+
+	public void setOtherScopePath(String otherScopePath) {
+		this.otherScopePath = otherScopePath;
+	}
+
+	public Set<PackageInfo> getMainPackageSet() {
+		return mainPackageSet;
+	}
+
+	public void setMainPackageSet(Set<PackageInfo> mainPackageSet) {
+		this.mainPackageSet = mainPackageSet;
+	}
+
+	public void addMainPackageSet(PackageInfo packageInfo) {
+		this.mainPackageSet.add(packageInfo);
 	}
 
 	public boolean isRootModule() {
@@ -77,10 +129,28 @@ public class ModuleInfo {
 		isRootModule = rootModule;
 	}
 
-	@Override
-	public String toString() {
-		return "ModuleInfo{" + "moduleName='" + moduleName + '\'' + ", modulePath='" + modulePath + '\'' +
-				", isMainScope=" + isMainScope + ", packageSet=" + packageSet + ", isRootModule=" + isRootModule + '}';
+	public Set<PackageInfo> getTestPackageSet() {
+		return testPackageSet;
+	}
+
+	public void setTestPackageSet(Set<PackageInfo> testPackageSet) {
+		this.testPackageSet = testPackageSet;
+	}
+
+	public Set<PackageInfo> getOtherPackageSet() {
+		return otherPackageSet;
+	}
+
+	public void setOtherPackageSet(Set<PackageInfo> otherPackageSet) {
+		this.otherPackageSet = otherPackageSet;
+	}
+
+	public void addTestPackageSet(PackageInfo packageInfo) {
+		this.testPackageSet.add(packageInfo);
+	}
+
+	public void addOtherPackageSet(PackageInfo packageInfo) {
+		this.otherPackageSet.add(packageInfo);
 	}
 
 }

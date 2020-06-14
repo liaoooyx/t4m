@@ -9,7 +9,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Construct all of the entities Created by Yuxiang Liao on 2020-06-11 09:46.
@@ -39,7 +38,7 @@ public class EntityScanner {
 		List<ModuleInfo> moduleInfoList = extractModuleFromPackageList(packageInfoList);
 		System.out.printf("模块总数: %d%n", moduleInfoList.size());
 		moduleInfoList.forEach(m -> {
-			System.out.println(m.getPackageSet().size());
+			System.out.println(m.getMainPackageSet().size());
 			// m.getPackageSet().forEach(p -> {
 			// 	System.out.print(p + " | ");
 			// });
@@ -113,16 +112,18 @@ public class EntityScanner {
 			ModuleInfo moduleInfo = new ModuleInfo();
 			String pkgFullName = packageInfo.getFullPackageName();
 			String pkgPath = packageInfo.getAbsolutePath();
-			// 去除包路径，并添加模块路径
+			// 去除包路径，并为模块添加路径
 			String regx = "";
 			if (!PackageInfo.EMPTY_IDENTIFIER.equals(packageInfo.getFullPackageName())) {
 				regx = File.separator + pkgFullName.replaceAll("\\.", File.separator) + "$";
 			}
+			String absolutePath;
 			if (!"".equals(regx)) {
-				moduleInfo.setModulePath(pkgPath.replaceAll(regx, "").strip());
+				absolutePath = pkgPath.replaceAll(regx, "").strip();
 			} else {
-				moduleInfo.setModulePath(pkgPath.strip());
+				absolutePath = pkgPath.strip();
 			}
+			moduleInfo.setAbsolutePath(absolutePath.replaceAll("(" + File.separator + "(main|test|java))+", ""));
 			// 避免模块重复
 			int index;
 			if ((index = moduleInfoList.indexOf(moduleInfo)) == -1) {
@@ -132,8 +133,16 @@ public class EntityScanner {
 			}
 			// 为模块添加子包
 			// 去除包路径后，最大公共路径相同的包，将属于同一个模块
-			moduleInfo.addPackageSet(packageInfo);
-
+			if (absolutePath.contains(File.separator + "main")) {
+				moduleInfo.addMainPackageSet(packageInfo);
+				moduleInfo.setMainScopePath(absolutePath);
+			} else if (absolutePath.contains(File.separator + "test")) {
+				moduleInfo.addTestPackageSet(packageInfo);
+				moduleInfo.setTestScopePath(absolutePath);
+			} else {
+				moduleInfo.addOtherPackageSet(packageInfo);
+				moduleInfo.setOtherScopePath(absolutePath);
+			}
 		});
 		return moduleInfoList;
 	}
