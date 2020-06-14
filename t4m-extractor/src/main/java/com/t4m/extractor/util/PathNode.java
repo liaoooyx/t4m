@@ -99,6 +99,14 @@ public class PathNode {
 		this.moduleInfo = moduleInfo;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public static void createPathNode(String[] names, PathNode previousNode, ModuleInfo moduleInfo) {
 		if (names.length > 0) {
 			String name = names[0];
@@ -107,6 +115,8 @@ public class PathNode {
 			int index;
 			if ((index = previousNode.getNextNodeList().indexOf(currentNode)) != -1) {
 				currentNode = previousNode.getNextNodeList().get(index);
+			} else if (previousNode.equals(currentNode)) {
+				currentNode = previousNode;
 			} else {
 				currentNode.setPreviousNode(previousNode);
 				currentNode.setAbsolutePath(previousNode.getAbsolutePath() + File.separator + name);
@@ -137,9 +147,38 @@ public class PathNode {
 		return targetNode;
 	}
 
+	public boolean hasNextNode() {
+		return nextNodeList.size() > 0;
+	}
+
+	public boolean hasModuleInfo() {
+		return moduleInfo != null;
+	}
+
+	public static void createModuleDependency(PathNode currentNode, ModuleInfo previousModuleInfo) {
+		if (currentNode.hasModuleInfo()) {
+			if (previousModuleInfo != null) {
+				currentNode.getModuleInfo().setPreviousModuleInfo(previousModuleInfo);
+				previousModuleInfo.addSubModuleSet(currentNode.getModuleInfo());
+			}
+			if (currentNode.hasNextNode()) {
+				currentNode.getNextNodeList().forEach(node -> {
+					createModuleDependency(node, currentNode.getModuleInfo());
+				});
+			}
+		} else {
+			if (currentNode.hasNextNode()) {
+				currentNode.getNextNodeList().forEach(node -> {
+					createModuleDependency(node, previousModuleInfo);
+				});
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
+		// String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
+		String rootPath = "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor";
 
 		ProjectInfo projectInfo = new ProjectInfo();
 		projectInfo.setRootPath(rootPath);
@@ -149,19 +188,29 @@ public class PathNode {
 		entityScanner.scan();
 		projectInfo = entityScanner.getProjectInfo();
 
+		String projectDirName = new File(projectInfo.getRootPath()).getName();
+
 		PathNode rootNode = new PathNode(new File(projectInfo.getRootPath()).getName(), projectInfo.getRootPath(),
 		                                 true);
 
 		// 建立模块层级关系
 		projectInfo.getModuleList().forEach(moduleInfo -> {
-			String suffixPath = moduleInfo.getModulePath().replace(rootPath, "").replaceFirst(File.separator, "")
+			// 补充module信息
+			String suffixPath = moduleInfo.getAbsolutePath().replace(rootPath, "").replaceFirst(File.separator, "")
 			                              .strip();
+			String shortPath = projectDirName + File.separator + suffixPath;
+			moduleInfo.setPathName(shortPath);
+			moduleInfo.setShortName(
+					shortPath.replaceAll(File.separator, ".").replaceAll("(\\.(src|main|test|java))+", ""));
+
 			// 递归生成路径节点
-			if (!"".equals(suffixPath)) {
-				String[] fileNames = suffixPath.split(File.separator);
+			if (!"".equals(moduleInfo.getShortName())) {
+				String[] fileNames = moduleInfo.getShortName().split("\\.");
 				createPathNode(fileNames, rootNode, moduleInfo);
 			}
 		});
+
+		createModuleDependency(rootNode, null);
 
 		System.out.println(rootNode);
 
