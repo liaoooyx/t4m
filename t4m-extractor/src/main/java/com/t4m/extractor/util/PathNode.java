@@ -12,18 +12,17 @@ import java.util.*;
  */
 public class PathNode {
 
+	private static ProjectInfo projectInfo;
+
 	private String name; // 当前文件夹名字
 	private String absolutePath;
 	private PathNode previousNode; // 上一层文件夹名
 	private List<PathNode> nextNodeList = new LinkedList<>(); // 下一层文件夹名
 
+
 	private boolean isRootNode = false;
 
 	private ModuleInfo moduleInfo;
-
-	public PathNode() {
-
-	}
 
 	public PathNode(String name) {
 		this.name = name;
@@ -61,6 +60,14 @@ public class PathNode {
 
 	public void setPreviousNode(PathNode previousNode) {
 		this.previousNode = previousNode;
+	}
+
+	public static ProjectInfo getProjectInfo() {
+		return projectInfo;
+	}
+
+	public static void setProjectInfo(ProjectInfo projectInfo) {
+		PathNode.projectInfo = projectInfo;
 	}
 
 	public List<PathNode> getNextNodeList() {
@@ -155,7 +162,7 @@ public class PathNode {
 		return moduleInfo != null;
 	}
 
-	public static void createModuleDependency(PathNode currentNode, ModuleInfo previousModuleInfo) {
+	public static void revealModuleDependency(PathNode currentNode, ModuleInfo previousModuleInfo) {
 		if (currentNode.hasModuleInfo()) {
 			if (previousModuleInfo != null) {
 				currentNode.getModuleInfo().setPreviousModuleInfo(previousModuleInfo);
@@ -163,41 +170,27 @@ public class PathNode {
 			}
 			if (currentNode.hasNextNode()) {
 				currentNode.getNextNodeList().forEach(node -> {
-					createModuleDependency(node, currentNode.getModuleInfo());
+					revealModuleDependency(node, currentNode.getModuleInfo());
 				});
 			}
 		} else {
 			if (currentNode.hasNextNode()) {
 				currentNode.getNextNodeList().forEach(node -> {
-					createModuleDependency(node, previousModuleInfo);
+					revealModuleDependency(node, previousModuleInfo);
 				});
 			}
 		}
 	}
 
-	public static void main(String[] args) {
-
-		// String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor";
-
-		ProjectInfo projectInfo = new ProjectInfo();
-		projectInfo.setRootPath(rootPath);
-		projectInfo.setProjectName("CustomizedName");
-
-		EntityScanner entityScanner = new EntityScanner(projectInfo);
-		entityScanner.scan();
-		projectInfo = entityScanner.getProjectInfo();
+	public static void createModuleDependency(PathNode rootNode, ProjectInfo projectInfo) {
 
 		String projectDirName = new File(projectInfo.getRootPath()).getName();
-
-		PathNode rootNode = new PathNode(new File(projectInfo.getRootPath()).getName(), projectInfo.getRootPath(),
-		                                 true);
 
 		// 建立模块层级关系
 		projectInfo.getModuleList().forEach(moduleInfo -> {
 			// 补充module信息
-			String suffixPath = moduleInfo.getAbsolutePath().replace(rootPath, "").replaceFirst(File.separator, "")
-			                              .strip();
+			String suffixPath = moduleInfo.getAbsolutePath().replace(projectInfo.getRootPath(), "").replaceFirst(
+					File.separator, "").strip();
 			String shortPath = projectDirName + File.separator + suffixPath;
 			moduleInfo.setPathName(shortPath);
 			moduleInfo.setShortName(
@@ -209,11 +202,30 @@ public class PathNode {
 				createPathNode(fileNames, rootNode, moduleInfo);
 			}
 		});
+		revealModuleDependency(rootNode, null);
+	}
 
-		createModuleDependency(rootNode, null);
+	public static void main(String[] args) {
+
+		String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
+		// String rootPath = "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor";
+
+		ProjectInfo projectInfo = new ProjectInfo();
+		projectInfo.setRootPath(rootPath);
+		projectInfo.setProjectName("CustomizedName");
+
+		EntityScanner entityScanner = new EntityScanner(projectInfo);
+		entityScanner.scan();
+		projectInfo = entityScanner.getProjectInfo();
+
+		PathNode rootNode = new PathNode(new File(projectInfo.getRootPath()).getName(), projectInfo.getRootPath(),
+		                                 true);
+
+		createModuleDependency(rootNode, projectInfo);
 
 		System.out.println(rootNode);
 
 	}
+
 
 }

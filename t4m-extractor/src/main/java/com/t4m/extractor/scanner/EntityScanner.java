@@ -4,16 +4,21 @@ import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
  * Construct all of the entities Created by Yuxiang Liao on 2020-06-11 09:46.
  */
 public class EntityScanner {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(EntityScanner.class);
 
 	public String[] exclusions = {"build"};
 
@@ -29,24 +34,17 @@ public class EntityScanner {
 		getAllJavaFiles(root, javaFileList);
 		// 初始化所有Class
 		List<ClassInfo> classInfoList = extractClassFromFileList(javaFileList);
-		System.out.printf("类总数: %d%n", classInfoList.size());
+		LOGGER.debug("类总数: {}", classInfoList.size());
 		// 初始化所有Package
 		List<PackageInfo> packageInfoList = extractPackageFromClassList(classInfoList);
-		System.out.printf("包总数: %d%n", packageInfoList.size());
-		// packageInfoList.forEach(i -> System.out
-		// 		.printf("(%d)%s   %s %n", i.getPackagePathChain().length, i.getFullPackageName(), i.getAbsolutePath()));
+		LOGGER.debug("包总数: {}", packageInfoList.size());
+		// 初始化所有Module
 		List<ModuleInfo> moduleInfoList = extractModuleFromPackageList(packageInfoList);
-		System.out.printf("模块总数: %d%n", moduleInfoList.size());
-		moduleInfoList.forEach(m -> {
-			System.out.println(m.getMainPackageSet().size());
-			// m.getPackageSet().forEach(p -> {
-			// 	System.out.print(p + " | ");
-			// });
-			System.out.println(m);
-		});
+		LOGGER.debug("模块总数: {}", moduleInfoList.size());
 		projectInfo.setModuleList(moduleInfoList);
 		projectInfo.setPackageList(packageInfoList);
 		projectInfo.setClassList(classInfoList);
+
 		return projectInfo;
 	}
 
