@@ -8,7 +8,7 @@ import java.util.Set;
  */
 public class ClassInfo {
 
-	private String className;
+	private String shortName;
 	private String fullClassName; // fully-qualified class name
 	private ClassType classType;
 
@@ -42,12 +42,12 @@ public class ClassInfo {
 		this.packageFullName = PackageInfo.EMPTY_IDENTIFIER;
 	}
 
-	public String getClassName() {
-		return className;
+	public String getShortName() {
+		return shortName;
 	}
 
-	public void setClassName(String className) {
-		this.className = className;
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
 	}
 
 	public String getFullClassName() {

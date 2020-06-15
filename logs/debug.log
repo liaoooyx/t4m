@@ -1,0 +1,186 @@
+2020-06-14 18:32:21.530 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-14 18:32:21.706 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-14 18:32:21.761 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-14 18:32:21.778 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-14 18:32:21.779 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-14 18:32:21.780 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
+2020-06-14 19:30:18.618 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-14 19:30:18.823 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-14 19:30:18.882 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-14 19:30:18.895 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-14 19:30:18.896 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-14 19:30:18.897 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
+2020-06-14 20:08:34.776 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-14 20:08:34.916 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-14 20:08:34.976 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-14 20:08:35.000 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-14 20:08:35.002 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-14 20:08:35.003 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
+2020-06-14 20:08:59.657 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:main] 
+ 类总数: 24
+2020-06-14 20:08:59.667 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:main] 
+ 包总数: 5
+2020-06-14 20:08:59.685 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:main] 
+ 模块总数: 2
+2020-06-14 20:18:12.123 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:main] 
+ 类总数: 24
+2020-06-14 20:18:12.135 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:main] 
+ 包总数: 5
+2020-06-14 20:18:12.154 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:main] 
+ 模块总数: 2
+2020-06-14 20:53:25.989 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:main] 
+ 类总数: 24
+2020-06-14 20:53:25.998 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:main] 
+ 包总数: 5
+2020-06-14 20:53:26.019 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:main] 
+ 模块总数: 2
+2020-06-14 23:09:34.829 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:main] 
+ 类总数: 24
+2020-06-14 23:09:34.843 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:main] 
+ 包总数: 5
+2020-06-14 23:09:34.875 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:main] 
+ 模块总数: 2
+2020-06-14 23:15:55.933 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-14 23:15:55.941 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-14 23:15:55.956 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
+2020-06-14 23:16:16.332 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-14 23:16:16.343 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-14 23:16:16.364 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
+2020-06-14 23:56:23.603 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-14 23:56:23.612 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-14 23:56:23.635 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
+2020-06-14 23:56:45.108 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:main] 
+ 类总数: 6989
+2020-06-14 23:56:45.460 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:main] 
+ 包总数: 1174
+2020-06-14 23:56:45.546 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:main] 
+ 模块总数: 97
+2020-06-15 00:27:50.210 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:main] 
+ 类总数: 6989
+2020-06-15 00:27:50.487 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:main] 
+ 包总数: 1174
+2020-06-15 00:27:50.559 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:main] 
+ 模块总数: 97
+2020-06-15 00:52:16.793 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 00:52:16.996 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 00:52:17.050 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 00:52:20.061 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 00:52:20.128 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 00:52:20.143 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 00:53:00.923 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 00:53:01.146 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 00:53:01.198 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 00:53:03.797 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 00:53:03.866 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 00:53:03.879 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 00:55:46.540 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 00:55:46.718 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 00:55:46.769 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 01:00:16.861 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 01:00:17.059 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 01:00:17.123 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 01:00:17.170 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-15 01:00:17.171 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-15 01:00:17.171 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
+2020-06-15 01:00:18.245 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 01:00:18.330 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 01:00:18.340 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 01:00:20.906 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 01:00:20.962 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 01:00:20.971 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 01:00:20.979 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-15 01:00:20.979 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-15 01:00:20.979 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
+2020-06-15 01:02:49.985 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:main] 
+ 类总数: 6989
+2020-06-15 01:02:50.303 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:main] 
+ 包总数: 1174
+2020-06-15 01:02:50.375 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:main] 
+ 模块总数: 97
+2020-06-15 01:03:38.785 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 01:03:38.956 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 01:03:39.006 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 01:03:39.034 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-15 01:03:39.035 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-15 01:03:39.036 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
+2020-06-15 01:03:40.117 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 01:03:40.215 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 01:03:40.225 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 01:03:42.683 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 6989
+2020-06-15 01:03:42.759 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 1174
+2020-06-15 01:03:42.768 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 97
+2020-06-15 01:03:42.776 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:37] [thread:Test worker] 
+ 类总数: 24
+2020-06-15 01:03:42.776 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:40] [thread:Test worker] 
+ 包总数: 5
+2020-06-15 01:03:42.777 [DEBUG] [com.t4m.extractor.scanner.EntityScanner:43] [thread:Test worker] 
+ 模块总数: 2
