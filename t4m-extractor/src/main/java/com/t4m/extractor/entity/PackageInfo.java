@@ -3,28 +3,21 @@ package com.t4m.extractor.entity;
 import java.util.*;
 
 /**
- * Created by Yuxiang Liao on 2020-06-09 22:55.
+ * 根据{@code absolutePath}来判断对象是否一致
  */
 public class PackageInfo {
 
 	public static String EMPTY_IDENTIFIER = "(null)";
 
-	private PackageInfo parentPackage;
-	private Set<PackageInfo> childrenPackageSet = new HashSet<>();
-	private Set<ClassInfo> classSet = new HashSet<>();
-	; // direct classes
-
-	private String fullPackageName; // = (null), if doesn't have package
+	private String fullyQualifiedName; // = (null), if doesn't have package
 	private String absolutePath;
 
-	private String[] packagePathChain;
+	private PackageInfo previousPackage;
+	private List<PackageInfo> subPackageList = new ArrayList<>();
+	private List<ClassInfo> classList = new ArrayList<>();
 
-
-	private Map<PackageInfo, Integer> dependsOn;
-	private Map<PackageInfo, Integer> dependedBy;
-
-	public PackageInfo() {
-	}
+	// private Map<PackageInfo, Integer> dependsOn;
+	// private Map<PackageInfo, Integer> dependedBy;
 
 	public PackageInfo(String absolutePath) {
 		this.absolutePath = absolutePath;
@@ -45,44 +38,12 @@ public class PackageInfo {
 		return Objects.hash(absolutePath);
 	}
 
-	public PackageInfo getParentPackage() {
-		return parentPackage;
+	public String getFullyQualifiedName() {
+		return fullyQualifiedName;
 	}
 
-	public void setParentPackage(PackageInfo parentPackage) {
-		this.parentPackage = parentPackage;
-	}
-
-	public Set<PackageInfo> getChildrenPackageSet() {
-		return childrenPackageSet;
-	}
-
-	public void setChildrenPackageSet(Set<PackageInfo> childrenPackageSet) {
-		this.childrenPackageSet = childrenPackageSet;
-	}
-
-	public void addChildrenPackage(PackageInfo packageInfo) {
-		this.childrenPackageSet.add(packageInfo);
-	}
-
-	public Set<ClassInfo> getClassSet() {
-		return classSet;
-	}
-
-	public void setClassSet(Set<ClassInfo> classSet) {
-		this.classSet = classSet;
-	}
-
-	public void addClassSet(ClassInfo classInfo) {
-		this.classSet.add(classInfo);
-	}
-
-	public String getFullPackageName() {
-		return fullPackageName;
-	}
-
-	public void setFullPackageName(String fullPackageName) {
-		this.fullPackageName = fullPackageName;
+	public void setFullyQualifiedName(String fullyQualifiedName) {
+		this.fullyQualifiedName = fullyQualifiedName;
 	}
 
 	public String getAbsolutePath() {
@@ -93,35 +54,53 @@ public class PackageInfo {
 		this.absolutePath = absolutePath;
 	}
 
-	public String[] getPackagePathChain() {
-		return packagePathChain;
+	public PackageInfo getPreviousPackage() {
+		return previousPackage;
 	}
 
-	public void setPackagePathChain(String[] packagePathChain) {
-		this.packagePathChain = packagePathChain;
+	public void setPreviousPackage(PackageInfo previousPackage) {
+		this.previousPackage = previousPackage;
 	}
 
-	public Map<PackageInfo, Integer> getDependsOn() {
-		return dependsOn;
+	public List<PackageInfo> getSubPackageList() {
+		return subPackageList;
 	}
 
-	public void setDependsOn(Map<PackageInfo, Integer> dependsOn) {
-		this.dependsOn = dependsOn;
+	public void setSubPackageList(List<PackageInfo> subPackageList) {
+		this.subPackageList = subPackageList;
 	}
 
-	public Map<PackageInfo, Integer> getDependedBy() {
-		return dependedBy;
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public PackageInfo safeAddSubPackageList(PackageInfo packageInfo) {
+		int index;
+		if ((index = subPackageList.indexOf(packageInfo)) == -1) {
+			this.subPackageList.add(packageInfo);
+			return packageInfo;
+		} else {
+			return this.subPackageList.get(index);
+		}
 	}
 
-	public void setDependedBy(Map<PackageInfo, Integer> dependedBy) {
-		this.dependedBy = dependedBy;
+	public List<ClassInfo> getClassList() {
+		return classList;
 	}
 
-	@Override
-	public String toString() {
-		return "PackageInfo{" + "parentPackage=" + parentPackage + ", childrenPackage=" + childrenPackageSet +
-				", classSet=" + classSet + ", fullPackageName='" + fullPackageName + '\'' + ", absolutePath='" +
-				absolutePath + '\'' + ", packagePathChain=" + Arrays.toString(packagePathChain) + ", dependsOn=" +
-				dependsOn + ", dependedBy=" + dependedBy + '}';
+	public void setClassList(List<ClassInfo> classList) {
+		this.classList = classList;
+	}
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public ClassInfo safeAddClassList(ClassInfo classInfo) {
+		int index;
+		if ((index = classList.indexOf(classInfo)) == -1) {
+			this.classList.add(classInfo);
+			return classInfo;
+		} else {
+			return this.classList.get(index);
+		}
 	}
 }

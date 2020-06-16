@@ -16,12 +16,6 @@ public class Scanner {
 	private static String JAVA_FILE_IDENTIFIER = "src";
 
 
-	private ProjectInfo projectInfo = new ProjectInfo();
-
-	public Scanner(String projectPath) {
-		projectInfo.setRootPath(projectPath);
-	}
-
 	public static void printFileInfo(File file, String previousPath) {
 
 		if (file.isDirectory()) {
@@ -70,16 +64,6 @@ public class Scanner {
 	}
 
 	public static void main(String[] args) {
-		String path = "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor";
-
-		ProjectInfo mainProject = new ProjectInfo();
-		ProjectInfo testProject = new ProjectInfo();
-
-		File root = new File(path);
-		// printFileInfo(root, ".");
-		// List<String> fileList = new ArrayList<>();
-		// getAllfiles(root, fileList);
-		getJavaFileList(root).forEach(System.out::println);
 
 	}
 }
