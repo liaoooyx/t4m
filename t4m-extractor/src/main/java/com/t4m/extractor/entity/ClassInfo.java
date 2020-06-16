@@ -1,7 +1,6 @@
 package com.t4m.extractor.entity;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 /**
  * Created by Yuxiang Liao at 2020-06-09 22:55.
@@ -9,37 +8,53 @@ import java.util.Set;
 public class ClassInfo {
 
 	private String shortName;
-	private String fullClassName; // fully-qualified class name
-	private ClassType classType;
-
-	private PackageInfo packageInfo;
-	private String packageFullName;// default to be (null) if a class doesn't have package.
-
+	private String fullyQualifiedName; // fully-qualified class name
 	private String absolutePath;
 
-	private ClassInfo hasAbstractClass;
-	private Set<ClassInfo> hasInterfaceClass;
+	private PackageInfo packageInfo;
+	private String packageFullyQualifiedName;
 
-	private List<ClassInfo> dependsOn;
-	private List<ClassInfo> dependedBy;
+	// 考虑内部类
 
-	private Set<MethodInfo> methodSet;
+	// private ClassInfo hasAbstractClass;
+	// private Set<ClassInfo> hasInterfaceClass;
+	//
+	// private List<ClassInfo> dependsOn;
+	// private List<ClassInfo> dependedBy;
+	//
+	// private Set<MethodInfo> methodSet;
+	//
+	// // instance variables in class, used by MethodInfo
+	// // Format: instancName:instanceType
+	// // such as "instanceSet:Set"
+	// private Set<String> instanceSet;
+	//
+	// private int numberOfMethods;
+	// private int numberOfInstances;
+	//
+	// private int sourceLinesOfCode;
+	// private int blankLines;
+	// private int effectiveLinesOfCode;
+	// private int commentLinesOfCode;
 
-	// instance variables in class, used by MethodInfo
-	// Format: instancName:instanceType
-	// such as "instanceSet:Set"
-	private Set<String> instanceSet;
 
-	private int numberOfMethods;
-	private int numberOfInstances;
+	public ClassInfo(String absolutePath) {
+		this.absolutePath = absolutePath;
+	}
 
-	private int sourceLinesOfCode;
-	private int blankLines;
-	private int effectiveLinesOfCode;
-	private int commentLinesOfCode;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ClassInfo classInfo = (ClassInfo) o;
+		return Objects.equals(absolutePath, classInfo.absolutePath);
+	}
 
-	public ClassInfo() {
-		this.packageFullName = PackageInfo.EMPTY_IDENTIFIER;
+	@Override
+	public int hashCode() {
+		return Objects.hash(absolutePath);
 	}
 
 	public String getShortName() {
@@ -50,20 +65,12 @@ public class ClassInfo {
 		this.shortName = shortName;
 	}
 
-	public String getFullClassName() {
-		return fullClassName;
+	public String getFullyQualifiedName() {
+		return fullyQualifiedName;
 	}
 
-	public void setFullClassName(String fullClassName) {
-		this.fullClassName = fullClassName;
-	}
-
-	public ClassType getClassType() {
-		return classType;
-	}
-
-	public void setClassType(ClassType classType) {
-		this.classType = classType;
+	public void setFullyQualifiedName(String fullyQualifiedName) {
+		this.fullyQualifiedName = fullyQualifiedName;
 	}
 
 	public PackageInfo getPackageInfo() {
@@ -74,14 +81,6 @@ public class ClassInfo {
 		this.packageInfo = packageInfo;
 	}
 
-	public String getPackageFullName() {
-		return packageFullName;
-	}
-
-	public void setPackageFullName(String packageFullName) {
-		this.packageFullName = packageFullName;
-	}
-
 	public String getAbsolutePath() {
 		return absolutePath;
 	}
@@ -90,99 +89,11 @@ public class ClassInfo {
 		this.absolutePath = absolutePath;
 	}
 
-	public ClassInfo getHasAbstractClass() {
-		return hasAbstractClass;
+	public String getPackageFullyQualifiedName() {
+		return packageFullyQualifiedName;
 	}
 
-	public void setHasAbstractClass(ClassInfo hasAbstractClass) {
-		this.hasAbstractClass = hasAbstractClass;
-	}
-
-	public Set<ClassInfo> getHasInterfaceClass() {
-		return hasInterfaceClass;
-	}
-
-	public void setHasInterfaceClass(Set<ClassInfo> hasInterfaceClass) {
-		this.hasInterfaceClass = hasInterfaceClass;
-	}
-
-	public List<ClassInfo> getDependsOn() {
-		return dependsOn;
-	}
-
-	public void setDependsOn(List<ClassInfo> dependsOn) {
-		this.dependsOn = dependsOn;
-	}
-
-	public List<ClassInfo> getDependedBy() {
-		return dependedBy;
-	}
-
-	public void setDependedBy(List<ClassInfo> dependedBy) {
-		this.dependedBy = dependedBy;
-	}
-
-	public Set<MethodInfo> getMethodSet() {
-		return methodSet;
-	}
-
-	public void setMethodSet(Set<MethodInfo> methodSet) {
-		this.methodSet = methodSet;
-	}
-
-	public Set<String> getInstanceSet() {
-		return instanceSet;
-	}
-
-	public void setInstanceSet(Set<String> instanceSet) {
-		this.instanceSet = instanceSet;
-	}
-
-	public int getNumberOfMethods() {
-		return numberOfMethods;
-	}
-
-	public void setNumberOfMethods(int numberOfMethods) {
-		this.numberOfMethods = numberOfMethods;
-	}
-
-	public int getNumberOfInstances() {
-		return numberOfInstances;
-	}
-
-	public void setNumberOfInstances(int numberOfInstances) {
-		this.numberOfInstances = numberOfInstances;
-	}
-
-	public int getSourceLinesOfCode() {
-		return sourceLinesOfCode;
-	}
-
-	public void setSourceLinesOfCode(int sourceLinesOfCode) {
-		this.sourceLinesOfCode = sourceLinesOfCode;
-	}
-
-	public int getBlankLines() {
-		return blankLines;
-	}
-
-	public void setBlankLines(int blankLines) {
-		this.blankLines = blankLines;
-	}
-
-	public int getEffectiveLinesOfCode() {
-		return effectiveLinesOfCode;
-	}
-
-	public void setEffectiveLinesOfCode(int effectiveLinesOfCode) {
-		this.effectiveLinesOfCode = effectiveLinesOfCode;
-	}
-
-	public int getCommentLinesOfCode() {
-		return commentLinesOfCode;
-	}
-
-	public void setCommentLinesOfCode(int commentLinesOfCode) {
-		this.commentLinesOfCode = commentLinesOfCode;
+	public void setPackageFullyQualifiedName(String packageFullyQualifiedName) {
+		this.packageFullyQualifiedName = packageFullyQualifiedName;
 	}
 }

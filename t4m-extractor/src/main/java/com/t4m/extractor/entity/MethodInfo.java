@@ -8,8 +8,8 @@ import java.util.Set;
  */
 public class MethodInfo {
 
-	private String methodName;
-	private String fullMethodName; // fully-qualified class name
+	private String shortName;
+	private String fullyQualifiedName; // fully-qualified class name
 
 	private ClassInfo belongsToClass;
 
