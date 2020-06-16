@@ -14,13 +14,8 @@ public class ProjectInfoProvider implements ArgumentsProvider {
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
-		ProjectInfo projectInfo1 = new ProjectInfo();
-		projectInfo1.setRootPath("/Users/liao/myProjects/IdeaProjects/sonarqube");
-		projectInfo1.setProjectName("TestProject1-sonarqube");
-
-		ProjectInfo projectInfo2 = new ProjectInfo();
-		projectInfo2.setRootPath("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-		projectInfo2.setProjectName("TestProject2-refactor");
+		ProjectInfo projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
+		ProjectInfo projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
 
 		return Stream.of(projectInfo1, projectInfo2).map(Arguments::of);
 	}
