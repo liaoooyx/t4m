@@ -1,30 +1,31 @@
 package com.t4m.extractor.entity;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-06-11 09:29.
  */
 public class ModuleInfo {
 
+	//shortName和fullyQualifiedName都
 	private String shortName;
-	private String pathName;
+	private String relativePath; // 从项目路径开始的相对路径
 	private String absolutePath;
 
-	private Set<ModuleInfo> subModuleSet = new HashSet<>();
+	private List<ModuleInfo> subModuleList = new ArrayList<>();
 	private ModuleInfo previousModuleInfo;
 
-	private Set<PackageInfo> mainPackageSet = new HashSet<>();
-	private Set<PackageInfo> testPackageSet = new HashSet<>();
-	private Set<PackageInfo> otherPackageSet = new HashSet<>();
+	private List<PackageInfo> mainPackageList = new ArrayList<>();
+	private List<PackageInfo> testPackageList = new ArrayList<>();
+	private List<PackageInfo> otherPackageList = new ArrayList<>();
 
 	private String mainScopePath;
 	private String testScopePath;
 	private String otherScopePath;
 
-	private boolean isRootModule = false;
+	public ModuleInfo(String absolutePath) {
+		this.absolutePath = absolutePath;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -49,32 +50,12 @@ public class ModuleInfo {
 		this.shortName = shortName;
 	}
 
-	public ModuleInfo getPreviousModuleInfo() {
-		return previousModuleInfo;
+	public String getRelativePath() {
+		return relativePath;
 	}
 
-	public void setPreviousModuleInfo(ModuleInfo previousModuleInfo) {
-		this.previousModuleInfo = previousModuleInfo;
-	}
-
-	public String getPathName() {
-		return pathName;
-	}
-
-	public void setPathName(String pathName) {
-		this.pathName = pathName;
-	}
-
-	public Set<ModuleInfo> getSubModuleSet() {
-		return subModuleSet;
-	}
-
-	public void setSubModuleSet(Set<ModuleInfo> subModuleSet) {
-		this.subModuleSet = subModuleSet;
-	}
-
-	public void addSubModuleSet(ModuleInfo moduleInfo){
-		this.subModuleSet.add(moduleInfo);
+	public void setRelativePath(String relativePath) {
+		this.relativePath = relativePath;
 	}
 
 	public String getAbsolutePath() {
@@ -83,6 +64,98 @@ public class ModuleInfo {
 
 	public void setAbsolutePath(String absolutePath) {
 		this.absolutePath = absolutePath;
+	}
+
+	public List<ModuleInfo> getSubModuleList() {
+		return subModuleList;
+	}
+
+	public void setSubModuleList(List<ModuleInfo> subModuleList) {
+		this.subModuleList = subModuleList;
+	}
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public ModuleInfo safeAddSubModuleList(ModuleInfo moduleInfo) {
+		int index;
+		if ((index = subModuleList.indexOf(moduleInfo)) == -1) {
+			this.subModuleList.add(moduleInfo);
+			return moduleInfo;
+		} else {
+			return this.subModuleList.get(index);
+		}
+	}
+
+	public ModuleInfo getPreviousModuleInfo() {
+		return previousModuleInfo;
+	}
+
+	public void setPreviousModuleInfo(ModuleInfo previousModuleInfo) {
+		this.previousModuleInfo = previousModuleInfo;
+	}
+
+	public List<PackageInfo> getMainPackageList() {
+		return mainPackageList;
+	}
+
+	public void setMainPackageList(List<PackageInfo> mainPackageList) {
+		this.mainPackageList = mainPackageList;
+	}
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public PackageInfo safeAddMainPackageList(PackageInfo packageInfo) {
+		int index;
+		if ((index = mainPackageList.indexOf(packageInfo)) == -1) {
+			this.mainPackageList.add(packageInfo);
+			return packageInfo;
+		} else {
+			return this.mainPackageList.get(index);
+		}
+	}
+
+	public List<PackageInfo> getTestPackageList() {
+		return testPackageList;
+	}
+
+	public void setTestPackageList(List<PackageInfo> testPackageList) {
+		this.testPackageList = testPackageList;
+	}
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public PackageInfo safeAddTestPackageList(PackageInfo packageInfo) {
+		int index;
+		if ((index = testPackageList.indexOf(packageInfo)) == -1) {
+			this.testPackageList.add(packageInfo);
+			return packageInfo;
+		} else {
+			return this.testPackageList.get(index);
+		}
+	}
+
+	public List<PackageInfo> getOtherPackageList() {
+		return otherPackageList;
+	}
+
+	public void setOtherPackageList(List<PackageInfo> otherPackageList) {
+		this.otherPackageList = otherPackageList;
+	}
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public PackageInfo safeAddOtherPackageList(PackageInfo packageInfo) {
+		int index;
+		if ((index = otherPackageList.indexOf(packageInfo)) == -1) {
+			this.otherPackageList.add(packageInfo);
+			return packageInfo;
+		} else {
+			return this.otherPackageList.get(index);
+		}
 	}
 
 	public String getMainScopePath() {
@@ -108,49 +181,4 @@ public class ModuleInfo {
 	public void setOtherScopePath(String otherScopePath) {
 		this.otherScopePath = otherScopePath;
 	}
-
-	public Set<PackageInfo> getMainPackageSet() {
-		return mainPackageSet;
-	}
-
-	public void setMainPackageSet(Set<PackageInfo> mainPackageSet) {
-		this.mainPackageSet = mainPackageSet;
-	}
-
-	public void addMainPackageSet(PackageInfo packageInfo) {
-		this.mainPackageSet.add(packageInfo);
-	}
-
-	public boolean isRootModule() {
-		return isRootModule;
-	}
-
-	public void setRootModule(boolean rootModule) {
-		isRootModule = rootModule;
-	}
-
-	public Set<PackageInfo> getTestPackageSet() {
-		return testPackageSet;
-	}
-
-	public void setTestPackageSet(Set<PackageInfo> testPackageSet) {
-		this.testPackageSet = testPackageSet;
-	}
-
-	public Set<PackageInfo> getOtherPackageSet() {
-		return otherPackageSet;
-	}
-
-	public void setOtherPackageSet(Set<PackageInfo> otherPackageSet) {
-		this.otherPackageSet = otherPackageSet;
-	}
-
-	public void addTestPackageSet(PackageInfo packageInfo) {
-		this.testPackageSet.add(packageInfo);
-	}
-
-	public void addOtherPackageSet(PackageInfo packageInfo) {
-		this.otherPackageSet.add(packageInfo);
-	}
-
 }
