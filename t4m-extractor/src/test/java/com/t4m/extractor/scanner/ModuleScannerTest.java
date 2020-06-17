@@ -20,11 +20,8 @@ class ModuleScannerTest {
 	public static void initProjectInfo() {
 		projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
 		projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-		List<File> rawJavaFileList = new ArrayList<>();
-		DirectoryScanner.scan(projectInfo1,rawJavaFileList);
-		ClassScanner.scan(projectInfo1,rawJavaFileList);
-		PackageScanner.scan(projectInfo1,projectInfo1.getClassList());
-		ModuleScanner.scan(projectInfo1,projectInfo1.getPackageList());
+		T4MScanner t4MScanner = new T4MScanner(projectInfo1);
+		t4MScanner.scanModuleAndPackageAndClassAndDirectory();
 	}
 
 	@Test

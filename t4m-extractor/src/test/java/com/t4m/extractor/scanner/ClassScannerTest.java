@@ -5,10 +5,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class ClassScannerTest {
@@ -19,9 +15,8 @@ class ClassScannerTest {
 	public static void initProjectInfo() {
 		projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
 		projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-		List<File> rawJavaFileList = new ArrayList<>();
-		DirectoryScanner.scan(projectInfo1,rawJavaFileList);
-		ClassScanner.scan(projectInfo1,rawJavaFileList);
+		T4MScanner t4MScanner = new T4MScanner(projectInfo1);
+		t4MScanner.scanClassAndDirectory();
 	}
 
 	@Test

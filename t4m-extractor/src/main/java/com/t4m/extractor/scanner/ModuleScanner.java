@@ -13,11 +13,17 @@ import java.util.List;
  */
 public class ModuleScanner {
 
+	private ProjectInfo projectInfo;
+
+	public ModuleScanner(ProjectInfo projectInfo) {
+		this.projectInfo = projectInfo;
+	}
+
 	/**
 	 * 根据列表中的{@code PackageInfo}创建模块信息
 	 */
-	public static List<ModuleInfo> scan(ProjectInfo projectInfo, List<PackageInfo> packageInfoList) {
-		packageInfoList.forEach(packageInfo -> {
+	public List<ModuleInfo> scan() {
+		projectInfo.getPackageList().forEach(packageInfo -> {
 			String pkgFullName = packageInfo.getFullyQualifiedName();
 			String pkgPath = packageInfo.getAbsolutePath();
 			// 去除包名路径，得到模块添加路径
