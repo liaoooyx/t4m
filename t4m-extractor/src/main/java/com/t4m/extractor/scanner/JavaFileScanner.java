@@ -13,9 +13,9 @@ import java.util.List;
 /**
  * Created by Yuxiang Liao on 2020-06-17 02:43.
  */
-public class DirectoryScanner {
+public class JavaFileScanner {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(DirectoryScanner.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(JavaFileScanner.class);
 
 	public static String[] exclusions = {"build"};
 
@@ -23,7 +23,7 @@ public class DirectoryScanner {
 
 	private List<File> rawJavaFileList = new ArrayList<>();
 
-	public DirectoryScanner(ProjectInfo projectInfo) {
+	public JavaFileScanner(ProjectInfo projectInfo) {
 		this.projectInfo = projectInfo;
 	}
 
