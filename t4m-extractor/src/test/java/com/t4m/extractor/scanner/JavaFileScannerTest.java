@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DirectoryScannerTest {
+class JavaFileScannerTest {
 
 	static ProjectInfo projectInfo1;
 	static ProjectInfo projectInfo2;

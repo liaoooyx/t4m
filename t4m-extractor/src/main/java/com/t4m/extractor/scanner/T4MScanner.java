@@ -3,7 +3,6 @@ package com.t4m.extractor.scanner;
 import com.t4m.extractor.entity.ProjectInfo;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,8 +25,8 @@ public class T4MScanner {
 	}
 
 	public void scanDirectory(){
-		DirectoryScanner directoryScanner = new DirectoryScanner(projectInfo);
-		rawJavaFileList = directoryScanner.scan();
+		JavaFileScanner javaFileScanner = new JavaFileScanner(projectInfo);
+		rawJavaFileList = javaFileScanner.scan();
 	}
 
 	public void scanClassAndDirectory(){

@@ -3,12 +3,17 @@ package com.t4m.extractor.scanner;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.util.DynamicLoader;
+import com.t4m.extractor.util.JavaFileUtil;
+import com.t4m.extractor.util.MemoryJavaFileManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.tools.JavaFileObject;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 通过反射来扫描类信息 Created by Yuxiang Liao on 2020-06-16 13:42.
@@ -42,30 +47,38 @@ public class ClassScanner {
 				// 保证类的唯一性
 				String classShortName = javaFile.getName().split("\\.")[0];
 				String classFullyQualifiedName = pkgFullyQualifiedName + "." + classShortName;
+				ClassInfo classInfo = projectInfo.safeAddClassList(
+						new ClassInfo(classFullyQualifiedName, javaFile.getAbsolutePath().strip()));
+				classInfo.setShortName(classShortName);
+				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
 
-				try {
-					Class clazz = Class.forName(classFullyQualifiedName);
-					ClassInfo classInfo = initClassInfo(clazz, javaFile, pkgFullyQualifiedName);
-
-				} catch (ClassNotFoundException e) {
-					LOGGER.warn("Cannot reflect Class object by {}. [{}]", classFullyQualifiedName, e.toString(), e);
-				}
 			} catch (FileNotFoundException e) {
-				LOGGER.warn("No such file to be converted to ClassInfo object.%n[{}]", e.toString(), e);
+				LOGGER.error("No such file to be converted to ClassInfo object.%n[{}]", e.toString(), e);
 			} catch (IOException e) {
-				LOGGER.warn("Error happened when finding package path. [{}]", e.toString(), e);
+				LOGGER.error("Error happened when finding package path. [{}]", e.toString(), e);
 			}
 		});
 		return projectInfo.getClassList();
 	}
 
 	private ClassInfo initClassInfo(Class clazz, File sourceFile, String pkgFullyQualifiedName) {
+
+		// String javaSource = JavaFileUtil.readJavaSource(javaFile.getAbsolutePath());
+		// Map<String, byte[]> bytecode = DynamicLoader.compile(javaFile.getName(), javaSource);
+		// DynamicLoader.MemoryClassLoader classLoader = new DynamicLoader.MemoryClassLoader(bytecode);
+		// Class clazz = Class.forName(classFullyQualifiedName);
+		// ClassInfo classInfo = initClassInfo(clazz, javaFile, pkgFullyQualifiedName);
+		//
+		// JavaFileObject javaFileObject = MemoryJavaFileManager.makeStringSource(javaName, javaSrc);
+
 		ClassInfo classInfo = projectInfo.safeAddClassList(
 				new ClassInfo(clazz.getName(), sourceFile.getAbsolutePath().strip()));
 		classInfo.setShortName(clazz.getSimpleName());
 		classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
 		return classInfo;
 	}
+
+
 
 	/**
 	 * 补全classInfo的信息
