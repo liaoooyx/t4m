@@ -94,10 +94,8 @@ public class DependencyScanner {
 		String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
 		List<File> rawJavaFileList = new ArrayList<>();
-		DirectoryScanner.scan(projectInfo,rawJavaFileList);
-		ClassScanner.scan(projectInfo,rawJavaFileList);
-		PackageScanner.scan(projectInfo,projectInfo.getClassList());
-		ModuleScanner.scan(projectInfo,projectInfo.getPackageList());
+		T4MScanner t4MScanner = new T4MScanner(projectInfo);
+		t4MScanner.scanModuleAndPackageAndClassAndDirectory();
 
 		DirectoryNode rootNode = new DirectoryNode(new File(projectInfo.getAbsolutePath()).getName(),
 		                                           projectInfo.getAbsolutePath());

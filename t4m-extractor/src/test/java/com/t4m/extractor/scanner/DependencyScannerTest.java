@@ -24,11 +24,8 @@ class DependencyScannerTest {
 	public static void initProjectInfo() {
 		projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
 		projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-		List<File> rawJavaFileList = new ArrayList<>();
-		DirectoryScanner.scan(projectInfo1, rawJavaFileList);
-		ClassScanner.scan(projectInfo1, rawJavaFileList);
-		PackageScanner.scan(projectInfo1, projectInfo1.getClassList());
-		ModuleScanner.scan(projectInfo1, projectInfo1.getPackageList());
+		T4MScanner t4MScanner = new T4MScanner(projectInfo1);
+		t4MScanner.scanModuleAndPackageAndClassAndDirectory();
 	}
 
 	@Test
@@ -46,27 +43,34 @@ class DependencyScannerTest {
 		ClassInfo xooClass = xooPackage.getClassList().get(0);
 		PackageInfo xooTestPackage = xooModule.getMainPackageList().get(1);
 
-		assertAll(() -> {
-			assertEquals("sonarqube", rootNode.getName());
-			assertEquals(16, rootNode.getNextNodeList().size());
-		}, () -> {
-			assertEquals("plugins", directoryNodePlugins.getName());
-			assertNull(directoryNodePlugins.getModuleInfo());
-			assertEquals(1, directoryNodePlugins.getNextNodeList().size());
-		}, () -> {
-			assertEquals("/Users/liao/myProjects/IdeaProjects/sonarqube/plugins/sonar-xoo-plugin",
-			             xooModule.getAbsolutePath());
-			assertEquals(9, xooModule.getMainPackageList().size());
-		}, () -> {
-			assertEquals("org.sonar.xoo", xooPackage.getFullyQualifiedName());
-			assertEquals(4, xooPackage.getClassList().size());
-		}, () -> {
-			assertEquals("Xoo", xooClass.getShortName());
-			assertEquals(xooPackage, xooClass.getPackageInfo());
-		}, () -> {
-			assertEquals("org.sonar.xoo.test", xooTestPackage.getFullyQualifiedName());
-			assertEquals(3, xooTestPackage.getClassList().size());
-		});
+		assertAll(
+				()->{
+					assertEquals("sonarqube", rootNode.getName());
+					assertEquals(16, rootNode.getNextNodeList().size());
+				},
+				()->{
+					assertEquals("plugins", directoryNodePlugins.getName());
+					assertNull(directoryNodePlugins.getModuleInfo());
+					assertEquals(1, directoryNodePlugins.getNextNodeList().size());
+				},
+				()->{
+					assertEquals("/Users/liao/myProjects/IdeaProjects/sonarqube/plugins/sonar-xoo-plugin",
+					             xooModule.getAbsolutePath());
+					assertEquals(9, xooModule.getMainPackageList().size());
+				},
+				()->{
+					assertEquals("org.sonar.xoo", xooPackage.getFullyQualifiedName());
+					assertEquals(4, xooPackage.getClassList().size());
+				},
+				()->{
+					assertEquals("Xoo", xooClass.getShortName());
+					assertEquals(xooPackage, xooClass.getPackageInfo());
+				},
+				()->{
+					assertEquals("org.sonar.xoo.test",xooTestPackage.getFullyQualifiedName());
+					assertEquals(3,xooTestPackage.getClassList().size());
+				}
+		);
 
 	}
 

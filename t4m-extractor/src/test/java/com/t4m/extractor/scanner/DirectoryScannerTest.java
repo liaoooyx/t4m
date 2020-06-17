@@ -20,14 +20,15 @@ class DirectoryScannerTest {
 	public static void initProjectInfo() {
 		projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
 		projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
+
 	}
 
 	@Test
 	@DisplayName("获取项目路径下所有Java文件")
 	void scan() {
-		List<File> rawJavaFileList = new ArrayList<>();
-		DirectoryScanner.scan(projectInfo1, rawJavaFileList);
-		assertEquals(6989, rawJavaFileList.size());
+		T4MScanner t4MScanner = new T4MScanner(projectInfo1);
+		t4MScanner.scanDirectory();
+		assertEquals(6989, t4MScanner.getRawJavaFileList().size());
 	}
 
 }

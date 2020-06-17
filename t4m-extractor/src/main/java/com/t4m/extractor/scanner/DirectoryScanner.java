@@ -19,13 +19,30 @@ public class DirectoryScanner {
 
 	public static String[] exclusions = {"build"};
 
+	private ProjectInfo projectInfo;
+
+	private List<File> rawJavaFileList = new ArrayList<>();
+
+	public DirectoryScanner(ProjectInfo projectInfo) {
+		this.projectInfo = projectInfo;
+	}
+
+	/**
+	 * 扫描项目中所有的java文件，并存放在第二个参数{@code rawJavaFileList}中
+	 */
+	public List<File> scan() {
+		File root = new File(projectInfo.getAbsolutePath());
+		getAllJavaFiles(root, rawJavaFileList);
+		return rawJavaFileList;
+	}
+
 	/**
 	 * 从项目跟路径开始，递归查找所有.java文件，指定的{@code exclusions}目录将被排除
 	 *
 	 * @param file 文件
 	 * @param javaList 储存所有.java文件
 	 */
-	private static void getAllJavaFiles(File file, List<File> javaList) {
+	private void getAllJavaFiles(File file, List<File> javaList) {
 		if (file.isDirectory()) {
 			File[] fileArray = file.listFiles(new FileFilter() {
 				@Override
@@ -47,12 +64,5 @@ public class DirectoryScanner {
 		}
 	}
 
-	/**
-	 * 扫描项目中所有的java文件，并存放在第二个参数{@code rawJavaFileList}中
-	 */
-	public static void scan(ProjectInfo projectInfo, List<File> rawJavaFileList) {
-		File root = new File(projectInfo.getAbsolutePath());
-		getAllJavaFiles(root, rawJavaFileList);
-	}
 
 }

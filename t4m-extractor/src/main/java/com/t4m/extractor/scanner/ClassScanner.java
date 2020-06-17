@@ -1,14 +1,12 @@
 package com.t4m.extractor.scanner;
 
 import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.DirectoryNode;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,10 +17,16 @@ public class ClassScanner {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ClassScanner.class);
 
+	private ProjectInfo projectInfo;
+
+	public ClassScanner(ProjectInfo projectInfo) {
+		this.projectInfo = projectInfo;
+	}
+
 	/**
 	 * 对于列表中的每个File对象，从中读取信息，并转化为{@code ClassInfo}对象. <br> 包括{@code absolutePath}, {@code packageFullyQualifiedName}.
 	 */
-	public static List<ClassInfo> scan(ProjectInfo projectInfo, List<File> rawJavaFileList) {
+	public List<ClassInfo> scan(List<File> rawJavaFileList) {
 		rawJavaFileList.forEach(javaFile -> {
 			try {
 				String line;
@@ -38,11 +42,14 @@ public class ClassScanner {
 				// 保证类的唯一性
 				String classShortName = javaFile.getName().split("\\.")[0];
 				String classFullyQualifiedName = pkgFullyQualifiedName + "." + classShortName;
-				ClassInfo classInfo = projectInfo.safeAddClassList(
-						new ClassInfo(classFullyQualifiedName, javaFile.getAbsolutePath().strip()));
-				classInfo.setShortName(classShortName);
-				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
 
+				try {
+					Class clazz = Class.forName(classFullyQualifiedName);
+					ClassInfo classInfo = initClassInfo(clazz, javaFile, pkgFullyQualifiedName);
+
+				} catch (ClassNotFoundException e) {
+					LOGGER.warn("Cannot reflect Class object by {}. [{}]", classFullyQualifiedName, e.toString(), e);
+				}
 			} catch (FileNotFoundException e) {
 				LOGGER.warn("No such file to be converted to ClassInfo object.%n[{}]", e.toString(), e);
 			} catch (IOException e) {
@@ -50,6 +57,14 @@ public class ClassScanner {
 			}
 		});
 		return projectInfo.getClassList();
+	}
+
+	private ClassInfo initClassInfo(Class clazz, File sourceFile, String pkgFullyQualifiedName) {
+		ClassInfo classInfo = projectInfo.safeAddClassList(
+				new ClassInfo(clazz.getName(), sourceFile.getAbsolutePath().strip()));
+		classInfo.setShortName(clazz.getSimpleName());
+		classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
+		return classInfo;
 	}
 
 	/**
@@ -81,8 +96,8 @@ public class ClassScanner {
 	public static void main(String[] args) {
 		String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
-		List<File> rawJavaFileList = new ArrayList<>();
-		DirectoryScanner.scan(projectInfo, rawJavaFileList);
-
+		T4MScanner t4MScanner = new T4MScanner(projectInfo);
+		t4MScanner.scanClassAndDirectory();
+		System.out.println(projectInfo);
 	}
 }
