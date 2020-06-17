@@ -1,5 +1,7 @@
 package com.t4m.extractor.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -14,7 +16,10 @@ public class ClassInfo {
 	private PackageInfo packageInfo;
 	private String packageFullyQualifiedName;
 
+	private ClassInfo.Type type;
+
 	// 考虑内部类
+	private List<ClassInfo> innerClassList = new ArrayList<>();
 
 	// private ClassInfo hasAbstractClass;
 	// private Set<ClassInfo> hasInterfaceClass;
@@ -38,7 +43,8 @@ public class ClassInfo {
 	// private int commentLinesOfCode;
 
 
-	public ClassInfo(String absolutePath) {
+	public ClassInfo(String fullyQualifiedName, String absolutePath) {
+		this.fullyQualifiedName = fullyQualifiedName;
 		this.absolutePath = absolutePath;
 	}
 
@@ -49,12 +55,13 @@ public class ClassInfo {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ClassInfo classInfo = (ClassInfo) o;
-		return Objects.equals(absolutePath, classInfo.absolutePath);
+		return Objects.equals(fullyQualifiedName, classInfo.fullyQualifiedName) && Objects.equals(absolutePath,
+		                                                                                          classInfo.absolutePath);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(absolutePath);
+		return Objects.hash(fullyQualifiedName, absolutePath);
 	}
 
 	public String getShortName() {
@@ -95,5 +102,40 @@ public class ClassInfo {
 
 	public void setPackageFullyQualifiedName(String packageFullyQualifiedName) {
 		this.packageFullyQualifiedName = packageFullyQualifiedName;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public List<ClassInfo> getInnerClassList() {
+		return innerClassList;
+	}
+
+	public void setInnerClassList(List<ClassInfo> innerClassList) {
+		this.innerClassList = innerClassList;
+	}
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public ClassInfo safeAddInnerClassList(ClassInfo classInfo) {
+		int index;
+		if ((index = innerClassList.indexOf(classInfo)) == -1) {
+			this.innerClassList.add(classInfo);
+			return classInfo;
+		} else {
+			return this.innerClassList.get(index);
+		}
+	}
+
+	public static enum Type {
+		CLASS,
+		ABSTRACT,
+		INTERFACE;
 	}
 }

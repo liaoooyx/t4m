@@ -6,7 +6,9 @@ import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Yuxiang Liao on 2020-06-16 01:18.
@@ -91,7 +93,11 @@ public class DependencyScanner {
 	public static void main(String[] args) {
 		String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
-		EntityScanner.scan(projectInfo);
+		List<File> rawJavaFileList = new ArrayList<>();
+		DirectoryScanner.scan(projectInfo,rawJavaFileList);
+		ClassScanner.scan(projectInfo,rawJavaFileList);
+		PackageScanner.scan(projectInfo,projectInfo.getClassList());
+		ModuleScanner.scan(projectInfo,projectInfo.getPackageList());
 
 		DirectoryNode rootNode = new DirectoryNode(new File(projectInfo.getAbsolutePath()).getName(),
 		                                           projectInfo.getAbsolutePath());
