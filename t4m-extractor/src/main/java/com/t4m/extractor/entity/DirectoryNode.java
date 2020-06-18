@@ -84,6 +84,10 @@ public class DirectoryNode {
 		this.moduleInfo = moduleInfo;
 	}
 
+	public boolean hasModuleInfo() {
+		return moduleInfo != null;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -96,9 +100,6 @@ public class DirectoryNode {
 		return nextNodeList.size() > 0;
 	}
 
-	public boolean hasModuleInfo() {
-		return moduleInfo != null;
-	}
 
 	/**
 	 * 根据路径，递归创建节点链表

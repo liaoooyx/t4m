@@ -1,5 +1,8 @@
 package com.t4m.extractor.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
@@ -7,10 +10,7 @@ import javax.tools.ToolProvider;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +18,9 @@ import java.util.regex.Pattern;
  * Created by Yuxiang Liao on 2020-06-17 05:22.
  */
 public class DynamicLoader {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(DynamicLoader.class);
+
 	/**
 	 * auto fill in the java-name with code, return null if cannot find the public class
 	 *
@@ -40,12 +43,12 @@ public class DynamicLoader {
 	public static Map<String, byte[]> compile(String javaName, String javaSrc) {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager stdManager = compiler.getStandardFileManager(null, null, null);
-		JavaFileObject javaFileObject = MemoryJavaFileManager.makeStringSource(javaName, javaSrc);
+		JavaFileObject javaFileObject = MemoryJavaFileManager.initStringSource(javaName, javaSrc);
 		try (MemoryJavaFileManager manager = new MemoryJavaFileManager(stdManager)) {
 			JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, null, null,
-			                                                     Arrays.asList(javaFileObject));
+			                                                     Collections.singletonList(javaFileObject));
 			if (task.call())
-				return manager.getClassBytes();
+				return manager.getClassBytesMap();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -61,30 +64,31 @@ public class DynamicLoader {
 		try (MemoryJavaFileManager manager = new MemoryJavaFileManager(stdManager)) {
 			JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, null, null, javaFileObjectList);
 			if (task.call())
-				return manager.getClassBytes();
+				return manager.getClassBytesMap();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("",e);
 		}
 		return null;
 	}
 
 	public static class MemoryClassLoader extends URLClassLoader {
-		Map<String, byte[]> classBytes = new HashMap<String, byte[]>();
+		Map<String, byte[]> classBytesMap = new HashMap<>();
 
-		public MemoryClassLoader(Map<String, byte[]> classBytes) {
+		public MemoryClassLoader(Map<String, byte[]> classBytesMap) {
 			super(new URL[0], MemoryClassLoader.class.getClassLoader());
-			this.classBytes.putAll(classBytes);
+			this.classBytesMap.putAll(classBytesMap);
 		}
 
 		@Override
-		protected Class<?> findClass(String name) throws ClassNotFoundException {
-			byte[] buf = classBytes.get(name);
+		public Class<?> findClass(String name) throws ClassNotFoundException {
+			byte[] buf = classBytesMap.get(name);
 			if (buf == null) {
 				return super.findClass(name);
 			}
-			classBytes.remove(name);
+			classBytesMap.remove(name);
 			return defineClass(name, buf, 0, buf.length);
 		}
+
 	}
 
 }

@@ -9,11 +9,11 @@ import java.util.List;
 /**
  * Created by Yuxiang Liao on 2020-06-17 02:40.
  */
-public class PackageScanner {
+public class No3_PackageScanner {
 
 	private ProjectInfo projectInfo;
 
-	public PackageScanner(ProjectInfo projectInfo) {
+	public No3_PackageScanner(ProjectInfo projectInfo) {
 		this.projectInfo = projectInfo;
 	}
 

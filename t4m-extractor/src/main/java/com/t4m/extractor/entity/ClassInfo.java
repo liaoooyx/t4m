@@ -42,8 +42,7 @@ public class ClassInfo {
 	// private int effectiveLinesOfCode;
 	// private int commentLinesOfCode;
 
-
-	public ClassInfo(String fullyQualifiedName, String absolutePath) {
+	public ClassInfo(String absolutePath) {
 		this.fullyQualifiedName = fullyQualifiedName;
 		this.absolutePath = absolutePath;
 	}
@@ -55,13 +54,12 @@ public class ClassInfo {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ClassInfo classInfo = (ClassInfo) o;
-		return Objects.equals(fullyQualifiedName, classInfo.fullyQualifiedName) && Objects.equals(absolutePath,
-		                                                                                          classInfo.absolutePath);
+		return Objects.equals(absolutePath, classInfo.absolutePath);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fullyQualifiedName, absolutePath);
+		return Objects.hash(absolutePath);
 	}
 
 	public String getShortName() {

@@ -14,6 +14,7 @@ public class ModuleInfo {
 
 	private List<ModuleInfo> subModuleList = new ArrayList<>();
 	private ModuleInfo previousModuleInfo;
+	private String tempCompileOutputPath;
 
 	private List<PackageInfo> mainPackageList = new ArrayList<>();
 	private List<PackageInfo> testPackageList = new ArrayList<>();
@@ -95,6 +96,14 @@ public class ModuleInfo {
 		this.previousModuleInfo = previousModuleInfo;
 	}
 
+	public String getTempCompileOutputPath() {
+		return tempCompileOutputPath;
+	}
+
+	public void setTempCompileOutputPath(String tempCompileOutputPath) {
+		this.tempCompileOutputPath = tempCompileOutputPath;
+	}
+
 	public List<PackageInfo> getMainPackageList() {
 		return mainPackageList;
 	}
@@ -114,6 +123,10 @@ public class ModuleInfo {
 		} else {
 			return this.mainPackageList.get(index);
 		}
+	}
+
+	public boolean hasMainPackageList() {
+		return mainPackageList.size() > 0;
 	}
 
 	public List<PackageInfo> getTestPackageList() {
@@ -137,6 +150,10 @@ public class ModuleInfo {
 		}
 	}
 
+	public boolean hasTestPackageList() {
+		return testPackageList.size() > 0;
+	}
+
 	public List<PackageInfo> getOtherPackageList() {
 		return otherPackageList;
 	}
@@ -156,6 +173,10 @@ public class ModuleInfo {
 		} else {
 			return this.otherPackageList.get(index);
 		}
+	}
+
+	public boolean hasOtherPackageList() {
+		return otherPackageList.size() > 0;
 	}
 
 	public String getMainScopePath() {

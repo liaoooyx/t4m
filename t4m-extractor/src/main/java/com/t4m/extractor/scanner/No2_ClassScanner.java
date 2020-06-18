@@ -1,37 +1,33 @@
 package com.t4m.extractor.scanner;
 
+import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.util.DynamicLoader;
-import com.t4m.extractor.util.JavaFileUtil;
-import com.t4m.extractor.util.MemoryJavaFileManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.tools.JavaFileObject;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 通过反射来扫描类信息 Created by Yuxiang Liao on 2020-06-16 13:42.
  */
-public class ClassScanner {
+public class No2_ClassScanner {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ClassScanner.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(No2_ClassScanner.class);
 
 	private ProjectInfo projectInfo;
 
-	public ClassScanner(ProjectInfo projectInfo) {
+	public No2_ClassScanner(ProjectInfo projectInfo) {
 		this.projectInfo = projectInfo;
 	}
 
 	/**
 	 * 对于列表中的每个File对象，从中读取信息，并转化为{@code ClassInfo}对象. <br> 包括{@code absolutePath}, {@code packageFullyQualifiedName}.
 	 */
-	public List<ClassInfo> scan(List<File> rawJavaFileList) {
+	public void scan(List<File> rawJavaFileList) {
 		rawJavaFileList.forEach(javaFile -> {
 			try {
 				String line;
@@ -47,9 +43,9 @@ public class ClassScanner {
 				// 保证类的唯一性
 				String classShortName = javaFile.getName().split("\\.")[0];
 				String classFullyQualifiedName = pkgFullyQualifiedName + "." + classShortName;
-				ClassInfo classInfo = projectInfo.safeAddClassList(
-						new ClassInfo(classFullyQualifiedName, javaFile.getAbsolutePath().strip()));
+				ClassInfo classInfo = projectInfo.safeAddClassList(new ClassInfo(javaFile.getAbsolutePath().strip()));
 				classInfo.setShortName(classShortName);
+				classInfo.setFullyQualifiedName(classFullyQualifiedName);
 				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
 
 			} catch (FileNotFoundException e) {
@@ -58,27 +54,7 @@ public class ClassScanner {
 				LOGGER.error("Error happened when finding package path. [{}]", e.toString(), e);
 			}
 		});
-		return projectInfo.getClassList();
 	}
-
-	private ClassInfo initClassInfo(Class clazz, File sourceFile, String pkgFullyQualifiedName) {
-
-		// String javaSource = JavaFileUtil.readJavaSource(javaFile.getAbsolutePath());
-		// Map<String, byte[]> bytecode = DynamicLoader.compile(javaFile.getName(), javaSource);
-		// DynamicLoader.MemoryClassLoader classLoader = new DynamicLoader.MemoryClassLoader(bytecode);
-		// Class clazz = Class.forName(classFullyQualifiedName);
-		// ClassInfo classInfo = initClassInfo(clazz, javaFile, pkgFullyQualifiedName);
-		//
-		// JavaFileObject javaFileObject = MemoryJavaFileManager.makeStringSource(javaName, javaSrc);
-
-		ClassInfo classInfo = projectInfo.safeAddClassList(
-				new ClassInfo(clazz.getName(), sourceFile.getAbsolutePath().strip()));
-		classInfo.setShortName(clazz.getSimpleName());
-		classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
-		return classInfo;
-	}
-
-
 
 	/**
 	 * 补全classInfo的信息
@@ -99,18 +75,18 @@ public class ClassScanner {
 	public static void findAndAddInnerClass(Class currentClazz, ClassInfo classInfo) {
 		Arrays.stream(currentClazz.getClasses()).forEach(clazz -> {
 			ClassInfo innerClassInfo = classInfo.safeAddInnerClassList(
-					new ClassInfo(clazz.getName(), classInfo.getAbsolutePath()));
+					new ClassInfo(classInfo.getAbsolutePath()));
 			innerClassInfo.setShortName(clazz.getSimpleName());
 			innerClassInfo.setPackageFullyQualifiedName(classInfo.getFullyQualifiedName());
 			classInfo.getPackageInfo().safeAddClassList(innerClassInfo);
 		});
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException {
 		String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
+		// String rootPath = "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor";
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
-		T4MScanner t4MScanner = new T4MScanner(projectInfo);
-		t4MScanner.scanClassAndDirectory();
-		System.out.println(projectInfo);
+		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
+		t4MExtractor.scanClass();
 	}
 }

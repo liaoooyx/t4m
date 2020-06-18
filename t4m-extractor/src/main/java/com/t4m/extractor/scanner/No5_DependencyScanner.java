@@ -1,5 +1,6 @@
 package com.t4m.extractor.scanner;
 
+import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.DirectoryNode;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
@@ -13,7 +14,21 @@ import java.util.List;
 /**
  * Created by Yuxiang Liao on 2020-06-16 01:18.
  */
-public class DependencyScanner {
+public class No5_DependencyScanner {
+
+	private ProjectInfo projectInfo;
+
+	public No5_DependencyScanner(ProjectInfo projectInfo) {
+		this.projectInfo = projectInfo;
+	}
+
+	public void scan() {
+		DirectoryNode rootNode = new DirectoryNode(new File(projectInfo.getAbsolutePath()).getName(),
+		                                           projectInfo.getAbsolutePath());
+		createModuleDependency(rootNode, projectInfo);
+		createPackageDependency(projectInfo);
+		projectInfo.setRootNode(rootNode);
+	}
 
 	/**
 	 * 建立模块依赖关系
@@ -94,16 +109,9 @@ public class DependencyScanner {
 		String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
 		List<File> rawJavaFileList = new ArrayList<>();
-		T4MScanner t4MScanner = new T4MScanner(projectInfo);
-		t4MScanner.scanModuleAndPackageAndClassAndDirectory();
+		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
+		t4MExtractor.scanDependency();
 
-		DirectoryNode rootNode = new DirectoryNode(new File(projectInfo.getAbsolutePath()).getName(),
-		                                           projectInfo.getAbsolutePath());
-		createModuleDependency(rootNode, projectInfo);
-
-		createPackageDependency(projectInfo);
-
-		System.out.println(rootNode);
 	}
 
 }

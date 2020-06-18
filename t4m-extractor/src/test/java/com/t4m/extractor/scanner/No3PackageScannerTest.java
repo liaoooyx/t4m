@@ -1,17 +1,14 @@
 package com.t4m.extractor.scanner;
 
+import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ProjectInfo;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class JavaFileScannerTest {
+class No3PackageScannerTest {
 
 	static ProjectInfo projectInfo1;
 	static ProjectInfo projectInfo2;
@@ -20,15 +17,15 @@ class JavaFileScannerTest {
 	public static void initProjectInfo() {
 		projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
 		projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-
+		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo1);
+		t4MExtractor.scanPackage();
 	}
 
 	@Test
 	@DisplayName("获取项目路径下所有Java文件")
 	void scan() {
-		T4MScanner t4MScanner = new T4MScanner(projectInfo1);
-		t4MScanner.scanDirectory();
-		assertEquals(6989, t4MScanner.getRawJavaFileList().size());
+		assertEquals(1176, projectInfo1.getPackageList().size());
+
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.t4m.extractor.util;
 
-import com.t4m.extractor.scanner.ClassScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,7 @@ public class JavaFileUtil {
 	/**
 	 * 读取Java源文件内容，以字符串返回。默认文件编码为UTF-8
 	 */
-	public static String readJavaSource(String absolutePath) {
+	public static String readSourceCodeFromJavaFile(String absolutePath) {
 		//TODO 考虑文件编码的影响
 		String encoding = "UTF-8";
 		File file = new File(absolutePath);
@@ -39,7 +38,7 @@ public class JavaFileUtil {
 	public static void main(String[] args) {
 		String path =
 				"/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/src/main/java/com/t4m/extractor/util/JavaFileUtil.java";
-		String javaSource = JavaFileUtil.readJavaSource(path);
+		String javaSource = JavaFileUtil.readSourceCodeFromJavaFile(path);
 		System.out.println(javaSource);
 	}
 }

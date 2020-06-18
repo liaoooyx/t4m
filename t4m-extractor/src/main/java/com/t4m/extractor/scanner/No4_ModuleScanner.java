@@ -4,6 +4,9 @@ import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.util.PropertyUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
@@ -11,11 +14,15 @@ import java.util.List;
 /**
  * Created by Yuxiang Liao on 2020-06-17 02:40.
  */
-public class ModuleScanner {
+public class No4_ModuleScanner {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(No4_ModuleScanner.class);
+
+	private static final String TEMP_COMPILE_OUTPUT_PATH = PropertyUtil.getProperty("TEMP_COMPILE_OUTPUT_PATH");
 
 	private ProjectInfo projectInfo;
 
-	public ModuleScanner(ProjectInfo projectInfo) {
+	public No4_ModuleScanner(ProjectInfo projectInfo) {
 		this.projectInfo = projectInfo;
 	}
 
@@ -43,6 +50,8 @@ public class ModuleScanner {
 			String moduleAbsolutePath = moduleAbsolutePathWithSuffix.replaceAll(regex, "");
 			// 保证模块的唯一性
 			ModuleInfo moduleInfo = projectInfo.safeAddModuleList(new ModuleInfo(moduleAbsolutePath));
+			moduleInfo.setTempCompileOutputPath(
+					TEMP_COMPILE_OUTPUT_PATH + File.separator + moduleInfo.getRelativePath());
 			// 为模块添加子包，分为3个域：main，test，other。包括域路径和域下的包
 			// 包在加入列表中时，已去重
 			if (moduleAbsolutePathWithSuffix.contains(File.separator + "main")) {
