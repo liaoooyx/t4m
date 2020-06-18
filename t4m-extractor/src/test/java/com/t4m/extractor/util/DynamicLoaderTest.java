@@ -3,16 +3,20 @@ package com.t4m.extractor.util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.tools.*;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DynamicLoaderTest {
-	private String javaSrc = "public class TestClass{" + "public void sayHello(String msg) {" +
+	private final String javaSrc = "public class TestClass{" + "public void sayHello(String msg) {" +
 			"System.out.printf(\"Hello %s! This message from a Java String.%n\",msg);" + "}" +
 			"public int add(int a,int b){" + "return a+b;" + "}" + "}";
 

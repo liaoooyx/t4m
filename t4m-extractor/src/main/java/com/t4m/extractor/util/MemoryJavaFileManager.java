@@ -15,20 +15,19 @@ public class MemoryJavaFileManager extends ForwardingJavaFileManager {
 	 * Java source file extension.
 	 */
 	private final static String EXT = ".java";
-	private Map<String, byte[]> classBytes = new HashMap<String, byte[]>();
-	;
+	private Map<String, byte[]> classBytesMap = new HashMap<String, byte[]>();
 
 	public MemoryJavaFileManager(JavaFileManager fileManager) {
 		super(fileManager);
 	}
 
-	public Map<String, byte[]> getClassBytes() {
-		return classBytes;
+	public Map<String, byte[]> getClassBytesMap() {
+		return classBytesMap;
 	}
 
 	@Override
 	public void close() throws IOException {
-		classBytes = new HashMap<String, byte[]>();
+		classBytesMap = new HashMap<String, byte[]>();
 	}
 
 	/**
@@ -70,7 +69,7 @@ public class MemoryJavaFileManager extends ForwardingJavaFileManager {
 				public void close() throws IOException {
 					out.close();
 					ByteArrayOutputStream bos = (ByteArrayOutputStream) out;
-					classBytes.put(name, bos.toByteArray());
+					classBytesMap.put(name, bos.toByteArray());
 				}
 			};
 		}
@@ -87,7 +86,7 @@ public class MemoryJavaFileManager extends ForwardingJavaFileManager {
 		}
 	}
 
-	static JavaFileObject makeStringSource(String name, String code) {
+	public static JavaFileObject initStringSource(String name, String code) {
 		return new StringInputBuffer(name, code);
 	}
 

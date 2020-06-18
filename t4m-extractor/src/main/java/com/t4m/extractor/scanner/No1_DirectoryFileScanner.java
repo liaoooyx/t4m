@@ -1,11 +1,11 @@
 package com.t4m.extractor.scanner;
 
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileFilter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,22 +13,22 @@ import java.util.List;
 /**
  * Created by Yuxiang Liao on 2020-06-17 02:43.
  */
-public class JavaFileScanner {
+public class No1_DirectoryFileScanner {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(JavaFileScanner.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(No1_DirectoryFileScanner.class);
 
-	public static String[] exclusions = {"build"};
+	public static String[] exclusions = PropertyUtil.getProperty("EXCLUDED_PATH").split(",");
 
 	private ProjectInfo projectInfo;
 
 	private List<File> rawJavaFileList = new ArrayList<>();
 
-	public JavaFileScanner(ProjectInfo projectInfo) {
+	public No1_DirectoryFileScanner(ProjectInfo projectInfo) {
 		this.projectInfo = projectInfo;
 	}
 
 	/**
-	 * 扫描项目中所有的java文件，并存放在第二个参数{@code rawJavaFileList}中
+	 * 扫描项目中所有的java文件，并返回{@code rawJavaFileList}
 	 */
 	public List<File> scan() {
 		File root = new File(projectInfo.getAbsolutePath());
@@ -64,5 +64,10 @@ public class JavaFileScanner {
 		}
 	}
 
+	public static void main(String[] args) {
+		ProjectInfo projectInfo = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
+		No1_DirectoryFileScanner directoryFileScanner = new No1_DirectoryFileScanner(projectInfo);
+		directoryFileScanner.scan();
+	}
 
 }

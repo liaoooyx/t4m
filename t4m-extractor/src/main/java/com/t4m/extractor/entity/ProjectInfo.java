@@ -1,5 +1,9 @@
 package com.t4m.extractor.entity;
 
+import com.t4m.extractor.util.DynamicLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +14,18 @@ import java.util.Optional;
  */
 public class ProjectInfo {
 
+	public static final Logger LOGGER = LoggerFactory.getLogger(ProjectInfo.class);
+
 	private String absolutePath;
 	private String projectDirName;
 
-	private ModuleInfo rootModule; //could be null if there is not root module.
+	private DirectoryNode rootNode;
 
 	private List<ModuleInfo> moduleList = new ArrayList<>();
 	private List<PackageInfo> packageList = new ArrayList<>();
 	private List<ClassInfo> classList = new ArrayList<>();
+
+	DynamicLoader.MemoryClassLoader classLoader;
 
 	public ProjectInfo(String absolutePath) {
 		this.absolutePath = absolutePath;
@@ -40,12 +48,12 @@ public class ProjectInfo {
 		this.projectDirName = projectDirName;
 	}
 
-	public ModuleInfo getRootModule() {
-		return rootModule;
+	public DirectoryNode getRootNode() {
+		return rootNode;
 	}
 
-	public void setRootModule(ModuleInfo rootModule) {
-		this.rootModule = rootModule;
+	public void setRootNode(DirectoryNode rootNode) {
+		this.rootNode = rootNode;
 	}
 
 	public List<ModuleInfo> getModuleList() {
@@ -86,6 +94,7 @@ public class ProjectInfo {
 			this.classList.add(classInfo);
 			return classInfo;
 		} else {
+			LOGGER.debug("{} exists in {}", classInfo.getFullyQualifiedName(), classInfo.getAbsolutePath());
 			return this.classList.get(index);
 		}
 	}
@@ -129,5 +138,13 @@ public class ProjectInfo {
 			return this.packageList.get(i);
 		else
 			return null;
+	}
+
+	public DynamicLoader.MemoryClassLoader getClassLoader() {
+		return classLoader;
+	}
+
+	public void setClassLoader(DynamicLoader.MemoryClassLoader classLoader) {
+		this.classLoader = classLoader;
 	}
 }

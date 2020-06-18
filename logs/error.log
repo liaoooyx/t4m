@@ -1,0 +1,16 @@
+2020-06-17 23:14:58.933 [ERROR] [com.t4m.extractor.scanner.No1_DirectoryFileScanner:68] [thread:main]
+ Error happen when creating temporary output directory for target project java file. [java.io.IOException: No such file or directory]
+java.io.IOException: No such file or directory
+	at java.base/java.io.UnixFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1024)
+	at com.t4m.extractor.scanner.No1_DirectoryFileScanner.compileAllClass(DirectoryFileScanner.java:64)
+	at com.t4m.extractor.scanner.No1_DirectoryFileScanner.scan(DirectoryFileScanner.java:49)
+	at com.t4m.extractor.scanner.No1_DirectoryFileScanner.main(DirectoryFileScanner.java:37)
+2020-06-17 23:16:30.754 [ERROR] [com.t4m.extractor.scanner.No1_DirectoryFileScanner:68] [thread:main]
+ Error happen when creating temporary output directory for target project java file. [java.io.IOException: No such file or directory]
+java.io.IOException: No such file or directory
+	at java.base/java.io.UnixFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1024)
+	at com.t4m.extractor.scanner.No1_DirectoryFileScanner.compileAllClass(DirectoryFileScanner.java:64)
+	at com.t4m.extractor.scanner.No1_DirectoryFileScanner.scan(DirectoryFileScanner.java:49)
+	at com.t4m.extractor.scanner.No1_DirectoryFileScanner.main(DirectoryFileScanner.java:37)

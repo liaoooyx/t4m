@@ -1,5 +1,6 @@
 package com.t4m.extractor.scanner;
 
+import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.DirectoryNode;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
@@ -10,12 +11,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DependencyScannerTest {
+class No5DependencyScannerTest {
 
 	static ProjectInfo projectInfo1;
 	static ProjectInfo projectInfo2;
@@ -24,8 +23,8 @@ class DependencyScannerTest {
 	public static void initProjectInfo() {
 		projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
 		projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-		T4MScanner t4MScanner = new T4MScanner(projectInfo1);
-		t4MScanner.scanModuleAndPackageAndClassAndDirectory();
+		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo1);
+		t4MExtractor.scanModule();
 	}
 
 	@Test
@@ -35,7 +34,7 @@ class DependencyScannerTest {
 		DirectoryNode rootNode = new DirectoryNode(new File(projectInfo1.getAbsolutePath()).getName(),
 		                                           projectInfo1.getAbsolutePath());
 
-		DependencyScanner.createModuleDependency(rootNode, projectInfo1);
+		No5_DependencyScanner.createModuleDependency(rootNode, projectInfo1);
 
 		DirectoryNode directoryNodePlugins = rootNode.getNextNodeList().get(6);
 		ModuleInfo xooModule = directoryNodePlugins.getNextNodeList().get(0).getModuleInfo();
@@ -77,7 +76,7 @@ class DependencyScannerTest {
 	@Test
 	@DisplayName("测试包依赖关系")
 	void createPackageDependency() {
-		DependencyScanner.createPackageDependency(projectInfo1);
+		No5_DependencyScanner.createPackageDependency(projectInfo1);
 		PackageInfo pkg = projectInfo1.getPackageInfoByFullyQualifiedName("org.sonar.core.issue.tracking");
 		assertEquals("org.sonar.core.issue", pkg.getPreviousPackage().getFullyQualifiedName());
 	}
