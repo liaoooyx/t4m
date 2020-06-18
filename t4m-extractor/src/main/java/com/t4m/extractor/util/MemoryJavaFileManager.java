@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * Created by Yuxiang Liao on 2020-06-17 05:20.
  */
+@Deprecated
 public class MemoryJavaFileManager extends ForwardingJavaFileManager {
 	/**
 	 * Java source file extension.

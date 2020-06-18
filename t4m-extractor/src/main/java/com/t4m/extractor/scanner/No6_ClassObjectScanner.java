@@ -6,12 +6,15 @@ import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.PropertyUtil;
+import org.eclipse.jdt.core.compiler.CompilationProgress;
+import org.eclipse.jdt.core.compiler.batch.BatchCompiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.tools.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ import java.util.List;
 /**
  * Created by Yuxiang Liao on 2020-06-18 01:12.
  */
+@Deprecated
 public class No6_ClassObjectScanner {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(No6_ClassObjectScanner.class);
@@ -41,10 +45,11 @@ public class No6_ClassObjectScanner {
 			List<String> javaSourceFilePathList = getJavaSourceFilePathFromModule(moduleInfo);
 			try {
 				if (javaSourceFilePathList != null) {
-					boolean success = compile(outputDir, javaSourceFilePathList);
-					if (!success) {
-						LOGGER.info("Failed to compile module {}", moduleInfo.getRelativePath());
-					}
+					compile(outputDir, javaSourceFilePathList);
+					// boolean success =
+					// if (!success) {
+					// 	LOGGER.info("Failed to compile module {}", moduleInfo.getRelativePath());
+					// }
 				} else {
 					LOGGER.info("Module {} does not contain java file in non-test scope. \r\nPath of this module: {}",
 					            moduleInfo.getRelativePath(), moduleInfo.getAbsolutePath());
@@ -95,33 +100,38 @@ public class No6_ClassObjectScanner {
 		return javaSourceFileList;
 	}
 
-	private boolean compile(File outputDir, List<String> javaFilePathList) throws IOException {
+	private void compile(File outputDir, List<String> javaFilePathList) throws IOException {
 		StandardJavaFileManager fileManager = null;
-		try {
-			JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-			DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-			// 建立用于保存被编译文件名的对象
-			// 每个文件被保存在一个从JavaFileObject继承的类中
-			fileManager = compiler.getStandardFileManager(diagnostics, null, null);
-			JavaFileManager.Location oLocation = StandardLocation.CLASS_OUTPUT;
-			fileManager.setLocation(oLocation, Arrays.asList(outputDir));
-			Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromStrings(
-					javaFilePathList);
-			JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, null, null,
-			                                                     compilationUnits);
-			boolean result = task.call();
-			if (!result) {
-				for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-					// read error dertails from the diagnostic object
-					LOGGER.warn(diagnostic.toString());
-				}
-			}
-			return result;
-		} finally {
-			if (fileManager != null) {
-				fileManager.close();
-			}
-		}
+		CompilationProgress progress = null; // instantiate your subclass
+		BatchCompiler.compile("-classpath rt.jar A.java", new PrintWriter(System.out), new PrintWriter(System.err),
+		                      progress);
+
+		// try {
+		//
+		// 	JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		// 	DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+		// 	// 建立用于保存被编译文件名的对象
+		// 	// 每个文件被保存在一个从JavaFileObject继承的类中
+		// 	fileManager = compiler.getStandardFileManager(diagnostics, null, null);
+		// 	JavaFileManager.Location oLocation = StandardLocation.CLASS_OUTPUT;
+		// 	fileManager.setLocation(oLocation, Arrays.asList(outputDir));
+		// 	Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromStrings(
+		// 			javaFilePathList);
+		// 	JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, null, null,
+		// 	                                                     compilationUnits);
+		// 	boolean result = task.call();
+		// 	if (!result) {
+		// 		for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+		// 			// read error dertails from the diagnostic object
+		// 			LOGGER.warn(diagnostic.toString());
+		// 		}
+		// 	}
+		// 	return result;
+		// } finally {
+		// 	if (fileManager != null) {
+		// 		fileManager.close();
+		// 	}
+		// }
 	}
 
 	public static void main(String[] args) {

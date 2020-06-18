@@ -1,8 +1,12 @@
 package com.t4m.extractor;
 
+import org.eclipse.jdt.core.compiler.CompilationProgress;
+import org.eclipse.jdt.core.compiler.batch.BatchCompiler;
+
 import javax.tools.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -60,16 +64,23 @@ public class Test {
 
 	}
 
-	public static void main(String[] args) throws IOException, ClassNotFoundException {
+	public static void javac(String[] args) throws IOException, ClassNotFoundException {
 		String sOutputPath = "/Users/liao/desktop/out/temp";
 		List<String> paths = new ArrayList<String>();
-		paths.add("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Customer.java");
-		paths.add("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Price.java");
-		paths.add("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/LuxuryPrice.java");
-		paths.add("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/NewModelPrice.java");
-		paths.add("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/StandardPrice.java");
-		paths.add("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Rental.java");
-		paths.add("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Car.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Customer.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Price.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/LuxuryPrice.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/NewModelPrice.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/StandardPrice.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Rental.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Car.java");
 
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
@@ -96,5 +107,28 @@ public class Test {
 			}
 		}
 
+	}
+
+	public static void main(String[] args) {
+		List<String> paths = new ArrayList<String>();
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Customer.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Price.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/LuxuryPrice.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/NewModelPrice.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/StandardPrice.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Rental.java");
+		paths.add(
+				"/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Car.java");
+
+		StandardJavaFileManager fileManager = null;
+		CompilationProgress progress = null; // instantiate your subclass
+		BatchCompiler.compile("/Users/liao/myProjects/IdeaProjects/sonarqube -source 1.8 -classpath /Users/liao/myProjects/IdeaProjects/sonarque;rt.jar -d /Users/liao/desktop/out/ -proceedOnError[]", new PrintWriter(System.out),
+		                      new PrintWriter(System.err), progress);
 	}
 }

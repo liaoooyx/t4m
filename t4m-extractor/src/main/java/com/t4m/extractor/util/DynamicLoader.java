@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Yuxiang Liao on 2020-06-17 05:22.
  */
+@Deprecated
 public class DynamicLoader {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(DynamicLoader.class);
