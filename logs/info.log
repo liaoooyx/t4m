@@ -1,783 +1,783 @@
-2020-06-18 03:14:06.018 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:06.018 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-application
-2020-06-18 03:14:06.025 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.025 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module2/newBaseDir/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module2/newBaseDir/src
-2020-06-18 03:14:06.025 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.025 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module1/sources
-2020-06-18 03:14:06.025 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.025 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile/any-folder/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile/any-folder/sources
-2020-06-18 03:14:06.025 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.025 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile-and-overwritten-basedir/any-folder/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile-and-overwritten-basedir/any-folder/sources
-2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module2/newBaseDir/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module2/newBaseDir/src
-2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module1/sources
-2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module2/src
-2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module1/sources
-2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.026 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-build-dir/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-build-dir/sources
-2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1.feature/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1.feature/src
-2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1/sources
-2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project/sources
-2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module2/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module2/sources
-2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module12/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module12/sources
-2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.027 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module11/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module11/sources
-2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-unexisting-source-dir/module1/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-unexisting-source-dir/module1/src
-2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-explicit-unexisting-test-dir/module1/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-explicit-unexisting-test-dir/module1/src
-2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir-not-associated/modules/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir-not-associated/modules/module1/sources
-2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-test-dir/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-test-dir/sources
-2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.083 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-lib-dir/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-lib-dir/sources
-2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-binary/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-binary/sources
-2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module2/src
-2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module1/sources
-2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module2/src
-2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module1/sources
-2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir/modules/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir/modules/module1/sources
-2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.084 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/sources
-2020-06-18 03:14:06.085 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.085 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/module1/sources
-2020-06-18 03:14:06.085 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.085 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-lib/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-lib/sources
-2020-06-18 03:14:06.085 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.085 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-missing-project-name/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-missing-project-name/sources
-2020-06-18 03:14:06.085 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:06.085 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/cpd does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/cpd
-2020-06-18 03:14:09.754 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:09.754 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-scanner-engine
-2020-06-18 03:14:10.038 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:10.038 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-scanner-protocol
-2020-06-18 03:14:10.242 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:10.242 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-testing-harness
-2020-06-18 03:14:10.242 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:10.242 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-duplications/test-resources/org/sonar/duplications/cpd/CPDTest does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-duplications/test-resources/org/sonar/duplications/cpd/CPDTest
-2020-06-18 03:14:10.465 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:10.465 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-duplications
-2020-06-18 03:14:10.465 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:10.465 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-duplications/src/test/files/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-duplications/src/test/files/java
-2020-06-18 03:14:10.506 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:10.506 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-shutdowner
-2020-06-18 03:14:11.485 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:11.485 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/plugins/sonar-xoo-plugin
-2020-06-18 03:14:11.520 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:11.520 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-check-api
-2020-06-18 03:14:12.840 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:12.840 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-auth
-2020-06-18 03:14:12.840 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:12.840 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-auth/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-auth/src/testFixtures/java
-2020-06-18 03:14:12.984 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:12.984 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-gitlab
-2020-06-18 03:14:14.501 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:14.501 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-db-migration
-2020-06-18 03:14:24.804 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:24.804 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-webapi
-2020-06-18 03:14:25.033 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:25.033 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-webapi/src/main/java/org/sonar/server/rule
-2020-06-18 03:14:25.984 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:25.984 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-core
-2020-06-18 03:14:26.293 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:26.293 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-core/src/main/java/org/sonar/server/rule
-2020-06-18 03:14:26.436 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:26.436 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-ldap
-2020-06-18 03:14:28.914 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:28.914 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common
-2020-06-18 03:14:28.914 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:28.914 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-server-common/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-server-common/src/testFixtures/java
-2020-06-18 03:14:28.985 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:28.985 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common/src/main/java/org/sonar/server/security
-2020-06-18 03:14:29.074 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:29.074 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common/src/main/java/org/sonar/server/rule
-2020-06-18 03:14:29.380 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:29.380 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common/src/main/java/org/sonar/server/rule/index
-2020-06-18 03:14:30.798 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:30.798 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-db-dao
-2020-06-18 03:14:30.799 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:30.799 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-db-dao/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-db-dao/src/testFixtures/java
-2020-06-18 03:14:30.932 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:30.932 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce-task
-2020-06-18 03:14:30.932 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:30.932 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce-task/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce-task/src/testFixtures/java
-2020-06-18 03:14:31.475 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:31.475 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-main
-2020-06-18 03:14:31.779 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:31.779 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-process
-2020-06-18 03:14:31.898 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:31.898 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce-common
-2020-06-18 03:14:32.015 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:32.015 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-github
-2020-06-18 03:14:32.055 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:32.055 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-common
-2020-06-18 03:14:32.139 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:32.139 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-saml
-2020-06-18 03:14:32.349 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:32.349 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-ws
-2020-06-18 03:14:32.349 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.349 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-ws/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-ws/src/testFixtures/java
-2020-06-18 03:14:32.349 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.349 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/fake-sqale-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/fake-sqale-plugin/src
-2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-requirenew-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-requirenew-plugin/src
-2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/fake-views-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/fake-views-plugin/src
-2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-require-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-require-plugin/src
-2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-libs-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-libs-plugin/src
-2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin-v2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin-v2/src
-2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-extend-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-extend-plugin/src
-2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.350 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/fake-report-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/fake-report-plugin/src
-2020-06-18 03:14:32.351 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.351 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin/src
-2020-06-18 03:14:32.806 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:32.806 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-api
-2020-06-18 03:14:32.807 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.807 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/testFixtures/java
-2020-06-18 03:14:32.959 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:32.959 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-db-core
-2020-06-18 03:14:32.960 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:32.960 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-db-core/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-db-core/src/testFixtures/java
-2020-06-18 03:14:33.674 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:33.674 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-es
-2020-06-18 03:14:33.674 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:33.674 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-es/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-es/src/testFixtures/java
-2020-06-18 03:14:33.674 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:33.674 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce/src/test/plugins/sonar-test-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce/src/test/plugins/sonar-test-plugin/src
-2020-06-18 03:14:33.675 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:33.675 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce/src/test/plugins/sonar-test2-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce/src/test/plugins/sonar-test2-plugin/src
-2020-06-18 03:14:34.422 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:34.422 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce
-2020-06-18 03:14:35.331 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:35.331 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver
-2020-06-18 03:14:35.331 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:35.331 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce-task-projectanalysis/src/test/resources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce-task-projectanalysis/src/test/resources
-2020-06-18 03:14:38.238 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:38.238 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce-task-projectanalysis
-2020-06-18 03:14:38.238 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:38.238 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce-task-projectanalysis/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce-task-projectanalysis/src/testFixtures/java
-2020-06-18 03:14:38.238 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:38.238 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-core/src/test/projects/base-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-core/src/test/projects/base-plugin/src
-2020-06-18 03:14:38.238 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:38.238 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-core/src/test/projects/dependent-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-core/src/test/projects/dependent-plugin/src
-2020-06-18 03:14:38.861 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:38.861 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-core
-2020-06-18 03:14:38.907 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:38.907 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-markdown
-2020-06-18 03:14:38.908 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:38.908 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.sonar does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.sonar
-2020-06-18 03:14:38.908 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:38.908 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src
-2020-06-18 03:14:38.908 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:14:38.908 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.dirPrefixedWithDot does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.dirPrefixedWithDot
-2020-06-18 03:14:39.695 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:39.695 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-plugin-api
-2020-06-18 03:14:39.825 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:39.825 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-testing-ldap
-2020-06-18 03:14:39.897 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:39.897 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-ws-generator
-2020-06-18 03:14:40.872 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:40.872 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-ws
-2020-06-18 03:14:41.376 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:14:41.376 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-plugin-api-impl
-2020-06-18 03:17:45.034 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:45.034 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-application
-2020-06-18 03:17:45.037 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.037 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module2/newBaseDir/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module2/newBaseDir/src
-2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module1/sources
-2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile/any-folder/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile/any-folder/sources
-2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile-and-overwritten-basedir/any-folder/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile-and-overwritten-basedir/any-folder/sources
-2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module2/newBaseDir/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module2/newBaseDir/src
-2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.038 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module1/sources
-2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module2/src
-2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module1/sources
-2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-build-dir/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-build-dir/sources
-2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1.feature/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1.feature/src
-2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.039 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1/sources
-2020-06-18 03:17:45.040 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.040 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project/sources
-2020-06-18 03:17:45.040 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.040 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module2/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module2/sources
-2020-06-18 03:17:45.040 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.040 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module12/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module12/sources
-2020-06-18 03:17:45.040 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.040 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module11/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module11/sources
-2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-unexisting-source-dir/module1/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-unexisting-source-dir/module1/src
-2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-explicit-unexisting-test-dir/module1/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-explicit-unexisting-test-dir/module1/src
-2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir-not-associated/modules/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir-not-associated/modules/module1/sources
-2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-test-dir/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-test-dir/sources
-2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-lib-dir/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-lib-dir/sources
-2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.087 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-binary/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-binary/sources
-2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module2/src
-2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module1/sources
-2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module2/src
-2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module1/sources
-2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir/modules/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir/modules/module1/sources
-2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/sources
-2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.088 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/module1/sources
-2020-06-18 03:17:45.089 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.089 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-lib/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-lib/sources
-2020-06-18 03:17:45.089 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.089 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-missing-project-name/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-missing-project-name/sources
-2020-06-18 03:17:45.089 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:45.089 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/cpd does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/cpd
-2020-06-18 03:17:48.936 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:48.936 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-scanner-engine
-2020-06-18 03:17:49.178 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:49.178 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-scanner-protocol
-2020-06-18 03:17:49.351 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:49.351 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-testing-harness
-2020-06-18 03:17:49.352 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:49.352 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-duplications/test-resources/org/sonar/duplications/cpd/CPDTest does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-duplications/test-resources/org/sonar/duplications/cpd/CPDTest
-2020-06-18 03:17:49.552 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:49.552 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-duplications
-2020-06-18 03:17:49.552 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:49.552 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-duplications/src/test/files/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-duplications/src/test/files/java
-2020-06-18 03:17:49.615 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:49.615 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-shutdowner
-2020-06-18 03:17:50.695 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:50.695 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/plugins/sonar-xoo-plugin
-2020-06-18 03:17:50.734 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:50.734 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-check-api
-2020-06-18 03:17:52.042 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:52.042 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-auth
-2020-06-18 03:17:52.042 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:17:52.042 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-auth/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-auth/src/testFixtures/java
-2020-06-18 03:17:52.175 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:52.175 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-gitlab
-2020-06-18 03:17:53.765 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:17:53.765 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-db-migration
-2020-06-18 03:18:04.745 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:04.745 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-webapi
-2020-06-18 03:18:04.987 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:04.987 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-webapi/src/main/java/org/sonar/server/rule
-2020-06-18 03:18:06.058 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:06.058 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-core
-2020-06-18 03:18:06.358 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:06.358 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-core/src/main/java/org/sonar/server/rule
-2020-06-18 03:18:06.496 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:06.496 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-ldap
-2020-06-18 03:18:09.197 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:09.197 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common
-2020-06-18 03:18:09.198 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:09.198 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-server-common/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-server-common/src/testFixtures/java
-2020-06-18 03:18:09.298 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:09.298 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common/src/main/java/org/sonar/server/security
-2020-06-18 03:18:09.407 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:09.407 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common/src/main/java/org/sonar/server/rule
-2020-06-18 03:18:09.731 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:09.731 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common/src/main/java/org/sonar/server/rule/index
-2020-06-18 03:18:11.253 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:11.253 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-db-dao
-2020-06-18 03:18:11.254 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:11.254 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-db-dao/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-db-dao/src/testFixtures/java
-2020-06-18 03:18:11.377 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:11.377 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce-task
-2020-06-18 03:18:11.377 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:11.377 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce-task/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce-task/src/testFixtures/java
-2020-06-18 03:18:11.890 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:11.890 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-main
-2020-06-18 03:18:12.182 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:12.182 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-process
-2020-06-18 03:18:12.294 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:12.294 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce-common
-2020-06-18 03:18:12.401 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:12.401 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-github
-2020-06-18 03:18:12.439 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:12.439 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-common
-2020-06-18 03:18:12.519 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:12.519 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-saml
-2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-ws
-2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-ws/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-ws/src/testFixtures/java
-2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/fake-sqale-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/fake-sqale-plugin/src
-2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-requirenew-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-requirenew-plugin/src
-2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.723 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/fake-views-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/fake-views-plugin/src
-2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-require-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-require-plugin/src
-2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-libs-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-libs-plugin/src
-2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin-v2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin-v2/src
-2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-extend-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-extend-plugin/src
-2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/fake-report-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/fake-report-plugin/src
-2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:12.724 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin/src
-2020-06-18 03:18:13.149 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:13.149 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-api
-2020-06-18 03:18:13.149 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:13.149 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/testFixtures/java
-2020-06-18 03:18:13.297 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:13.297 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-db-core
-2020-06-18 03:18:13.297 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:13.297 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-db-core/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-db-core/src/testFixtures/java
-2020-06-18 03:18:14.037 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:14.037 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-es
-2020-06-18 03:18:14.037 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:14.037 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-es/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-es/src/testFixtures/java
-2020-06-18 03:18:14.037 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:14.037 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce/src/test/plugins/sonar-test-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce/src/test/plugins/sonar-test-plugin/src
-2020-06-18 03:18:14.037 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:14.037 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce/src/test/plugins/sonar-test2-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce/src/test/plugins/sonar-test2-plugin/src
-2020-06-18 03:18:14.806 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:14.806 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce
-2020-06-18 03:18:15.740 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:15.740 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver
-2020-06-18 03:18:15.740 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:15.740 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce-task-projectanalysis/src/test/resources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce-task-projectanalysis/src/test/resources
-2020-06-18 03:18:18.665 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:18.665 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce-task-projectanalysis
-2020-06-18 03:18:18.665 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:18.665 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce-task-projectanalysis/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce-task-projectanalysis/src/testFixtures/java
-2020-06-18 03:18:18.665 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:18.665 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-core/src/test/projects/base-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-core/src/test/projects/base-plugin/src
-2020-06-18 03:18:18.666 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:18.666 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-core/src/test/projects/dependent-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-core/src/test/projects/dependent-plugin/src
-2020-06-18 03:18:19.290 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:19.290 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-core
-2020-06-18 03:18:19.336 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:19.336 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-markdown
-2020-06-18 03:18:19.336 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:19.336 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.sonar does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.sonar
-2020-06-18 03:18:19.336 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:19.336 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src
-2020-06-18 03:18:19.336 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:18:19.336 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.dirPrefixedWithDot does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.dirPrefixedWithDot
-2020-06-18 03:18:20.119 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:20.119 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-plugin-api
-2020-06-18 03:18:20.247 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:20.247 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-testing-ldap
-2020-06-18 03:18:20.310 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:20.310 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-ws-generator
-2020-06-18 03:18:21.278 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:21.278 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-ws
-2020-06-18 03:18:21.796 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:18:21.796 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-plugin-api-impl
-2020-06-18 03:26:50.702 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:50.702 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-application
-2020-06-18 03:26:50.706 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.706 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module2/newBaseDir/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module2/newBaseDir/src
-2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module/module1/sources
-2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile/any-folder/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile/any-folder/sources
-2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile-and-overwritten-basedir/any-folder/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-with-configfile-and-overwritten-basedir/any-folder/sources
-2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module2/newBaseDir/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module2/newBaseDir/src
-2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/DeprecatedProjectReactorBuilderTest/multi-module-definitions-in-each-module-inherited/module1/sources
-2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.707 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module2/src
-2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-moduleKey/module1/sources
-2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-build-dir/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-build-dir/sources
-2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1.feature/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1.feature/src
-2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-same-prefix/module1/sources
-2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project/sources
-2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.708 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module2/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module2/sources
-2020-06-18 03:26:50.709 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.709 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module12/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module12/sources
-2020-06-18 03:26:50.711 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.711 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module11/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/big-multi-module-definitions-all-in-root/module1/module11/sources
-2020-06-18 03:26:50.786 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.786 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-unexisting-source-dir/module1/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-unexisting-source-dir/module1/src
-2020-06-18 03:26:50.786 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.786 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-explicit-unexisting-test-dir/module1/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-explicit-unexisting-test-dir/module1/src
-2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir-not-associated/modules/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir-not-associated/modules/module1/sources
-2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-test-dir/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-test-dir/sources
-2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-lib-dir/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-lib-dir/sources
-2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-binary/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-binary/sources
-2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.787 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module2/src
-2020-06-18 03:26:50.788 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.788 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-definitions-all-in-root/module1/sources
-2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module2/src
-2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-pom-in-root/module1/sources
-2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir/modules/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-with-basedir/modules/module1/sources
-2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/sources
-2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.789 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/module1/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/multi-module-repeated-id/modules/module1/module1/sources
-2020-06-18 03:26:50.790 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.790 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-lib/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-unexisting-lib/sources
-2020-06-18 03:26:50.790 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.790 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-missing-project-name/sources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/scan/ProjectReactorBuilderTest/simple-project-with-missing-project-name/sources
-2020-06-18 03:26:50.790 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:50.790 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/cpd does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-scanner-engine/src/test/resources/org/sonar/scanner/cpd
-2020-06-18 03:26:54.433 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:54.433 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-scanner-engine
-2020-06-18 03:26:54.768 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:54.768 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-scanner-protocol
-2020-06-18 03:26:55.029 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:55.029 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-testing-harness
-2020-06-18 03:26:55.029 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:55.029 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-duplications/test-resources/org/sonar/duplications/cpd/CPDTest does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-duplications/test-resources/org/sonar/duplications/cpd/CPDTest
-2020-06-18 03:26:55.345 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:55.345 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-duplications
-2020-06-18 03:26:55.346 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:55.346 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-duplications/src/test/files/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-duplications/src/test/files/java
-2020-06-18 03:26:55.420 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:55.420 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-shutdowner
-2020-06-18 03:26:56.476 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:56.476 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/plugins/sonar-xoo-plugin
-2020-06-18 03:26:56.516 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:56.516 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-check-api
-2020-06-18 03:26:57.876 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:57.876 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-auth
-2020-06-18 03:26:57.876 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:26:57.876 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-auth/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-auth/src/testFixtures/java
-2020-06-18 03:26:58.058 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:58.058 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-gitlab
-2020-06-18 03:26:59.630 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:26:59.630 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-db-migration
-2020-06-18 03:27:09.275 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:09.275 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-webapi
-2020-06-18 03:27:09.518 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:09.518 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-webapi/src/main/java/org/sonar/server/rule
-2020-06-18 03:27:10.568 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:10.568 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-core
-2020-06-18 03:27:10.854 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:10.854 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-core/src/main/java/org/sonar/server/rule
-2020-06-18 03:27:11.009 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:11.009 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-ldap
-2020-06-18 03:27:13.573 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:13.573 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common
-2020-06-18 03:27:13.574 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:13.574 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-server-common/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-server-common/src/testFixtures/java
-2020-06-18 03:27:13.688 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:13.688 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common/src/main/java/org/sonar/server/security
-2020-06-18 03:27:13.812 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:13.812 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common/src/main/java/org/sonar/server/rule
-2020-06-18 03:27:14.143 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:14.143 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-server-common/src/main/java/org/sonar/server/rule/index
-2020-06-18 03:27:15.678 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:15.678 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-db-dao
-2020-06-18 03:27:15.679 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:15.679 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-db-dao/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-db-dao/src/testFixtures/java
-2020-06-18 03:27:15.826 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:15.826 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce-task
-2020-06-18 03:27:15.827 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:15.827 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce-task/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce-task/src/testFixtures/java
-2020-06-18 03:27:16.409 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:16.409 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-main
-2020-06-18 03:27:16.740 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:16.740 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-process
-2020-06-18 03:27:16.868 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:16.868 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce-common
-2020-06-18 03:27:17.030 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:17.030 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-github
-2020-06-18 03:27:17.082 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:17.082 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-common
-2020-06-18 03:27:17.209 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:17.209 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-auth-saml
-2020-06-18 03:27:17.462 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:17.462 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-ws
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-ws/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-ws/src/testFixtures/java
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/fake-sqale-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/fake-sqale-plugin/src
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-requirenew-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-requirenew-plugin/src
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/fake-views-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/fake-views-plugin/src
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-require-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-require-plugin/src
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-libs-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-libs-plugin/src
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin-v2/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin-v2/src
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-extend-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-extend-plugin/src
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/fake-report-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/fake-report-plugin/src
-2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.463 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/test/projects/test-base-plugin/src
-2020-06-18 03:27:17.890 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:17.890 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-api
-2020-06-18 03:27:17.890 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:17.890 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-api/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-api/src/testFixtures/java
-2020-06-18 03:27:18.068 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:18.068 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-db-core
-2020-06-18 03:27:18.068 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:18.068 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-db-core/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-db-core/src/testFixtures/java
-2020-06-18 03:27:18.974 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:18.974 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver-es
-2020-06-18 03:27:18.975 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:18.975 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-webserver-es/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-webserver-es/src/testFixtures/java
-2020-06-18 03:27:18.975 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:18.975 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce/src/test/plugins/sonar-test-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce/src/test/plugins/sonar-test-plugin/src
-2020-06-18 03:27:18.975 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:18.975 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce/src/test/plugins/sonar-test2-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce/src/test/plugins/sonar-test2-plugin/src
-2020-06-18 03:27:19.806 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:19.806 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce
-2020-06-18 03:27:20.837 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:20.837 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-webserver
-2020-06-18 03:27:20.837 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:20.837 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce-task-projectanalysis/src/test/resources does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce-task-projectanalysis/src/test/resources
-2020-06-18 03:27:23.859 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:23.859 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/server/sonar-ce-task-projectanalysis
-2020-06-18 03:27:23.860 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:23.860 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/server/sonar-ce-task-projectanalysis/src/testFixtures/java does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/server/sonar-ce-task-projectanalysis/src/testFixtures/java
-2020-06-18 03:27:23.860 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:23.860 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-core/src/test/projects/base-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-core/src/test/projects/base-plugin/src
-2020-06-18 03:27:23.860 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:23.860 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-core/src/test/projects/dependent-plugin/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-core/src/test/projects/dependent-plugin/src
-2020-06-18 03:27:24.569 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:24.569 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-core
-2020-06-18 03:27:24.620 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:24.620 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-markdown
-2020-06-18 03:27:24.621 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:24.621 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.sonar does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.sonar
-2020-06-18 03:27:24.621 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:24.621 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src
-2020-06-18 03:27:24.621 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:49] [thread:main] 
+2020-06-18 03:27:24.621 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:49] [thread:main]
  Module sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.dirPrefixedWithDot does not contain java file in non-test scope. 
 Path of this module: /Users/liao/myProjects/IdeaProjects/sonarqube/sonar-plugin-api/test-resources/org/sonar/api/resources/DefaultProjectFileSystemTest/shouldExcludeDirectoriesStartingWithDot/src/org/.dirPrefixedWithDot
-2020-06-18 03:27:25.547 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:25.547 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-plugin-api
-2020-06-18 03:27:25.685 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:25.685 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-testing-ldap
-2020-06-18 03:27:25.767 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:25.767 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-ws-generator
-2020-06-18 03:27:27.001 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:27.001 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-ws
-2020-06-18 03:27:27.674 [INFO] [com.t4m.extractor.scanner.No6_ClassObjectScanner:46] [thread:main] 
+2020-06-18 03:27:27.674 [INFO] [com.t4m.extractor.scanner.No6_ASTScanner:46] [thread:main]
  Failed to compile module sonarqube/sonar-plugin-api-impl

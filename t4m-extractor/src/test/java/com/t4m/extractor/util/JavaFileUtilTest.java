@@ -14,7 +14,7 @@ class JavaFileUtilTest {
 				" */\n" + "package com.t4m.extractor.entity;";
 		String path =
 				"/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/src/main/java/com/t4m/extractor/entity/package-info.java";
-		String output = JavaFileUtil.readSourceCodeFromJavaFile(path);
+		String output = JavaFileUtil.readStringFromJavaFile(path);
 		assertEquals(javaSource, output);
 	}
 }
