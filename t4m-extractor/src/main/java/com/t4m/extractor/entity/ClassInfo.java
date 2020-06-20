@@ -1,8 +1,7 @@
 package com.t4m.extractor.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * Created by Yuxiang Liao at 2020-06-09 22:55.
@@ -16,7 +15,7 @@ public class ClassInfo {
 	private PackageInfo packageInfo;
 	private String packageFullyQualifiedName;
 
-	private ClassInfo.Type type;
+	private ClassModifier classModifier;
 
 	// 考虑内部类
 	private List<ClassInfo> innerClassList = new ArrayList<>();
@@ -34,17 +33,25 @@ public class ClassInfo {
 	// // such as "instanceSet:Set"
 	// private Set<String> instanceSet;
 	//
-	// private int numberOfMethods;
-	// private int numberOfInstances;
-	//
-	// private int sourceLinesOfCode;
-	// private int blankLines;
-	// private int effectiveLinesOfCode;
-	// private int commentLinesOfCode;
+	private int numberOfMethods;
+	private int numberOfFields;
 
-	public ClassInfo(String absolutePath) {
-		this.fullyQualifiedName = fullyQualifiedName;
+	//SLOC counts the number of lines in the source file that are not: blank or empty lines, braces, or comments.
+	Map<SLOCType, Integer> slocCounterMap = new HashMap<>();
+
+	public ClassInfo(String shortName, String absolutePath) {
+		this.shortName = shortName;
 		this.absolutePath = absolutePath;
+	}
+
+	public ClassInfo(String innerClassShortName, ClassInfo outerClass) {
+		this.shortName = innerClassShortName;
+		this.absolutePath = outerClass.absolutePath;
+		this.fullyQualifiedName = outerClass.fullyQualifiedName.replaceFirst(outerClass.shortName + "$",
+		                                                                     Matcher.quoteReplacement(
+				                                                                     innerClassShortName));
+		this.packageInfo = outerClass.packageInfo;
+		this.packageFullyQualifiedName = outerClass.packageFullyQualifiedName;
 	}
 
 	@Override
@@ -54,12 +61,12 @@ public class ClassInfo {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ClassInfo classInfo = (ClassInfo) o;
-		return Objects.equals(absolutePath, classInfo.absolutePath);
+		return Objects.equals(shortName, classInfo.shortName) && Objects.equals(absolutePath, classInfo.absolutePath);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(absolutePath);
+		return Objects.hash(shortName, absolutePath);
 	}
 
 	public String getShortName() {
@@ -102,12 +109,12 @@ public class ClassInfo {
 		this.packageFullyQualifiedName = packageFullyQualifiedName;
 	}
 
-	public Type getType() {
-		return type;
+	public ClassModifier getClassModifier() {
+		return classModifier;
 	}
 
-	public void setType(Type type) {
-		this.type = type;
+	public void setClassModifier(ClassModifier classModifier) {
+		this.classModifier = classModifier;
 	}
 
 	public List<ClassInfo> getInnerClassList() {
@@ -131,9 +138,56 @@ public class ClassInfo {
 		}
 	}
 
-	public static enum Type {
+	public int getNumberOfMethods() {
+		return numberOfMethods;
+	}
+
+	public void setNumberOfMethods(int numberOfMethods) {
+		this.numberOfMethods = numberOfMethods;
+	}
+
+	public int getNumberOfFields() {
+		return numberOfFields;
+	}
+
+	public void setNumberOfFields(int numberOfFields) {
+		this.numberOfFields = numberOfFields;
+	}
+
+	public Map<SLOCType, Integer> getSlocCounterMap() {
+		if (slocCounterMap == null || slocCounterMap.isEmpty()) {
+			initSlocCounterMap();
+		}
+		return slocCounterMap;
+	}
+
+	public void setSlocCounterMap(Map<SLOCType, Integer> slocCounterMap) {
+		this.slocCounterMap = slocCounterMap;
+	}
+
+	public Map<SLOCType, Integer> initSlocCounterMap() {
+		this.slocCounterMap.put(SLOCType.CODE_LINES_FROM_SOURCE_FILE, 0); // 不包括空白行，单独大括号和注释行
+		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE, 0); // 包括这样的注释和代码混合的行
+		this.slocCounterMap.put(SLOCType.PHYSICAL_LINES_FROM_SOURCE_FILE, 0);  // 包括代码行、大括号，不包括单独的注释行
+		this.slocCounterMap.put(SLOCType.CODE_LINES_FROM_AST, 0); // 不包括空白行，单独大括号和注释行
+		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_AST, 0); // 包括这样的注释和代码混合的行
+		this.slocCounterMap.put(SLOCType.PHYSICAL_LINES_FROM_AST, 0);  // 包括代码行、大括号，不包括单独的注释行
+		return slocCounterMap;
+	}
+
+	public static enum ClassModifier {
 		CLASS,
-		ABSTRACT,
+		ABSTRACT_CLASS,
 		INTERFACE;
 	}
+
+	public static enum SLOCType{
+		CODE_LINES_FROM_SOURCE_FILE,
+		COMMENT_LINES_FROM_SOURCE_FILE,
+		PHYSICAL_LINES_FROM_SOURCE_FILE,
+		CODE_LINES_FROM_AST,
+		COMMENT_LINES_FROM_AST,
+		PHYSICAL_LINES_FROM_AST;
+	}
+
 }

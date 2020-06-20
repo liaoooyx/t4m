@@ -53,4 +53,10 @@ public class T4MExtractor {
 		No5_DependencyScanner dependencyScanner = new No5_DependencyScanner(projectInfo);
 		dependencyScanner.scan();
 	}
+
+	public void scanASP(){
+		scanDependency();
+		No6_ASPScanner aspScanner = new No6_ASPScanner(projectInfo);
+		aspScanner.scan();
+	}
 }

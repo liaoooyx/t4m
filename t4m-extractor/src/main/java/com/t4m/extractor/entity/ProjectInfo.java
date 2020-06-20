@@ -1,6 +1,5 @@
 package com.t4m.extractor.entity;
 
-import com.t4m.extractor.util.DynamicLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +23,6 @@ public class ProjectInfo {
 	private List<ModuleInfo> moduleList = new ArrayList<>();
 	private List<PackageInfo> packageList = new ArrayList<>();
 	private List<ClassInfo> classList = new ArrayList<>();
-
-	DynamicLoader.MemoryClassLoader classLoader;
 
 	public ProjectInfo(String absolutePath) {
 		this.absolutePath = absolutePath;
@@ -138,13 +135,5 @@ public class ProjectInfo {
 			return this.packageList.get(i);
 		else
 			return null;
-	}
-
-	public DynamicLoader.MemoryClassLoader getClassLoader() {
-		return classLoader;
-	}
-
-	public void setClassLoader(DynamicLoader.MemoryClassLoader classLoader) {
-		this.classLoader = classLoader;
 	}
 }
