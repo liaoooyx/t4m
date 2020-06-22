@@ -1,5 +1,6 @@
 package com.t4m.extractor.entity;
 
+import com.t4m.extractor.util.EntityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ public class ProjectInfo {
 	private List<ModuleInfo> moduleList = new ArrayList<>();
 	private List<PackageInfo> packageList = new ArrayList<>();
 	private List<ClassInfo> classList = new ArrayList<>();
+	private List<ClassInfo> innerClassList = new ArrayList<>();
 
 	public ProjectInfo(String absolutePath) {
 		this.absolutePath = absolutePath;
@@ -96,6 +98,47 @@ public class ProjectInfo {
 		}
 	}
 
+	public List<ClassInfo> getInnerClassList() {
+		return innerClassList;
+	}
+
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public ClassInfo safeAddInnerClassList(ClassInfo classInfo) {
+		int index;
+		if ((index = innerClassList.indexOf(classInfo)) == -1) {
+			this.innerClassList.add(classInfo);
+			return classInfo;
+		} else {
+			LOGGER.debug("{} exists in {}", classInfo.getFullyQualifiedName(), classInfo.getAbsolutePath());
+			return this.innerClassList.get(index);
+		}
+	}
+
+	public void setInnerClassList(List<ClassInfo> innerClassList) {
+		this.innerClassList = innerClassList;
+	}
+
+	/**
+	 * 优先从当前模块中查找类，如果当前模块中没有，则从整个项目中查找 一般情况下，全限定类名是不重复的，因此只需要从整个项目中发现即可；但不排除包名和类目都重复的情况（比如多个版本）这种情况默认先从当前的包中查询。
+	 */
+	public ClassInfo getClassInfoByFullyQualifiedName(String fullyQualifiedClassName, ModuleInfo moduleInfo) {
+		List<ClassInfo> tempClassList = new ArrayList<>();
+		if (moduleInfo.hasMainPackageList()) {
+			moduleInfo.getMainPackageList().forEach(tempModule -> {
+				tempClassList.addAll(tempModule.getClassList());
+			});
+		} else if (moduleInfo.hasOtherPackageList()) {
+			moduleInfo.getOtherPackageList().forEach(tempModule -> {
+				tempClassList.addAll(tempModule.getClassList());
+			});
+		}
+		return EntityUtil.getClassByQualifiedName(tempClassList, fullyQualifiedClassName);
+	}
+
+
 	public List<PackageInfo> getPackageList() {
 		return packageList;
 	}
@@ -120,9 +163,30 @@ public class ProjectInfo {
 	/**
 	 * 根据全限定包名获取对象，返回获得的第一个对象，如果不存在则返回{@code null}.
 	 */
-	public PackageInfo getPackageInfoByFullyQualifiedName(String fullyQualifiedName) {
-		Optional<PackageInfo> optProjectInfo = packageList.stream().filter(
-				pkg -> fullyQualifiedName.equals(pkg.getFullyQualifiedName())).findFirst();
+	public PackageInfo getPackageInfoByFullyQualifiedName(String fullyQualifiedPackageName) {
+		return findPackageInfoFromList(packageList, fullyQualifiedPackageName);
+	}
+
+	/**
+	 * 优先从当前模块中查找包，如果当前模块中没有，则从整个项目中查找 一般情况下，全限定包名是不重复的，因此只需要从整个项目中发现即可；但不排除包名重复的情况，这种情况默认先从当前的包中查询。
+	 */
+	public PackageInfo getPackageInfoByFullyQualifiedName(String fullyQualifiedPackageName, ModuleInfo moduleInfo) {
+		PackageInfo packageInfo = null;
+		if (moduleInfo.hasMainPackageList()) {
+			packageInfo = findPackageInfoFromList(moduleInfo.getMainPackageList(), fullyQualifiedPackageName);
+		} else if (moduleInfo.hasOtherPackageList()) {
+			packageInfo = findPackageInfoFromList(moduleInfo.getOtherPackageList(), fullyQualifiedPackageName);
+		}
+		if (packageInfo != null) {
+			return packageInfo;
+		} else {
+			return findPackageInfoFromList(packageList, fullyQualifiedPackageName);
+		}
+	}
+
+	private PackageInfo findPackageInfoFromList(List<PackageInfo> pkgInfoList, String fullyQualifiedPackageName) {
+		Optional<PackageInfo> optProjectInfo = pkgInfoList.stream().filter(
+				pkg -> fullyQualifiedPackageName.equals(pkg.getFullyQualifiedName())).findFirst();
 		return optProjectInfo.orElse(null);
 	}
 

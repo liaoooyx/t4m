@@ -16,15 +16,19 @@ public class ClassInfo {
 	private String packageFullyQualifiedName;
 
 	private ClassModifier classModifier;
+	private boolean innerClass = false;
 
 	// 考虑内部类
+	private ClassInfo outerClass;
 	private List<ClassInfo> innerClassList = new ArrayList<>();
 
-	// private ClassInfo hasAbstractClass;
-	// private Set<ClassInfo> hasInterfaceClass;
-	//
-	// private List<ClassInfo> dependsOn;
-	// private List<ClassInfo> dependedBy;
+	private ClassInfo supperClass;
+	private List<ClassInfo> interfaceList = new ArrayList<>();
+
+	//依赖（引用的类）
+	private List<ClassInfo> activeDependencyList = new ArrayList<>();
+	//被依赖（被其他类引用）
+	private List<ClassInfo> passiveDependencyList = new ArrayList<>();
 	//
 	// private Set<MethodInfo> methodSet;
 	//
@@ -117,6 +121,22 @@ public class ClassInfo {
 		this.classModifier = classModifier;
 	}
 
+	public boolean isInnerClass() {
+		return innerClass;
+	}
+
+	public void setInnerClass(boolean innerClass) {
+		this.innerClass = innerClass;
+	}
+
+	public ClassInfo getOuterClass() {
+		return outerClass;
+	}
+
+	public void setOuterClass(ClassInfo outerClass) {
+		this.outerClass = outerClass;
+	}
+
 	public List<ClassInfo> getInnerClassList() {
 		return innerClassList;
 	}
@@ -135,6 +155,77 @@ public class ClassInfo {
 			return classInfo;
 		} else {
 			return this.innerClassList.get(index);
+		}
+	}
+
+	public ClassInfo getSupperClass() {
+		return supperClass;
+	}
+
+	public void setSupperClass(ClassInfo supperClass) {
+		this.supperClass = supperClass;
+	}
+
+	public List<ClassInfo> getInterfaceList() {
+		return interfaceList;
+	}
+
+	public void setInterfaceList(List<ClassInfo> interfaceList) {
+		this.interfaceList = interfaceList;
+	}
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public ClassInfo safeAddInterfaceList(ClassInfo classInfo) {
+		int index;
+		if ((index = interfaceList.indexOf(classInfo)) == -1) {
+			this.interfaceList.add(classInfo);
+			return classInfo;
+		} else {
+			return this.interfaceList.get(index);
+		}
+	}
+
+	public List<ClassInfo> getActiveDependencyList() {
+		return activeDependencyList;
+	}
+
+	public void setActiveDependencyList(List<ClassInfo> activeDependencyList) {
+		this.activeDependencyList = activeDependencyList;
+	}
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public ClassInfo safeAddActiveDependencyList(ClassInfo classInfo) {
+		int index;
+		if ((index = activeDependencyList.indexOf(classInfo)) == -1) {
+			this.activeDependencyList.add(classInfo);
+			return classInfo;
+		} else {
+			return this.activeDependencyList.get(index);
+		}
+	}
+
+	public List<ClassInfo> getPassiveDependencyList() {
+		return passiveDependencyList;
+	}
+
+	public void setPassiveDependencyList(List<ClassInfo> passiveDependencyList) {
+		this.passiveDependencyList = passiveDependencyList;
+	}
+
+	/**
+	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
+	 */
+	public ClassInfo safeAddPassiveDependencyList(ClassInfo classInfo) {
+		int index;
+		if ((index = passiveDependencyList.indexOf(classInfo)) == -1) {
+			this.passiveDependencyList.add(classInfo);
+			return classInfo;
+		} else {
+			return this.passiveDependencyList.get(index);
 		}
 	}
 
@@ -181,7 +272,7 @@ public class ClassInfo {
 		INTERFACE;
 	}
 
-	public static enum SLOCType{
+	public static enum SLOCType {
 		CODE_LINES_FROM_SOURCE_FILE,
 		COMMENT_LINES_FROM_SOURCE_FILE,
 		PHYSICAL_LINES_FROM_SOURCE_FILE,
@@ -190,4 +281,8 @@ public class ClassInfo {
 		PHYSICAL_LINES_FROM_AST;
 	}
 
+	@Override
+	public String toString() {
+		return "ClassInfo{" + "fullyQualifiedName='" + fullyQualifiedName + '\'' + '}';
+	}
 }

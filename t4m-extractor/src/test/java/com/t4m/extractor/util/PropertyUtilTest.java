@@ -8,7 +8,7 @@ class PropertyUtilTest {
 
 	@Test
 	void testGetProperty(){
-		assertEquals("build",PropertyUtil.getProperty("EXCLUDED_PATH"));
+		assertEquals("/build",PropertyUtil.getProperty("EXCLUDED_PATH"));
 	}
 
 }

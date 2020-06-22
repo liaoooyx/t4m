@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Yuxiang Liao on 2020-06-16 01:18.
@@ -37,22 +38,51 @@ public class No5_DependencyScanner {
 
 		// 建立模块层级关系
 		projectInfo.getModuleList().forEach(moduleInfo -> {
+
 			// 补充module信息
 			String moduleSuffixPath = moduleInfo.getAbsolutePath().replace(projectInfo.getAbsolutePath(), "")
 			                                    .replaceFirst(File.separator, "").strip();
 			String moduleRelativePath = projectInfo.getProjectDirName() + File.separator + moduleSuffixPath;
 			String[] temp = moduleRelativePath.split(File.separator);
-			String shortName = temp[temp.length - 1];
-			moduleInfo.setRelativePath(moduleRelativePath);
-			moduleInfo.setShortName(shortName);
+			String moduleShortName = temp[temp.length - 1];
+			if (Objects.equals(rootNode.getName(),moduleShortName)){
+				// 根模块 (可以不存在根模块)
+				rootNode.setModuleInfo(moduleInfo);
+				moduleInfo.setRelativePath(File.separator);
+			}else {
+				//子模块
+				moduleInfo.setRelativePath(moduleRelativePath);
+			}
+			moduleInfo.setShortName(moduleShortName);
 			// 根据模块的相对路径，递归生成节点
 			if (!"".equals(moduleSuffixPath)) {
 				String[] fileNames = moduleRelativePath.split(File.separator);
+				//排除根模块
 				String[] excludeRootDir = Arrays.copyOfRange(fileNames, 1, fileNames.length);
-				DirectoryNode.initDirectoryNodeLink(excludeRootDir, rootNode, moduleInfo);
+				initDirectoryNodeLink(excludeRootDir, rootNode, moduleInfo);
 			}
 		});
 		recursiveModuleDependency(rootNode, null);
+	}
+
+	/**
+	 * 根据路径，递归创建节点链表
+	 */
+	public static void initDirectoryNodeLink(String[] names, DirectoryNode previousNode, ModuleInfo moduleInfo) {
+		if (names.length > 0) {
+			String name = names[0];
+			DirectoryNode currentNode = previousNode.safeAddNodeList(
+					new DirectoryNode(name, previousNode.getAbsolutePath() + File.separator + name));
+			// 当currentNode为新节点时，它的previousNode为空，需要赋值
+			if (currentNode.getPreviousNode() == null) {
+				currentNode.setPreviousNode(previousNode);
+			}
+			String[] nextNames = Arrays.copyOfRange(names, 1, names.length);
+			initDirectoryNodeLink(nextNames, currentNode, moduleInfo);
+		} else {
+			// 已经遍历到底部，则添加模块信息
+			previousNode.setModuleInfo(moduleInfo);
+		}
 	}
 
 	/**

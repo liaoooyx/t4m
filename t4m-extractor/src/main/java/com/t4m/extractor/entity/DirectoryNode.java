@@ -100,25 +100,4 @@ public class DirectoryNode {
 		return nextNodeList.size() > 0;
 	}
 
-
-	/**
-	 * 根据路径，递归创建节点链表
-	 */
-	public static void initDirectoryNodeLink(String[] names, DirectoryNode previousNode, ModuleInfo moduleInfo) {
-		if (names.length > 0) {
-			String name = names[0];
-			DirectoryNode currentNode = previousNode.safeAddNodeList(
-					new DirectoryNode(name, previousNode.getAbsolutePath() + File.separator + name));
-			// 当currentNode为新节点时，它的previousNode为空，需要赋值
-			if (currentNode.getPreviousNode() == null) {
-				currentNode.setPreviousNode(previousNode);
-			}
-			String[] nextNames = Arrays.copyOfRange(names, 1, names.length);
-			initDirectoryNodeLink(nextNames, currentNode, moduleInfo);
-		} else {
-			// 已经遍历到底部，则添加模块信息
-			previousNode.setModuleInfo(moduleInfo);
-		}
-	}
-
 }

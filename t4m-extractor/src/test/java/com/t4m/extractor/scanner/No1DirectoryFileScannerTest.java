@@ -6,26 +6,26 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class No1DirectoryFileScannerTest {
 
-	static ProjectInfo projectInfo1;
-	static ProjectInfo projectInfo2;
+	static ProjectInfo projectInfo;
 
 	@BeforeAll
 	public static void initProjectInfo() {
-		projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
-		projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-
+		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
+		projectInfo = new ProjectInfo(path);
 	}
 
 	@Test
 	@DisplayName("获取项目路径下所有Java文件")
 	void scan() {
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo1);
+		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanDirectory();
-		assertEquals(7012, t4MExtractor.getRawJavaFileList().size());
+		assertEquals(15, t4MExtractor.getRawJavaFileList().size());
 	}
 
 }

@@ -64,6 +64,7 @@ public class No4_ModuleScanner {
 				moduleInfo.safeAddOtherPackageList(packageInfo);
 				moduleInfo.setOtherScopePath(moduleAbsolutePathWithSuffix);
 			}
+			packageInfo.setModuleInfo(moduleInfo);
 		});
 		return projectInfo.getModuleList();
 	}

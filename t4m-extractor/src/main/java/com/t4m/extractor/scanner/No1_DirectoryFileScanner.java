@@ -17,7 +17,7 @@ public class No1_DirectoryFileScanner {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(No1_DirectoryFileScanner.class);
 
-	public static String[] exclusions = PropertyUtil.getProperty("EXCLUDED_PATH").split(",");
+	public static String[] exclusions = PropertyUtil.getProperty("EXCLUDED_PATH").split(";");
 
 	private ProjectInfo projectInfo;
 
@@ -48,7 +48,7 @@ public class No1_DirectoryFileScanner {
 				@Override
 				public boolean accept(File pathname) {
 					for (String exclusion : exclusions) {
-						if (exclusion.equals(pathname.getName()))
+						if (pathname.getAbsolutePath().contains(exclusion))
 							return false;
 					}
 					return true;

@@ -12,6 +12,8 @@ public class PackageInfo {
 	private String fullyQualifiedName; // = (null), if doesn't have package
 	private String absolutePath;
 
+	private ModuleInfo moduleInfo;
+
 	private PackageInfo previousPackage;
 	private List<PackageInfo> subPackageList = new ArrayList<>();
 	private List<ClassInfo> classList = new ArrayList<>();
@@ -52,6 +54,14 @@ public class PackageInfo {
 
 	public void setAbsolutePath(String absolutePath) {
 		this.absolutePath = absolutePath;
+	}
+
+	public ModuleInfo getModuleInfo() {
+		return moduleInfo;
+	}
+
+	public void setModuleInfo(ModuleInfo moduleInfo) {
+		this.moduleInfo = moduleInfo;
 	}
 
 	public PackageInfo getPreviousPackage() {
@@ -103,4 +113,5 @@ public class PackageInfo {
 			return this.classList.get(index);
 		}
 	}
+
 }

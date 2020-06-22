@@ -1,9 +1,9 @@
 package com.t4m.extractor.scanner;
 
 import com.t4m.extractor.T4MExtractor;
-import com.t4m.extractor.entity.ModuleInfo;
-import com.t4m.extractor.entity.PackageInfo;
+import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.scanner.ast.InnerClassVisitor;
 import com.t4m.extractor.scanner.ast.T4MVisitor;
 import com.t4m.extractor.util.JavaFileUtil;
 import com.t4m.extractor.util.PropertyUtil;
@@ -13,11 +13,6 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.tools.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,11 +31,29 @@ public class No6_ASPScanner {
 	}
 
 	public void scan() {
-		projectInfo.getClassList().forEach(classInfo -> {
+		scanInnerClass();
+		scanMetrics();
+	}
+
+	private void scanInnerClass() {
+		List<ClassInfo> classInfoList = projectInfo.getClassList();
+		for (int i = 0; i < classInfoList.size(); i++) {
+			ClassInfo classInfo = classInfoList.get(i);
 			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
-			compilationUnit.accept(new T4MVisitor(classInfo));
-			System.out.println();
-		});
+			InnerClassVisitor innerClassVisitor = new InnerClassVisitor(classInfo, projectInfo);
+			compilationUnit.accept(innerClassVisitor);
+		}
+	}
+
+
+	private void scanMetrics() {
+		List<ClassInfo> classInfoList = projectInfo.getClassList();
+		for (int i = 0; i < classInfoList.size(); i++) {
+			ClassInfo classInfo = classInfoList.get(i);
+			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
+			T4MVisitor t4MVisitor = new T4MVisitor(classInfo, projectInfo);
+			compilationUnit.accept(t4MVisitor);
+		}
 	}
 
 	/**
@@ -55,7 +68,7 @@ public class No6_ASPScanner {
 	}
 
 	public static void main(String[] args) {
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor";
+		String rootPath = "/Users/liao/myProjects/IdeaProjects/JSimulationProject";
 		// String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);

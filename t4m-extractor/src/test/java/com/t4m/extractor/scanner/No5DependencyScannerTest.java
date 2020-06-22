@@ -6,6 +6,7 @@ import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.util.EntityUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,68 +17,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class No5DependencyScannerTest {
 
-	static ProjectInfo projectInfo1;
-	static ProjectInfo projectInfo2;
+	static ProjectInfo projectInfo;
 
 	@BeforeAll
 	public static void initProjectInfo() {
-		projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
-		projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo1);
-		t4MExtractor.scanModule();
+		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
+		projectInfo = new ProjectInfo(path);
+		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
+		t4MExtractor.scanDependency();
 	}
 
 	@Test
 	@DisplayName("测试模块依赖关系")
 	void createModuleDependency() {
 
-		DirectoryNode rootNode = new DirectoryNode(new File(projectInfo1.getAbsolutePath()).getName(),
-		                                           projectInfo1.getAbsolutePath());
-
-		No5_DependencyScanner.createModuleDependency(rootNode, projectInfo1);
-
-		DirectoryNode directoryNodePlugins = rootNode.getNextNodeList().get(6);
-		ModuleInfo xooModule = directoryNodePlugins.getNextNodeList().get(0).getModuleInfo();
-		PackageInfo xooPackage = xooModule.getMainPackageList().get(0);
-		ClassInfo xooClass = xooPackage.getClassList().get(0);
-		PackageInfo xooTestPackage = xooModule.getMainPackageList().get(1);
-
-		assertAll(
-				()->{
-					assertEquals("sonarqube", rootNode.getName());
-					assertEquals(16, rootNode.getNextNodeList().size());
-				},
-				()->{
-					assertEquals("plugins", directoryNodePlugins.getName());
-					assertNull(directoryNodePlugins.getModuleInfo());
-					assertEquals(1, directoryNodePlugins.getNextNodeList().size());
-				},
-				()->{
-					assertEquals("/Users/liao/myProjects/IdeaProjects/sonarqube/plugins/sonar-xoo-plugin",
-					             xooModule.getAbsolutePath());
-					assertEquals(9, xooModule.getMainPackageList().size());
-				},
-				()->{
-					assertEquals("org.sonar.xoo", xooPackage.getFullyQualifiedName());
-					assertEquals(4, xooPackage.getClassList().size());
-				},
-				()->{
-					assertEquals("Xoo", xooClass.getShortName());
-					assertEquals(xooPackage, xooClass.getPackageInfo());
-				},
-				()->{
-					assertEquals("org.sonar.xoo.test",xooTestPackage.getFullyQualifiedName());
-					assertEquals(3,xooTestPackage.getClassList().size());
-				}
-		);
+		ModuleInfo moduleInfo1 = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
+		ModuleInfo subModule = EntityUtil.getModuleByShortName(moduleInfo1.getSubModuleList(), "submodule1");
+		ModuleInfo moduleInfo2 = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "submodule1");
+		assertEquals(moduleInfo2, subModule);
 
 	}
 
 	@Test
 	@DisplayName("测试包依赖关系")
 	void createPackageDependency() {
-		No5_DependencyScanner.createPackageDependency(projectInfo1);
-		PackageInfo pkg = projectInfo1.getPackageInfoByFullyQualifiedName("org.sonar.core.issue.tracking");
-		assertEquals("org.sonar.core.issue", pkg.getPreviousPackage().getFullyQualifiedName());
+		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
+		PackageInfo rootPkg = EntityUtil.getPackageByQualifiedName(moduleInfo.getMainPackageList(),
+		                                                           "com.simulation.core");
+		PackageInfo pkg = EntityUtil.getPackageByQualifiedName(rootPkg.getSubPackageList(),
+		                                                           "com.simulation.core.foo");
+		assertNotNull(pkg);
 	}
 }

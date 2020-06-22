@@ -6,25 +6,26 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class No3PackageScannerTest {
 
-	static ProjectInfo projectInfo1;
-	static ProjectInfo projectInfo2;
+	static ProjectInfo projectInfo;
 
 	@BeforeAll
 	public static void initProjectInfo() {
-		projectInfo1 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
-		projectInfo2 = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/comp5911m/refactor");
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo1);
+		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
+		projectInfo = new ProjectInfo(path);
+		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanPackage();
 	}
 
 	@Test
 	@DisplayName("获取项目路径下所有Java文件")
 	void scan() {
-		assertEquals(1176, projectInfo1.getPackageList().size());
+		assertEquals(5, projectInfo.getPackageList().size());
 
 	}
 
