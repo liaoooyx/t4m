@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: common_head('UK Place Infomation')">
+</head>
+<body>
+<div th:replace="fragments/breadcrumb :: breadcrumb"></div>
+<h2 th:text="${fieldName}">show</h2>
+<div>
+    <div th:each="i:${list}" class="list-group list-group-flush">
+        <a th:unless="${#strings.isEmpty(i)}" th:text="${i}"
+           th:href="@{${#httpServletRequest.getRequestURL()} + '/' +${#strings.replace(#strings.replace(i,'/',' '),'''',' ')}}"
+           class="list-group-item list-group-item-action">
+        </a>
+        <a th:if="${#strings.isEmpty(i)}" th:text="unknowns" class="list-group-item list-group-item-action disabled"
+           tabindex="-1"
+           aria-disabled="true"></a>
+    </div>
+</div>
+</body>
+</html>

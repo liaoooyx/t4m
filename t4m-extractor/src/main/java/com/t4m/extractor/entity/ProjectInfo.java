@@ -19,7 +19,7 @@ public class ProjectInfo {
 	private String absolutePath;
 	private String projectDirName;
 
-	private DirectoryNode rootNode;
+	private DirHierarchyNode rootDirHierarchyNode;
 
 	private List<ModuleInfo> moduleList = new ArrayList<>();
 	private List<PackageInfo> packageList = new ArrayList<>();
@@ -47,12 +47,12 @@ public class ProjectInfo {
 		this.projectDirName = projectDirName;
 	}
 
-	public DirectoryNode getRootNode() {
-		return rootNode;
+	public DirHierarchyNode getRootDirHierarchyNode() {
+		return rootDirHierarchyNode;
 	}
 
-	public void setRootNode(DirectoryNode rootNode) {
-		this.rootNode = rootNode;
+	public void setRootDirHierarchyNode(DirHierarchyNode rootDirHierarchyNode) {
+		this.rootDirHierarchyNode = rootDirHierarchyNode;
 	}
 
 	public List<ModuleInfo> getModuleList() {

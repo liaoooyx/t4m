@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  thymeleaf:
+    cache: false
+    mode: HTML
+
+# 在controller 内通过 @Value("${api.location.licences.url}")，即可绑定参数值到字段上。
+api:
+  location:
+    root:
+      url: http://localhost:8088/api/map
+    licences:
+      url: http://localhost:8088/api/licences

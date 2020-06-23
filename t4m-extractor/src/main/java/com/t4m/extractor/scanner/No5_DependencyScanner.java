@@ -1,7 +1,7 @@
 package com.t4m.extractor.scanner;
 
 import com.t4m.extractor.T4MExtractor;
-import com.t4m.extractor.entity.DirectoryNode;
+import com.t4m.extractor.entity.DirHierarchyNode;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
@@ -24,17 +24,17 @@ public class No5_DependencyScanner {
 	}
 
 	public void scan() {
-		DirectoryNode rootNode = new DirectoryNode(new File(projectInfo.getAbsolutePath()).getName(),
-		                                           projectInfo.getAbsolutePath());
+		DirHierarchyNode rootNode = new DirHierarchyNode(new File(projectInfo.getAbsolutePath()).getName(),
+		                                                 projectInfo.getAbsolutePath());
 		createModuleDependency(rootNode, projectInfo);
 		createPackageDependency(projectInfo);
-		projectInfo.setRootNode(rootNode);
+		projectInfo.setRootDirHierarchyNode(rootNode);
 	}
 
 	/**
 	 * 建立模块依赖关系
 	 */
-	public static void createModuleDependency(DirectoryNode rootNode, ProjectInfo projectInfo) {
+	public static void createModuleDependency(DirHierarchyNode rootNode, ProjectInfo projectInfo) {
 
 		// 建立模块层级关系
 		projectInfo.getModuleList().forEach(moduleInfo -> {
@@ -68,11 +68,11 @@ public class No5_DependencyScanner {
 	/**
 	 * 根据路径，递归创建节点链表
 	 */
-	public static void initDirectoryNodeLink(String[] names, DirectoryNode previousNode, ModuleInfo moduleInfo) {
+	public static void initDirectoryNodeLink(String[] names, DirHierarchyNode previousNode, ModuleInfo moduleInfo) {
 		if (names.length > 0) {
 			String name = names[0];
-			DirectoryNode currentNode = previousNode.safeAddNodeList(
-					new DirectoryNode(name, previousNode.getAbsolutePath() + File.separator + name));
+			DirHierarchyNode currentNode = previousNode.safeAddNodeList(
+					new DirHierarchyNode(name, previousNode.getAbsolutePath() + File.separator + name));
 			// 当currentNode为新节点时，它的previousNode为空，需要赋值
 			if (currentNode.getPreviousNode() == null) {
 				currentNode.setPreviousNode(previousNode);
@@ -88,7 +88,7 @@ public class No5_DependencyScanner {
 	/**
 	 * 深度优先，递归遍历节点
 	 */
-	private static void recursiveModuleDependency(DirectoryNode currentNode, ModuleInfo previousModuleInfo) {
+	private static void recursiveModuleDependency(DirHierarchyNode currentNode, ModuleInfo previousModuleInfo) {
 		if (currentNode.hasModuleInfo()) {
 			if (previousModuleInfo != null) {
 				currentNode.getModuleInfo().setPreviousModuleInfo(previousModuleInfo);

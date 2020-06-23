@@ -3,7 +3,11 @@ build/
 .gradle/
 .gradletasknamecache
 classes/
-out/
+
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
 
 # Maven (in integration tests)
 target/
@@ -21,6 +25,16 @@ out/
 .project
 .settings
 .externalToolBuilders
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
 
 # Mac OS X
 .DS_Store

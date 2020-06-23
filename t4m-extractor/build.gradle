@@ -1,5 +1,5 @@
 dependencies {
-    implementation "org.eclipse.jdt:org.eclipse.jdt.core:3.22.0"
+    implementation 'org.eclipse.jdt:org.eclipse.jdt.core:3.22.0'
 }
 
-
+jar.enabled = true
