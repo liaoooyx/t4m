@@ -1,12 +1,15 @@
 package com.t4m.extractor.entity;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.regex.Matcher;
 
 /**
  * Created by Yuxiang Liao at 2020-06-09 22:55.
  */
-public class ClassInfo {
+public class ClassInfo implements Serializable {
+
+	private static final long serialVersionUID = 2417256803742933401L;
 
 	private String shortName;
 	private String fullyQualifiedName; // fully-qualified class name

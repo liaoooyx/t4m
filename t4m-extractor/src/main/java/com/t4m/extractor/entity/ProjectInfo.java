@@ -5,16 +5,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-06-09 14:02.
  */
-public class ProjectInfo {
+public class ProjectInfo implements Serializable {
+
+	private static final long serialVersionUID = 3553544572450478178L;
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ProjectInfo.class);
+
+	private Date createDate;
 
 	private String absolutePath;
 	private String projectDirName;
@@ -27,8 +31,43 @@ public class ProjectInfo {
 	private List<ClassInfo> innerClassList = new ArrayList<>();
 
 	public ProjectInfo(String absolutePath) {
+		this(new Date(), absolutePath);
+		String[] paths = absolutePath.split(File.separator);
+		this.projectDirName = paths[paths.length - 1];
+
+	}
+
+	public ProjectInfo(Date createDate, String absolutePath) {
+		this.createDate = createDate;
 		this.absolutePath = absolutePath;
-		this.projectDirName = new File(absolutePath).getName();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ProjectInfo that = (ProjectInfo) o;
+		return Objects.equals(createDate, that.createDate) && Objects.equals(absolutePath, that.absolutePath) &&
+				Objects.equals(projectDirName, that.projectDirName) && Objects.equals(rootDirHierarchyNode,
+				                                                                      that.rootDirHierarchyNode) &&
+				Objects.equals(moduleList, that.moduleList) && Objects.equals(packageList, that.packageList) &&
+				Objects.equals(classList, that.classList) && Objects.equals(innerClassList, that.innerClassList);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(createDate, absolutePath, projectDirName, rootDirHierarchyNode, moduleList, packageList,
+		                    classList, innerClassList);
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 
 	public String getAbsolutePath() {

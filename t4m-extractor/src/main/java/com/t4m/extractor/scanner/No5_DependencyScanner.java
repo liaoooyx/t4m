@@ -48,7 +48,7 @@ public class No5_DependencyScanner {
 			if (Objects.equals(rootNode.getName(),moduleShortName)){
 				// 根模块 (可以不存在根模块)
 				rootNode.setModuleInfo(moduleInfo);
-				moduleInfo.setRelativePath(File.separator);
+				moduleInfo.setRelativePath(moduleShortName);
 			}else {
 				//子模块
 				moduleInfo.setRelativePath(moduleRelativePath);

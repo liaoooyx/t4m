@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JavaFileUtilTest {
+class FileUtilTest {
 
 	@Test
 	void readJavaSource() {
@@ -14,7 +14,7 @@ class JavaFileUtilTest {
 				" */\n" + "package com.t4m.extractor.entity;";
 		String path =
 				"/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/src/main/java/com/t4m/extractor/entity/package-info.java";
-		String output = JavaFileUtil.readStringFromJavaFile(path);
+		String output = FileUtil.readStringFromJavaSourceFile(path);
 		assertEquals(javaSource, output);
 	}
 }

@@ -1,12 +1,14 @@
 package com.t4m.extractor.entity;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-06-11 09:29.
  */
-public class ModuleInfo {
+public class ModuleInfo implements Serializable {
 
+	private static final long serialVersionUID = 4453849096224682890L;
 	//shortName和fullyQualifiedName都
 	private String shortName;
 	private String relativePath; // 从项目路径开始的相对路径
@@ -14,7 +16,6 @@ public class ModuleInfo {
 
 	private List<ModuleInfo> subModuleList = new ArrayList<>();
 	private ModuleInfo previousModuleInfo;
-	private String tempCompileOutputPath;
 
 	private List<PackageInfo> mainPackageList = new ArrayList<>();
 	private List<PackageInfo> testPackageList = new ArrayList<>();
@@ -94,14 +95,6 @@ public class ModuleInfo {
 
 	public void setPreviousModuleInfo(ModuleInfo previousModuleInfo) {
 		this.previousModuleInfo = previousModuleInfo;
-	}
-
-	public String getTempCompileOutputPath() {
-		return tempCompileOutputPath;
-	}
-
-	public void setTempCompileOutputPath(String tempCompileOutputPath) {
-		this.tempCompileOutputPath = tempCompileOutputPath;
 	}
 
 	public List<PackageInfo> getMainPackageList() {

@@ -8,14 +8,14 @@ import java.io.*;
 /**
  * Created by Yuxiang Liao on 2020-06-17 06:01.
  */
-public class JavaFileUtil {
+public class FileUtil {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(JavaFileUtil.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 
 	/**
 	 * 读取Java源文件内容，以字符串返回。默认文件编码为UTF-8
 	 */
-	public static String readStringFromJavaFile(String absolutePath) {
+	public static String readStringFromJavaSourceFile(String absolutePath) {
 		//TODO 考虑文件编码的影响
 		String encoding = "UTF-8";
 		File file = new File(absolutePath);
@@ -47,10 +47,22 @@ public class JavaFileUtil {
 		return new String(in).toCharArray();
 	}
 
+	/**
+	 * 判断目录是否存储，如果不存在则创建目录
+	 */
+	public static boolean checkAndMakeDirectory(String dirPath) {
+		File dir = new File(dirPath);
+		if (!dir.exists()) {
+			return dir.mkdirs();
+		} else {
+			return true;
+		}
+	}
+
 	public static void main(String[] args) {
 		String path =
 				"/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/src/main/java/com/t4m/extractor/util/JavaFileUtil.java";
-		String javaSource = JavaFileUtil.readStringFromJavaFile(path);
+		String javaSource = FileUtil.readStringFromJavaSourceFile(path);
 		System.out.println(javaSource);
 	}
 }

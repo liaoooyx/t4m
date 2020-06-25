@@ -5,8 +5,11 @@ import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.scanner.ast.InnerClassVisitor;
 import com.t4m.extractor.scanner.ast.T4MVisitor;
-import com.t4m.extractor.util.JavaFileUtil;
+import com.t4m.extractor.util.FileUtil;
 import com.t4m.extractor.util.PropertyUtil;
+import com.t4m.extractor.util.TimeUtil;
+import com.t4m.serializer.T4MProjectInfoSerializer;
+import com.t4m.serializer.T4MSerializer;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -60,7 +63,7 @@ public class No6_ASPScanner {
 	 * 获取一个类对应的AST（抽象语法树）的编译单元，该单元可视为AST的根节点。 用法1：通过传入一个ASTVisitor，完成对类的所有处理。 用法2：通过AST编译单元，获取类的各个部分。
 	 */
 	public static CompilationUnit getCompilationUnit(String javaFilePath) {
-		char[] charArray = JavaFileUtil.readCharArrayFromJavaSourceFile(javaFilePath);
+		char[] charArray = FileUtil.readCharArrayFromJavaSourceFile(javaFilePath);
 		ASTParser astParser = ASTParser.newParser(AST.JLS14);
 		astParser.setSource(charArray);
 		astParser.setKind(ASTParser.K_COMPILATION_UNIT);

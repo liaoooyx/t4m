@@ -1,12 +1,15 @@
 package com.t4m.extractor.entity;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 用于调整模块的依赖关系， Created by Yuxiang Liao on 2020-06-12 15:36.
  */
-public class DirHierarchyNode {
+public class DirHierarchyNode implements Serializable {
 
+	private static final long serialVersionUID = -3065831265679039732L;
+	
 	private String name; // 当前文件夹名字
 	private String absolutePath;
 	private DirHierarchyNode previousNode; // 上一层文件夹名

@@ -2,15 +2,12 @@ package com.t4m.extractor;
 
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.PackageInfo;
-import com.t4m.extractor.util.JavaFileUtil;
+import com.t4m.extractor.util.FileUtil;
 import org.eclipse.jdt.core.dom.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Yuxiang Liao on 2020-06-17 20:17.
@@ -19,7 +16,7 @@ public class Test {
 
 
 	public static CompilationUnit getCompilationUnit(String javaFilePath) {
-		char[] charArray = JavaFileUtil.readCharArrayFromJavaSourceFile(javaFilePath);
+		char[] charArray = FileUtil.readCharArrayFromJavaSourceFile(javaFilePath);
 		ASTParser astParser = ASTParser.newParser(AST.JLS14);
 		astParser.setSource(charArray);
 		astParser.setEnvironment(null, new String[]{

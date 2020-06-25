@@ -1,12 +1,14 @@
 package com.t4m.extractor.entity;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 根据{@code absolutePath}来判断对象是否一致
  */
-public class PackageInfo {
+public class PackageInfo implements Serializable {
 
+	private static final long serialVersionUID = 1661151854125377881L;
 	public static String EMPTY_IDENTIFIER = "(null)";
 
 	private String fullyQualifiedName; // = (null), if doesn't have package

@@ -28,7 +28,6 @@ class No5DependencyScannerTest {
 	@Test
 	@DisplayName("测试模块依赖关系")
 	void createModuleDependency() {
-
 		ModuleInfo moduleInfo1 = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		ModuleInfo subModule = EntityUtil.getModuleByShortName(moduleInfo1.getSubModuleList(), "submodule1");
 		ModuleInfo moduleInfo2 = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "submodule1");
@@ -37,13 +36,22 @@ class No5DependencyScannerTest {
 	}
 
 	@Test
+	@DisplayName("测试模块信息完整性")
+	void testModuleInfoIntegrity() {
+		ModuleInfo rootModule = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
+		assertEquals("JSimulation", rootModule.getRelativePath());
+		ModuleInfo subModule1 = EntityUtil.getModuleByShortName(rootModule.getSubModuleList(), "submodule1");
+		assertNotNull(subModule1);
+		assertEquals("JSimulation/submodule1", subModule1.getRelativePath());
+	}
+
+	@Test
 	@DisplayName("测试包依赖关系")
 	void createPackageDependency() {
 		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		PackageInfo rootPkg = EntityUtil.getPackageByQualifiedName(moduleInfo.getMainPackageList(),
 		                                                           "com.simulation.core");
-		PackageInfo pkg = EntityUtil.getPackageByQualifiedName(rootPkg.getSubPackageList(),
-		                                                           "com.simulation.core.foo");
+		PackageInfo pkg = EntityUtil.getPackageByQualifiedName(rootPkg.getSubPackageList(), "com.simulation.core.foo");
 		assertNotNull(pkg);
 	}
 }
