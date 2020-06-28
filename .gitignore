@@ -55,3 +55,6 @@ Desktop.ini
 
 # Log
 logs/
+
+# Persistence
+db/

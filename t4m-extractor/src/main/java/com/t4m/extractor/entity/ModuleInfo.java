@@ -25,6 +25,9 @@ public class ModuleInfo implements Serializable {
 	private String testScopePath;
 	private String otherScopePath;
 
+	private int numberOfClasses;
+	private int numberOfInnerClasses;
+
 	public ModuleInfo(String absolutePath) {
 		this.absolutePath = absolutePath;
 	}
@@ -194,5 +197,43 @@ public class ModuleInfo implements Serializable {
 
 	public void setOtherScopePath(String otherScopePath) {
 		this.otherScopePath = otherScopePath;
+	}
+
+	public int getNumberOfClasses() {
+		if (numberOfClasses == 0) {
+			if (this.hasMainPackageList()) {
+				for (PackageInfo packageInfo : this.getMainPackageList()) {
+					numberOfClasses += packageInfo.getNumberOfClasses();
+				}
+			} else if (this.hasOtherPackageList()) {
+				for (PackageInfo packageInfo : this.getOtherPackageList()) {
+					numberOfClasses += packageInfo.getNumberOfClasses();
+				}
+			}
+		}
+		return numberOfClasses;
+	}
+
+	public void setNumberOfClasses(int numberOfClasses) {
+		this.numberOfClasses = numberOfClasses;
+	}
+
+	public int getNumberOfInnerClasses() {
+		if (numberOfInnerClasses == 0) {
+			if (this.hasMainPackageList()) {
+				for (PackageInfo packageInfo : this.getMainPackageList()) {
+					numberOfInnerClasses += packageInfo.getNumberOfInnerClasses();
+				}
+			} else if (this.hasOtherPackageList()) {
+				for (PackageInfo packageInfo : this.getOtherPackageList()) {
+					numberOfInnerClasses += packageInfo.getNumberOfInnerClasses();
+				}
+			}
+		}
+		return numberOfInnerClasses;
+	}
+
+	public void setNumberOfInnerClasses(int numberOfInnerClasses) {
+		this.numberOfInnerClasses = numberOfInnerClasses;
 	}
 }

@@ -90,15 +90,18 @@ public class No5_DependencyScanner {
 	 */
 	private static void recursiveModuleDependency(DirHierarchyNode currentNode, ModuleInfo previousModuleInfo) {
 		if (currentNode.hasModuleInfo()) {
+			// 非根节点
 			if (previousModuleInfo != null) {
 				currentNode.getModuleInfo().setPreviousModuleInfo(previousModuleInfo);
 				previousModuleInfo.safeAddSubModuleList(currentNode.getModuleInfo());
 			}
+			// 根节点
 			if (currentNode.hasNextNode()) {
 				currentNode.getNextNodeList().forEach(
 						node -> recursiveModuleDependency(node, currentNode.getModuleInfo()));
 			}
 		} else {
+			// 当前节点无模块
 			if (currentNode.hasNextNode()) {
 				currentNode.getNextNodeList().forEach(node -> recursiveModuleDependency(node, previousModuleInfo));
 			}

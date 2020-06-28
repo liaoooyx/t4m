@@ -59,6 +59,14 @@ public class FileUtil {
 		}
 	}
 
+	public static boolean checkAndMakeDirectory(File dir) {
+		if (!dir.exists()) {
+			return dir.mkdirs();
+		} else {
+			return true;
+		}
+	}
+
 	public static void main(String[] args) {
 		String path =
 				"/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/src/main/java/com/t4m/extractor/util/JavaFileUtil.java";

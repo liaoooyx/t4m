@@ -1,0 +1,86 @@
+<!-- module -->
+<div class="col-xl-12">
+	<div class="card">
+		<div class="table-responsive card-table">
+			<table class="table align-items-center table-flush">
+				<thead class="thead-light">
+				<tr>
+					<th scope="col">Module</th>
+					<th scope="col">Package Number</th>
+					<th scope="col">Class + (InnerClass) Number</th>
+				</tr>
+				</thead>
+				<tbody th:each="moduleMap : ${moduleMapList}">
+				<tr th:object="${moduleMap}"
+				    th:class="(*{type} eq 'new')? 'text-success' : ((*{type} eq 'delete')? 'text-danger': '')"
+				    th:styleappend="(*{type} eq 'delete')? 'text-decoration: line-through;' : ''">
+					<th scope="row" th:text="(*{type} eq 'new') ? '(new) '+ *{moduleName} : *{moduleName}"></th>
+					<td th:text="*{numOfPkg}">num of pkg</td>
+					<td th:text="*{numOfClass}+' + ('+*{numOfInnerClass}+')'">num of class</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- package -->
+<div class="col-xl-12">
+	<div class="card">
+		<div class="card-header border-0 py-2">
+		</div>
+		<div class="table-responsive card-table">
+			<table class="table align-items-center table-flush">
+				<thead class="thead-light">
+				<tr>
+					<th scope="col">Package</th>
+					<th scope="col">of Module</th>
+					<th scope="col">Class + (InnerClass) Number</th>
+				</tr>
+				</thead>
+				<tbody th:each="packageMap : ${packageMapList}">
+				<tr th:object="${packageMap}"
+				    th:class="(*{type} eq 'new')? 'text-success' : ((*{type} eq 'delete')? 'text-danger': '')"
+				    th:styleappend="(*{type} eq 'delete')? 'text-decoration: line-through;' : ''">
+					<th scope="row" th:text="(*{type} eq 'new') ? '(new) '+ *{packageName} : *{packageName}"></th>
+					<td th:text="*{packageInfo.getModuleInfo().getRelativePath()}"></td>
+					<td th:text="*{numOfClass}+' + ('+*{numOfInnerClass}+')'"></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<!-- class -->
+<div class="col-xl-12">
+	<div class="card">
+		<div class="card-header border-0 py-2">
+		</div>
+		<div class="table-responsive card-table">
+			<!-- Projects table -->
+			<table class="table align-items-center table-flush">
+				<thead class="thead-light">
+				<tr>
+					<th scope="col">Class</th>
+					<th scope="col">of Package</th>
+					<th scope="col">of Module</th>
+					<th scope="col">Field Number</th>
+					<th scope="col">Method Number</th>
+					<th scope="col">SLOC</th>
+				</tr>
+				</thead>
+				<tbody th:each="classMap : ${classMapList}">
+				<tr th:object="${classMap}"
+				    th:class="(*{type} eq 'new')? 'text-success' : ((*{type} eq 'delete')? 'text-danger': '')"
+				    th:styleappend="(*{type} eq 'delete')? 'text-decoration: line-through;' : ''">
+					<th scope="row" th:text="(*{type} eq 'new') ? '(new) '+ *{className} : *{className}"></th>
+					<td th:text="*{classInfo.getPackageInfo().getFullyQualifiedName()}"></td>
+					<td th:text="*{classInfo.getPackageInfo().getModuleInfo().getRelativePath()}"></td>
+					<td th:text="*{numOfFields}"></td>
+					<td th:text="*{numOfMethods}"></td>
+					<td th:text="*{SLOC}"></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

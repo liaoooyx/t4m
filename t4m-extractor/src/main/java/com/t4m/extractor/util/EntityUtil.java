@@ -85,6 +85,15 @@ public class EntityUtil {
 	}
 
 	/**
+	 * 在列表中查找指定的模块名
+	 */
+	public static ModuleInfo getModuleByRelativeName(List<ModuleInfo> moduleInfoList, String relativeName) {
+		Optional<ModuleInfo> target = moduleInfoList.stream().filter(
+				moduleInfo -> relativeName.equals(moduleInfo.getRelativePath())).findFirst();
+		return target.orElse(null);
+	}
+
+	/**
 	 * 在列表中查找指定的全限定包名
 	 */
 	public static PackageInfo getPackageByQualifiedName(List<PackageInfo> packageInfoList, String qualifiedName) {

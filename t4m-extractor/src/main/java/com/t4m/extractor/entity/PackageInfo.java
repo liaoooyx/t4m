@@ -23,6 +23,9 @@ public class PackageInfo implements Serializable {
 	// private Map<PackageInfo, Integer> dependsOn;
 	// private Map<PackageInfo, Integer> dependedBy;
 
+	private int numberOfClasses;
+	private int numberOfInnerClasses;
+
 	public PackageInfo(String absolutePath) {
 		this.absolutePath = absolutePath;
 	}
@@ -114,6 +117,31 @@ public class PackageInfo implements Serializable {
 		} else {
 			return this.classList.get(index);
 		}
+	}
+
+	public int getNumberOfClasses() {
+		if (numberOfClasses == 0) {
+			numberOfClasses += this.getClassList().size();
+		}
+		return numberOfClasses;
+	}
+
+	public void setNumberOfClasses(int numberOfClasses) {
+		this.numberOfClasses = numberOfClasses;
+	}
+
+	//TODO 如果确实没有内部类，那么每次都要重新计算显得多余
+	public int getNumberOfInnerClasses() {
+		if (numberOfInnerClasses == 0) {
+			for (ClassInfo classInfo : this.getClassList()) {
+				numberOfInnerClasses += classInfo.getInnerClassList().size();
+			}
+		}
+		return numberOfInnerClasses;
+	}
+
+	public void setNumberOfInnerClasses(int numberOfInnerClasses) {
+		this.numberOfInnerClasses = numberOfInnerClasses;
 	}
 
 }

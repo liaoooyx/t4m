@@ -17,6 +17,10 @@ public class T4MExtractor {
 		this.projectInfo = projectInfo;
 	}
 
+	public T4MExtractor(String projectPath) {
+		this.projectInfo = new ProjectInfo(projectPath);
+	}
+
 	public ProjectInfo getProjectInfo() {
 		return projectInfo;
 	}
@@ -25,38 +29,43 @@ public class T4MExtractor {
 		return rawJavaFileList;
 	}
 
-	public void scanDirectory(){
+	public void scanDirectory() {
 		No1_DirectoryFileScanner directoryFileScanner = new No1_DirectoryFileScanner(projectInfo);
 		rawJavaFileList = directoryFileScanner.scan();
 	}
 
-	public void scanClass(){
+	public void scanClass() {
 		scanDirectory();
 		No2_ClassScanner classScanner = new No2_ClassScanner(projectInfo);
 		classScanner.scan(rawJavaFileList);
 	}
 
-	public void scanPackage(){
+	public void scanPackage() {
 		scanClass();
 		No3_PackageScanner packageScanner = new No3_PackageScanner(projectInfo);
 		packageScanner.scan();
 	}
 
-	public void scanModule(){
+	public void scanModule() {
 		scanPackage();
 		No4_ModuleScanner moduleScanner = new No4_ModuleScanner(projectInfo);
 		moduleScanner.scan();
 	}
 
-	public void scanDependency(){
+	public void scanDependency() {
 		scanModule();
 		No5_DependencyScanner dependencyScanner = new No5_DependencyScanner(projectInfo);
 		dependencyScanner.scan();
 	}
 
-	public void scanASP(){
+	public void scanASP() {
 		scanDependency();
 		No6_ASPScanner aspScanner = new No6_ASPScanner(projectInfo);
 		aspScanner.scan();
+	}
+
+	public ProjectInfo extractProjectInfo() {
+		scanASP();
+		return projectInfo;
 	}
 }

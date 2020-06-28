@@ -2,6 +2,7 @@ package com.t4m.extractor.scanner;
 
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.exception.DuplicatedInnerClassFoundedException;
 import com.t4m.extractor.util.EntityUtil;
@@ -196,13 +197,21 @@ class No6_ASPScannerTest {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.bar.SimpleClassC");
 		List<ClassInfo> inferfaceList = classInfo.getInterfaceList();
-		assertEquals(2,inferfaceList.size());
+		assertEquals(2, inferfaceList.size());
 		ClassInfo classInfo_interfaceA = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                                    "com.simulation.core.bar.SimpleInterfaceA");
 		ClassInfo classInfo_interfaceC = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                                    "com.simulation.core.bar.SimpleInterfaceC");
 		assertTrue(inferfaceList.contains(classInfo_interfaceA));
 		assertTrue(inferfaceList.contains(classInfo_interfaceC));
+	}
+
+	@Test
+	@DisplayName("测试ModuleInfo下的类数量和内部类数量")
+	void testNumberOfClassAndInnerClass() {
+		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
+		assertEquals(14,moduleInfo.getNumberOfClasses());
+		assertEquals(4,moduleInfo.getNumberOfInnerClasses());
 	}
 
 }
