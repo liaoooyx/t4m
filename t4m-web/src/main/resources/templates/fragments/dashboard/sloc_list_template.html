@@ -1,0 +1,49 @@
+<div class="card">
+	<div class="table-responsive">
+		<table class="table align-items-center table-flush">
+			<thead class="thead-light">
+			<tr>
+				<th></th>
+				<th scope="col">Name</th>
+				<th scope="col">Type</th>
+				<th scope="col">Logic Code Line<br>(Source File)</th>
+				<th scope="col">Logic Code Line<br>(Eclipse AST)</th>
+				<th scope="col">Physical Code Line<br>(Source File)</th>
+				<th scope="col">Physical Code Line<br>(Eclipse AST)</th>
+				<th scope="col">All Comment Line<br>(Source File)</th>
+				<th scope="col">Document Comment Line<br>(Eclipse AST)</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<th scope="row" th:if="${!isRoot}">
+					<a href="javascript:void(0);"
+					   th:onclick="getNextLevel([[${previousName}]],[[${previousType}]])">(Go back)</a>
+				</th>
+			</tr>
+			<tr th:each="colMap : ${dataList}" th:object="${colMap}" th:inline="text">
+				<td>
+					<a class="sloc-table-chart-icon" href="javascript:void(0);" data-toggle="modal"
+					   data-target="#sloc_row_model" th:onclick="showTableChart([[*{name}]],[[*{type}]])">
+						<i class="fas fa-chart-bar"></i>
+					</a>
+				</td>
+				<th scope="row" th:if="*{type} eq 'module' or *{type} eq 'package'">
+					<a href="javascript:void(0);"
+					   th:onclick="getNextLevel([[*{name}]],[[*{type}]])">
+						[[*{name}]]</a>
+				</th>
+				<th scope="row" th:unless="*{type} eq 'module' or *{type} eq 'package'" th:text="*{name}">
+				</th>
+				<td th:text="*{type}"></td>
+				<td th:text="*{logicCodeLineFromSourceFile}"></td>
+				<td th:text="*{logicCodeLineFromAST}"></td>
+				<td th:text="*{physicalCodeLineFromSourceFile}"></td>
+				<td th:text="*{physicalCodeLineFromAST}"></td>
+				<td th:text="*{allCommentLineFromSourceFile}"></td>
+				<td th:text="*{docCommentLineFromAST}"></td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

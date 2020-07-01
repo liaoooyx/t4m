@@ -48,7 +48,7 @@ public class No2_ClassScanner {
 						pkgFullyQualifiedName = line.replaceFirst("package", "").replace(";", "").strip();
 					}
 					// sloc计数
-					SLOCMetric.SLOCCounterFromRawFile(currentLine, slocCounterMap);
+					SLOCMetric.slocCounterFromRawFile(currentLine, slocCounterMap);
 				}
 				classInfo.setFullyQualifiedName(pkgFullyQualifiedName + "." + classShortName);
 				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);

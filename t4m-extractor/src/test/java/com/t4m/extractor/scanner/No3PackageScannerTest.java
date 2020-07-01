@@ -23,7 +23,7 @@ class No3PackageScannerTest {
 	}
 
 	@Test
-	@DisplayName("获取项目路径下所有Java文件")
+	@DisplayName("测试包数量")
 	void scan() {
 		assertEquals(5, projectInfo.getPackageList().size());
 

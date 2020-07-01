@@ -25,7 +25,7 @@ class No4ModuleScannerTest {
 	}
 
 	@Test
-	@DisplayName("获取项目路径下所有Java文件")
+	@DisplayName("测试模块数量")
 	void scan() {
 		assertEquals(2, projectInfo.getModuleList().size());
 	}

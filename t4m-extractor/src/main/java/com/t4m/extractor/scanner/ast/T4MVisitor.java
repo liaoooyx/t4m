@@ -211,7 +211,7 @@ public class T4MVisitor extends ASTVisitor {
 			sourceLines = node.getParent().toString().split(System.lineSeparator());
 		}
 		Map<ClassInfo.SLOCType, Integer> slocCounterMap = currentClassInfo.getSlocCounterMap();
-		Arrays.stream(sourceLines).forEach(line -> SLOCMetric.SLOCCounterFromAST(line, slocCounterMap));
+		Arrays.stream(sourceLines).forEach(line -> SLOCMetric.slocCounterFromAST(line, slocCounterMap));
 		currentClassInfo.setSlocCounterMap(slocCounterMap);
 		// 类的类型
 		if (node.isInterface()) {

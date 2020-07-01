@@ -1,18 +1,18 @@
 package com.t4m.web.service;
 
+import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
+import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.util.SLOCUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-06-26 13:57.
@@ -31,33 +31,35 @@ public class PackageService {
 		ProjectInfo previous = projectInfos[1];
 
 		List<Map<String, Object>> packageMapList = new ArrayList<>();
-		if (previous == null){
+		if (previous == null) {
 			for (PackageInfo packageInfo : current.getPackageList()) {
 				Map<String, Object> map = initMapList(packageInfo);
-				map.put("type", "old");
+				map.put("newness", "old");
 				packageMapList.add(map);
 			}
-		}else {
+		} else {
 			//添加新、旧记录
 			for (PackageInfo packageInfo : current.getPackageList()) {
 				Map<String, Object> map = initMapList(packageInfo);
 				PackageInfo pkgOfPreviousRecord = EntityUtil.getPackageByQualifiedName(previous.getPackageList(),
-				                                                                       packageInfo.getFullyQualifiedName());
+				                                                                       packageInfo
+						                                                                       .getFullyQualifiedName());
 				if (pkgOfPreviousRecord == null) {
-					map.put("type", "new");
+					map.put("newness", "new");
 				} else {
-					map.put("type", "old");
+					map.put("newness", "old");
 				}
 				packageMapList.add(map);
 			}
 			//添加已删除记录
 			for (PackageInfo packageInfo : previous.getPackageList()) {
 				PackageInfo pkgOfCurrentRecord = EntityUtil.getPackageByQualifiedName(current.getPackageList(),
-				                                                                      packageInfo.getFullyQualifiedName());
+				                                                                      packageInfo
+						                                                                      .getFullyQualifiedName());
 				if (pkgOfCurrentRecord == null) {
 					//	说明该包在当前记录中已被删除
 					Map<String, Object> map = initMapList(packageInfo);
-					map.put("type", "delete");
+					map.put("newness", "delete");
 					packageMapList.add(map);
 				}
 			}
@@ -75,5 +77,59 @@ public class PackageService {
 		map.put("numOfClass", String.valueOf(packageInfo.getNumberOfClasses()));
 		map.put("numOfInnerClass", String.valueOf(packageInfo.getNumberOfInnerClasses()));
 		return map;
+	}
+
+	/**
+	 * 用于dashboard-sloc的列表数据。根据包名，获取其下的类的SLOC，以及子包的SLOC
+	 */
+	public List<Map<String, Object>> getSLOCRecordByPackageName(String packageName, int index) {
+		ProjectInfo projectInfo = ProjectRecord.getProjectInfoRecordByIndex(index)[0];
+		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), packageName);
+		List<Map<String, Object>> rows = new ArrayList<>();
+		// 子包的SLOC（直接类，和下一层的子包）
+		for (PackageInfo subPkg : packageInfo.getSubPackageList()) {
+			Map<String, Object> rowForSubPkg = SLOCUtil.initSLOCRowRecordForFrontPage(
+					subPkg.getFullyQualifiedName(), "package", subPkg.getSumOfSLOCForCurrentAndSubPkg());
+			rows.add(rowForSubPkg);
+		}
+		// 当前包的SLOC（直接类，不包括子包）
+		Map<String, Object> rowForPkg = SLOCUtil.initSLOCRowRecordForFrontPage(
+				packageInfo.getFullyQualifiedName(), "current package", packageInfo.getSumOfSLOCForCurrentPkg());
+		rows.add(rowForPkg);
+		for (ClassInfo classInfo : packageInfo.getClassList()) {
+			Map<String, Object> rowForClass = SLOCUtil.initSLOCRowRecordForFrontPage(
+					classInfo.getFullyQualifiedName(), "class", classInfo.getSumOfSLOC());
+			rows.add(rowForClass);
+		}
+		return rows;
+	}
+
+	/**
+	 * 返回用于dashboard-sloc页面的表格弹框的chart数据集
+	 */
+	public List<String[]> getSLOCTableChartDataset(String pkgName, boolean includeSubPkgSLOC) {
+		List<String[]> dataset = new ArrayList<>();
+		dataset.add(new String[]{"time", "Logic Code Line (Source File)", "Physical Code Line (Source File)",
+		                         "All Comment Line", "Logic Code Line (AST)", "Physical Code Line (AST)",
+		                         "JavaDoc Comment Line"});
+		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), pkgName);
+			String[] tempRow = new String[7];
+			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			Arrays.fill(tempRow, 1, 6, null);
+			if (packageInfo != null){
+				int[] slocArray;
+				if (includeSubPkgSLOC){
+					slocArray = packageInfo.getSumOfSLOCForCurrentAndSubPkg();
+				}else {
+					slocArray = packageInfo.getSumOfSLOCForCurrentPkg();
+				}
+				for (int i = 0; i < 6; i++) {
+					tempRow[i + 1] = String.valueOf(slocArray[i]);
+				}
+			}
+			dataset.add(tempRow);
+		}
+		return dataset;
 	}
 }

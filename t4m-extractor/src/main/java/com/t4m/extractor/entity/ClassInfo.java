@@ -1,5 +1,7 @@
 package com.t4m.extractor.entity;
 
+import com.t4m.extractor.metric.SLOCMetric;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -259,14 +261,28 @@ public class ClassInfo implements Serializable {
 		this.slocCounterMap = slocCounterMap;
 	}
 
+	/**
+	 * 如果是内部类，那么它关于source file的三项将为0，因为无法从source file中判断出内部类。 如果是外部类，那么它的六项都包括内部类
+	 * 对于AST格式的SLOC，它的数值与源文件可能不一致，因为AST格式会对部分代码行合并，比如方法注解和方法声明会合并为一行
+	 */
 	public Map<SLOCType, Integer> initSlocCounterMap() {
-		this.slocCounterMap.put(SLOCType.CODE_LINES_FROM_SOURCE_FILE, 0); // 不包括空白行，单独大括号和注释行
-		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE, 0); // 包括这样的注释和代码混合的行
-		this.slocCounterMap.put(SLOCType.PHYSICAL_LINES_FROM_SOURCE_FILE, 0);  // 包括代码行、大括号，不包括单独的注释行
-		this.slocCounterMap.put(SLOCType.CODE_LINES_FROM_AST, 0); // 不包括空白行，单独大括号和注释行
-		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_AST, 0); // 包括这样的注释和代码混合的行
-		this.slocCounterMap.put(SLOCType.PHYSICAL_LINES_FROM_AST, 0);  // 包括代码行、大括号，不包括单独的注释行
+		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, 0); // 不包括空白行，单独大括号和注释行
+		this.slocCounterMap.put(SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE, 0); // 包括这样的注释和代码混合的行
+		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE, 0);  // 包括代码行、大括号，不包括单独的注释行
+		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_AST, 0); // 不包括空白行，单独大括号和注释行
+		this.slocCounterMap.put(SLOCType.DOC_COMMENT_LINES_FROM_AST, 0); // 不包括"//"注释行，只包括"/**/"的doc注释行
+		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_AST, 0);  // 包括代码行、大括号，不包括单独的注释行
 		return slocCounterMap;
+	}
+
+	/**
+	 * 获取自身的SLOC，以数组形式返回。索引与对应的值，查看{@link SLOCMetric.sumSLOC()}
+	 */
+	public int[] getSumOfSLOC() {
+		int[] slocArray = new int[6];
+		Arrays.fill(slocArray, 0);
+		SLOCMetric.sumSLOC(slocArray, slocCounterMap);
+		return slocArray;
 	}
 
 	public static enum ClassModifier {
@@ -276,12 +292,12 @@ public class ClassInfo implements Serializable {
 	}
 
 	public static enum SLOCType {
-		CODE_LINES_FROM_SOURCE_FILE,
-		COMMENT_LINES_FROM_SOURCE_FILE,
-		PHYSICAL_LINES_FROM_SOURCE_FILE,
-		CODE_LINES_FROM_AST,
-		COMMENT_LINES_FROM_AST,
-		PHYSICAL_LINES_FROM_AST;
+		LOGIC_CODE_LINES_FROM_SOURCE_FILE,
+		PHYSICAL_CODE_LINES_FROM_SOURCE_FILE,
+		ALL_COMMENT_LINES_FROM_SOURCE_FILE,
+		LOGIC_CODE_LINES_FROM_AST,
+		PHYSICAL_CODE_LINES_FROM_AST,
+		DOC_COMMENT_LINES_FROM_AST;
 	}
 
 	@Override

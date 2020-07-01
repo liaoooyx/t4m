@@ -1,13 +1,14 @@
 package com.t4m.web.service;
 
+import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.DirHierarchyNode;
+import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.util.ProjectRecord;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-06-27 02:37.
@@ -70,4 +71,58 @@ public class ProjectService {
 		}
 		return numOfClassAndInnerClassRecords;
 	}
+
+	/**
+	 * 用于Dashboard-SLOC页面中timeline chart的数据集。 第1层：Map，key为创建时间，嵌套List 第2层：Map，key为前端Echart需要的4个series，分别为Interface,
+	 * Abstract Class, Class and Inner Class，嵌套List 第3层：List，包括SLOC-code, SLOC-comment, SLOC-code + SLOC-comment,
+	 * ClassName, OfWhichModule。
+	 */
+	public Map<String, Map<String, List<Object>>> getDataSetOfSLOC() {
+		LinkedHashMap<String, Map<String, List<Object>>> timeline = new LinkedHashMap<>();
+		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			Map<String, List<Object>> series = new HashMap<>();
+			series.put("Interface", new ArrayList<>());
+			series.put("Abstract Class", new ArrayList<>());
+			series.put("Class", new ArrayList<>());
+			series.put("Inner Class", new ArrayList<>());
+			addDataRow(series, projectInfo.getClassList());
+			addDataRow(series, projectInfo.getInnerClassList());
+			timeline.put(time, series);
+		}
+		return timeline;
+	}
+
+	private void addDataRow(Map<String, List<Object>> series, List<ClassInfo> classInfoList) {
+		for (ClassInfo classInfo : classInfoList) {
+			List<Object> rows = null;
+			if (classInfo.isInnerClass()) {
+				rows = series.get("Inner Class");
+			} else {
+				switch (classInfo.getClassModifier()) {
+					case CLASS:
+						rows = series.get("Class");
+						break;
+					case ABSTRACT_CLASS:
+						rows = series.get("Abstract Class");
+						break;
+					case INTERFACE:
+						rows = series.get("Interface");
+						break;
+				}
+			}
+
+			List<Object> cols = new ArrayList<>();
+			Map<ClassInfo.SLOCType, Integer> couterMap = classInfo.getSlocCounterMap();
+			cols.add(couterMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)); // logic code line
+			cols.add(couterMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST)); // comment line
+			int classSize = couterMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST) + couterMap.get(
+					ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST);
+			cols.add(classSize);
+			cols.add(classInfo.getFullyQualifiedName()); // class qualified name
+			cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
+			rows.add(cols);
+		}
+	}
+
 }

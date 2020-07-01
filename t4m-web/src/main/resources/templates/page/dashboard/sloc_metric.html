@@ -1,0 +1,631 @@
+<!--
+=========================================================
+* Argon Dashboard - v1.2.0
+=========================================================
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+
+
+* Copyright  Creative Tim (http://www.creative-tim.com)
+* Coded by www.creative-tim.com
+
+
+
+=========================================================
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
+	<meta name="author" content="Creative Tim">
+	<title>Argon Dashboard - Free Dashboard for Bootstrap 4</title>
+	<!-- Favicon -->
+	<link rel="icon" th:href="@{/assets/img/brand/favicon.png}" type="image/png">
+	<!-- Fonts -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+	<!-- Icons -->
+	<link rel="stylesheet" th:href="@{/assets/vendor/nucleo/css/nucleo.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css}" type="text/css">
+	<!-- Page plugins -->
+	<!-- Argon CSS -->
+	<link rel="stylesheet" th:href="@{/assets/css/argon.css?v=1.2.0}" type="text/css">
+	<script th:src="@{/assets/vendor/echart/dist/echarts.js}"></script>
+	<script th:src="@{/assets/js/vue.js}"></script>
+	<style>
+		
+		/*custom bootstrap .dropdown-menu for max height*/
+		.dropdown-menu {
+			max-height: 20rem;
+			overflow: auto;
+		}
+		
+		.sloc-table-chart-icon {
+			font-size: 1rem;
+			color: black;
+		}
+	
+	</style>
+</head>
+
+<body>
+<!-- Sidenav -->
+<nav th:replace="fragments/navigation :: sidnav(1)"></nav>
+
+<!-- Main content -->
+<div class="main-content" id="panel">
+	<!-- Topnav -->
+	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+		<div class="container-fluid">
+			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
+				
+				<!-- Path nav -->
+				<div class="row col-auto align-items-center ">
+					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Source Line Of Code</h6>
+					<nav aria-label="breadcrumb col-auto" class="d-none d-md-inline-block ml-md-4">
+						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
+							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
+							<li class="breadcrumb-item active" aria-current="page">SLOC</li>
+						</ol>
+					</nav>
+				</div>
+				
+				<div class="row col-auto justify-content-end align-items-center m-0">
+					<div class="col-auto">
+						<ul class="navbar-nav align-items-center">
+							<li class="nav-item d-xl-none">
+								<!-- Sidenav toggler -->
+								<div class="pr-2 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin"
+								     data-target="#sidenav-main">
+									<div class="sidenav-toggler-inner">
+										<i class="sidenav-toggler-line"></i>
+										<i class="sidenav-toggler-line"></i>
+										<i class="sidenav-toggler-line"></i>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+	</nav>
+	
+	<!-- Header -->
+	<div class="header bg-primary pb-6">
+		<div class="container-fluid">
+		</div>
+	</div>
+	
+	<!-- Page content -->
+	<div class="container-fluid mt--6" th:with="currentProjectInfo = ${projectList.get(projectList.size()-1)}">
+		<div class="row">
+			<!-- chart -->
+			<div class="col-xl-12">
+				<div class="card">
+					<div class="card-header bg-transparent">
+						<div class="row align-items-center">
+							<div class="col">
+								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
+								<h5 class="h3 mb-0">Timeline of the class SLOC (Eclipse AST formatted)</h5>
+							</div>
+						</div>
+					</div>
+					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:550px;"></div>
+					<script type="text/javascript" th:inline="javascript">
+
+              var timeRecords = /*[[${timeRecords}]]*/;
+              var dataset = /*[[${dataset}]]*/;
+
+              function getMax() {
+                  let xMax = 0;
+                  let yMax = 0;
+                  let d2Max = 0;
+                  for (let key in dataset) {
+                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Inner Class']) {
+                          for (let cols of dataset[key][key2]) {
+                              xMax = Number(cols[0]) > xMax ? Number(cols[0]) : xMax;
+                              yMax = Number(cols[1]) > yMax ? Number(cols[1]) : yMax;
+                              d2Max = Number(cols[2]) > d2Max ? Number(cols[2]) : d2Max;
+                          }
+                      }
+                  }
+                  return [xMax, yMax, d2Max];
+              }
+
+              var dataMax = getMax();
+
+              function optionsFormatter() {
+                  let options = [];
+                  for (let i = 0; i < timeRecords.length; i++) {
+                      options[i] = {
+                          series: [{
+                              name: 'Interface',
+                              data: dataset[timeRecords[i]]['Interface'],
+                              type: 'scatter',
+                              itemStyle: {
+                                  color: '#69d7e5',
+                              },
+                              emphasis: {
+                                  label: {
+                                      show: true,
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                      color: '#000000',
+                                      position: 'top',
+                                      fontWeight: 'normal',
+                                  },
+                              },
+                          }, {
+                              name: 'Abstract Class',
+                              data: dataset[timeRecords[i]]['Abstract Class'],
+                              type: 'scatter',
+                              itemStyle: {
+                                  color: '#3dba40',
+                              },
+                              emphasis: {
+                                  label: {
+                                      show: true,
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                      color: '#000000',
+                                      position: 'top',
+                                      fontWeight: 'normal',
+                                  },
+                              },
+                          }, {
+                              name: 'Class',
+                              data: dataset[timeRecords[i]]['Class'],
+                              type: 'scatter',
+                              itemStyle: {
+                                  color: '#c23531',
+                              },
+                              emphasis: {
+                                  label: {
+                                      show: true,
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                      color: '#000000',
+                                      position: 'top',
+                                      fontWeight: 'normal',
+                                  },
+                              },
+                          }, {
+                              name: 'Inner Class',
+                              data: dataset[timeRecords[i]]['Abstract Inner'],
+                              type: 'scatter',
+                              itemStyle: {
+                                  color: '#e7da70',
+                              },
+                              emphasis: {
+                                  label: {
+                                      show: true,
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                      color: '#000000',
+                                      position: 'top',
+                                      fontWeight: 'normal',
+                                  },
+                              },
+                          }]
+                      }
+                  }
+                  return options;
+              }
+
+              var options = optionsFormatter();
+
+              var option = {
+                  baseOption: {
+                      timeline: {
+                          axisType: 'category', //轴的类型，value是数值轴；category是类目轴；
+                          // orient: 'horizontal',//摆放方式；vertical/horizontal
+                          loop: true,
+                          // autoPlay: true,
+                          currentIndex: timeRecords.length - 1,
+                          playInterval: 1000,
+                          symbol: 'circle',//timeline标记的图形: circle,rect,roundRect,triangle,diamond,pin,arrow,none;可以通过‘image://url"设置为图片
+                          controlStyle: {//控制按钮的样式；包括播放/前进/后退按钮
+                              showNextBtn: true,//是否显示播放按钮；
+                              showPrevBtn: true,//是否显示后退按钮；
+                              showPlayBtn: true,//是否显示播放按钮
+                          },
+                          data: timeRecords,
+                          label: {
+                              formatter: function (s) {
+                                  var date = new Date(s);
+                                  return date.getMonth() + "-" + date.getDate();
+                              }
+                          }
+                      },
+                      legend: {
+                          data: ['Class', 'Interface', 'Abstract Class', 'Inner Class'],
+                      },
+                      xAxis: {
+                          name: 'Logic Code Line',
+                          type: 'value',
+                          max: Math.ceil(dataMax[0] / 5) * 5
+                      },
+                      yAxis: {
+                          name: 'Comment Line',
+                          type: 'value',
+                          max: Math.ceil(dataMax[1] / 5) * 5
+                      },
+                      tooltip: {
+                          // 显示额外信息
+                          padding: 10,
+                          borderWidth: 1,
+                          formatter: function (params) {
+                              var text = '';
+                              params.forEach(row => {
+                                  if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
+                                      let value = row.value;
+                                      text +=
+                                          '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                          + 'Class: ' + value[3] + '<br>'
+                                          + '<span style="font: 12px">'
+                                          + 'of Module: ' + value[4] + +'</span>' + '<br>'
+                                          + '</div>';
+                                  }
+                              });
+                              text += 'Number of Code Line：' + pointedData[0] + '<br>'
+                                  + 'Number of Comment Line：' + pointedData[1] + '<br>'
+                              return text;
+
+                          },
+                          // 重叠问题
+                          show: true,
+                          enterable: true,
+                          trigger: 'axis',
+                          axisPointer: {
+                              type: 'cross',
+                              snap: true,
+                              axis: 'x', // y轴选项
+                              label: {
+                                  // show: false,
+                                  color: '#fff',
+                                  backgroundColor: 'rgba(0, 0, 0, .55)'
+                              }
+                          },
+                      },
+                      grid: {
+                          // left: '10%',
+                          right: 150,
+                          // top: '18%',
+                          // bottom: '10%'
+                      },
+                      color: ['#c23531'],
+                      //右侧视觉映射
+                      visualMap: [
+                          {
+                              type: 'continuous',
+                              left: 'right',
+                              top: 'middle',
+                              // itemWidth: 30,
+                              // itemHeight: 120,
+                              calculable: true,
+                              precision: 0.1,
+                              text: ['Class Logic Size (X+Y)'],
+                              textGap: 30,
+                              //以commentline + codeline作为参数，表示类的大小
+                              dimension: 2,
+                              max: (Math.ceil(dataMax[0] / 5) * 5) + (Math.ceil(dataMax[1] / 5) * 5),
+                              inRange: {
+                                  symbolSize: [10, 70]
+                              },
+                              controller: {
+                                  inRange: {
+                                      color: ['#c23531']
+                                  },
+                              }
+                          },
+                          // {
+                          //     type: 'continuous',
+                          //     left: 'right',
+                          //     bottom: '10%',
+                          //     text: ['Easy to Read', 'Hard to Read'],
+                          //     //以comment line作为参数，表示类的理解难易程度
+                          //     dimension: 1,
+                          //     min: 0,
+                          //     max: dataMax[1],
+                          //     precision: 1,
+                          //     inRange: {
+                          //         colorLightness: [0.4, 0.8]
+                          //     },
+                          //     controller: {
+                          //         inRange: {
+                          //             color: ['#c23531']
+                          //         },
+                          //     },
+                          // }
+                      ],
+                  },
+                  options: options
+
+              };
+              // 基于准备好的dom，初始化echarts实例
+              var myChart = echarts.init(document.getElementById('chart'));
+              // 使用刚指定的配置项和数据显示图表。
+              myChart.setOption(option);
+              var pointedData = [];
+              myChart.on('mouseover', function (params) {
+                  pointedData = params.data;
+              })
+					
+					
+					</script>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			
+			<div class="col-xl-12">
+				<div class="card-header border-0">
+					<div class="row align-items-center">
+						<div class="col-auto">
+							<h6 class="text-uppercase text-muted ls-1 mb0">Project Information</h6>
+							
+							<!-- dropdown -->
+							<div class="nav-item dropdown">
+								<a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+								   aria-expanded="false">
+											<span class="h3 mb-0 mr-2" id="current_record_time"
+											      th:text="${#dates.format(currentProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+									<i class="fas fa-caret-down"></i>
+								</a>
+								<div class="dropdown-menu">
+									
+									<a th:class="${timeRecordStat.index} eq ${timeRecords.size()-1} ? 'dropdown-item active' : 'dropdown-item'"
+									   href="javascript:void(0);"
+									   th:each="timeRecord,timeRecordStat : ${timeRecords}"
+									   th:onclick="selectRecordTime(this,[[${timeRecordStat.index}]])">
+										<span th:text="${timeRecord}"></span>
+									</a>
+								</div>
+							</div>
+						
+						</div>
+					
+					</div>
+				</div>
+			</div>
+			
+			<!-- 这部分的动态更新由vue.js支持，模板语法有thymeleaf支持 -->
+			<!-- 修改代码后，需要同步更新至templates/fragments/dashboard/sloc_list_template.html -->
+			<div class="col-xl-12" id="sloc_info_table" v-html="sloc_list_fragment">
+				
+				<div class="card">
+					<div class="table-responsive">
+						<table class="table align-items-center table-flush">
+							<thead class="thead-light">
+							<tr>
+								<th></th>
+								<th scope="col">Name</th>
+								<th scope="col">Type</th>
+								<th scope="col">Logic Code Line<br>(Source File)</th>
+								<th scope="col">Logic Code Line<br>(Eclipse AST)</th>
+								<th scope="col">Physical Code Line<br>(Source File)</th>
+								<th scope="col">Physical Code Line<br>(Eclipse AST)</th>
+								<th scope="col">All Comment Line<br>(Source File)</th>
+								<th scope="col">Document Comment Line<br>(Eclipse AST)</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<th scope="row" th:if="${!isRoot}">
+									<a href="javascript:void(0);"
+									   th:onclick="getNextLevel([[${previousName}]],[[${previousType}]])">(Go back)</a>
+								</th>
+							</tr>
+							<tr th:each="colMap : ${dataList}" th:object="${colMap}" th:inline="text">
+								<td>
+									<a class="sloc-table-chart-icon" href="javascript:void(0);" data-toggle="modal"
+									   data-target="#sloc_row_model" th:onclick="showTableChart([[*{name}]],[[*{type}]])">
+										<i class="fas fa-chart-bar"></i>
+									</a>
+								</td>
+								<th scope="row" th:if="*{type} eq 'module' or *{type} eq 'package'">
+									<a href="javascript:void(0);"
+									   th:onclick="getNextLevel([[*{name}]],[[*{type}]])">
+										[[*{name}]]</a>
+								</th>
+								<th scope="row" th:unless="*{type} eq 'module' or *{type} eq 'package'" th:text="*{name}">
+								</th>
+								<td th:text="*{type}"></td>
+								<td th:text="*{logicCodeLineFromSourceFile}"></td>
+								<td th:text="*{logicCodeLineFromAST}"></td>
+								<td th:text="*{physicalCodeLineFromSourceFile}"></td>
+								<td th:text="*{physicalCodeLineFromAST}"></td>
+								<td th:text="*{allCommentLineFromSourceFile}"></td>
+								<td th:text="*{docCommentLineFromAST}"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			
+			</div>
+			
+			<!-- Modal -->
+			<div class="modal fade" id="sloc_row_model" tabindex="-1" role="dialog"
+			     aria-labelledby="sloc_row_model_label" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="sloc_row_model_label">
+								<span class="h3 text-uppercase text-muted mr-2">{{ recordType }}</span>
+								<span class="h3">{{ recordName }}</span>
+							</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div id="sloc_row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			</div>
+			
+		</div>
+		<!-- Footer -->
+		<footer th:replace="fragments/footer :: footer"></footer>
+	</div>
+</div>
+<!-- Argon Scripts -->
+<!-- Core -->
+<script th:src="@{/assets/vendor/jquery/dist/jquery.min.js}"></script>
+<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/js-cookie/js.cookie.js}"></script>
+<script th:src="@{/assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js}"></script>
+<script th:src="@{/assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js}"></script>
+<!-- Optional JS -->
+<script th:src="@{/assets/vendor/chart.js/dist/Chart.min.js}"></script>
+<script th:src="@{/assets/vendor/chart.js/dist/Chart.extension.js}"></script>
+<!-- Argon JS -->
+<script th:src="@{/assets/js/argon.js?v=1.2.0}"></script>
+<script>
+    var recordRowName = "";
+    var recordRowType = "";
+    var projectRecordIndex = -1;
+
+    function selectRecordTime(obj, index) {
+        projectRecordIndex = index;
+        let newTime = $(obj).text()
+        $('#current_record_time').text(newTime)
+        $(obj).siblings().removeClass("active")
+        $(obj).addClass("active");
+        recordRowName = "";
+        recordRowType = "";
+        requestSLOCRecords(recordRowName, recordRowType, projectRecordIndex);
+    }
+
+    function getNextLevel(name, type) {
+        recordRowName = name;
+        recordRowType = type;
+        requestSLOCRecords(recordRowName, recordRowType, projectRecordIndex);
+    }
+
+    function requestSLOCRecords(name, type, index, preName, preType) {
+        $.get("/dashboard/sloc/table?name=" + name + "&type=" + type
+            + "&projectRecordIndex=" + index, function (data) {
+            if ("undefined" == typeof vm.$el) {
+                vm.sloc_list_fragment = data;
+                // 挂载vue实例到DOM上，继续声明周期
+                vm.$mount('#sloc_info_table');
+            }
+            vm.sloc_list_fragment = data;
+        });
+    }
+
+    var vm = new Vue({
+        // Vue实例将在created后停止声明周期，等到调用updateProjectInfomation()时才继续
+        // el: '#project_info_overview',
+        data: {
+            sloc_list_fragment: ""
+        }
+    })
+
+    // 指定图表的配置项和数据
+    var option2 = {
+        legend: {
+            data: ["Logic Code Line (Source File)", "Logic Code Line (AST)",
+		            "Physical Code Line (Source File)", "Physical Code Line (AST)",
+                "All Comment Line", "JavaDoc Comment Line"]
+        },
+        grid: {
+            bottom: '100'
+        },
+        // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {},
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                snap: true,
+                type: "line",
+            }
+        },
+        dataZoom: [
+            {
+                type: 'slider',
+                xAxisIndex: 0,
+                start: 20,
+                end: 100
+            },
+            {
+                type: 'inside',
+                xAxisIndex: 0,
+                start: 20,
+                end: 100
+            },
+            {
+                type: 'slider',
+                yAxisIndex: 0,
+                start: 0,
+                end: 100
+            }
+        ],
+    };
+    var myChart2 = echarts.init(document.getElementById('sloc_row_chart'));
+    myChart2.setOption(option2);
+
+    // 用于修改模块框title
+    var vm_sloc_chart_title = new Vue({
+        el: '#sloc_row_model_label',
+        data: {
+            recordType: '',
+            recordName: '',
+        }
+    })
+
+    function showTableChart(name, type) {
+        vm_sloc_chart_title.recordName = name;
+        vm_sloc_chart_title.recordType = type;
+        // 异步加载数据
+        $.get("/dashboard/sloc/table/chart?name=" + name + "&type=" + type).done(function (data) {
+            console.log(data);
+            // 填入数据
+            myChart2.setOption({
+                dataset: {
+                    // 提供一份数据。
+                    source: data
+                },
+                series: [
+                    {type: 'line', name: 'Logic Code Line (Source File)'},
+                    {type: 'line', name: 'Physical Code Line (Source File)'},
+                    {type: 'line', name: 'All Comment Line'},
+                    {type: 'line', name: 'Logic Code Line (AST)'},
+                    {type: 'line', name: 'Physical Code Line (AST)'},
+                    {type: 'line', name: 'JavaDoc Comment Line'},
+                ],
+            });
+        });
+    }
+
+    // 让echarts在模态框打开后重新渲染
+    $('#sloc_row_model').on('shown.bs.modal', function () {
+        myChart2.resize()
+    })
+
+</script>
+
+</body>
+
+</html>

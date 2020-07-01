@@ -1,17 +1,16 @@
 package com.t4m.web.service;
 
 import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
+import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.util.ProjectRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-06-26 15:56.
@@ -30,18 +29,18 @@ public class ClassService {
 		ProjectInfo previous = projectInfos[1];
 
 		List<Map<String, Object>> classMapList = new ArrayList<>();
-		if (previous == null){
+		if (previous == null) {
 			for (ClassInfo classInfo : current.getClassList()) {
 				Map<String, Object> m1 = initMapList(classInfo);
-				m1.put("type", "old");
+				m1.put("newness", "old");
 				classMapList.add(m1);
 				for (ClassInfo innerClass : classInfo.getInnerClassList()) {
 					Map<String, Object> m2 = initMapList(innerClass);
-					m2.put("type", "old");
+					m2.put("newness", "old");
 					classMapList.add(m2);
 				}
 			}
-		}else{
+		} else {
 			//添加新、旧记录
 			for (ClassInfo classInfo : current.getClassList()) {
 				Map<String, Object> m1 = initNewAndOldRecord(classInfo, previous.getClassList());
@@ -77,9 +76,9 @@ public class ClassService {
 		ClassInfo classOfPreviousRecord = EntityUtil.getClassByQualifiedName(previousRecordClassList,
 		                                                                     classInfo.getFullyQualifiedName());
 		if (classOfPreviousRecord == null) {
-			recordMap.put("type", "new");
+			recordMap.put("newness", "new");
 		} else {
-			recordMap.put("type", "old");
+			recordMap.put("newness", "old");
 		}
 		return recordMap;
 	}
@@ -94,7 +93,7 @@ public class ClassService {
 		//	说明该类在当前记录中已被删除, 返回该条被删除的记录
 		if (classOfCurrentRecord == null) {
 			Map<String, Object> m1 = initMapList(classInfo);
-			m1.put("type", "delete");
+			m1.put("newness", "delete");
 			return m1;
 		}
 		return null;
@@ -110,8 +109,33 @@ public class ClassService {
 		map.put("numOfFields", String.valueOf(classInfo.getNumberOfFields()));
 		map.put("numOfMethods", String.valueOf(classInfo.getNumberOfMethods()));
 		map.put("numOfInnerClass", String.valueOf(classInfo.getInnerClassList().size()));
-		map.put("SLOC",
-		        String.valueOf(classInfo.getSlocCounterMap().get(ClassInfo.SLOCType.PHYSICAL_LINES_FROM_SOURCE_FILE)));
+		map.put("SLOC", String.valueOf(
+				classInfo.getSlocCounterMap().get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE)));
 		return map;
 	}
+
+	/**
+	 * 返回用于dashboard-sloc页面的表格弹框的chart数据集
+	 */
+	public List<String[]> getSLOCTableChartDataset(String className) {
+		List<String[]> dataset = new ArrayList<>();
+		dataset.add(new String[]{"time", "Logic Code Line (Source File)", "Physical Code Line (Source File)",
+		                         "All Comment Line", "Logic Code Line (AST)", "Physical Code Line (AST)",
+		                         "JavaDoc Comment Line"});
+		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(), className);
+			String[] tempRow = new String[7];
+			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			Arrays.fill(tempRow, 1, 6, null);
+			if (classInfo != null) {
+				int[] slocArray = classInfo.getSumOfSLOC();
+				for (int i = 0; i < 6; i++) {
+					tempRow[i + 1] = String.valueOf(slocArray[i]);
+				}
+			}
+			dataset.add(tempRow);
+		}
+		return dataset;
+	}
+
 }

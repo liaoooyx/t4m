@@ -54,10 +54,13 @@ public class ComplexClassA extends ComplexAbstractClass {
 	}
 
 	public static class InnnerClassOfComplexClassA {
+		//test
 		int field1;
-		String field2;
+		int field2;
+		String field2; //test
 		SimpleClassA classA;
 
+		//test
 		public static void method() {
 		}
 

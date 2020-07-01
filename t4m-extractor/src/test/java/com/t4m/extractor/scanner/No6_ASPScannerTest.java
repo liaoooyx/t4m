@@ -6,7 +6,6 @@ import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.exception.DuplicatedInnerClassFoundedException;
 import com.t4m.extractor.util.EntityUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,12 +36,12 @@ class No6_ASPScannerTest {
 		assertNotNull(classInfo);
 		assertAll(() -> {
 			Map<ClassInfo.SLOCType, Integer> slocMap = classInfo.getSlocCounterMap();
-			assertAll(() -> assertEquals(31, slocMap.get(ClassInfo.SLOCType.CODE_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(17, slocMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(41, slocMap.get(ClassInfo.SLOCType.PHYSICAL_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(28, slocMap.get(ClassInfo.SLOCType.CODE_LINES_FROM_AST)),
-			          () -> assertEquals(15, slocMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST)),
-			          () -> assertEquals(38, slocMap.get(ClassInfo.SLOCType.PHYSICAL_LINES_FROM_AST)));
+			assertAll(() -> assertEquals(31, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(17, slocMap.get(ClassInfo.SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(41, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(28, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
+			          () -> assertEquals(15, slocMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST)),
+			          () -> assertEquals(38, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
 		});
 
 		ClassInfo innerClass = EntityUtil.getClassByShortName(classInfo.getInnerClassList(),
@@ -50,12 +49,12 @@ class No6_ASPScannerTest {
 		assertNotNull(innerClass);
 		assertAll(() -> {
 			Map<ClassInfo.SLOCType, Integer> slocMap = innerClass.getSlocCounterMap();
-			assertAll(() -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.CODE_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.PHYSICAL_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(7, slocMap.get(ClassInfo.SLOCType.CODE_LINES_FROM_AST)),
-			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST)),
-			          () -> assertEquals(10, slocMap.get(ClassInfo.SLOCType.PHYSICAL_LINES_FROM_AST)));
+			assertAll(() -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(7, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
+			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST)),
+			          () -> assertEquals(10, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
 		});
 	}
 
@@ -212,6 +211,26 @@ class No6_ASPScannerTest {
 		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		assertEquals(14,moduleInfo.getNumberOfClasses());
 		assertEquals(4,moduleInfo.getNumberOfInnerClasses());
+	}
+
+	@Test
+	@DisplayName("测试外部类的SLOC")
+	void testSumSLOCforClass(){
+		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
+		                                                         "com.simulation.core.foo.ComplexClassA");
+		int[] slocArray = classInfo.getSumOfSLOC();
+		assertEquals(32,slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
+		assertEquals(42,slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+		assertEquals(20,slocArray[2]); //SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE
+		assertEquals(29,slocArray[3]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
+		assertEquals(39,slocArray[4]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
+		assertEquals(15,slocArray[5]); //SLOCType.DOC_COMMENT_LINES_FROM_AST
+	}
+
+	@Test
+	@DisplayName("测试包的总SLOC")
+	void testSumSLOCforPackage(){
+
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.t4m.extractor.entity;
 
+import com.t4m.extractor.metric.SLOCMetric;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -18,7 +20,7 @@ public class PackageInfo implements Serializable {
 
 	private PackageInfo previousPackage;
 	private List<PackageInfo> subPackageList = new ArrayList<>();
-	private List<ClassInfo> classList = new ArrayList<>();
+	private List<ClassInfo> classList = new ArrayList<>(); // 目前不包括内部类，只有外部类
 
 	// private Map<PackageInfo, Integer> dependsOn;
 	// private Map<PackageInfo, Integer> dependedBy;
@@ -75,6 +77,10 @@ public class PackageInfo implements Serializable {
 
 	public void setPreviousPackage(PackageInfo previousPackage) {
 		this.previousPackage = previousPackage;
+	}
+
+	public boolean hasPreviousPackage() {
+		return previousPackage != null ? true : false;
 	}
 
 	public List<PackageInfo> getSubPackageList() {
@@ -138,6 +144,29 @@ public class PackageInfo implements Serializable {
 			}
 		}
 		return numberOfInnerClasses;
+	}
+
+	/**
+	 * 获取自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以数组形式返回。索引与对应的值，查看{@link SLOCMetric sumSLOC()}
+	 */
+	public int[] getSumOfSLOCForCurrentPkg() {
+		int[] slocArray = new int[6];
+		Arrays.fill(slocArray, 0);
+		for (ClassInfo classInfo : classList) {
+			SLOCMetric.sumSLOC(slocArray, classInfo.getSumOfSLOC());
+		}
+		return slocArray;
+	}
+
+	/**
+	 * 获取自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以及子包的SLOC，以数组形式返回。索引与对应的值，查看{@link SLOCMetric sumSLOC()}
+	 */
+	public int[] getSumOfSLOCForCurrentAndSubPkg() {
+		int[] slocArray = getSumOfSLOCForCurrentPkg();
+		for (PackageInfo subPackageInfo : subPackageList){
+			SLOCMetric.sumSLOC(slocArray, subPackageInfo.getSumOfSLOCForCurrentAndSubPkg());
+		}
+		return slocArray;
 	}
 
 	public void setNumberOfInnerClasses(int numberOfInnerClasses) {

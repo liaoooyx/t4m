@@ -1,5 +1,7 @@
 package com.t4m.extractor.entity;
 
+import com.t4m.extractor.metric.SLOCMetric;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -175,6 +177,17 @@ public class ModuleInfo implements Serializable {
 		return otherPackageList.size() > 0;
 	}
 
+	/**
+	 * 优先返回mainPackageList，如果没有则返回otherPackageList。忽略testPackageList
+	 */
+	public List<PackageInfo> getPackageList() {
+		if (hasMainPackageList()) {
+			return mainPackageList;
+		} else {
+			return otherPackageList;
+		}
+	}
+
 	public String getMainScopePath() {
 		return mainScopePath;
 	}
@@ -235,5 +248,23 @@ public class ModuleInfo implements Serializable {
 
 	public void setNumberOfInnerClasses(int numberOfInnerClasses) {
 		this.numberOfInnerClasses = numberOfInnerClasses;
+	}
+
+	/**
+	 * 获取自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以数组形式返回。索引与对应的值，查看{@link SLOCMetric.sumSLOC()}
+	 */
+	public int[] getSumOfSLOC() {
+		int[] slocArray = new int[6];
+		Arrays.fill(slocArray, 0);
+		if (hasMainPackageList()) {
+			for (PackageInfo packageInfo : mainPackageList) {
+				SLOCMetric.sumSLOC(slocArray, packageInfo.getSumOfSLOCForCurrentPkg());
+			}
+		} else if (hasOtherPackageList()) {
+			for (PackageInfo packageInfo : otherPackageList) {
+				SLOCMetric.sumSLOC(slocArray, packageInfo.getSumOfSLOCForCurrentPkg());
+			}
+		}
+		return slocArray;
 	}
 }

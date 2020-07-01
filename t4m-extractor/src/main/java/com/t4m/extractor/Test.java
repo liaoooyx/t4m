@@ -19,9 +19,6 @@ public class Test {
 		char[] charArray = FileUtil.readCharArrayFromJavaSourceFile(javaFilePath);
 		ASTParser astParser = ASTParser.newParser(AST.JLS14);
 		astParser.setSource(charArray);
-		astParser.setEnvironment(null, new String[]{
-				                         "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/"},
-		                         new String[]{"UTF-8"}, true);
 		astParser.setKind(ASTParser.K_COMPILATION_UNIT);
 
 		CompilationUnit result = (CompilationUnit) (astParser.createAST(null));
@@ -31,15 +28,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		String[] paths =
-				{"/Users/liao/myProjects/IdeaProjects/JSimulationProject/src/main/java/com/simulation/foo/ComplexClassA.java",
-				// "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/TestClass.java",
-				 // "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/TestInterface.java",
-				 // "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/StandardPrice.java",
-				 // "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/price/Price.java",
-				 // "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Car.java",
-				 // "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Customer.java",
-				 // "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/refactor-module2/src/main/java/com/refactor/refactor3/Rental.java",
-				 // "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor/src/main/java/com/refactor2/StandardPrice.java"
+				{"/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/src/test/resources/JSimulation/src/main/java/com/simulation/core/foo/ComplexClassA.java"
 				};
 		Arrays.stream(paths).forEach(path -> {
 			CompilationUnit compilationUnit = getCompilationUnit(path);
@@ -89,6 +78,8 @@ public class Test {
 
 			System.out.println("Num of Fields:\t"+node.getFields().length);
 			System.out.println("Num of Methods:\t"+node.getMethods().length);
+
+			System.out.println(node.toString());
 
 			return true;
 		}

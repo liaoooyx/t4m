@@ -1,4 +1,4 @@
-@charset 'UTF-8';
+@charset "UTF-8";
 /*!
 
 =========================================================
@@ -4684,7 +4684,6 @@ input[type='button'].btn-block
 .dropdown-item:focus
 {
     text-decoration: none;
-
     color: #16181b;
     background-color: #f6f9fc;
 }
@@ -4692,9 +4691,8 @@ input[type='button'].btn-block
 .dropdown-item:active
 {
     text-decoration: none;
-
-    color: #16181b;
-    background-color: transparent;
+    color: #FFFFFF;
+    background-color: #5e72e4;
 }
 .dropdown-item.disabled,
 .dropdown-item:disabled

@@ -62,7 +62,7 @@ public class T4MProjectInfoSerializer implements T4MSerializer {
 				try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(objFile))) {
 					projectInfoList.add((ProjectInfo) ois.readObject());
 				} catch (Exception e) {
-					LOGGER.error("Error happen when deserializing object from [{}]", objFile);
+					LOGGER.error("Error happen when deserializing object from [{}]", objFile,e);
 				}
 			}
 		} else {
