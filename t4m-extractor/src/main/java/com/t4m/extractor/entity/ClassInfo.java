@@ -20,7 +20,7 @@ public class ClassInfo implements Serializable {
 	private PackageInfo packageInfo;
 	private String packageFullyQualifiedName;
 
-	private ClassModifier classModifier;
+	private ClassModifier classModifier; // 如果该类的源文件为package-info.java，那么可能不存在类修饰符，因为该文件可以不存在类，只包含注释。
 	private boolean innerClass = false;
 
 	// 考虑内部类
@@ -262,8 +262,7 @@ public class ClassInfo implements Serializable {
 	}
 
 	/**
-	 * 如果是内部类，那么它关于source file的三项将为0，因为无法从source file中判断出内部类。 如果是外部类，那么它的六项都包括内部类
-	 * 对于AST格式的SLOC，它的数值与源文件可能不一致，因为AST格式会对部分代码行合并，比如方法注解和方法声明会合并为一行
+	 * 如果是内部类，那么它关于source file的三项将为0，因为无法从source file中判断出内部类。 如果是外部类，那么它的六项都包括内部类 对于AST格式的SLOC，它的数值与源文件可能不一致，因为AST格式会对部分代码行合并，比如方法注解和方法声明会合并为一行
 	 */
 	public Map<SLOCType, Integer> initSlocCounterMap() {
 		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, 0); // 不包括空白行，单独大括号和注释行

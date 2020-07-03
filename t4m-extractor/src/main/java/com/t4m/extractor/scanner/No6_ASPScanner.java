@@ -16,7 +16,6 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -81,7 +80,7 @@ public class No6_ASPScanner {
 		aspScanner.scan();
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		String dbFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
-		String dbPath = PropertyUtil.getProperty("OBJECT_DB_PATH");
+		String dbPath = PropertyUtil.getProperty("ROOT_DB_PATH");
 		serializer.serializeTo(projectInfo, dbFileName);
 		System.out.println();
 	}

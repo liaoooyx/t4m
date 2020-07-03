@@ -16,43 +16,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
-	<meta name="author" content="Creative Tim">
-	<title>Argon Dashboard - Free Dashboard for Bootstrap 4</title>
-	<!-- Favicon -->
-	<link rel="icon" th:href="@{/assets/img/brand/favicon.png}" type="image/png">
-	<!-- Fonts -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-	<!-- Icons -->
-	<link rel="stylesheet" th:href="@{/assets/vendor/nucleo/css/nucleo.css}" type="text/css">
-	<link rel="stylesheet" th:href="@{/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css}" type="text/css">
-	<!-- Page plugins -->
-	<!-- Argon CSS -->
-	<link rel="stylesheet" th:href="@{/assets/css/argon.css?v=1.2.0}" type="text/css">
-	<script th:src="@{/assets/vendor/echart/dist/echarts.js}"></script>
-	<script th:src="@{/assets/js/vue.js}"></script>
-	<style>
-		
-		/*custom bootstrap .dropdown-menu for max height*/
-		.dropdown-menu {
-			max-height: 20rem;
-			overflow: auto;
-		}
-		
-		.sloc-table-chart-icon {
-			font-size: 1rem;
-			color: black;
-		}
-	
-	</style>
-</head>
+<head th:replace="fragments/common :: head_and_imports"></head>
 
 <body>
 <!-- Sidenav -->
-<nav th:replace="fragments/navigation :: sidnav(1)"></nav>
+<nav th:replace="fragments/common :: sidnav(1)"></nav>
 
 <!-- Main content -->
 <div class="main-content" id="panel">
@@ -483,21 +451,10 @@
 			
 		</div>
 		<!-- Footer -->
-		<footer th:replace="fragments/footer :: footer"></footer>
+		<footer th:replace="fragments/common :: footer"></footer>
 	</div>
 </div>
-<!-- Argon Scripts -->
-<!-- Core -->
-<script th:src="@{/assets/vendor/jquery/dist/jquery.min.js}"></script>
-<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/assets/vendor/js-cookie/js.cookie.js}"></script>
-<script th:src="@{/assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js}"></script>
-<script th:src="@{/assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js}"></script>
-<!-- Optional JS -->
-<script th:src="@{/assets/vendor/chart.js/dist/Chart.min.js}"></script>
-<script th:src="@{/assets/vendor/chart.js/dist/Chart.extension.js}"></script>
-<!-- Argon JS -->
-<script th:src="@{/assets/js/argon.js?v=1.2.0}"></script>
+<script th:replace="fragments/common :: footer_imports"></script>
 <script>
     var recordRowName = "";
     var recordRowType = "";
@@ -600,7 +557,6 @@
         vm_sloc_chart_title.recordType = type;
         // 异步加载数据
         $.get("/dashboard/sloc/table/chart?name=" + name + "&type=" + type).done(function (data) {
-            console.log(data);
             // 填入数据
             myChart2.setOption({
                 dataset: {

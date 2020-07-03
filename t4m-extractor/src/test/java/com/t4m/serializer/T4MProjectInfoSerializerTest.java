@@ -4,8 +4,6 @@ import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.PropertyUtil;
 import com.t4m.extractor.util.TimeUtil;
-import org.eclipse.jdt.internal.core.util.ProvidesInfo;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +30,7 @@ class T4MProjectInfoSerializerTest {
 	void serialization() {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		String dbFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
-		String dbPath = PropertyUtil.getProperty("OBJECT_DB_PATH");
+		String dbPath = PropertyUtil.getProperty("ROOT_DB_PATH");
 		serializer.serializeTo(projectInfo, dbFileName);
 		File file = new File(dbPath + File.separator + dbFileName);
 		assertTrue(file.exists());

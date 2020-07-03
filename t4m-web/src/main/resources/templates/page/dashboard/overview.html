@@ -16,40 +16,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
-	<meta name="author" content="Creative Tim">
-	<title>Argon Dashboard - Free Dashboard for Bootstrap 4</title>
-	<!-- Favicon -->
-	<link rel="icon" th:href="@{/assets/img/brand/favicon.png}" type="image/png">
-	<!-- Fonts -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-	<!-- Icons -->
-	<link rel="stylesheet" th:href="@{/assets/vendor/nucleo/css/nucleo.css}" type="text/css">
-	<link rel="stylesheet" th:href="@{/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css}" type="text/css">
-	<!-- Page plugins -->
-	<!-- Argon CSS -->
-	<link rel="stylesheet" th:href="@{/assets/css/argon.css?v=1.2.0}" type="text/css">
-	<script th:src="@{/assets/vendor/echart/dist/echarts.js}"></script>
-	<script th:src="@{/assets/js/vue.js}"></script>
-	<style>
-		.card-table {
-			max-height: 21rem;
-		}
-		
-		/*custom bootstrap .dropdown-menu for max height*/
-		.dropdown-menu {
-			max-height: 20rem;
-			overflow: auto;
-		}
-	</style>
-</head>
+<head th:replace="fragments/common :: head_and_imports"></head>
 
 <body>
 <!-- Sidenav -->
-<nav th:replace="fragments/navigation :: sidnav(0)"></nav>
+<nav th:replace="fragments/common :: sidnav(0)"></nav>
 
 <!-- Main content -->
 <div class="main-content" id="panel">
@@ -60,7 +31,7 @@
 				
 				<!-- Path nav -->
 				<div class="row col-auto align-items-center ">
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Basic Information Overview</h6>
+					<h6 class="h2 text-white d-inline-block mb-0 col-auto" th:text="${currentProjectName}"></h6>
 					<nav aria-label="breadcrumb col-auto" class="d-none d-md-inline-block ml-md-4">
 						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
 							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
@@ -71,23 +42,6 @@
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
-					<!-- Search form -->
-					<!--					<div class="col-auto">-->
-					<!--						<form class="navbar-search navbar-search-light form-inline" id="navbar-search-main">-->
-					<!--							<div class="form-group mb-0">-->
-					<!--								<div class="input-group input-group-alternative input-group-merge">-->
-					<!--									<div class="input-group-prepend">-->
-					<!--										<span class="input-group-text"><i class="fas fa-search"></i></span>-->
-					<!--									</div>-->
-					<!--									<input class="form-control" placeholder="Search" type="text">-->
-					<!--								</div>-->
-					<!--							</div>-->
-					<!--							<button type="button" class="close" data-action="search-close" data-target="#navbar-search-main"-->
-					<!--							        aria-label="Close">-->
-					<!--								<span aria-hidden="true">×</span>-->
-					<!--							</button>-->
-					<!--						</form>-->
-					<!--					</div>-->
 					<!-- Navbar links -->
 					<div class="col-auto">
 						<ul class="navbar-nav align-items-center">
@@ -113,8 +67,7 @@
 	<!-- Header -->
 	<div class="header bg-primary pb-6">
 		<div class="container-fluid">
-			<div class="header-body"
-			     th:with="currentProjectInfo = ${projectList.get(projectList.size()-1)}, preProjectInfo = ${projectList.get(projectList.size()-2)}">
+			<div class="header-body">
 				<!-- Card stats -->
 				<div class="row pt-3">
 					<!-- Module Card -->
@@ -219,7 +172,7 @@
 	
 	
 	<!-- Page content -->
-	<div class="container-fluid mt--6" th:with="currentProjectInfo = ${projectList.get(projectList.size()-1)}">
+	<div class="container-fluid mt--6">
 		<div class="row">
 			<!-- chart -->
 			<div class="col-xl-12">
@@ -457,7 +410,7 @@
 		</div>
 		
 		<script>
-        function selectRecordTime(obj,index) {
+        function selectRecordTime(obj, index) {
             console.log(obj);
             let newTime = $(obj).text()
             $('#current_record_time').text(newTime)
@@ -483,22 +436,10 @@
 		</script>
 		
 		<!-- Footer -->
-		<footer th:replace="fragments/footer :: footer"></footer>
+		<footer th:replace="fragments/common :: footer"></footer>
 	</div>
 </div>
-<!-- Argon Scripts -->
-<!-- Core -->
-<script th:src="@{/assets/vendor/jquery/dist/jquery.min.js}"></script>
-<script th:src="@{/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/assets/vendor/js-cookie/js.cookie.js}"></script>
-<script th:src="@{/assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js}"></script>
-<script th:src="@{/assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js}"></script>
-<!-- Optional JS -->
-<script th:src="@{/assets/vendor/chart.js/dist/Chart.min.js}"></script>
-<script th:src="@{/assets/vendor/chart.js/dist/Chart.extension.js}"></script>
-<!-- Argon JS -->
-<script th:src="@{/assets/js/argon.js?v=1.2.0}"></script>
-
+<script th:replace="fragments/common :: footer_imports"></script>
 </body>
 
 </html>

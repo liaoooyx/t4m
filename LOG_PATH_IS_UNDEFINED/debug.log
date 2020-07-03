@@ -1,0 +1,40 @@
+2020-07-03 04:26:39.637 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Creating new Restarter for thread Thread[main,5,main]
+2020-07-03 04:26:39.640 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Immediately restarting application
+2020-07-03 04:26:39.640 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Created RestartClassLoader org.springframework.boot.devtools.restart.classloader.RestartClassLoader@26a24bcd
+2020-07-03 04:26:39.640 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Starting application com.t4m.web.T4mWebApplication with URLs [file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-web.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/resources/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-extractor.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/resources/main/]
+2020-07-03 04:26:39.641 [DEBUG] [org.springframework.boot.context.logging.ClasspathLoggingApplicationListener:54] [thread:restartedMain] 
+ Application failed to start with classpath: [file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-web.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/resources/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-extractor.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/resources/main/]
+2020-07-03 04:28:29.511 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Creating new Restarter for thread Thread[main,5,main]
+2020-07-03 04:28:29.513 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Immediately restarting application
+2020-07-03 04:28:29.513 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Created RestartClassLoader org.springframework.boot.devtools.restart.classloader.RestartClassLoader@29ac0ba
+2020-07-03 04:28:29.513 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Starting application com.t4m.web.T4mWebApplication with URLs [file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-web.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/resources/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-extractor.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/resources/main/]
+2020-07-03 04:28:29.513 [DEBUG] [org.springframework.boot.context.logging.ClasspathLoggingApplicationListener:54] [thread:restartedMain] 
+ Application failed to start with classpath: [file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-web.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/resources/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-extractor.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/resources/main/]
+2020-07-03 04:33:03.265 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Creating new Restarter for thread Thread[main,5,main]
+2020-07-03 04:33:03.267 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Immediately restarting application
+2020-07-03 04:33:03.267 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Created RestartClassLoader org.springframework.boot.devtools.restart.classloader.RestartClassLoader@5c657181
+2020-07-03 04:33:03.267 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Starting application com.t4m.web.T4mWebApplication with URLs [file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/resources/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-extractor.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/resources/main/]
+2020-07-03 04:33:03.268 [DEBUG] [org.springframework.boot.context.logging.ClasspathLoggingApplicationListener:54] [thread:restartedMain] 
+ Application failed to start with classpath: [file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/resources/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-extractor.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/resources/main/]
+2020-07-03 04:37:48.035 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Creating new Restarter for thread Thread[main,5,main]
+2020-07-03 04:37:48.037 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Immediately restarting application
+2020-07-03 04:37:48.038 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Created RestartClassLoader org.springframework.boot.devtools.restart.classloader.RestartClassLoader@2010c080
+2020-07-03 04:37:48.038 [DEBUG] [org.springframework.boot.devtools.restart.Restarter:222] [thread:restartedMain] 
+ Starting application com.t4m.web.T4mWebApplication with URLs [file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-web.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/resources/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-extractor.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/resources/main/]
+2020-07-03 04:37:48.038 [DEBUG] [org.springframework.boot.context.logging.ClasspathLoggingApplicationListener:54] [thread:restartedMain] 
+ Application failed to start with classpath: [file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-web.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-web/build/resources/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/out/production/t4m.t4m-extractor.main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/classes/java/main/, file:/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/build/resources/main/]

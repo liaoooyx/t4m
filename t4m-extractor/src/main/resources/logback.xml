@@ -1,6 +1,6 @@
 <configuration scan="true">
 
-    <property resource="extractor.properties"/>
+    <property resource="t4m.properties"/>
 
     <!--appender定义日志输出的规范，name为对象名，class为引用的对象-->
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">

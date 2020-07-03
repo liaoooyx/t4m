@@ -76,8 +76,14 @@ public class T4MVisitor extends ASTVisitor {
 		return isInnerClass(getParentTypeDeclaration(node));
 	}
 
-	public boolean isAbstractClass(List<Modifier> modifiers) {
-		return modifiers.stream().anyMatch(modifier -> "abstract".equals(modifier.getKeyword().toString()));
+	public boolean isAbstractClass(List<IExtendedModifier> modifiers) {
+		return modifiers.stream().anyMatch(modifier -> {
+			if (modifier.isModifier()) {
+				return ((Modifier) modifier).isAbstract();
+			} else {
+				return false;
+			}
+		});
 	}
 
 	/**
@@ -109,13 +115,14 @@ public class T4MVisitor extends ASTVisitor {
 		if (isInnerClass(classNode)) {
 			// 内部类
 			String innerClassShortName = transferShortName(classNode.getName().toString());
-			currentClassInfo = EntityUtil.getClassByQualifiedName(
-					outerClassInfo.getInnerClassList(),
-					outerClassInfo.getFullyQualifiedName() + "$" + innerClassShortName);
+			currentClassInfo = EntityUtil.getClassByQualifiedName(outerClassInfo.getInnerClassList(),
+			                                                      outerClassInfo.getFullyQualifiedName() + "$" +
+					                                                      innerClassShortName);
 		} else {
 			// 外部类
 			currentClassInfo = outerClassInfo;
-		} return currentClassInfo;
+		}
+		return currentClassInfo;
 	}
 
 	/**
@@ -180,8 +187,8 @@ public class T4MVisitor extends ASTVisitor {
 			}
 			if (outerClassInfo != null && (i + 1) < splitNames.length) {
 				String possibleInnerClassName = splitNames[i] + "$" + splitNames[i + 1];
-				ClassInfo innerClassInfo = EntityUtil.getClassByShortName(
-						outerClassInfo.getInnerClassList(), possibleInnerClassName);
+				ClassInfo innerClassInfo = EntityUtil.getClassByShortName(outerClassInfo.getInnerClassList(),
+				                                                          possibleInnerClassName);
 				if (innerClassInfo != null) {
 					return innerClassInfo;
 				} else {

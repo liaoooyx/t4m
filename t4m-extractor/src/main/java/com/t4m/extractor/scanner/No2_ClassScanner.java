@@ -44,7 +44,7 @@ public class No2_ClassScanner {
 				while ((line = reader.readLine()) != null) {
 					String currentLine = line.strip();
 					// 读java文件的包路径
-					if (currentLine.startsWith("package")) {
+					if (currentLine.startsWith("package ")) {
 						pkgFullyQualifiedName = line.replaceFirst("package", "").replace(";", "").strip();
 					}
 					// sloc计数

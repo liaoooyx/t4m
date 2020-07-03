@@ -86,6 +86,7 @@ public class ProjectService {
 			series.put("Abstract Class", new ArrayList<>());
 			series.put("Class", new ArrayList<>());
 			series.put("Inner Class", new ArrayList<>());
+			series.put("package-info.java", new ArrayList<>());
 			addDataRow(series, projectInfo.getClassList());
 			addDataRow(series, projectInfo.getInnerClassList());
 			timeline.put(time, series);
@@ -98,6 +99,8 @@ public class ProjectService {
 			List<Object> rows = null;
 			if (classInfo.isInnerClass()) {
 				rows = series.get("Inner Class");
+			} else if ("package-info".equals(classInfo.getShortName())){
+				rows = series.get("Class");
 			} else {
 				switch (classInfo.getClassModifier()) {
 					case CLASS:

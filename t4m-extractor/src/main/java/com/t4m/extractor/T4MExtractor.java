@@ -64,7 +64,7 @@ public class T4MExtractor {
 		aspScanner.scan();
 	}
 
-	public ProjectInfo extractProjectInfo() {
+	public ProjectInfo action() {
 		scanASP();
 		return projectInfo;
 	}

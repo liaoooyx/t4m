@@ -3,10 +3,12 @@ package com.t4m.web.controller;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
+import com.t4m.extractor.util.PropertyUtil;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
 import com.t4m.web.service.ProjectService;
+import com.t4m.web.util.GlobalVariable;
 import com.t4m.web.util.ProjectRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +43,11 @@ public class DashboardController {
 
 	@GetMapping("/overview")
 	public String overview(Model model) {
-		List<ProjectInfo> projectInfoList = ProjectRecord.getProjectInfoList();
+		ProjectInfo[] projectInfos = ProjectRecord.getProjectInfoRecordByIndex(-1);
 		// 基本信息
-		model.addAttribute("projectList", projectInfoList);
+		model.addAttribute("currentProjectInfo", projectInfos[0]);
+		model.addAttribute("preProjectInfo", projectInfos[1]);
+		model.addAttribute("currentProjectName", GlobalVariable.CURRENT_PROJECT_NAME);
 		// 用于趋势图
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
 		model.addAttribute("moduleRecords", projectService.getNumOfModuleRecords());
@@ -54,7 +58,6 @@ public class DashboardController {
 		model.addAttribute("moduleMapList", moduleService.getModuleMapList(-1));
 		model.addAttribute("packageMapList", packageService.getPackageMapList(-1));
 		model.addAttribute("classMapList", classService.getClassMapList(-1));
-
 		return "page/dashboard/overview";
 	}
 
