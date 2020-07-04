@@ -102,7 +102,7 @@ public class T4MVisitor extends ASTVisitor {
 			if (outerClassQualifiedName.equals(outerClassInfo.getFullyQualifiedName())) {
 				currentClassInfo = outerClassInfo;
 			} else {
-				currentClassInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
+				currentClassInfo = EntityUtil.getClassByQualifiedName(projectInfo.getExtraClassList(),
 				                                                      outerClassQualifiedName);
 			}
 		}

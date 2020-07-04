@@ -52,7 +52,7 @@ public class No6_ASPScanner {
 		List<ClassInfo> classInfoList = projectInfo.getClassList();
 		for (int i = 0; i < classInfoList.size(); i++) {
 			System.out.println(i);
-			if (i==61){
+			if (i==8){
 				System.out.println();
 			}
 			ClassInfo classInfo = classInfoList.get(i);
