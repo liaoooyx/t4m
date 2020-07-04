@@ -4,6 +4,7 @@ import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,17 +50,18 @@ public class No4_ModuleScanner {
 							"java$"; // "/src(/main|/test)/java"
 			String moduleAbsolutePath = moduleAbsolutePathWithSuffix.replaceAll(regex, "");
 			// 保证模块的唯一性
-			ModuleInfo moduleInfo = projectInfo.safeAddModuleList(new ModuleInfo(moduleAbsolutePath));
+			ModuleInfo moduleInfo = EntityUtil.safeAddEntityToList(new ModuleInfo(moduleAbsolutePath),
+			                                                       projectInfo.getModuleList());
 			// 为模块添加子包，分为3个域：main，test，other。包括域路径和域下的包
 			// 包在加入列表中时，已去重
 			if (moduleAbsolutePathWithSuffix.contains(File.separator + "main")) {
-				moduleInfo.safeAddMainPackageList(packageInfo);
+				EntityUtil.safeAddEntityToList(packageInfo,moduleInfo.getMainPackageList());
 				moduleInfo.setMainScopePath(moduleAbsolutePathWithSuffix);
 			} else if (moduleAbsolutePathWithSuffix.contains(File.separator + "test")) {
-				moduleInfo.safeAddTestPackageList(packageInfo);
+				EntityUtil.safeAddEntityToList(packageInfo,moduleInfo.getTestPackageList());
 				moduleInfo.setTestScopePath(moduleAbsolutePathWithSuffix);
 			} else {
-				moduleInfo.safeAddOtherPackageList(packageInfo);
+				EntityUtil.safeAddEntityToList(packageInfo,moduleInfo.getOtherPackageList());
 				moduleInfo.setOtherScopePath(moduleAbsolutePathWithSuffix);
 			}
 			packageInfo.setModuleInfo(moduleInfo);

@@ -91,38 +91,12 @@ public class PackageInfo implements Serializable {
 		this.subPackageList = subPackageList;
 	}
 
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public PackageInfo safeAddSubPackageList(PackageInfo packageInfo) {
-		int index;
-		if ((index = subPackageList.indexOf(packageInfo)) == -1) {
-			this.subPackageList.add(packageInfo);
-			return packageInfo;
-		} else {
-			return this.subPackageList.get(index);
-		}
-	}
-
 	public List<ClassInfo> getClassList() {
 		return classList;
 	}
 
 	public void setClassList(List<ClassInfo> classList) {
 		this.classList = classList;
-	}
-
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public ClassInfo safeAddClassList(ClassInfo classInfo) {
-		int index;
-		if ((index = classList.indexOf(classInfo)) == -1) {
-			this.classList.add(classInfo);
-			return classInfo;
-		} else {
-			return this.classList.get(index);
-		}
 	}
 
 	public int getNumberOfClasses() {

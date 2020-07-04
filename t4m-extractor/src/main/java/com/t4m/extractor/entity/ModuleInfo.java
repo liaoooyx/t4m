@@ -81,19 +81,6 @@ public class ModuleInfo implements Serializable {
 		this.subModuleList = subModuleList;
 	}
 
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public ModuleInfo safeAddSubModuleList(ModuleInfo moduleInfo) {
-		int index;
-		if ((index = subModuleList.indexOf(moduleInfo)) == -1) {
-			this.subModuleList.add(moduleInfo);
-			return moduleInfo;
-		} else {
-			return this.subModuleList.get(index);
-		}
-	}
-
 	public ModuleInfo getPreviousModuleInfo() {
 		return previousModuleInfo;
 	}
@@ -110,19 +97,6 @@ public class ModuleInfo implements Serializable {
 		this.mainPackageList = mainPackageList;
 	}
 
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public PackageInfo safeAddMainPackageList(PackageInfo packageInfo) {
-		int index;
-		if ((index = mainPackageList.indexOf(packageInfo)) == -1) {
-			this.mainPackageList.add(packageInfo);
-			return packageInfo;
-		} else {
-			return this.mainPackageList.get(index);
-		}
-	}
-
 	public boolean hasMainPackageList() {
 		return mainPackageList.size() > 0;
 	}
@@ -135,19 +109,6 @@ public class ModuleInfo implements Serializable {
 		this.testPackageList = testPackageList;
 	}
 
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public PackageInfo safeAddTestPackageList(PackageInfo packageInfo) {
-		int index;
-		if ((index = testPackageList.indexOf(packageInfo)) == -1) {
-			this.testPackageList.add(packageInfo);
-			return packageInfo;
-		} else {
-			return this.testPackageList.get(index);
-		}
-	}
-
 	public boolean hasTestPackageList() {
 		return testPackageList.size() > 0;
 	}
@@ -158,19 +119,6 @@ public class ModuleInfo implements Serializable {
 
 	public void setOtherPackageList(List<PackageInfo> otherPackageList) {
 		this.otherPackageList = otherPackageList;
-	}
-
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public PackageInfo safeAddOtherPackageList(PackageInfo packageInfo) {
-		int index;
-		if ((index = otherPackageList.indexOf(packageInfo)) == -1) {
-			this.otherPackageList.add(packageInfo);
-			return packageInfo;
-		} else {
-			return this.otherPackageList.get(index);
-		}
 	}
 
 	public boolean hasOtherPackageList() {

@@ -31,8 +31,9 @@ class T4MProjectInfoSerializerTest {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		String dbFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
 		String dbPath = PropertyUtil.getProperty("ROOT_DB_PATH");
+		String currentProjectName = PropertyUtil.getProperty("CURRENT_PROJECT_NAME");
 		serializer.serializeTo(projectInfo, dbFileName);
-		File file = new File(dbPath + File.separator + dbFileName);
+		File file = new File(dbPath + File.separator + currentProjectName + File.separator + dbFileName);
 		assertTrue(file.exists());
 		ProjectInfo historyProjectInfo = serializer.deserializeFrom(
 				TimeUtil.formatToLogFileName(projectInfo.getCreateDate()));

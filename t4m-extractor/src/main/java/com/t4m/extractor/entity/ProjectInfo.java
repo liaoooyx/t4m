@@ -29,6 +29,7 @@ public class ProjectInfo implements Serializable {
 	private List<PackageInfo> packageList = new ArrayList<>();
 	private List<ClassInfo> classList = new ArrayList<>();
 	private List<ClassInfo> innerClassList = new ArrayList<>();
+	private List<ClassInfo> extraClassList = new ArrayList<>();
 
 	public ProjectInfo(String absolutePath) {
 		this(new Date(), absolutePath);
@@ -102,19 +103,6 @@ public class ProjectInfo implements Serializable {
 		this.moduleList = moduleList;
 	}
 
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public ModuleInfo safeAddModuleList(ModuleInfo moduleInfo) {
-		int index;
-		if ((index = moduleList.indexOf(moduleInfo)) == -1) {
-			this.moduleList.add(moduleInfo);
-			return moduleInfo;
-		} else {
-			return this.moduleList.get(index);
-		}
-	}
-
 	public List<ClassInfo> getClassList() {
 		return classList;
 	}
@@ -123,41 +111,20 @@ public class ProjectInfo implements Serializable {
 		this.classList = classList;
 	}
 
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public ClassInfo safeAddClassList(ClassInfo classInfo) {
-		int index;
-		if ((index = classList.indexOf(classInfo)) == -1) {
-			this.classList.add(classInfo);
-			return classInfo;
-		} else {
-			LOGGER.debug("{} exists in {}", classInfo.getFullyQualifiedName(), classInfo.getAbsolutePath());
-			return this.classList.get(index);
-		}
-	}
-
 	public List<ClassInfo> getInnerClassList() {
 		return innerClassList;
 	}
 
-
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public ClassInfo safeAddInnerClassList(ClassInfo classInfo) {
-		int index;
-		if ((index = innerClassList.indexOf(classInfo)) == -1) {
-			this.innerClassList.add(classInfo);
-			return classInfo;
-		} else {
-			LOGGER.debug("{} exists in {}", classInfo.getFullyQualifiedName(), classInfo.getAbsolutePath());
-			return this.innerClassList.get(index);
-		}
-	}
-
 	public void setInnerClassList(List<ClassInfo> innerClassList) {
 		this.innerClassList = innerClassList;
+	}
+
+	public List<ClassInfo> getExtraClassList() {
+		return extraClassList;
+	}
+
+	public void setExtraClassList(List<ClassInfo> extraClassList) {
+		this.extraClassList = extraClassList;
 	}
 
 	/**
@@ -184,26 +151,6 @@ public class ProjectInfo implements Serializable {
 
 	public void setPackageList(List<PackageInfo> packageList) {
 		this.packageList = packageList;
-	}
-
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public PackageInfo safeAddPackageList(PackageInfo packageInfo) {
-		int index;
-		if ((index = packageList.indexOf(packageInfo)) == -1) {
-			this.packageList.add(packageInfo);
-			return packageInfo;
-		} else {
-			return this.packageList.get(index);
-		}
-	}
-
-	/**
-	 * 根据全限定包名获取对象，返回获得的第一个对象，如果不存在则返回{@code null}.
-	 */
-	public PackageInfo getPackageInfoByFullyQualifiedName(String fullyQualifiedPackageName) {
-		return findPackageInfoFromList(packageList, fullyQualifiedPackageName);
 	}
 
 	/**

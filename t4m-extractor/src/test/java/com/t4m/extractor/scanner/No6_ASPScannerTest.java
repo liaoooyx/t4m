@@ -36,12 +36,12 @@ class No6_ASPScannerTest {
 		assertNotNull(classInfo);
 		assertAll(() -> {
 			Map<ClassInfo.SLOCType, Integer> slocMap = classInfo.getSlocCounterMap();
-			assertAll(() -> assertEquals(31, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(17, slocMap.get(ClassInfo.SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(41, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(28, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
+			assertAll(() -> assertEquals(32, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(20, slocMap.get(ClassInfo.SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(42, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(29, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
 			          () -> assertEquals(15, slocMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST)),
-			          () -> assertEquals(38, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
+			          () -> assertEquals(39, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
 		});
 
 		ClassInfo innerClass = EntityUtil.getClassByShortName(classInfo.getInnerClassList(),
@@ -52,9 +52,9 @@ class No6_ASPScannerTest {
 			assertAll(() -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE)),
 			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE)),
 			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(7, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
+			          () -> assertEquals(8, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
 			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST)),
-			          () -> assertEquals(10, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
+			          () -> assertEquals(11, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
 		});
 	}
 
@@ -74,7 +74,7 @@ class No6_ASPScannerTest {
 			assertEquals("com.simulation.core.foo.ComplexClassA$InnnerClassOfComplexClassA",
 			             innerClass.getFullyQualifiedName());
 			assertAll(() -> assertEquals(2, innerClass.getNumberOfMethods()),
-			          () -> assertEquals(3, innerClass.getNumberOfFields()));
+			          () -> assertEquals(4, innerClass.getNumberOfFields()));
 		} catch (DuplicatedInnerClassFoundedException e) {
 			e.printStackTrace();
 		}

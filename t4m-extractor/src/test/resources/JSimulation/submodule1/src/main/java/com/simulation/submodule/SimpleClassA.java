@@ -8,3 +8,7 @@ public class SimpleClassA {
 
 	}
 }
+
+class ExtraClass{
+	
+}

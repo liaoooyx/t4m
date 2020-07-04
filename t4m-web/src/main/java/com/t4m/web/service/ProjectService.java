@@ -86,6 +86,8 @@ public class ProjectService {
 			series.put("Abstract Class", new ArrayList<>());
 			series.put("Class", new ArrayList<>());
 			series.put("Inner Class", new ArrayList<>());
+			series.put("Enum", new ArrayList<>());
+			series.put("Annotation", new ArrayList<>());
 			series.put("package-info.java", new ArrayList<>());
 			addDataRow(series, projectInfo.getClassList());
 			addDataRow(series, projectInfo.getInnerClassList());
@@ -105,6 +107,12 @@ public class ProjectService {
 				switch (classInfo.getClassModifier()) {
 					case CLASS:
 						rows = series.get("Class");
+						break;
+					case ENUM:
+						rows = series.get("Enum");
+						break;
+					case ANNOTATION:
+						rows = series.get("ANNOTATION");
 						break;
 					case ABSTRACT_CLASS:
 						rows = series.get("Abstract Class");

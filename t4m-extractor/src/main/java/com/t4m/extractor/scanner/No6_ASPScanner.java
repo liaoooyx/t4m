@@ -7,9 +7,7 @@ import com.t4m.extractor.scanner.ast.InnerClassVisitor;
 import com.t4m.extractor.scanner.ast.T4MVisitor;
 import com.t4m.extractor.util.FileUtil;
 import com.t4m.extractor.util.PropertyUtil;
-import com.t4m.extractor.util.TimeUtil;
-import com.t4m.serializer.T4MProjectInfoSerializer;
-import com.t4m.serializer.T4MSerializer;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -17,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yuxiang Liao on 2020-06-18 01:12.
@@ -52,10 +51,15 @@ public class No6_ASPScanner {
 	private void scanMetrics() {
 		List<ClassInfo> classInfoList = projectInfo.getClassList();
 		for (int i = 0; i < classInfoList.size(); i++) {
+			System.out.println(i);
+			if (i==61){
+				System.out.println();
+			}
 			ClassInfo classInfo = classInfoList.get(i);
 			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
 			T4MVisitor t4MVisitor = new T4MVisitor(classInfo, projectInfo);
 			compilationUnit.accept(t4MVisitor);
+
 		}
 	}
 
@@ -67,21 +71,23 @@ public class No6_ASPScanner {
 		ASTParser astParser = ASTParser.newParser(AST.JLS14);
 		astParser.setSource(charArray);
 		astParser.setKind(ASTParser.K_COMPILATION_UNIT);
+		Map<String, String> options = JavaCore.getOptions();
+		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
+		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
+		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+		astParser.setCompilerOptions(options);
 		return (CompilationUnit) astParser.createAST(null);
 	}
 
 	public static void main(String[] args) {
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/JSimulationProject";
+		String rootPath = "/Users/liao/myProjects/IdeaProjects/jdepend";
 		// String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanDependency();
 		No6_ASPScanner aspScanner = new No6_ASPScanner(projectInfo);
 		aspScanner.scan();
-		T4MSerializer serializer = new T4MProjectInfoSerializer();
-		String dbFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
-		String dbPath = PropertyUtil.getProperty("ROOT_DB_PATH");
-		serializer.serializeTo(projectInfo, dbFileName);
+
 		System.out.println();
 	}
 }

@@ -5,6 +5,7 @@ import com.t4m.extractor.entity.DirHierarchyNode;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.util.EntityUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class No5_DependencyScanner {
 			// 非根节点
 			if (previousModuleInfo != null) {
 				currentNode.getModuleInfo().setPreviousModuleInfo(previousModuleInfo);
-				previousModuleInfo.safeAddSubModuleList(currentNode.getModuleInfo());
+				EntityUtil.safeAddEntityToList(currentNode.getModuleInfo(),previousModuleInfo.getSubModuleList());
 			}
 			// 根节点
 			if (currentNode.hasNextNode()) {
@@ -125,7 +126,7 @@ public class No5_DependencyScanner {
 			//判断当前路径是否有对应的包
 			if (currentPkg != null) {
 				if (previousPkg != null) {
-					previousPkg.safeAddSubPackageList(currentPkg);
+					EntityUtil.safeAddEntityToList(currentPkg,previousPkg.getSubPackageList());
 					currentPkg.setPreviousPackage(previousPkg);
 				}
 				// 更新父节点，搜索子路径下的其他文件夹

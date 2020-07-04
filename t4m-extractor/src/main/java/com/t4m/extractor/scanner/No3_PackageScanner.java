@@ -3,6 +3,7 @@ package com.t4m.extractor.scanner;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.util.EntityUtil;
 
 import java.util.List;
 
@@ -25,9 +26,9 @@ public class No3_PackageScanner {
 		projectInfo.getClassList().forEach(classInfo -> {
 			String pkgAbsolutePath = classInfo.getAbsolutePath().replaceFirst("/{1}?[^/]*?\\.java", "").strip();
 			// 保证包的唯一性
-			PackageInfo packageInfo = projectInfo.safeAddPackageList(new PackageInfo(pkgAbsolutePath));
+			PackageInfo packageInfo = EntityUtil.safeAddEntityToList(new PackageInfo(pkgAbsolutePath),projectInfo.getPackageList());
 			packageInfo.setFullyQualifiedName(classInfo.getPackageFullyQualifiedName());
-			packageInfo.safeAddClassList(classInfo);
+			EntityUtil.safeAddEntityToList(classInfo,packageInfo.getClassList());
 			classInfo.setPackageInfo(packageInfo);
 		});
 		return projectInfo.getPackageList();

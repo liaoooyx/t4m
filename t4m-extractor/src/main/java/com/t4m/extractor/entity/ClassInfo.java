@@ -44,6 +44,8 @@ public class ClassInfo implements Serializable {
 	//
 	private int numberOfMethods;
 	private int numberOfFields;
+	private int numberOfEnumConstants;
+	private int numberOfAnnotationMembers;
 
 	//SLOC counts the number of lines in the source file that are not: blank or empty lines, braces, or comments.
 	Map<SLOCType, Integer> slocCounterMap = new HashMap<>();
@@ -70,12 +72,13 @@ public class ClassInfo implements Serializable {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ClassInfo classInfo = (ClassInfo) o;
-		return Objects.equals(shortName, classInfo.shortName) && Objects.equals(absolutePath, classInfo.absolutePath);
+		return Objects.equals(fullyQualifiedName, classInfo.fullyQualifiedName) && Objects.equals(absolutePath,
+		                                                                                          classInfo.absolutePath);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(shortName, absolutePath);
+		return Objects.hash(fullyQualifiedName, absolutePath);
 	}
 
 	public String getShortName() {
@@ -150,19 +153,6 @@ public class ClassInfo implements Serializable {
 		this.innerClassList = innerClassList;
 	}
 
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public ClassInfo safeAddInnerClassList(ClassInfo classInfo) {
-		int index;
-		if ((index = innerClassList.indexOf(classInfo)) == -1) {
-			this.innerClassList.add(classInfo);
-			return classInfo;
-		} else {
-			return this.innerClassList.get(index);
-		}
-	}
-
 	public ClassInfo getSupperClass() {
 		return supperClass;
 	}
@@ -179,19 +169,6 @@ public class ClassInfo implements Serializable {
 		this.interfaceList = interfaceList;
 	}
 
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public ClassInfo safeAddInterfaceList(ClassInfo classInfo) {
-		int index;
-		if ((index = interfaceList.indexOf(classInfo)) == -1) {
-			this.interfaceList.add(classInfo);
-			return classInfo;
-		} else {
-			return this.interfaceList.get(index);
-		}
-	}
-
 	public List<ClassInfo> getActiveDependencyList() {
 		return activeDependencyList;
 	}
@@ -200,38 +177,12 @@ public class ClassInfo implements Serializable {
 		this.activeDependencyList = activeDependencyList;
 	}
 
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public ClassInfo safeAddActiveDependencyList(ClassInfo classInfo) {
-		int index;
-		if ((index = activeDependencyList.indexOf(classInfo)) == -1) {
-			this.activeDependencyList.add(classInfo);
-			return classInfo;
-		} else {
-			return this.activeDependencyList.get(index);
-		}
-	}
-
 	public List<ClassInfo> getPassiveDependencyList() {
 		return passiveDependencyList;
 	}
 
 	public void setPassiveDependencyList(List<ClassInfo> passiveDependencyList) {
 		this.passiveDependencyList = passiveDependencyList;
-	}
-
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public ClassInfo safeAddPassiveDependencyList(ClassInfo classInfo) {
-		int index;
-		if ((index = passiveDependencyList.indexOf(classInfo)) == -1) {
-			this.passiveDependencyList.add(classInfo);
-			return classInfo;
-		} else {
-			return this.passiveDependencyList.get(index);
-		}
 	}
 
 	public int getNumberOfMethods() {
@@ -248,6 +199,22 @@ public class ClassInfo implements Serializable {
 
 	public void setNumberOfFields(int numberOfFields) {
 		this.numberOfFields = numberOfFields;
+	}
+
+	public int getNumberOfEnumConstants() {
+		return numberOfEnumConstants;
+	}
+
+	public void setNumberOfEnumConstants(int numberOfEnumConstants) {
+		this.numberOfEnumConstants = numberOfEnumConstants;
+	}
+
+	public int getNumberOfAnnotationMembers() {
+		return numberOfAnnotationMembers;
+	}
+
+	public void setNumberOfAnnotationMembers(int numberOfAnnotationMembers) {
+		this.numberOfAnnotationMembers = numberOfAnnotationMembers;
 	}
 
 	public Map<SLOCType, Integer> getSlocCounterMap() {
@@ -286,6 +253,8 @@ public class ClassInfo implements Serializable {
 
 	public static enum ClassModifier {
 		CLASS,
+		ENUM,
+		ANNOTATION,
 		ABSTRACT_CLASS,
 		INTERFACE;
 	}

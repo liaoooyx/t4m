@@ -5,6 +5,7 @@ import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.metric.SLOCMetric;
+import com.t4m.extractor.util.EntityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +38,8 @@ public class No2_ClassScanner {
 				// 保证类的唯一性
 				String classShortName = javaFile.getName().split("\\.")[0];
 				// init ClassInfo
-				ClassInfo classInfo = projectInfo.safeAddClassList(
-						new ClassInfo(classShortName, javaFile.getAbsolutePath().strip()));
+				ClassInfo classInfo = EntityUtil.safeAddEntityToList(
+						new ClassInfo(classShortName, javaFile.getAbsolutePath().strip()), projectInfo.getClassList());
 				// SLOC from source file
 				Map<ClassInfo.SLOCType, Integer> slocCounterMap = classInfo.getSlocCounterMap();
 				while ((line = reader.readLine()) != null) {
