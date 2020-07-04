@@ -51,15 +51,10 @@ public class No6_ASPScanner {
 	private void scanMetrics() {
 		List<ClassInfo> classInfoList = projectInfo.getClassList();
 		for (int i = 0; i < classInfoList.size(); i++) {
-			System.out.println(i);
-			if (i==8){
-				System.out.println();
-			}
 			ClassInfo classInfo = classInfoList.get(i);
 			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
 			T4MVisitor t4MVisitor = new T4MVisitor(classInfo, projectInfo);
 			compilationUnit.accept(t4MVisitor);
-
 		}
 	}
 

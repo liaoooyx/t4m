@@ -35,8 +35,9 @@ public class InnerClassVisitor extends ASTVisitor {
 					parentClassInfo.getShortName() + "$" + node.getName().toString(); // Class$InnerClass
 			ClassInfo innerClassInfo = EntityUtil.safeAddEntityToList(new ClassInfo(innerClassName, parentClassInfo),
 			                                                          parentClassInfo.getInnerClassList());
-			innerClassInfo.setInnerClass(true);
+			innerClassInfo.setClassDeclaration(ClassInfo.ClassDeclaration.INNER_CLASS);
 			innerClassInfo.setOuterClass(parentClassInfo);
+			innerClassInfo.setMainPublicClass(outerClassInfo);
 			EntityUtil.safeAddEntityToList(innerClassInfo, projectInfo.getInnerClassList());
 		} else {
 			//由于一个类文件可以创建多个类，因此还需要对这些其他类进行创建。
@@ -46,6 +47,9 @@ public class InnerClassVisitor extends ASTVisitor {
 				extraClassInfo.setFullyQualifiedName(outerClassInfo.getPackageFullyQualifiedName() + "." + shortName);
 				extraClassInfo.setPackageInfo(outerClassInfo.getPackageInfo());
 				extraClassInfo.setPackageFullyQualifiedName(outerClassInfo.getPackageFullyQualifiedName());
+				extraClassInfo.setClassDeclaration(ClassInfo.ClassDeclaration.EXTRA_CLASS);
+				extraClassInfo.setMainPublicClass(outerClassInfo);
+				EntityUtil.safeAddEntityToList(extraClassInfo, outerClassInfo.getExtraClassList());
 				EntityUtil.safeAddEntityToList(extraClassInfo, projectInfo.getExtraClassList());
 				extraClassInfoList.add(extraClassInfo);
 			}

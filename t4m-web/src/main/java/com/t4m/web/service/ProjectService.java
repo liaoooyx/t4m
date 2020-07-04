@@ -55,7 +55,7 @@ public class ProjectService {
 	public List<Integer> getNumOfClassRecords() {
 		List<Integer> numOfClassRecords = new ArrayList<>();
 		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			numOfClassRecords.add(projectInfo.getClassList().size());
+			numOfClassRecords.add(projectInfo.getClassList().size() + projectInfo.getExtraClassList().size());
 		}
 		return numOfClassRecords;
 	}
@@ -66,8 +66,7 @@ public class ProjectService {
 	public List<Integer> getNumOfClassAndInnerClassRecords() {
 		List<Integer> numOfClassAndInnerClassRecords = new ArrayList<>();
 		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			numOfClassAndInnerClassRecords.add(
-					projectInfo.getClassList().size() + projectInfo.getInnerClassList().size());
+			numOfClassAndInnerClassRecords.add(projectInfo.getAllClassList().size());
 		}
 		return numOfClassAndInnerClassRecords;
 	}
@@ -89,8 +88,7 @@ public class ProjectService {
 			series.put("Enum", new ArrayList<>());
 			series.put("Annotation", new ArrayList<>());
 			series.put("package-info.java", new ArrayList<>());
-			addDataRow(series, projectInfo.getClassList());
-			addDataRow(series, projectInfo.getInnerClassList());
+			addDataRow(series, projectInfo.getAllClassList());
 			timeline.put(time, series);
 		}
 		return timeline;
@@ -99,10 +97,14 @@ public class ProjectService {
 	private void addDataRow(Map<String, List<Object>> series, List<ClassInfo> classInfoList) {
 		for (ClassInfo classInfo : classInfoList) {
 			List<Object> rows = null;
-			if (classInfo.isInnerClass()) {
-				rows = series.get("Inner Class");
-			} else if ("package-info".equals(classInfo.getShortName())){
+			if ("package-info".equals(classInfo.getShortName())) {
 				rows = series.get("Class");
+			} else if (classInfo.getClassDeclaration() != ClassInfo.ClassDeclaration.MAIN_PUBLIC_CLASS) {
+				if (classInfo.getClassDeclaration() == ClassInfo.ClassDeclaration.EXTRA_CLASS) {
+					rows = series.get("Extra Class");
+				} else if (classInfo.getClassDeclaration() == ClassInfo.ClassDeclaration.INNER_CLASS) {
+					rows = series.get("Inner Class");
+				}
 			} else {
 				switch (classInfo.getClassModifier()) {
 					case CLASS:

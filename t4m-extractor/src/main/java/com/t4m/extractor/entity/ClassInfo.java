@@ -21,11 +21,14 @@ public class ClassInfo implements Serializable {
 	private String packageFullyQualifiedName;
 
 	private ClassModifier classModifier; // 如果该类的源文件为package-info.java，那么可能不存在类修饰符，因为该文件可以不存在类，只包含注释。
-	private boolean innerClass = false;
+	private ClassDeclaration classDeclaration;
 
-	// 考虑内部类
-	private ClassInfo outerClass;
+	// 对于extraClass的innerClass来说，mainOuterClass与outerClass是不一致的。
+	private ClassInfo mainPublicClass; //唯一的公共外部类
+	private ClassInfo outerClass; //内部类的外部类
+
 	private List<ClassInfo> innerClassList = new ArrayList<>();
+	private List<ClassInfo> extraClassList = new ArrayList<>();
 
 	private ClassInfo supperClass;
 	private List<ClassInfo> interfaceList = new ArrayList<>();
@@ -55,14 +58,14 @@ public class ClassInfo implements Serializable {
 		this.absolutePath = absolutePath;
 	}
 
-	public ClassInfo(String innerClassShortName, ClassInfo outerClass) {
+	public ClassInfo(String innerClassShortName, ClassInfo mainPublicClass) {
 		this.shortName = innerClassShortName;
-		this.absolutePath = outerClass.absolutePath;
-		this.fullyQualifiedName = outerClass.fullyQualifiedName.replaceFirst(outerClass.shortName + "$",
-		                                                                     Matcher.quoteReplacement(
+		this.absolutePath = mainPublicClass.absolutePath;
+		this.fullyQualifiedName = mainPublicClass.fullyQualifiedName.replaceFirst(mainPublicClass.shortName + "$",
+		                                                                          Matcher.quoteReplacement(
 				                                                                     innerClassShortName));
-		this.packageInfo = outerClass.packageInfo;
-		this.packageFullyQualifiedName = outerClass.packageFullyQualifiedName;
+		this.packageInfo = mainPublicClass.packageInfo;
+		this.packageFullyQualifiedName = mainPublicClass.packageFullyQualifiedName;
 	}
 
 	@Override
@@ -129,12 +132,20 @@ public class ClassInfo implements Serializable {
 		this.classModifier = classModifier;
 	}
 
-	public boolean isInnerClass() {
-		return innerClass;
+	public ClassDeclaration getClassDeclaration() {
+		return classDeclaration;
 	}
 
-	public void setInnerClass(boolean innerClass) {
-		this.innerClass = innerClass;
+	public void setClassDeclaration(ClassDeclaration classDeclaration) {
+		this.classDeclaration = classDeclaration;
+	}
+
+	public ClassInfo getMainPublicClass() {
+		return mainPublicClass;
+	}
+
+	public void setMainPublicClass(ClassInfo mainPublicClass) {
+		this.mainPublicClass = mainPublicClass;
 	}
 
 	public ClassInfo getOuterClass() {
@@ -151,6 +162,14 @@ public class ClassInfo implements Serializable {
 
 	public void setInnerClassList(List<ClassInfo> innerClassList) {
 		this.innerClassList = innerClassList;
+	}
+
+	public List<ClassInfo> getExtraClassList() {
+		return extraClassList;
+	}
+
+	public void setExtraClassList(List<ClassInfo> extraClassList) {
+		this.extraClassList = extraClassList;
 	}
 
 	public ClassInfo getSupperClass() {
@@ -266,6 +285,12 @@ public class ClassInfo implements Serializable {
 		LOGIC_CODE_LINES_FROM_AST,
 		PHYSICAL_CODE_LINES_FROM_AST,
 		DOC_COMMENT_LINES_FROM_AST;
+	}
+
+	public static enum ClassDeclaration {
+		INNER_CLASS, // 内部类
+		EXTRA_CLASS, // 非public的外部类
+		MAIN_PUBLIC_CLASS; // 唯一的public外部类，与java文件名一致
 	}
 
 	@Override

@@ -156,9 +156,15 @@ public class T4MVisitor extends ASTVisitor {
 	 * 计算SLOC
 	 */
 	public void slocMetric(ClassInfo currentClassInfo, AbstractTypeDeclaration node) {
-		// 关于SLOC度量，由于内部类与非内部类的计算方式不同，因此需要进行区分：
-		// 内部类，获取源码行；非内部类，需要获取包括package和import关键字的行
-		ASTNode sourceLineNode = ASTVisitorUtil.isInnerClass(node) ? node : node.getParent();
+		// 关于SLOC度量，由于不同的ClassDeclaration的类的计算方式不同，因此需要进行区分：
+		// 唯一的public类，获取包括package和import关键字的所有行（包括其他类）；innerClass和extraClass，获取源码行；
+		// 所有对于前端来说，只应展示主类的SLOC，其他类的不准确
+		ASTNode sourceLineNode;
+		if (node.getName().getIdentifier().equals(outerClassInfo.getShortName())){
+			sourceLineNode = node.getParent();
+		}else {
+			sourceLineNode = node;
+		}
 		String[] sourceLines = sourceLineNode.toString().split(System.lineSeparator());
 
 		Map<ClassInfo.SLOCType, Integer> slocCounterMap = currentClassInfo.getSlocCounterMap();
@@ -235,7 +241,7 @@ public class T4MVisitor extends ASTVisitor {
 				String interfaceShortName = interf.toString();
 				ClassInfo interfaceClass = null;
 				interfaceClass = findClassInfoFromImportedListByShortName(interfaceShortName);
-				EntityUtil.safeAddEntityToList(interfaceClass,currentClassInfo.getInterfaceList());
+				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getInterfaceList());
 			});
 		}
 		return true;
@@ -273,7 +279,7 @@ public class T4MVisitor extends ASTVisitor {
 				String interfaceShortName = interf.toString();
 				ClassInfo interfaceClass = null;
 				interfaceClass = findClassInfoFromImportedListByShortName(interfaceShortName);
-				EntityUtil.safeAddEntityToList(interfaceClass,currentClassInfo.getInterfaceList());
+				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getInterfaceList());
 			});
 		}
 		return true;
@@ -319,8 +325,8 @@ public class T4MVisitor extends ASTVisitor {
 			ClassInfo currentClassInfo = resolveClassInfo(node);
 			// 添加依赖关系
 			if (varDeclaringClassInfo != null) {
-				EntityUtil.safeAddEntityToList(varDeclaringClassInfo,currentClassInfo.getActiveDependencyList());
-				EntityUtil.safeAddEntityToList(currentClassInfo,varDeclaringClassInfo.getPassiveDependencyList());
+				EntityUtil.safeAddEntityToList(varDeclaringClassInfo, currentClassInfo.getActiveDependencyList());
+				EntityUtil.safeAddEntityToList(currentClassInfo, varDeclaringClassInfo.getPassiveDependencyList());
 			}
 		}
 		return true;
@@ -339,8 +345,8 @@ public class T4MVisitor extends ASTVisitor {
 			ClassInfo currentClassInfo = resolveClassInfo(node);
 			// 添加依赖关系
 			if (staticInvokingClassInfo != null) {
-				EntityUtil.safeAddEntityToList(staticInvokingClassInfo,currentClassInfo.getActiveDependencyList());
-				EntityUtil.safeAddEntityToList(currentClassInfo,staticInvokingClassInfo.getPassiveDependencyList());
+				EntityUtil.safeAddEntityToList(staticInvokingClassInfo, currentClassInfo.getActiveDependencyList());
+				EntityUtil.safeAddEntityToList(currentClassInfo, staticInvokingClassInfo.getPassiveDependencyList());
 			}
 		}
 		return true;

@@ -27,6 +27,7 @@ public class ProjectInfo implements Serializable {
 
 	private List<ModuleInfo> moduleList = new ArrayList<>();
 	private List<PackageInfo> packageList = new ArrayList<>();
+
 	private List<ClassInfo> classList = new ArrayList<>();
 	private List<ClassInfo> innerClassList = new ArrayList<>();
 	private List<ClassInfo> extraClassList = new ArrayList<>();
@@ -125,6 +126,14 @@ public class ProjectInfo implements Serializable {
 
 	public void setExtraClassList(List<ClassInfo> extraClassList) {
 		this.extraClassList = extraClassList;
+	}
+
+	public List<ClassInfo> getAllClassList(){
+		List<ClassInfo> all = new ArrayList<>();
+		all.addAll(classList);
+		all.addAll(innerClassList);
+		all.addAll(extraClassList);
+		return all;
 	}
 
 	/**

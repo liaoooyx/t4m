@@ -51,6 +51,8 @@ public class No2_ClassScanner {
 					// sloc计数
 					SLOCMetric.slocCounterFromRawFile(currentLine, slocCounterMap);
 				}
+				classInfo.setMainPublicClass(classInfo);
+				classInfo.setClassDeclaration(ClassInfo.ClassDeclaration.MAIN_PUBLIC_CLASS);
 				classInfo.setFullyQualifiedName(pkgFullyQualifiedName + "." + classShortName);
 				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
 				classInfo.setSlocCounterMap(slocCounterMap);
