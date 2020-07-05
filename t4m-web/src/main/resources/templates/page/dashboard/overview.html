@@ -213,8 +213,9 @@
                           ['level'].concat(/*[[${timeRecords}]]*/),
                           ['Module Number'].concat(/*[[${moduleRecords}]]*/),
                           ['Package Number'].concat(/*[[${packageRecords}]]*/),
-                          ['Class Number'].concat(/*[[${classRecords}]]*/),
-                          ['Class + Inner Class Number'].concat(/*[[${classAndInnerClassRecords}]]*/)
+                          ['Java File Number (eq. public class)'].concat(/*[[${javaFileRecords}]]*/),
+                          ['Class Number (include non-public outer class)'].concat(/*[[${classRecords}]]*/),
+                          ['All Classes Number (include inner class and non-public outer class)'].concat(/*[[${allClassRecords}]]*/),
                       ]
                   },
                   // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。
@@ -222,7 +223,8 @@
                       {type: 'line', encode: {x: 0, y: 1, seriesName: 1}, seriesLayoutBy: 'row'},
                       {type: 'line', encode: {x: 0, y: 2, seriesName: 2}, seriesLayoutBy: 'row'},
                       {type: 'line', encode: {x: 0, y: 3, seriesName: 3}, seriesLayoutBy: 'row'},
-                      {type: 'line', encode: {x: 0, y: 4, seriesName: 4}, seriesLayoutBy: 'row'}
+                      {type: 'line', encode: {x: 0, y: 4, seriesName: 4}, seriesLayoutBy: 'row'},
+                      {type: 'line', encode: {x: 0, y: 5, seriesName: 5}, seriesLayoutBy: 'row'},
                   ],
                   legend: {},
                   grid: {
@@ -382,24 +384,30 @@
 						<table class="table align-items-center table-flush">
 							<thead class="thead-light">
 							<tr>
+								<th scope="col">Type</th>
 								<th scope="col">Class</th>
 								<th scope="col">of Package</th>
 								<th scope="col">of Module</th>
-								<th scope="col">Field Number</th>
-								<th scope="col">Method Number</th>
-								<th scope="col">SLOC</th>
+								<th scope="col">Fields</th>
+								<th scope="col">Methods</th>
+								<th scope="col">Enum Constants</th>
+								<th scope="col">Annotation Members</th>
+								<th scope="col">Inner Classes</th>
 							</tr>
 							</thead>
 							<tbody>
 							<tr th:each="classMap : ${classMapList}" th:object="${classMap}"
 							    th:class="(*{newness} eq 'new')? 'text-success' : ((*{newness} eq 'delete')? 'text-danger': '')"
 							    th:styleappend="(*{newness} eq 'delete')? 'text-decoration: line-through;' : ''">
-								<th scope="row" th:text="(*{newness} eq 'new') ? '(new) '+ *{className} : *{className}"></th>
+								<th scope="row" th:text="*{classModifier}"></th>
+								<td th:text="(*{newness} eq 'new') ? '(new) '+ *{className} : *{className}"></td>
 								<td th:text="*{classInfo.getPackageInfo().getFullyQualifiedName()}"></td>
 								<td th:text="*{classInfo.getPackageInfo().getModuleInfo().getRelativePath()}"></td>
-								<td th:text="*{numOfFields}"></td>
-								<td th:text="*{numOfMethods}"></td>
-								<td th:text="*{SLOC}"></td>
+								<td th:text="*{classInfo.getNumberOfFields()}"></td>
+								<td th:text="*{classInfo.getNumberOfMethods()}"></td>
+								<td th:text="*{classInfo.getNumberOfEnumConstants()}"></td>
+								<td th:text="*{classInfo.getNumberOfAnnotationMembers()}"></td>
+								<td th:text="*{classInfo.getInnerClassList().size()}"></td>
 							</tr>
 							</tbody>
 						</table>

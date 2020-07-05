@@ -79,22 +79,186 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-								<h5 class="h3 mb-0">Timeline of the class SLOC (Eclipse AST formatted)</h5>
+								<h5 class="h3 mb-0">Timeline of the class SLOC</h5>
+							</div>
+							<div class="col">
+								<ul class="nav nav-pills justify-content-end">
+									<li class="nav-item mr-2 mr-md-0">
+										<a id='sloc_chart_for_all_class' href="javascript:void(0);" class="nav-link py-2 px-3 active" data-toggle="tab"
+										   onclick="changeDataSet('allClass')">
+											<span class="d-none d-md-block">Class Level</span>
+											<span class="d-md-none">C</span>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="javascript:void(0);" class="nav-link py-2 px-3" data-toggle="tab" onclick="changeDataSet('mainClass')">
+											<span class="d-none d-md-block">File Level</span>
+											<span class="d-md-none">F</span>
+										</a>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div>
 					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:550px;"></div>
 					<script type="text/javascript" th:inline="javascript">
-
+              var datasetAllClass = /*[[${datasetAllClass}]]*/;
+              var datasetMainClass = /*[[${datasetMainClass}]]*/;
               var timeRecords = /*[[${timeRecords}]]*/;
-              var dataset = /*[[${dataset}]]*/;
 
-              function getMax() {
+              function changeDataSet(type) {
+                  let dataset;
+                  let label
+                  [];
+                  if (type === 'allClass') {
+                      dataset = datasetAllClass;
+                      label = ['Class', '', 'Logic Code Line (AST format, without package and import rows)',
+		                      'JavaDoc Comment Line']
+                  } else if (type === 'mainClass') {
+                      dataset = datasetMainClass;
+                      label = ['Source File', '.java',
+		                      'Logic Code Line (Without format, with package and import rows)',
+		                      'All Comment Line']
+                  }
+                  let dataMax = getMax(dataset);
+                  let options = optionsFormatter(dataset);
+                  let option = {
+                      baseOption: {
+                          timeline: {
+                              axisType: 'category', //轴的类型，value是数值轴；category是类目轴；
+                              // orient: 'horizontal',//摆放方式；vertical/horizontal
+                              loop: true,
+                              // autoPlay: true,
+                              currentIndex: timeRecords.length - 1,
+                              playInterval: 1000,
+                              symbol: 'circle',//timeline标记的图形: circle,rect,roundRect,triangle,diamond,pin,arrow,none;可以通过‘image://url"设置为图片
+                              controlStyle: {//控制按钮的样式；包括播放/前进/后退按钮
+                                  showNextBtn: true,//是否显示播放按钮；
+                                  showPrevBtn: true,//是否显示后退按钮；
+                                  showPlayBtn: true,//是否显示播放按钮
+                              },
+                              data: timeRecords,
+                              label: {
+                                  formatter: function (s) {
+                                      var date = new Date(s);
+                                      return date.getMonth() + "-" + date.getDate();
+                                  }
+                              }
+                          },
+                          legend: {
+                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class'],
+                          },
+                          xAxis: {
+                              name: 'Logic Code Line',
+                              type: 'value',
+                              max: Math.ceil(dataMax[0] / 5) * 5
+                          },
+                          yAxis: {
+                              name: 'Comment Line',
+                              type: 'value',
+                              max: Math.ceil(dataMax[1] / 5) * 5
+                          },
+                          tooltip: {
+                              // 显示额外信息
+                              padding: 10,
+                              borderWidth: 1,
+                              formatter: function (params) {
+                                  var text = '';
+                                  params.forEach(row => {
+                                      if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
+                                          let value = row.value;
+                                          text +=
+                                              '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                              + label[0] + ': ' + value[3] + label[1] + '<br>'
+                                              + '<span style="font: 12px">'
+                                              + 'of Module: ' + value[4] +'</span>' + '<br>'
+                                              + '</div>';
+                                      }
+                                  });
+                                  text += label[2] + ': ' + pointedData[0] + '<br>'
+                                      + label[3] + ': ' + pointedData[1] + '<br>'
+                                  return text;
+
+                              },
+                              // 重叠问题
+                              show: true,
+                              enterable: true,
+                              trigger: 'axis',
+                              axisPointer: {
+                                  type: 'cross',
+                                  snap: true,
+                                  axis: 'x', // y轴选项
+                                  label: {
+                                      // show: false,
+                                      color: '#fff',
+                                      backgroundColor: 'rgba(0, 0, 0, .55)'
+                                  }
+                              },
+                          },
+                          grid: {
+                              // left: '10%',
+                              right: 150,
+                              // top: '18%',
+                              // bottom: '10%'
+                          },
+                          color: ['#c23531'],
+                          //右侧视觉映射
+                          visualMap: [
+                              {
+                                  type: 'continuous',
+                                  left: 'right',
+                                  top: 'middle',
+                                  // itemWidth: 30,
+                                  // itemHeight: 120,
+                                  calculable: true,
+                                  precision: 0.1,
+                                  text: ['Class Logic Size (X+Y)'],
+                                  textGap: 30,
+                                  //以commentline + codeline作为参数，表示类的大小
+                                  dimension: 2,
+                                  max: (Math.ceil(dataMax[0] / 5) * 5) + (Math.ceil(dataMax[1] / 5) * 5),
+                                  inRange: {
+                                      symbolSize: [10, 70]
+                                  },
+                                  controller: {
+                                      inRange: {
+                                          color: ['#c23531']
+                                      },
+                                  }
+                              },
+                              // {
+                              //     type: 'continuous',
+                              //     left: 'right',
+                              //     bottom: '10%',
+                              //     text: ['Easy to Read', 'Hard to Read'],
+                              //     //以comment line作为参数，表示类的理解难易程度
+                              //     dimension: 1,
+                              //     min: 0,
+                              //     max: dataMax[1],
+                              //     precision: 1,
+                              //     inRange: {
+                              //         colorLightness: [0.4, 0.8]
+                              //     },
+                              //     controller: {
+                              //         inRange: {
+                              //             color: ['#c23531']
+                              //         },
+                              //     },
+                              // }
+                          ],
+                      },
+                      options: options
+
+                  };
+                  myChart.setOption(option);
+              }
+
+              function getMax(dataset) {
                   let xMax = 0;
                   let yMax = 0;
                   let d2Max = 0;
                   for (let key in dataset) {
-                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Inner Class']) {
+                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation']) {
                           for (let cols of dataset[key][key2]) {
                               xMax = Number(cols[0]) > xMax ? Number(cols[0]) : xMax;
                               yMax = Number(cols[1]) > yMax ? Number(cols[1]) : yMax;
@@ -105,9 +269,7 @@
                   return [xMax, yMax, d2Max];
               }
 
-              var dataMax = getMax();
-
-              function optionsFormatter() {
+              function optionsFormatter(dataset) {
                   let options = [];
                   for (let i = 0; i < timeRecords.length; i++) {
                       options[i] = {
@@ -116,7 +278,7 @@
                               data: dataset[timeRecords[i]]['Interface'],
                               type: 'scatter',
                               itemStyle: {
-                                  color: '#69d7e5',
+                                  color: '#69bae5',
                               },
                               emphasis: {
                                   label: {
@@ -134,7 +296,7 @@
                               data: dataset[timeRecords[i]]['Abstract Class'],
                               type: 'scatter',
                               itemStyle: {
-                                  color: '#3dba40',
+                                  color: '#54ba3d',
                               },
                               emphasis: {
                                   label: {
@@ -166,11 +328,29 @@
                                   },
                               },
                           }, {
-                              name: 'Inner Class',
-                              data: dataset[timeRecords[i]]['Abstract Inner'],
+                              name: 'Enum',
+                              data: dataset[timeRecords[i]]['Enum'],
                               type: 'scatter',
                               itemStyle: {
-                                  color: '#e7da70',
+                                  color: '#e7ad70',
+                              },
+                              emphasis: {
+                                  label: {
+                                      show: true,
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                      color: '#000000',
+                                      position: 'top',
+                                      fontWeight: 'normal',
+                                  },
+                              },
+                          }, {
+                              name: 'Annotation',
+                              data: dataset[timeRecords[i]]['Annotation'],
+                              type: 'scatter',
+                              itemStyle: {
+                                  color: '#e770e1',
                               },
                               emphasis: {
                                   label: {
@@ -189,140 +369,12 @@
                   return options;
               }
 
-              var options = optionsFormatter();
-
-              var option = {
-                  baseOption: {
-                      timeline: {
-                          axisType: 'category', //轴的类型，value是数值轴；category是类目轴；
-                          // orient: 'horizontal',//摆放方式；vertical/horizontal
-                          loop: true,
-                          // autoPlay: true,
-                          currentIndex: timeRecords.length - 1,
-                          playInterval: 1000,
-                          symbol: 'circle',//timeline标记的图形: circle,rect,roundRect,triangle,diamond,pin,arrow,none;可以通过‘image://url"设置为图片
-                          controlStyle: {//控制按钮的样式；包括播放/前进/后退按钮
-                              showNextBtn: true,//是否显示播放按钮；
-                              showPrevBtn: true,//是否显示后退按钮；
-                              showPlayBtn: true,//是否显示播放按钮
-                          },
-                          data: timeRecords,
-                          label: {
-                              formatter: function (s) {
-                                  var date = new Date(s);
-                                  return date.getMonth() + "-" + date.getDate();
-                              }
-                          }
-                      },
-                      legend: {
-                          data: ['Class', 'Interface', 'Abstract Class', 'Inner Class'],
-                      },
-                      xAxis: {
-                          name: 'Logic Code Line',
-                          type: 'value',
-                          max: Math.ceil(dataMax[0] / 5) * 5
-                      },
-                      yAxis: {
-                          name: 'Comment Line',
-                          type: 'value',
-                          max: Math.ceil(dataMax[1] / 5) * 5
-                      },
-                      tooltip: {
-                          // 显示额外信息
-                          padding: 10,
-                          borderWidth: 1,
-                          formatter: function (params) {
-                              var text = '';
-                              params.forEach(row => {
-                                  if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
-                                      let value = row.value;
-                                      text +=
-                                          '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
-                                          + 'Class: ' + value[3] + '<br>'
-                                          + '<span style="font: 12px">'
-                                          + 'of Module: ' + value[4] + +'</span>' + '<br>'
-                                          + '</div>';
-                                  }
-                              });
-                              text += 'Number of Code Line：' + pointedData[0] + '<br>'
-                                  + 'Number of Comment Line：' + pointedData[1] + '<br>'
-                              return text;
-
-                          },
-                          // 重叠问题
-                          show: true,
-                          enterable: true,
-                          trigger: 'axis',
-                          axisPointer: {
-                              type: 'cross',
-                              snap: true,
-                              axis: 'x', // y轴选项
-                              label: {
-                                  // show: false,
-                                  color: '#fff',
-                                  backgroundColor: 'rgba(0, 0, 0, .55)'
-                              }
-                          },
-                      },
-                      grid: {
-                          // left: '10%',
-                          right: 150,
-                          // top: '18%',
-                          // bottom: '10%'
-                      },
-                      color: ['#c23531'],
-                      //右侧视觉映射
-                      visualMap: [
-                          {
-                              type: 'continuous',
-                              left: 'right',
-                              top: 'middle',
-                              // itemWidth: 30,
-                              // itemHeight: 120,
-                              calculable: true,
-                              precision: 0.1,
-                              text: ['Class Logic Size (X+Y)'],
-                              textGap: 30,
-                              //以commentline + codeline作为参数，表示类的大小
-                              dimension: 2,
-                              max: (Math.ceil(dataMax[0] / 5) * 5) + (Math.ceil(dataMax[1] / 5) * 5),
-                              inRange: {
-                                  symbolSize: [10, 70]
-                              },
-                              controller: {
-                                  inRange: {
-                                      color: ['#c23531']
-                                  },
-                              }
-                          },
-                          // {
-                          //     type: 'continuous',
-                          //     left: 'right',
-                          //     bottom: '10%',
-                          //     text: ['Easy to Read', 'Hard to Read'],
-                          //     //以comment line作为参数，表示类的理解难易程度
-                          //     dimension: 1,
-                          //     min: 0,
-                          //     max: dataMax[1],
-                          //     precision: 1,
-                          //     inRange: {
-                          //         colorLightness: [0.4, 0.8]
-                          //     },
-                          //     controller: {
-                          //         inRange: {
-                          //             color: ['#c23531']
-                          //         },
-                          //     },
-                          // }
-                      ],
-                  },
-                  options: options
-
-              };
               // 基于准备好的dom，初始化echarts实例
               var myChart = echarts.init(document.getElementById('chart'));
-              // 使用刚指定的配置项和数据显示图表。
-              myChart.setOption(option);
+
+              // $('#sloc_chart_for_all_class').trigger('click');
+              document.getElementById('sloc_chart_for_all_class').click()
+
               var pointedData = [];
               myChart.on('mouseover', function (params) {
                   pointedData = params.data;
@@ -448,7 +500,7 @@
 				</div>
 			
 			</div>
-			
+		
 		</div>
 		<!-- Footer -->
 		<footer th:replace="fragments/common :: footer"></footer>
@@ -501,7 +553,7 @@
     var option2 = {
         legend: {
             data: ["Logic Code Line (Source File)", "Logic Code Line (AST)",
-		            "Physical Code Line (Source File)", "Physical Code Line (AST)",
+                "Physical Code Line (Source File)", "Physical Code Line (AST)",
                 "All Comment Line", "JavaDoc Comment Line"]
         },
         grid: {

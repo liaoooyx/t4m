@@ -58,7 +58,9 @@
 				<!-- Nav items -->
 				<ul class="navbar-nav px-2">
 					<li class="nav-item">
-						<button type="button" class="col-auto btn btn-block btn-outline-primary text-uppercase">
+						<button id="scan_current_project_btn" type="button"
+						        class="col-auto btn btn-block btn-outline-primary text-uppercase"
+						        onclick="scanCurrentProject(this)">
 							<span class="btn-inner--icon"><i class="fas fa-search-plus"></i></span>
 							<span class="btn-inner--text">Scan</span>
 						</button>
@@ -69,7 +71,9 @@
 								<span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
 								<span class="btn-inner--text">New</span>
 							</button>
-							<button type="button" class="col-auto btn btn-outline-default text-uppercase">
+							<button id="switch_project_btn" type="button" class="col-auto btn btn-outline-default text-uppercase"
+							        data-toggle="modal"
+							        data-target="#model_to_switch_project">
 								<span class="btn-inner--icon"><i class="fas fa-exchange-alt"></i></span>
 								<span class="btn-inner--text">Switch</span>
 							</button>
@@ -99,6 +103,35 @@
 						</div>
 					</div>
 				</div>
+				
+				<!-- Modal to switch and delete project -->
+				<div class="modal fade" id="model_to_switch_project" tabindex="-1" role="dialog"
+				     aria-labelledby="model_to_switch_project_label" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="model_to_switch_project_label">Switch Project</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div id="model_content_of_switching_project" class="modal-body">
+								<div class="list-group list-group-flush">
+									<a href="javascript:void(0);" class="list-group-item py-2 list-group-item-action"
+									   v-for="projectName in projectList" v-bind:class="projectName === currentProject?'active':''"
+									   v-on:click="switchProject(projectName)">
+										{{projectName}}
+									</a>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								<!--								<button type="button" class="btn btn-primary" >Choose</button>-->
+							</div>
+						</div>
+					</div>
+				</div>
+				
 				
 				<!-- Divider -->
 				<hr class="my-3">
@@ -192,19 +225,60 @@
 	<!--	<script th:src="@{/assets/js/fileinput.js}"></script>-->
 	
 	<script th:inline="javascript">
-			var blank_page_trigger = [[${isBlank}]];
-			if (blank_page_trigger){
+      var blank_page_trigger = [[${isBlank}]];
+      if (blank_page_trigger) {
           $("#new_project_btn").trigger("click");
       }
-			
-      function scanNewProject() {
-          let projectPath = $('#new_project_path').val()
-          $.get("/operation/new?path=" + projectPath, function (data) {
-              if (data == "success") {
+
+      function scanCurrentProject(obj) {
+          $(obj).attr("disabled", "");
+          $(obj).html("SCANNING...");
+          let i = 0;
+          let scanningCounter = setInterval(function () {
+              $(obj).html("SCANNING..." + (++i));
+          }, 1000);
+          $.get("/operation/scan", function (data) {
+              clearInterval(scanningCounter);
+              if (data === "success") {
                   window.location.reload();
               }
           })
       }
+
+      function scanNewProject() {
+          let projectPath = $('#new_project_path').val()
+          $.get("/operation/new?path=" + projectPath, function (data) {
+              if (data ==="success") {
+                  window.location.reload();
+              }
+          })
+      }
+
+      $('#model_to_switch_project').on('show.bs.modal', function (e) {
+          $.get("/operation/search", function (data) {
+              console.log(data['currentProject']);
+              vm_for_switch_project_model.projectList = data['projectList'];
+              vm_for_switch_project_model.currentProject = data['currentProject'];
+          })
+      })
+
+      var vm_for_switch_project_model = new Vue({
+          el: '#model_content_of_switching_project',
+          data: {
+              projectList: [],
+              currentProject: '',
+          },
+          methods: {
+              switchProject: function (targetProjectName) {
+                  console.log(targetProjectName)
+                  $.get("/operation/switch/" + targetProjectName, function (data) {
+                      if (data === "success") {
+                          window.location.href = "/dashboard/overview";
+                      }
+                  })
+              },
+          }
+      })
 	
 	</script>
 </imports>

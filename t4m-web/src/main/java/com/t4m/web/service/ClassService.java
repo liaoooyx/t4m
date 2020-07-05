@@ -1,7 +1,6 @@
 package com.t4m.web.service;
 
 import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.TimeUtil;
@@ -24,7 +23,7 @@ public class ClassService {
 	 * 构造绑定到前端页面的数据。List的每条数据都是一个包，每个模块的信息以键值对方式存储在Map中。
 	 */
 	public List<Map<String, Object>> getClassMapList(int index) {
-		ProjectInfo[] projectInfos = ProjectRecord.getProjectInfoRecordByIndex(index);
+		ProjectInfo[] projectInfos = ProjectRecord.getTwoProjectInfoRecordByIndex(index);
 		ProjectInfo current = projectInfos[0];
 		ProjectInfo previous = projectInfos[1];
 
@@ -39,29 +38,38 @@ public class ClassService {
 					m2.put("newness", "old");
 					classMapList.add(m2);
 				}
-			}
-		} else {
-			//添加新、旧记录
-			for (ClassInfo classInfo : current.getClassList()) {
-				Map<String, Object> m1 = initNewAndOldRecord(classInfo, previous.getClassList());
-				classMapList.add(m1);
-				for (ClassInfo innerClass : classInfo.getInnerClassList()) {
-					Map<String, Object> m2 = initNewAndOldRecord(innerClass, previous.getInnerClassList());
+				for (ClassInfo extraClass : classInfo.getExtraClassList()) {
+					Map<String, Object> m2 = initMapList(extraClass);
+					m2.put("newness", "old");
 					classMapList.add(m2);
 				}
 			}
+		} else {
+			//添加新、旧记录
+			for (ClassInfo classInfo : current.getAllClassList()) {
+				Map<String, Object> m1 = initNewAndOldRecord(classInfo, previous.getAllClassList());
+				classMapList.add(m1);
+				// for (ClassInfo innerClass : classInfo.getInnerClassList()) {
+				// 	Map<String, Object> m2 = initNewAndOldRecord(innerClass, previous.getInnerClassList());
+				// 	classMapList.add(m2);
+				// }
+				// for (ClassInfo extraClass: classInfo.getExtraClassList()){
+				// 	Map<String, Object> m2 = initNewAndOldRecord(extraClass, previous.getExtraClassList());
+				// 	classMapList.add(m2);
+				// }
+			}
 			// 添加已删除记录
 			for (ClassInfo classInfo : previous.getClassList()) {
-				Map<String, Object> m1 = initDeletedRecord(classInfo, current.getClassList());
+				Map<String, Object> m1 = initDeletedRecord(classInfo, current.getAllClassList());
 				if (m1 != null) {
 					classMapList.add(m1);
 				}
-				for (ClassInfo innerClass : classInfo.getInnerClassList()) {
-					Map<String, Object> m2 = initDeletedRecord(innerClass, current.getInnerClassList());
-					if (m1 != null) {
-						classMapList.add(m2);
-					}
-				}
+				// for (ClassInfo innerClass : classInfo.getInnerClassList()) {
+				// 	Map<String, Object> m2 = initDeletedRecord(innerClass, current.getInnerClassList());
+				// 	if (m1 != null) {
+				// 		classMapList.add(m2);
+				// 	}
+				// }
 			}
 		}
 
@@ -105,12 +113,8 @@ public class ClassService {
 	private Map<String, Object> initMapList(ClassInfo classInfo) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("classInfo", classInfo);
+		map.put("classModifier",classInfo.getClassModifier());
 		map.put("className", classInfo.getShortName());
-		map.put("numOfFields", String.valueOf(classInfo.getNumberOfFields()));
-		map.put("numOfMethods", String.valueOf(classInfo.getNumberOfMethods()));
-		map.put("numOfInnerClass", String.valueOf(classInfo.getInnerClassList().size()));
-		map.put("SLOC", String.valueOf(
-				classInfo.getSlocCounterMap().get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE)));
 		return map;
 	}
 

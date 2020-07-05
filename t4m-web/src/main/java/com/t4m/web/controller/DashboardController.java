@@ -3,7 +3,6 @@ package com.t4m.web.controller;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
-import com.t4m.extractor.util.PropertyUtil;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
@@ -17,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +41,7 @@ public class DashboardController {
 
 	@GetMapping("/overview")
 	public String overview(Model model) {
-		ProjectInfo[] projectInfos = ProjectRecord.getProjectInfoRecordByIndex(-1);
+		ProjectInfo[] projectInfos = ProjectRecord.getTwoProjectInfoRecordByIndex(-1);
 		// 基本信息
 		model.addAttribute("currentProjectInfo", projectInfos[0]);
 		model.addAttribute("preProjectInfo", projectInfos[1]);
@@ -52,8 +50,9 @@ public class DashboardController {
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
 		model.addAttribute("moduleRecords", projectService.getNumOfModuleRecords());
 		model.addAttribute("packageRecords", projectService.getNumOfPackageRecords());
+		model.addAttribute("javaFileRecords", projectService.getNumOfJavaFileRecords());
 		model.addAttribute("classRecords", projectService.getNumOfClassRecords());
-		model.addAttribute("classAndInnerClassRecords", projectService.getNumOfClassAndInnerClassRecords());
+		model.addAttribute("allClassRecords", projectService.getNumOfAllClassRecords());
 		// 用于表格
 		model.addAttribute("moduleMapList", moduleService.getModuleMapList(-1));
 		model.addAttribute("packageMapList", packageService.getPackageMapList(-1));
@@ -79,7 +78,9 @@ public class DashboardController {
 		model.addAttribute("projectList", projectInfoList);
 		// 用于timeline chart
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
-		model.addAttribute("dataset", projectService.getDataSetOfSLOC());
+		model.addAttribute("datasetAllClass", projectService.getDataSetOfSLOC(ProjectService.FLAG_ALL_CLASS));
+		model.addAttribute("datasetMainClass", projectService.getDataSetOfSLOC(ProjectService.FLAG_MAIN_PUBLIC_CLASS));
+		// 用于table
 		model.addAttribute("dataList", moduleService.getAllModulesSLOC(-1));
 		model.addAttribute("previousName", "");
 		model.addAttribute("previousType", "");
@@ -103,7 +104,7 @@ public class DashboardController {
 			// "返回上级"后，直接回到所有模块SLOC的展示
 			model.addAttribute("dataList", moduleService.getSLOCRecordByModuleName(name, projectRecordIndex));
 		} else if ("package".equals(type)) { // 获取指定包的类和直接子包
-			ProjectInfo projectInfo = ProjectRecord.getProjectInfoRecordByIndex(projectRecordIndex)[0];
+			ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), name);
 			if (packageInfo.hasPreviousPackage()) {
 				preName = packageInfo.getPreviousPackage().getFullyQualifiedName();

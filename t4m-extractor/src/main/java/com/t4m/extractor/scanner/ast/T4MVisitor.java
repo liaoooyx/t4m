@@ -159,14 +159,9 @@ public class T4MVisitor extends ASTVisitor {
 		// 关于SLOC度量，由于不同的ClassDeclaration的类的计算方式不同，因此需要进行区分：
 		// 唯一的public类，获取包括package和import关键字的所有行（包括其他类）；innerClass和extraClass，获取源码行；
 		// 所有对于前端来说，只应展示主类的SLOC，其他类的不准确
-		ASTNode sourceLineNode;
-		if (node.getName().getIdentifier().equals(outerClassInfo.getShortName())){
-			sourceLineNode = node.getParent();
-		}else {
-			sourceLineNode = node;
-		}
-		String[] sourceLines = sourceLineNode.toString().split(System.lineSeparator());
 
+		// 将AST与SOURCE_FILE分开，AST将不包括package和IMPORT语句。于是乎，只有类型为MAIN_PUBLIC_CLASS的类是才有源文件的SLOC
+		String[] sourceLines = node.toString().split(System.lineSeparator());
 		Map<ClassInfo.SLOCType, Integer> slocCounterMap = currentClassInfo.getSlocCounterMap();
 		Arrays.stream(sourceLines).forEach(line -> SLOCMetric.slocCounterFromAST(line, slocCounterMap));
 		currentClassInfo.setSlocCounterMap(slocCounterMap);

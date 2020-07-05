@@ -261,7 +261,7 @@ public class ClassInfo implements Serializable {
 	}
 
 	/**
-	 * 获取自身的SLOC，以数组形式返回。索引与对应的值，查看{@link SLOCMetric.sumSLOC()}
+	 * 获取自身的SLOC，以数组形式返回。索引与对应的值，查看{@link SLOCMetric#sumSLOC(int[], Map)}
 	 */
 	public int[] getSumOfSLOC() {
 		int[] slocArray = new int[6];
@@ -271,15 +271,26 @@ public class ClassInfo implements Serializable {
 	}
 
 	public static enum ClassModifier {
-		CLASS,
-		ENUM,
-		ANNOTATION,
-		ABSTRACT_CLASS,
-		INTERFACE;
+		CLASS("class"),
+		ENUM("enum"),
+		ANNOTATION("annotation"),
+		ABSTRACT_CLASS("abstract"),
+		INTERFACE("interface");
+
+		String str;
+
+		ClassModifier(String str) {
+			this.str = str;
+		}
+
+		@Override
+		public String toString() {
+			return str;
+		}
 	}
 
 	public static enum SLOCType {
-		LOGIC_CODE_LINES_FROM_SOURCE_FILE,
+		LOGIC_CODE_LINES_FROM_SOURCE_FILE(),
 		PHYSICAL_CODE_LINES_FROM_SOURCE_FILE,
 		ALL_COMMENT_LINES_FROM_SOURCE_FILE,
 		LOGIC_CODE_LINES_FROM_AST,

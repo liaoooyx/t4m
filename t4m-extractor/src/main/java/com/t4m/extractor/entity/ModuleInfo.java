@@ -126,13 +126,15 @@ public class ModuleInfo implements Serializable {
 	}
 
 	/**
-	 * 优先返回mainPackageList，如果没有则返回otherPackageList。忽略testPackageList
+	 * 优先返回mainPackageList，然后是otherPackageList，最后是testPackageList
 	 */
 	public List<PackageInfo> getPackageList() {
 		if (hasMainPackageList()) {
 			return mainPackageList;
-		} else {
+		} else if (hasOtherPackageList()) {
 			return otherPackageList;
+		} else {
+			return testPackageList;
 		}
 	}
 
@@ -162,14 +164,8 @@ public class ModuleInfo implements Serializable {
 
 	public int getNumberOfClasses() {
 		if (numberOfClasses == 0) {
-			if (this.hasMainPackageList()) {
-				for (PackageInfo packageInfo : this.getMainPackageList()) {
-					numberOfClasses += packageInfo.getNumberOfClasses();
-				}
-			} else if (this.hasOtherPackageList()) {
-				for (PackageInfo packageInfo : this.getOtherPackageList()) {
-					numberOfClasses += packageInfo.getNumberOfClasses();
-				}
+			for (PackageInfo packageInfo : this.getPackageList()) {
+				numberOfClasses += packageInfo.getNumberOfClasses();
 			}
 		}
 		return numberOfClasses;
@@ -181,14 +177,8 @@ public class ModuleInfo implements Serializable {
 
 	public int getNumberOfInnerClasses() {
 		if (numberOfInnerClasses == 0) {
-			if (this.hasMainPackageList()) {
-				for (PackageInfo packageInfo : this.getMainPackageList()) {
-					numberOfInnerClasses += packageInfo.getNumberOfInnerClasses();
-				}
-			} else if (this.hasOtherPackageList()) {
-				for (PackageInfo packageInfo : this.getOtherPackageList()) {
-					numberOfInnerClasses += packageInfo.getNumberOfInnerClasses();
-				}
+			for (PackageInfo packageInfo : this.getPackageList()) {
+				numberOfInnerClasses += packageInfo.getNumberOfInnerClasses();
 			}
 		}
 		return numberOfInnerClasses;
@@ -204,14 +194,8 @@ public class ModuleInfo implements Serializable {
 	public int[] getSumOfSLOC() {
 		int[] slocArray = new int[6];
 		Arrays.fill(slocArray, 0);
-		if (hasMainPackageList()) {
-			for (PackageInfo packageInfo : mainPackageList) {
-				SLOCMetric.sumSLOC(slocArray, packageInfo.getSumOfSLOCForCurrentPkg());
-			}
-		} else if (hasOtherPackageList()) {
-			for (PackageInfo packageInfo : otherPackageList) {
-				SLOCMetric.sumSLOC(slocArray, packageInfo.getSumOfSLOCForCurrentPkg());
-			}
+		for (PackageInfo packageInfo : getPackageList()) {
+			SLOCMetric.sumSLOC(slocArray, packageInfo.getSumOfSLOCForCurrentPkg());
 		}
 		return slocArray;
 	}

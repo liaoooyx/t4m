@@ -7,6 +7,8 @@ import com.t4m.serializer.T4MSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +21,7 @@ public class ProjectRecord {
 	static List<ProjectInfo> projectInfoList;
 
 	/**
-	 * 当扫描，切换，新增时，需要主动更新记录。并刷新前端页面
+	 * 当扫描，切换，新增时，需要主动调用词方法，更新记录
 	 */
 	public static List<ProjectInfo> updateProjectInfoRecord() {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
@@ -36,20 +38,16 @@ public class ProjectRecord {
 	}
 
 	/**
-	 * 如果index大于记录长度或者为-1，那么将默认读取最后一条记录。返回数组：第一个元素为当前记录，第二个元素为上一个记录。
-	 * 如果只有一条记录，那么返回的2条相同的记录。如果没有记录，则返回null。
+	 * 如果index大于记录长度或者为-1，那么将默认读取最后一条记录。返回数组：第一个元素为当前记录，第二个元素为上一个记录。 如果只有一条记录，那么返回的2条相同的记录。如果没有记录，则返回null。
 	 */
-	public static ProjectInfo[] getProjectInfoRecordByIndex(int index) {
+	public static ProjectInfo[] getTwoProjectInfoRecordByIndex(int index) {
 
 		List<ProjectInfo> projectInfoList = ProjectRecord.getProjectInfoList();
-		if (projectInfoList.size() == 0){
+		if (projectInfoList.isEmpty()) {
 			return null;
 		}
 		if (index > projectInfoList.size() - 1 || index < 0) {
 			index = projectInfoList.size() - 1;
-			LOGGER.warn(
-					"The index ({}) of projectInfo list is larger than the size of list ({}), using the index of last element as default.",
-					index, projectInfoList.size());
 		}
 		ProjectInfo current = projectInfoList.get(index);
 		ProjectInfo previous = null;
@@ -59,6 +57,31 @@ public class ProjectRecord {
 			previous = current;
 		}
 		return new ProjectInfo[]{current, previous};
+	}
+
+	/**
+	 * 返回db目录下的所有项目文件夹名
+	 */
+	public static List<String> getAllProjectRecordsDirName() {
+		List<String> projectDirList = new ArrayList<>();
+		String dbPath = PropertyUtil.getProperty("ROOT_DB_PATH");
+		File rootDir = new File(dbPath);
+		if (rootDir.exists()){
+			if (rootDir.listFiles()!=null){
+				for (File file : rootDir.listFiles()) {
+					if (file.isDirectory()) {
+						projectDirList.add(file.getName());
+					}
+				}
+				return projectDirList;
+			}else {
+				LOGGER.error("There is no project record dir in DB Directory: [{}].",dbPath);
+				return null;
+			}
+		}else {
+			LOGGER.error("The DB Directory: [{}] does not exist.",dbPath);
+			return null;
+		}
 	}
 
 }
