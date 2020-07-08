@@ -1,16 +1,16 @@
 package com.t4m.extractor.scanner.ast;
 
 import com.t4m.extractor.T4MExtractor;
-import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.FieldInfo;
-import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.entity.*;
 import com.t4m.extractor.util.EntityUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,6 +49,44 @@ class CreateMethodAndFieldInfoVisitorTest {
 		ClassInfo target4 = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
 		                                                       "com.simulation.core.foo.ComplexClassB$InnerClassOfB");
 		assertEquals(target4, f4.getTypeAsClassInfoList().get(0));
+	}
 
+	@Test
+	@DisplayName("测试构造MethodInfo")
+	void testToCreateMethodInfo() {
+		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
+		                                                         "com.simulation.core.foo.ComplexClassA");
+
+		List<MethodInfo> m1List = EntityUtil.getMethodByShortName(classInfo.getMethodInfoList(), "ComplexClassA");
+		assertEquals("", m1List.get(0).getReturnTypeString());
+		assertEquals(0, m1List.get(0).getReturnTypeAsClassInfoList().size());
+
+		List<MethodInfo> m2List = EntityUtil.getMethodByShortName(classInfo.getMethodInfoList(),
+		                                                          "referSimpleClassCInParams");
+		ClassInfo c2r = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
+		                                                   "com.simulation.core.xoo.XooClassA");
+		ClassInfo c2p = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
+		                                                   "com.simulation.core.bar.SimpleClassC");
+		assertEquals("XooClassA", m2List.get(0).getReturnTypeString());
+		assertEquals(c2r, m2List.get(0).getReturnTypeAsClassInfoList().get(0));
+		assertEquals(c2p, m2List.get(0).getParamsTypeAsClassInfoList().get(0));
+
+		List<MethodInfo> m3List = EntityUtil.getMethodByShortName(classInfo.getMethodInfoList(), "callList");
+		ClassInfo c3r = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
+		                                                   "com.simulation.core.bar.SimpleClassA");
+		Map<String, String> paramsMap3 = m3List.get(0).getParamsNameTypeMap();
+		assertEquals("List<SimpleClassA>", m3List.get(0).getReturnTypeString());
+		assertEquals(c3r, m3List.get(0).getReturnTypeAsClassInfoList().get(0));
+		assertTrue(paramsMap3.containsKey("listA"));
+		assertTrue(paramsMap3.containsKey("mapC"));
+
+		List<MethodInfo> m4List = EntityUtil.getMethodByShortName(classInfo.getMethodInfoList(), "multiParams");
+		ClassInfo c4p1 = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
+		                                                    "com.simulation.core.foo.ComplexClassA$InnnerClassOfComplexClassA");
+		ClassInfo c4p2 = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
+		                                                    "com.simulation.core.foo.ComplexClassC$InnerClassOfC");
+		List<ClassInfo> paramsList4  = m4List.get(0).getParamsTypeAsClassInfoList();
+		assertTrue(paramsList4.contains(c4p1));
+		assertTrue(paramsList4.contains(c4p2));
 	}
 }

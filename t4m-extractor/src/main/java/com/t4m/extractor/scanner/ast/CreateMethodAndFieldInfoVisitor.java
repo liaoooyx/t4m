@@ -8,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yuxiang Liao on 2020-07-07 23:22.
@@ -77,40 +79,90 @@ public class CreateMethodAndFieldInfoVisitor extends ASTVisitor {
 				LOGGER.error(obj.toString());
 			}
 		}
-		VariableDeclarationFragment fragment = (VariableDeclarationFragment) node.fragments().get(0);
-		String varName = fragment.getName().getIdentifier();
-		String typeString = type.toString();
-		FieldInfo fieldInfo = new FieldInfo(varName, typeString);
-		List<ClassInfo> projectScopeTypeParamsList = fillRelevantClassInfoNameToList(type, fieldInfo
-				.getTypeAsClassInfoList());
-		fieldInfo.setTypeToClassInfoList(projectScopeTypeParamsList);
-
-		for (Object obj : node.modifiers()) {
-			IExtendedModifier modifier = (IExtendedModifier) obj;
-			if (modifier.isModifier() && ((Modifier) modifier).getKeyword().toFlagValue() == Modifier.STATIC) {
-				fieldInfo.setStatic(true);
+		// 构造FieldInfo
+		for (Object fragemtObj : node.fragments()) {
+			VariableDeclarationFragment fragment = (VariableDeclarationFragment) fragemtObj;
+			String varName = fragment.getName().getIdentifier();
+			String typeString = type.toString();
+			FieldInfo fieldInfo = new FieldInfo(varName, typeString);
+			fillRelevantClassInfoToList(type, fieldInfo.getTypeAsClassInfoList());
+			for (Object modifierObj : node.modifiers()) {
+				IExtendedModifier ieModifier = (IExtendedModifier) modifierObj;
+				if (ieModifier.isModifier()) {
+					Modifier modifier = (Modifier) ieModifier;
+					if (modifier.getKeyword().toFlagValue() == Modifier.STATIC) {
+						fieldInfo.setStatic(true);
+					} else if (modifier.getKeyword().toFlagValue() == Modifier.FINAL) {
+						fieldInfo.setFinal(true);
+					} else if (modifier.getKeyword().toFlagValue() == Modifier.PUBLIC) {
+						fieldInfo.setAccessModifierEnum(AccessModifierEnum.PUBLIC);
+					} else if (modifier.getKeyword().toFlagValue() == Modifier.PRIVATE) {
+						fieldInfo.setAccessModifierEnum(AccessModifierEnum.PRIVATE);
+					} else if (modifier.getKeyword().toFlagValue() == Modifier.PROTECTED) {
+						fieldInfo.setAccessModifierEnum(AccessModifierEnum.PROTECTED);
+					}
+				}
 			}
+			EntityUtil.safeAddEntityToList(fieldInfo, currentClassInfo.getFieldInfoList());
 		}
-		EntityUtil.safeAddEntityToList(fieldInfo, currentClassInfo.getFieldInfoList());
 		return true;
 	}
 
 	@Override
 	public boolean visit(MethodDeclaration node) {
-		return super.visit(node);
+		ClassInfo currentClassInfo = ASTVisitorUtil.resolveClassInfo(node, outerClassInfo, projectInfo);
+
+		String methodName = node.getName().getIdentifier();
+		MethodInfo methodInfo = new MethodInfo(methodName);
+		methodInfo.setFullyQualifiedName(currentClassInfo.getFullyQualifiedName() + "#" + methodName);
+
+		for (Object modifierObj : node.modifiers()) {
+			IExtendedModifier ieModifier = (IExtendedModifier) modifierObj;
+			if (ieModifier.isModifier()) {
+				Modifier modifier = (Modifier) ieModifier;
+				if (modifier.getKeyword().toFlagValue() == Modifier.STATIC) {
+					methodInfo.setStaticMethod(true);
+				} else if (modifier.getKeyword().toFlagValue() == Modifier.ABSTRACT) {
+					methodInfo.setAbstractMethod(true);
+				} else if (modifier.getKeyword().toFlagValue() == Modifier.PUBLIC) {
+					methodInfo.setAccessModifierEnum(AccessModifierEnum.PUBLIC);
+				} else if (modifier.getKeyword().toFlagValue() == Modifier.PRIVATE) {
+					methodInfo.setAccessModifierEnum(AccessModifierEnum.PRIVATE);
+				} else if (modifier.getKeyword().toFlagValue() == Modifier.PROTECTED) {
+					methodInfo.setAccessModifierEnum(AccessModifierEnum.PROTECTED);
+				}
+			}
+		}
+
+		Type returnType = node.getReturnType2();
+		if (returnType != null) {
+			methodInfo.setReturnTypeString(returnType.toString());
+			fillRelevantClassInfoToList(returnType, methodInfo.getReturnTypeAsClassInfoList());
+		}
+
+		Map<String, String> paramsNameTypeMap = new LinkedHashMap<>();
+		for (Object paramObj : node.parameters()) {
+			SingleVariableDeclaration param = (SingleVariableDeclaration) paramObj;
+			paramsNameTypeMap.put(param.getName().getIdentifier(), param.getType().toString());
+			fillRelevantClassInfoToList(param.getType(), methodInfo.getParamsTypeAsClassInfoList());
+		}
+		methodInfo.setParamsNameTypeMap(paramsNameTypeMap);
+
+		EntityUtil.safeAddEntityToList(methodInfo, currentClassInfo.getMethodInfoList());
+		return true;
 	}
 
 	/**
-	 * 将于字段的类型中出现的，与项目有关的类，加入到列表中
+	 * 将于字段的类型中出现的，与项目有关的类，加入到列表中。目前是直接累加在传入的列表中，并返回该列表，而不是创建一个新的列表。
 	 */
-	public List<ClassInfo> fillRelevantClassInfoNameToList(Type type, List<ClassInfo> qualifiedNameList) {
+	public List<ClassInfo> fillRelevantClassInfoToList(Type type, List<ClassInfo> qualifiedNameList) {
 		if (type.isSimpleType()) { // 退出递归的条件
 			ClassInfo fieldTypeClassInfo;
 			SimpleType simpleType = (SimpleType) type;
 			// 可能是简单类名，也可能是外部类+嵌套类名，也可能是自己的嵌套类名。外部类名可能是全限定类名。需要解析
 			String unIdentifiedTypeName = simpleType.getName().getFullyQualifiedName();
 			fieldTypeClassInfo = resolveUnidentifiedNameToClassInfo(unIdentifiedTypeName);
-			if (fieldTypeClassInfo!=null){
+			if (fieldTypeClassInfo != null) {
 				qualifiedNameList.add(fieldTypeClassInfo);
 			}
 			return qualifiedNameList;
@@ -118,12 +170,12 @@ public class CreateMethodAndFieldInfoVisitor extends ASTVisitor {
 			// 数组
 			ArrayType arrayType = (ArrayType) type;
 			Type newType = arrayType.getElementType();
-			fillRelevantClassInfoNameToList(newType, qualifiedNameList);
+			fillRelevantClassInfoToList(newType, qualifiedNameList);
 		} else if (type.isParameterizedType()) {
 			// List Map Set ...
 			ParameterizedType parameterizedType = (ParameterizedType) type;
 			for (Object newType : parameterizedType.typeArguments()) {
-				fillRelevantClassInfoNameToList((Type) newType, qualifiedNameList);
+				fillRelevantClassInfoToList((Type) newType, qualifiedNameList);
 			}
 		} else if (type.isPrimitiveType()) {
 			//原始类型 PrimitiveType of FieldType. Skip

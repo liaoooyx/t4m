@@ -1,14 +1,7 @@
 package com.t4m.extractor.entity;
 
-import com.t4m.extractor.util.EntityUtil;
-
-import java.awt.*;
 import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-06-09 22:56.
@@ -20,13 +13,25 @@ public class MethodInfo implements Serializable {
 	private String shortName;
 	private String fullyQualifiedName; // fully-qualified class name: pkga.b.c#method
 
-	private String returnTypeQualifiedName = ""; // 返回类型的全限定类名，空字符串表示void
-	private List<String> paramsQualifiedNameList = new ArrayList<>(); // 参数的全限定类名列表，空列表表示无参数
+	private String returnTypeString = ""; // 空字符串表示无返回（即构造器）
+	private List<ClassInfo> returnTypeAsClassInfoList = new ArrayList<>();
+
+	private Map<String,String> paramsNameTypeMap = new LinkedHashMap<>(); // key为参数名，value为参数类型字符串
+	private List<ClassInfo> paramsTypeAsClassInfoList = new ArrayList<>();
 
 	private boolean abstractMethod = false;
 	private boolean staticMethod = false;
+	private AccessModifierEnum accessModifierEnum = AccessModifierEnum.DEFAULT;
 
-	// 方法列表只存在于ClassInfo下，因此只用shortName即可
+	public MethodInfo(String shortName) {
+		this.shortName = shortName;
+	}
+
+	@Override
+	public String toString() {
+		return "MethodInfo{" + "shortName='" + shortName + '\'' + ", returnTypeString='" + returnTypeString + '\'' +
+				", paramsNameTypeMap=" + paramsNameTypeMap + '}';
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -35,17 +40,14 @@ public class MethodInfo implements Serializable {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		MethodInfo that = (MethodInfo) o;
-		return Objects.equals(shortName, that.shortName) && Objects.equals(returnTypeQualifiedName,
-		                                                                   that.returnTypeQualifiedName) &&
-				Objects.equals(paramsQualifiedNameList, that.paramsQualifiedNameList);
+		return Objects.equals(shortName, that.shortName) && Objects.equals(returnTypeString, that.returnTypeString) &&
+				Objects.equals(paramsNameTypeMap, that.paramsNameTypeMap);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(shortName, returnTypeQualifiedName, paramsQualifiedNameList);
+		return Objects.hash(shortName, returnTypeString, paramsNameTypeMap);
 	}
-
-	private ClassInfo classInfo;
 
 	public String getShortName() {
 		return shortName;
@@ -63,20 +65,36 @@ public class MethodInfo implements Serializable {
 		this.fullyQualifiedName = fullyQualifiedName;
 	}
 
-	public String getReturnTypeQualifiedName() {
-		return returnTypeQualifiedName;
+	public String getReturnTypeString() {
+		return returnTypeString;
 	}
 
-	public void setReturnTypeQualifiedName(String returnTypeQualifiedName) {
-		this.returnTypeQualifiedName = returnTypeQualifiedName;
+	public void setReturnTypeString(String returnTypeString) {
+		this.returnTypeString = returnTypeString;
 	}
 
-	public List<String> getParamsQualifiedNameList() {
-		return paramsQualifiedNameList;
+	public List<ClassInfo> getReturnTypeAsClassInfoList() {
+		return returnTypeAsClassInfoList;
 	}
 
-	public void setParamsQualifiedNameList(List<String> paramsQualifiedNameList) {
-		this.paramsQualifiedNameList = paramsQualifiedNameList;
+	public void setReturnTypeAsClassInfoList(List<ClassInfo> returnTypeAsClassInfoList) {
+		this.returnTypeAsClassInfoList = returnTypeAsClassInfoList;
+	}
+
+	public Map<String, String> getParamsNameTypeMap() {
+		return paramsNameTypeMap;
+	}
+
+	public void setParamsNameTypeMap(Map<String, String> paramsNameTypeMap) {
+		this.paramsNameTypeMap = paramsNameTypeMap;
+	}
+
+	public List<ClassInfo> getParamsTypeAsClassInfoList() {
+		return paramsTypeAsClassInfoList;
+	}
+
+	public void setParamsTypeAsClassInfoList(List<ClassInfo> paramsTypeAsClassInfoList) {
+		this.paramsTypeAsClassInfoList = paramsTypeAsClassInfoList;
 	}
 
 	public boolean isAbstractMethod() {
@@ -95,33 +113,11 @@ public class MethodInfo implements Serializable {
 		this.staticMethod = staticMethod;
 	}
 
-	public ClassInfo getClassInfo() {
-		return classInfo;
+	public AccessModifierEnum getAccessModifierEnum() {
+		return accessModifierEnum;
 	}
 
-	public void setClassInfo(ClassInfo classInfo) {
-		this.classInfo = classInfo;
+	public void setAccessModifierEnum(AccessModifierEnum accessModifierEnum) {
+		this.accessModifierEnum = accessModifierEnum;
 	}
-
-	/**
-	 * 返回returnTypeQualifiedName对应的ClassInfo，如果不存在，则返回Null
-	 */
-	public ClassInfo resolveReturnTypeToClassInfo(List<ClassInfo> classInfoList) {
-		return EntityUtil.getClassByQualifiedName(classInfoList, this.returnTypeQualifiedName);
-	}
-
-	/**
-	 * 遍历列表paramsQualifiedNameList，将入参的全限定类型名解析为ClassInfo，如果不存在，则跳过并解析下一条，如果都不存在，则返回空列表
-	 */
-	public List<ClassInfo> resolveParamsListToClassInfoList(List<ClassInfo> classInfoList) {
-		List<ClassInfo> paramsLsit = new ArrayList<>();
-		for (String paramName : paramsQualifiedNameList) {
-			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(classInfoList, paramName);
-			if (classInfo != null) {
-				paramsLsit.add(classInfo);
-			}
-		}
-		return paramsLsit;
-	}
-
 }

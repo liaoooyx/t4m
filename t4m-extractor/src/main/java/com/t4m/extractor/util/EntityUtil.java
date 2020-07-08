@@ -1,12 +1,10 @@
 package com.t4m.extractor.util;
 
-import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.FieldInfo;
-import com.t4m.extractor.entity.ModuleInfo;
-import com.t4m.extractor.entity.PackageInfo;
+import com.t4m.extractor.entity.*;
 import com.t4m.extractor.exception.DuplicatedInnerClassFoundedException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Yuxiang Liao on 2020-06-21 15:52.
@@ -20,6 +18,14 @@ public class EntityUtil {
 		Optional<FieldInfo> target = fieldInfoList.stream().filter(
 				fieldInfo -> shortName.equals(fieldInfo.getShortName())).findFirst();
 		return target.orElse(null);
+	}
+
+	/**
+	 * 在列表中查找指定的方法名
+	 */
+	public static List<MethodInfo> getMethodByShortName(List<MethodInfo> methodInfoList, String shortName) {
+		return methodInfoList.stream().filter(fieldInfo -> shortName.equals(fieldInfo.getShortName())).collect(
+				Collectors.toList());
 	}
 
 	/**

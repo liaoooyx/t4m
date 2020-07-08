@@ -1,5 +1,6 @@
 package com.simulation.core.foo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,9 +27,10 @@ public class ComplexClassA extends ComplexAbstractClass {
 	com.simulation.core.xoo.XooClassA xooClassA;
 	List<SimpleClassA> list;
 	Map<String, SimpleClassC> map;
-	SimpleClassA[] array;
+	Map<SimpleClassC, SimpleClassC> map22;
+	SimpleClassA[] array1,array2;
 	ComplexClassB.InnerClassOfB cB = new ComplexClassB().innerClassOfComplexClassB;
-
+	private static final int aaa = 10;
 
 	static {
 		simpleClassC = ComplexClassC.initSimpleClassC();
@@ -77,6 +79,23 @@ public class ComplexClassA extends ComplexAbstractClass {
 	 */
 	public void invokeInnerClassA() {
 		ComplexClassD.InnerClassOfD.method();
+	}
+
+	public SimpleClassA[] callArray() {
+		SimpleClassA[] arrayA = new SimpleClassA[10],arryB=null;
+		return arrayA;
+	}
+
+	public SimpleClassA[] callArray(SimpleClassA...arrA) {
+		return arrA;
+	}
+
+	public List<SimpleClassA> callList(List<SimpleClassA> listA, Map<String, SimpleClassC> mapC) {
+		return listA;
+	}
+
+	public void multiParams(InnnerClassOfComplexClassA classA,ComplexClassC.InnerClassOfC classA2) {
+
 	}
 
 	@Override
