@@ -13,7 +13,7 @@ public class ClassInfo implements Serializable {
 
 	private static final long serialVersionUID = 2417256803742933401L;
 
-	private String shortName;
+	private String shortName; // 嵌套类的类名为 A$B
 	private String fullyQualifiedName; // fully-qualified class name
 	private String absolutePath;
 
@@ -31,20 +31,18 @@ public class ClassInfo implements Serializable {
 	private List<ClassInfo> extraClassList = new ArrayList<>();
 
 	private ClassInfo supperClass;
-	private List<ClassInfo> interfaceList = new ArrayList<>();
+	private List<ClassInfo> nestedClassList = new ArrayList<>();
 
 	//依赖（引用的类）
 	private List<ClassInfo> activeDependencyList = new ArrayList<>();
 	//被依赖（被其他类引用）
 	private List<ClassInfo> passiveDependencyList = new ArrayList<>();
-	//
-	// private Set<MethodInfo> methodSet;
-	//
-	// // instance variables in class, used by MethodInfo
-	// // Format: instancName:instanceType
-	// // such as "instanceSet:Set"
-	// private Set<String> instanceSet;
-	//
+
+	// 方法列表
+	private List<MethodInfo> methodInfoList = new ArrayList<>();
+	// 类的class-variable，包括静态变量，不包括常量
+	private List<FieldInfo> fieldInfoList = new ArrayList<>();
+
 	private int numberOfMethods;
 	private int numberOfFields;
 	private int numberOfEnumConstants;
@@ -180,12 +178,12 @@ public class ClassInfo implements Serializable {
 		this.supperClass = supperClass;
 	}
 
-	public List<ClassInfo> getInterfaceList() {
-		return interfaceList;
+	public List<ClassInfo> getNestedClassList() {
+		return nestedClassList;
 	}
 
-	public void setInterfaceList(List<ClassInfo> interfaceList) {
-		this.interfaceList = interfaceList;
+	public void setNestedClassList(List<ClassInfo> nestedClassList) {
+		this.nestedClassList = nestedClassList;
 	}
 
 	public List<ClassInfo> getActiveDependencyList() {
@@ -202,6 +200,22 @@ public class ClassInfo implements Serializable {
 
 	public void setPassiveDependencyList(List<ClassInfo> passiveDependencyList) {
 		this.passiveDependencyList = passiveDependencyList;
+	}
+
+	public List<MethodInfo> getMethodInfoList() {
+		return methodInfoList;
+	}
+
+	public void setMethodInfoList(List<MethodInfo> methodInfoList) {
+		this.methodInfoList = methodInfoList;
+	}
+
+	public List<FieldInfo> getFieldInfoList() {
+		return fieldInfoList;
+	}
+
+	public void setFieldInfoList(List<FieldInfo> fieldInfoList) {
+		this.fieldInfoList = fieldInfoList;
 	}
 
 	public int getNumberOfMethods() {

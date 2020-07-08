@@ -138,12 +138,12 @@
 									<div class="col">
 										<h5 class="card-title text-uppercase text-muted mb-0">Number Of Classes + (InnerClasses)</h5>
 										<span class="h2 font-weight-bold mb-0"
-										      th:text="${currentProjectInfo.getClassList().size()}+' + ('+${currentProjectInfo.getInnerClassList().size()}+')'"></span>
+										      th:text="${currentProjectInfo.getClassList().size()}+' + ('+${currentProjectInfo.getNestedClassList().size()}+')'"></span>
 									</div>
 								</div>
 								<!-- Update Info -->
 								<p class="mt-3 mb-0 text-sm" th:inline="text"
-								   th:with="numDiff=${currentProjectInfo.getClassList().size() - preProjectInfo.getClassList().size()}, numDiff2=${currentProjectInfo.getInnerClassList().size() - preProjectInfo.getInnerClassList().size()}">
+								   th:with="numDiff=${currentProjectInfo.getClassList().size() - preProjectInfo.getClassList().size()}, numDiff2=${currentProjectInfo.getNestedClassList().size() - preProjectInfo.getNestedClassList().size()}">
 									<span class="text-success mr-0" th:if="${numDiff} ge '0'">
 										<i class="fa fa-arrow-up"></i>[[${numDiff}]]
 									</span>

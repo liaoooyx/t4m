@@ -1,5 +1,10 @@
 package com.simulation.core.foo;
 
+import java.util.List;
+import java.util.Map;
+
+import com.simulation.core.CoreClass;
+import com.simulation.core.bar.SimpleAbstractClass;
 import com.simulation.core.bar.SimpleClassA;
 import com.simulation.core.bar.SimpleClassB;
 import com.simulation.core.bar.SimpleClassC;
@@ -15,27 +20,53 @@ public class ComplexClassA extends ComplexAbstractClass {
 	SimpleInterfaceA simpleInterfaceA = new SimpleClassA();
 	// 依赖SimpleClassB，但不依赖SimpleInterfaceB
 	SimpleClassB simpleClassB;
+	SimpleClassB simpleClassB2;
+	static SimpleClassC simpleClassC;
+	int a;
+	com.simulation.core.xoo.XooClassA xooClassA;
+	List<SimpleClassA> list;
+	Map<String, SimpleClassC> map;
+	SimpleClassA[] array;
+	ComplexClassB.InnerClassOfB cB = new ComplexClassB().innerClassOfComplexClassB;
+
+
+	static {
+		simpleClassC = ComplexClassC.initSimpleClassC();
+	}
+
+	{
+		ComplexClassB classB = new ComplexClassB();
+		simpleClassB2 = classB.initSimpleClassB();
+
+	}
 
 	public ComplexClassA() {
 		this.simpleClassB = new SimpleClassB();
+		list.forEach(e->{});
 	}
 
 	/**
-	 * 依赖SimpleClassC，但不依赖XooClassA
+	 * 依赖SimpleClassC，XooClassA
 	 */
 	public XooClassA referSimpleClassCInParams(SimpleClassC simpleClassC) {
 		return simpleClassC.getXooClassA();
 	}
 
 	/**
-	 * 依赖ComplexClassB, 和ComplexClassB$InnerClassA
+	 * 依赖ComplexClassB, ComplexClassB$InnerClassA，CoreClass
 	 */
-	public void invokeInnerClassC() {
+	public void invokeInnerClassC(CoreClass coreClass) {
 		new ComplexClassB().new InnerClassOfB().method();
+		ComplexClassB cbB = new ComplexClassB();
+		ComplexClassB.InnerClassOfB cibB = cbB.innerClassOfComplexClassB;
+		cbB.innerClassOfComplexClassB.method();
+		cibB.method();
+		cbB.innerClassOfComplexClassB.method();
+		cbB.innerClassOfComplexClassB.myselfB.method();
 	}
 
 	/**
-	 * 依赖ComplexClassC, 不依赖ComplexClassC$InnerClassA
+	 * 依赖ComplexClassC, 不依赖ComplexClassC$InnerClassC
 	 */
 	public void invokeInnerClassFromComplexClassC() {
 		ComplexClassC.innerClassA.method();
@@ -54,13 +85,11 @@ public class ComplexClassA extends ComplexAbstractClass {
 	}
 
 	public static class InnnerClassOfComplexClassA {
-		//test
+		// test
 		int field1;
-		int field2;
-		String field2; //test
+		String field2;
 		SimpleClassA classA;
 
-		//test
 		public static void method() {
 		}
 

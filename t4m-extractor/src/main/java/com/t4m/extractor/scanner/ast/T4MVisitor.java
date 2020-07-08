@@ -48,13 +48,13 @@ public class T4MVisitor extends ASTVisitor {
 	private ClassInfo findClassInfoFromImportedListByShortName(String shortName) {
 		shortName = transferShortName(shortName); //Class.InnerClass -> Class$InnerClass
 		ClassInfo targetClass = null;
-		targetClass = EntityUtil.getClassOrInnerClassFromOuterClassListByRawShortName(importedClassList, shortName);
+		targetClass = EntityUtil.getClassOrNestedClassFromOuterClassListByShortName(importedClassList, shortName);
 		if (targetClass != null) {
 			return targetClass;
 		}
 		for (PackageInfo packageInfo : importedPackageList) {
-			targetClass = EntityUtil.getClassOrInnerClassFromOuterClassListByRawShortName(packageInfo.getClassList(),
-			                                                                              shortName);
+			targetClass = EntityUtil.getClassOrNestedClassFromOuterClassListByShortName(packageInfo.getClassList(),
+			                                                                            shortName);
 			if (targetClass != null) {
 				return targetClass;
 			}
@@ -236,7 +236,7 @@ public class T4MVisitor extends ASTVisitor {
 				String interfaceShortName = interf.toString();
 				ClassInfo interfaceClass = null;
 				interfaceClass = findClassInfoFromImportedListByShortName(interfaceShortName);
-				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getInterfaceList());
+				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getNestedClassList());
 			});
 		}
 		return true;
@@ -274,7 +274,7 @@ public class T4MVisitor extends ASTVisitor {
 				String interfaceShortName = interf.toString();
 				ClassInfo interfaceClass = null;
 				interfaceClass = findClassInfoFromImportedListByShortName(interfaceShortName);
-				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getInterfaceList());
+				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getNestedClassList());
 			});
 		}
 		return true;
@@ -305,6 +305,7 @@ public class T4MVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(SimpleType node) {
 		// 方法返回类型不属于依赖关系
+		// TODO 返回类型属于耦合
 		if (!isMethodReturnModifier(node)) {
 			// 判断是否存在于importedList列表中
 			// 注意 new ComplexClassB().new InnerClassC();会出现单独出现内部类名的情况。

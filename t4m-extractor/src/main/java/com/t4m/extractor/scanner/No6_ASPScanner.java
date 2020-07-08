@@ -3,7 +3,8 @@ package com.t4m.extractor.scanner;
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.scanner.ast.InnerClassVisitor;
+import com.t4m.extractor.scanner.ast.CreateClassInfoVisitor;
+import com.t4m.extractor.scanner.ast.CreateMethodAndFieldInfoVisitor;
 import com.t4m.extractor.scanner.ast.T4MVisitor;
 import com.t4m.extractor.util.FileUtil;
 import com.t4m.extractor.util.PropertyUtil;
@@ -33,17 +34,29 @@ public class No6_ASPScanner {
 	}
 
 	public void scan() {
-		scanInnerClass();
+		scanNestedAndExtraClass();
+		scanMethodAndField();
 		scanMetrics();
 	}
 
-	private void scanInnerClass() {
+	private void scanNestedAndExtraClass() {
 		List<ClassInfo> classInfoList = projectInfo.getClassList();
 		for (int i = 0; i < classInfoList.size(); i++) {
 			ClassInfo classInfo = classInfoList.get(i);
 			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
-			InnerClassVisitor innerClassVisitor = new InnerClassVisitor(classInfo, projectInfo);
+			CreateClassInfoVisitor innerClassVisitor = new CreateClassInfoVisitor(classInfo, projectInfo);
 			compilationUnit.accept(innerClassVisitor);
+		}
+	}
+
+	private void scanMethodAndField() {
+		List<ClassInfo> classInfoList = projectInfo.getClassList();
+		for (int i = 0; i < classInfoList.size(); i++) {
+			ClassInfo classInfo = classInfoList.get(i);
+			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
+			CreateMethodAndFieldInfoVisitor methodAndFieldInfoVisitor = new CreateMethodAndFieldInfoVisitor(classInfo,
+			                                                                                                projectInfo);
+			compilationUnit.accept(methodAndFieldInfoVisitor);
 		}
 	}
 
@@ -75,8 +88,9 @@ public class No6_ASPScanner {
 	}
 
 	public static void main(String[] args) {
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/jdepend";
+		// String rootPath = "/Users/liao/myProjects/IdeaProjects/jdepend";
 		// String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
+		String rootPath = "/Users/liao/myProjects/IdeaProjects/JSimulationProject";
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanDependency();

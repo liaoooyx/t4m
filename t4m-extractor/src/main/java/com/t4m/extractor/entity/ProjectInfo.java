@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -29,7 +28,7 @@ public class ProjectInfo implements Serializable {
 	private List<PackageInfo> packageList = new ArrayList<>();
 
 	private List<ClassInfo> classList = new ArrayList<>();
-	private List<ClassInfo> innerClassList = new ArrayList<>();
+	private List<ClassInfo> nestedClassList = new ArrayList<>();
 	private List<ClassInfo> extraClassList = new ArrayList<>();
 
 	public ProjectInfo(String absolutePath) {
@@ -55,13 +54,13 @@ public class ProjectInfo implements Serializable {
 				Objects.equals(projectDirName, that.projectDirName) && Objects.equals(rootDirHierarchyNode,
 				                                                                      that.rootDirHierarchyNode) &&
 				Objects.equals(moduleList, that.moduleList) && Objects.equals(packageList, that.packageList) &&
-				Objects.equals(classList, that.classList) && Objects.equals(innerClassList, that.innerClassList);
+				Objects.equals(classList, that.classList) && Objects.equals(nestedClassList, that.nestedClassList);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(createDate, absolutePath, projectDirName, rootDirHierarchyNode, moduleList, packageList,
-		                    classList, innerClassList);
+		                    classList, nestedClassList);
 	}
 
 	public Date getCreateDate() {
@@ -112,12 +111,12 @@ public class ProjectInfo implements Serializable {
 		this.classList = classList;
 	}
 
-	public List<ClassInfo> getInnerClassList() {
-		return innerClassList;
+	public List<ClassInfo> getNestedClassList() {
+		return nestedClassList;
 	}
 
-	public void setInnerClassList(List<ClassInfo> innerClassList) {
-		this.innerClassList = innerClassList;
+	public void setNestedClassList(List<ClassInfo> nestedClassList) {
+		this.nestedClassList = nestedClassList;
 	}
 
 	public List<ClassInfo> getExtraClassList() {
@@ -128,32 +127,6 @@ public class ProjectInfo implements Serializable {
 		this.extraClassList = extraClassList;
 	}
 
-	public List<ClassInfo> getAllClassList(){
-		List<ClassInfo> all = new ArrayList<>();
-		all.addAll(classList);
-		all.addAll(innerClassList);
-		all.addAll(extraClassList);
-		return all;
-	}
-
-	/**
-	 * 优先从当前模块中查找类，如果当前模块中没有，则从整个项目中查找 一般情况下，全限定类名是不重复的，因此只需要从整个项目中发现即可；但不排除包名和类目都重复的情况（比如多个版本）这种情况默认先从当前的包中查询。
-	 */
-	public ClassInfo getClassInfoByFullyQualifiedName(String fullyQualifiedClassName, ModuleInfo moduleInfo) {
-		List<ClassInfo> tempClassList = new ArrayList<>();
-		if (moduleInfo.hasMainPackageList()) {
-			moduleInfo.getMainPackageList().forEach(tempModule -> {
-				tempClassList.addAll(tempModule.getClassList());
-			});
-		} else if (moduleInfo.hasOtherPackageList()) {
-			moduleInfo.getOtherPackageList().forEach(tempModule -> {
-				tempClassList.addAll(tempModule.getClassList());
-			});
-		}
-		return EntityUtil.getClassByQualifiedName(tempClassList, fullyQualifiedClassName);
-	}
-
-
 	public List<PackageInfo> getPackageList() {
 		return packageList;
 	}
@@ -162,27 +135,40 @@ public class ProjectInfo implements Serializable {
 		this.packageList = packageList;
 	}
 
+	public List<ClassInfo> getAllClassList() {
+		List<ClassInfo> all = new ArrayList<>();
+		all.addAll(classList);
+		all.addAll(nestedClassList);
+		all.addAll(extraClassList);
+		return all;
+	}
+
 	/**
-	 * 优先从当前模块中查找包，如果当前模块中没有，则从整个项目中查找 一般情况下，全限定包名是不重复的，因此只需要从整个项目中发现即可；但不排除包名重复的情况，这种情况默认先从当前的包中查询。
+	 * 优先从当前模块中查找类，如果当前模块中没有，则从整个项目中查找（包括其他模块） 一般情况下，全限定类名是不重复的，直接从整个项目中发现即可； 但不排除包名和类名都重复的情况（比如多个版本），所以默认先从当前的包中查询。
 	 */
-	public PackageInfo getPackageInfoByFullyQualifiedName(String fullyQualifiedPackageName, ModuleInfo moduleInfo) {
-		PackageInfo packageInfo = null;
-		if (moduleInfo.hasMainPackageList()) {
-			packageInfo = findPackageInfoFromList(moduleInfo.getMainPackageList(), fullyQualifiedPackageName);
-		} else if (moduleInfo.hasOtherPackageList()) {
-			packageInfo = findPackageInfoFromList(moduleInfo.getOtherPackageList(), fullyQualifiedPackageName);
-		}
-		if (packageInfo != null) {
-			return packageInfo;
+	public ClassInfo getClassInfoByFullyQualifiedName(String fullyQualifiedClassName, ModuleInfo moduleInfo) {
+		List<ClassInfo> tempClassList = new ArrayList<>();
+		moduleInfo.getPackageList().forEach(pkg -> tempClassList.addAll(pkg.getClassList()));
+		ClassInfo targetClass = EntityUtil.getClassByQualifiedName(tempClassList, fullyQualifiedClassName);
+		if (targetClass != null) {
+			return targetClass;
 		} else {
-			return findPackageInfoFromList(packageList, fullyQualifiedPackageName);
+			return EntityUtil.getClassByQualifiedName(getAllClassList(), fullyQualifiedClassName);
 		}
 	}
 
-	private PackageInfo findPackageInfoFromList(List<PackageInfo> pkgInfoList, String fullyQualifiedPackageName) {
-		Optional<PackageInfo> optProjectInfo = pkgInfoList.stream().filter(
-				pkg -> fullyQualifiedPackageName.equals(pkg.getFullyQualifiedName())).findFirst();
-		return optProjectInfo.orElse(null);
+
+	/**
+	 * 优先从当前模块中查找包，如果当前模块中没有，则从整个项目中查找（包括其他模块）。 一般情况下，全限定包名是不重复的，因此只需要从整个项目中发现即可；但不排除包名重复的情况，所默认先从当前的模块中查询。
+	 */
+	public PackageInfo getPackageInfoByFullyQualifiedName(String fullyQualifiedPackageName, ModuleInfo moduleInfo) {
+		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(moduleInfo.getPackageList(),
+		                                                               fullyQualifiedPackageName);
+		if (packageInfo != null) {
+			return packageInfo;
+		} else {
+			return EntityUtil.getPackageByQualifiedName(packageList, fullyQualifiedPackageName);
+		}
 	}
 
 	/**

@@ -195,7 +195,7 @@ class No6_ASPScannerTest {
 	void testInterface() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.bar.SimpleClassC");
-		List<ClassInfo> inferfaceList = classInfo.getInterfaceList();
+		List<ClassInfo> inferfaceList = classInfo.getNestedClassList();
 		assertEquals(2, inferfaceList.size());
 		ClassInfo classInfo_interfaceA = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                                    "com.simulation.core.bar.SimpleInterfaceA");

@@ -27,14 +27,17 @@ public class Test {
 	}
 
 	public static void main(String[] args) {
-		String[] paths =
-				{"/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/src/test/resources/JSimulation/src/main/java/com/simulation/core/foo/ComplexClassA.java"
-				};
-		Arrays.stream(paths).forEach(path -> {
-			CompilationUnit compilationUnit = getCompilationUnit(path);
-			compilationUnit.accept(new Test.T4MVisitor());
-			System.out.println();
-		});
+		// String[] paths =
+		// 		{"/Users/liao/myProjects/IdeaProjects/t4m/t4m-extractor/src/test/resources/JSimulation/src/main/java/com/simulation/core/foo/ComplexClassA.java"
+		// 		};
+		// Arrays.stream(paths).forEach(path -> {
+		// 	CompilationUnit compilationUnit = getCompilationUnit(path);
+		// 	compilationUnit.accept(new Test.T4MVisitor());
+		// 	System.out.println();
+		// });
+
+		Object a = new Integer(1);
+		System.out.println(a instanceof String);
 
 	}
 
@@ -76,8 +79,8 @@ public class Test {
 				System.out.println("Interface: " + interf.toString());
 			});
 
-			System.out.println("Num of Fields:\t"+node.getFields().length);
-			System.out.println("Num of Methods:\t"+node.getMethods().length);
+			System.out.println("Num of Fields:\t" + node.getFields().length);
+			System.out.println("Num of Methods:\t" + node.getMethods().length);
 
 			System.out.println(node.toString());
 

@@ -1,6 +1,7 @@
 package com.t4m.extractor.util;
 
 import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.FieldInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.exception.DuplicatedInnerClassFoundedException;
@@ -11,6 +12,15 @@ import java.util.*;
  * Created by Yuxiang Liao on 2020-06-21 15:52.
  */
 public class EntityUtil {
+
+	/**
+	 * 在列表中查找指定的字段名
+	 */
+	public static FieldInfo getFieldByShortName(List<FieldInfo> fieldInfoList, String shortName) {
+		Optional<FieldInfo> target = fieldInfoList.stream().filter(
+				fieldInfo -> shortName.equals(fieldInfo.getShortName())).findFirst();
+		return target.orElse(null);
+	}
 
 	/**
 	 * 在列表中查找指定的全限定类名
@@ -35,15 +45,15 @@ public class EntityUtil {
 	 * 在无法判断传入的类名是外部类还是内部类的情况下，调用该方法。该方法优先查找列表中的外部类，如果不存在则查找列表中的类的持有的内部类列表。
 	 *
 	 * @param classInfoList 储存着外部类的列表
-	 * @param rawShortName 原始类名。即Class或InnerClass（不是Class$InnerClass）
+	 * @param rawShortName 原始类名。即Class或InnerClass或Class$InnerClass）
 	 * @throws DuplicatedInnerClassFoundedException 如果指定的列表中包含的类的内部类的类名重复，那么会抛出异常。
 	 */
-	public static ClassInfo getClassOrInnerClassFromOuterClassListByRawShortName(
+	public static ClassInfo getClassOrNestedClassFromOuterClassListByShortName(
 			List<ClassInfo> classInfoList, String rawShortName) throws DuplicatedInnerClassFoundedException {
 		ClassInfo target = null;
 		target = getClassByShortName(classInfoList, rawShortName);
 		if (target == null) {
-			target = getInnerClassFromOuterClassListByShortName(classInfoList, rawShortName);
+			target = getNestedClassFromOuterClassListByShortName(classInfoList, rawShortName);
 		}
 		return target;
 	}
@@ -52,16 +62,63 @@ public class EntityUtil {
 	 * 根据类名，查找指定列表中的类的内部类。
 	 *
 	 * @param classInfoList 储存着外部类的列表
-	 * @param innerClassRawShortName 内部类的类目。类名有两种格式：原始类名比如：InnerClass；相对的是转化后的类名：Class$InnerClass。
+	 * @param innerClassShortName 内部类的类名: InnerClass或Class$InnerClass
 	 * @throws DuplicatedInnerClassFoundedException 如果指定的列表中的类的内部类的类名重复，那么会抛出异常。
 	 */
-	public static ClassInfo getInnerClassFromOuterClassListByShortName(
-			List<ClassInfo> classInfoList, String innerClassRawShortName) throws DuplicatedInnerClassFoundedException {
+	public static ClassInfo getNestedClassFromOuterClassListByShortName(
+			List<ClassInfo> classInfoList, String innerClassShortName) throws DuplicatedInnerClassFoundedException {
 		ClassInfo target = null;
 		List<ClassInfo> multipleInnerClassList = new ArrayList<>();
 		for (ClassInfo outerClassInfo : classInfoList) {
 			for (ClassInfo innerClassInfo : outerClassInfo.getInnerClassList()) {
-				if (innerClassRawShortName.equals(innerClassInfo.getShortName().split("\\$")[1])) {
+				if (innerClassShortName.equals(innerClassInfo.getShortName().split("\\$")[1]) ||
+						innerClassShortName.equals(innerClassInfo.getShortName())) {
+					target = innerClassInfo;
+					multipleInnerClassList.add(target);
+					break;
+				}
+			}
+		}
+		if (multipleInnerClassList.size() > 1) {
+			String msg = multipleInnerClassList.toString();
+			throw new DuplicatedInnerClassFoundedException(msg);
+		}
+		return target;
+	}
+
+
+	/**
+	 * 在无法判断传入的类名是外部类还是内部类的情况下，调用该方法。该方法优先查找列表中的外部类，如果不存在则查找列表中的类的持有的内部类列表。
+	 *
+	 * @param classInfoList 储存着外部类的列表
+	 * @param qualifiedName 全限定类名。即com.a.Class或com.a.Class$InnerClass
+	 * @throws DuplicatedInnerClassFoundedException 如果指定的列表中包含的类的内部类的类名重复，那么会抛出异常。
+	 */
+	public static ClassInfo getClassOrNestedClassFromOuterClassListByQualifiedName(
+			List<ClassInfo> classInfoList, String qualifiedName) throws DuplicatedInnerClassFoundedException {
+		ClassInfo target = null;
+		target = getClassByQualifiedName(classInfoList, qualifiedName);
+		if (target == null) {
+			target = getNestedClassFromOuterClassListByQualifiedName(classInfoList, qualifiedName);
+		}
+		return target;
+	}
+
+	/**
+	 * 根据类名，查找指定列表中的类的内部类。
+	 *
+	 * @param classInfoList 储存着外部类的列表
+	 * @param nestedClassQualifiedName 内部类的全限定类名。即com.a.Class或com.a.Class$InnerClass
+	 * @throws DuplicatedInnerClassFoundedException 如果指定的列表中的类的内部类的类名重复，那么会抛出异常。
+	 */
+	public static ClassInfo getNestedClassFromOuterClassListByQualifiedName(
+			List<ClassInfo> classInfoList, String nestedClassQualifiedName) throws
+	                                                                        DuplicatedInnerClassFoundedException {
+		ClassInfo target = null;
+		List<ClassInfo> multipleInnerClassList = new ArrayList<>();
+		for (ClassInfo outerClassInfo : classInfoList) {
+			for (ClassInfo innerClassInfo : outerClassInfo.getInnerClassList()) {
+				if (nestedClassQualifiedName.equals(innerClassInfo.getFullyQualifiedName())) {
 					target = innerClassInfo;
 					multipleInnerClassList.add(target);
 					break;

@@ -10,15 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 用于补充额外信息，比如内部类、非public的类，方法
  * Created by Yuxiang Liao on 2020-06-21 13:02.
  */
-public class InnerClassVisitor extends ASTVisitor {
+public class CreateClassInfoVisitor extends ASTVisitor {
 
 	private ClassInfo outerClassInfo;
 	private ProjectInfo projectInfo;
 	private List<ClassInfo> extraClassInfoList = new ArrayList<>();
 
-	public InnerClassVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
+	public CreateClassInfoVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
 		this.outerClassInfo = outerClassInfo;
 		this.projectInfo = projectInfo;
 		extraClassInfoList.add(outerClassInfo);
@@ -38,7 +39,7 @@ public class InnerClassVisitor extends ASTVisitor {
 			innerClassInfo.setClassDeclaration(ClassInfo.ClassDeclaration.INNER_CLASS);
 			innerClassInfo.setOuterClass(parentClassInfo);
 			innerClassInfo.setMainPublicClass(outerClassInfo);
-			EntityUtil.safeAddEntityToList(innerClassInfo, projectInfo.getInnerClassList());
+			EntityUtil.safeAddEntityToList(innerClassInfo, projectInfo.getNestedClassList());
 		} else {
 			//由于一个类文件可以创建多个类，因此还需要对这些其他类进行创建。
 			String shortName = node.getName().getIdentifier();
@@ -55,6 +56,8 @@ public class InnerClassVisitor extends ASTVisitor {
 			}
 		}
 	}
+
+	/*------------------------------------------------------------------------------------------*/
 
 	@Override
 	public boolean visit(TypeDeclaration node) {
