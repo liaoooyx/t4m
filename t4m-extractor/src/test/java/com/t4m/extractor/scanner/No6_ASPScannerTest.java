@@ -108,8 +108,8 @@ class No6_ASPScannerTest {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.foo.ComplexClassA");
 		assertNotNull(classInfo);
-		List<ClassInfo> activeDependencyList = classInfo.getActiveDependencyList();
-		List<ClassInfo> passiveDependencyList = classInfo.getPassiveDependencyList();
+		List<ClassInfo> activeDependencyList = classInfo.getActiveDependencyAkaFanOutList();
+		List<ClassInfo> passiveDependencyList = classInfo.getPassiveDependencyAkaFanInList();
 		assertEquals(0, passiveDependencyList.size());
 		assertEquals(9, activeDependencyList.size());
 		assertAll(() -> {

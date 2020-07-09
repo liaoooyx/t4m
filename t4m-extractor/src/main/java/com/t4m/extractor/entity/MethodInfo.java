@@ -2,6 +2,7 @@ package com.t4m.extractor.entity;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Yuxiang Liao on 2020-06-09 22:56.
@@ -16,8 +17,8 @@ public class MethodInfo implements Serializable {
 	private String returnTypeString = ""; // 空字符串表示无返回（即构造器）
 	private List<ClassInfo> returnTypeAsClassInfoList = new ArrayList<>();
 
-	private Map<String,String> paramsNameTypeMap = new LinkedHashMap<>(); // key为参数名，value为参数类型字符串
-	private List<ClassInfo> paramsTypeAsClassInfoList = new ArrayList<>();
+	private Map<String, String> paramsNameTypeMap = new LinkedHashMap<>(); // key为参数名，value为参数类型字符串
+	private Map<String, List<ClassInfo>> paramsTypeAsClassInfoListMap = new LinkedHashMap<>();
 
 	private boolean abstractMethod = false;
 	private boolean staticMethod = false;
@@ -89,12 +90,13 @@ public class MethodInfo implements Serializable {
 		this.paramsNameTypeMap = paramsNameTypeMap;
 	}
 
-	public List<ClassInfo> getParamsTypeAsClassInfoList() {
-		return paramsTypeAsClassInfoList;
+	public Map<String, List<ClassInfo>> getParamsTypeAsClassInfoListMap() {
+		return paramsTypeAsClassInfoListMap;
 	}
 
-	public void setParamsTypeAsClassInfoList(List<ClassInfo> paramsTypeAsClassInfoList) {
-		this.paramsTypeAsClassInfoList = paramsTypeAsClassInfoList;
+	public void setParamsTypeAsClassInfoListMap(
+			Map<String, List<ClassInfo>> paramsTypeAsClassInfoListMap) {
+		this.paramsTypeAsClassInfoListMap = paramsTypeAsClassInfoListMap;
 	}
 
 	public boolean isAbstractMethod() {
@@ -119,5 +121,13 @@ public class MethodInfo implements Serializable {
 
 	public void setAccessModifierEnum(AccessModifierEnum accessModifierEnum) {
 		this.accessModifierEnum = accessModifierEnum;
+	}
+
+	/**
+	 * 将paramsTypeAsClassInfoListMap中每个val都是一个list，该方法将之合并为一个list
+	 */
+	public List<ClassInfo> getParamsTypeAsClassInfoList() {
+		return paramsTypeAsClassInfoListMap.values().stream().flatMap(Collection::stream).collect(
+				Collectors.toList());
 	}
 }

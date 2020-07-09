@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用于补充额外信息，比如内部类、非public的类，方法
+ * 用于构造非公共类和嵌套类
  * Created by Yuxiang Liao on 2020-06-21 13:02.
  */
-public class CreateClassInfoVisitor extends ASTVisitor {
+public class No1_ClassInfoVisitor extends ASTVisitor {
 
 	private ClassInfo outerClassInfo;
 	private ProjectInfo projectInfo;
 	private List<ClassInfo> extraClassInfoList = new ArrayList<>();
 
-	public CreateClassInfoVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
+	public No1_ClassInfoVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
 		this.outerClassInfo = outerClassInfo;
 		this.projectInfo = projectInfo;
 		extraClassInfoList.add(outerClassInfo);

@@ -3,9 +3,9 @@ package com.t4m.extractor.scanner;
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.scanner.ast.CreateClassInfoVisitor;
-import com.t4m.extractor.scanner.ast.CreateMethodAndFieldInfoVisitor;
-import com.t4m.extractor.scanner.ast.T4MVisitor;
+import com.t4m.extractor.scanner.ast.No1_ClassInfoVisitor;
+import com.t4m.extractor.scanner.ast.No2_MethodAndFieldInfoVisitor;
+import com.t4m.extractor.scanner.ast.No3_SLOCVisitor;
 import com.t4m.extractor.util.FileUtil;
 import com.t4m.extractor.util.PropertyUtil;
 import org.eclipse.jdt.core.JavaCore;
@@ -36,7 +36,7 @@ public class No6_ASPScanner {
 	public void scan() {
 		scanNestedAndExtraClass();
 		scanMethodAndField();
-		scanMetrics();
+		scanSLOC();
 	}
 
 	private void scanNestedAndExtraClass() {
@@ -44,7 +44,7 @@ public class No6_ASPScanner {
 		for (int i = 0; i < classInfoList.size(); i++) {
 			ClassInfo classInfo = classInfoList.get(i);
 			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
-			CreateClassInfoVisitor innerClassVisitor = new CreateClassInfoVisitor(classInfo, projectInfo);
+			No1_ClassInfoVisitor innerClassVisitor = new No1_ClassInfoVisitor(classInfo, projectInfo);
 			compilationUnit.accept(innerClassVisitor);
 		}
 	}
@@ -54,20 +54,20 @@ public class No6_ASPScanner {
 		for (int i = 0; i < classInfoList.size(); i++) {
 			ClassInfo classInfo = classInfoList.get(i);
 			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
-			CreateMethodAndFieldInfoVisitor methodAndFieldInfoVisitor = new CreateMethodAndFieldInfoVisitor(classInfo,
-			                                                                                                projectInfo);
+			No2_MethodAndFieldInfoVisitor methodAndFieldInfoVisitor = new No2_MethodAndFieldInfoVisitor(classInfo,
+			                                                                                            projectInfo);
 			compilationUnit.accept(methodAndFieldInfoVisitor);
 		}
 	}
 
 
-	private void scanMetrics() {
+	private void scanSLOC() {
 		List<ClassInfo> classInfoList = projectInfo.getClassList();
 		for (int i = 0; i < classInfoList.size(); i++) {
 			ClassInfo classInfo = classInfoList.get(i);
 			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
-			T4MVisitor t4MVisitor = new T4MVisitor(classInfo, projectInfo);
-			compilationUnit.accept(t4MVisitor);
+			No3_SLOCVisitor SLOCVisitor = new No3_SLOCVisitor(classInfo, projectInfo);
+			compilationUnit.accept(SLOCVisitor);
 		}
 	}
 

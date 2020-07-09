@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 /**
  * Created by Yuxiang Liao on 2020-06-18 13:31.
  */
-public class T4MVisitor extends ASTVisitor {
+public class No3_SLOCVisitor extends ASTVisitor {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ASTVisitor.class);
 
@@ -29,7 +29,7 @@ public class T4MVisitor extends ASTVisitor {
 	private List<ClassInfo> importedClassList = new ArrayList<>();
 	private List<PackageInfo> importedPackageList = new ArrayList<>();
 
-	public T4MVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
+	public No3_SLOCVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
 		this.outerClassInfo = outerClassInfo;
 		this.projectInfo = projectInfo;
 	}
@@ -321,8 +321,8 @@ public class T4MVisitor extends ASTVisitor {
 			ClassInfo currentClassInfo = resolveClassInfo(node);
 			// 添加依赖关系
 			if (varDeclaringClassInfo != null) {
-				EntityUtil.safeAddEntityToList(varDeclaringClassInfo, currentClassInfo.getActiveDependencyList());
-				EntityUtil.safeAddEntityToList(currentClassInfo, varDeclaringClassInfo.getPassiveDependencyList());
+				EntityUtil.safeAddEntityToList(varDeclaringClassInfo, currentClassInfo.getActiveDependencyAkaFanOutList());
+				EntityUtil.safeAddEntityToList(currentClassInfo, varDeclaringClassInfo.getPassiveDependencyAkaFanInList());
 			}
 		}
 		return true;
@@ -341,8 +341,8 @@ public class T4MVisitor extends ASTVisitor {
 			ClassInfo currentClassInfo = resolveClassInfo(node);
 			// 添加依赖关系
 			if (staticInvokingClassInfo != null) {
-				EntityUtil.safeAddEntityToList(staticInvokingClassInfo, currentClassInfo.getActiveDependencyList());
-				EntityUtil.safeAddEntityToList(currentClassInfo, staticInvokingClassInfo.getPassiveDependencyList());
+				EntityUtil.safeAddEntityToList(staticInvokingClassInfo, currentClassInfo.getActiveDependencyAkaFanOutList());
+				EntityUtil.safeAddEntityToList(currentClassInfo, staticInvokingClassInfo.getPassiveDependencyAkaFanInList());
 			}
 		}
 		return true;

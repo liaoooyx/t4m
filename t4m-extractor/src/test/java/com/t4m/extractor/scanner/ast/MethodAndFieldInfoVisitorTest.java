@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class CreateMethodAndFieldInfoVisitorTest {
+class MethodAndFieldInfoVisitorTest {
 
 	static ProjectInfo projectInfo;
 
@@ -69,7 +69,7 @@ class CreateMethodAndFieldInfoVisitorTest {
 		                                                   "com.simulation.core.bar.SimpleClassC");
 		assertEquals("XooClassA", m2List.get(0).getReturnTypeString());
 		assertEquals(c2r, m2List.get(0).getReturnTypeAsClassInfoList().get(0));
-		assertEquals(c2p, m2List.get(0).getParamsTypeAsClassInfoList().get(0));
+		assertEquals(c2p, m2List.get(0).getParamsTypeAsClassInfoListMap().get("simpleClassC").get(0));
 
 		List<MethodInfo> m3List = EntityUtil.getMethodByShortName(classInfo.getMethodInfoList(), "callList");
 		ClassInfo c3r = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),

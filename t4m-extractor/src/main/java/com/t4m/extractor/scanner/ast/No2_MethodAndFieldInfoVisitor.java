@@ -13,24 +13,94 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Yuxiang Liao on 2020-07-07 23:22.
+ * 用于构造MethodInfo和FieldInfo Created by Yuxiang Liao on 2020-07-07 23:22.
  */
-public class CreateMethodAndFieldInfoVisitor extends ASTVisitor {
+public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CreateMethodAndFieldInfoVisitor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(No2_MethodAndFieldInfoVisitor.class);
 
 	private ClassInfo outerClassInfo;
 	private ProjectInfo projectInfo;
-	private List<ClassInfo> extraClassInfoList = new ArrayList<>();
 
 	// 由 package 和 import 声明的包和类，对应projectInfo中的包和类
 	private List<ClassInfo> importedClassList = new ArrayList<>();
 	private List<PackageInfo> importedPackageList = new ArrayList<>();
 
-	public CreateMethodAndFieldInfoVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
+	public No2_MethodAndFieldInfoVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
 		this.outerClassInfo = outerClassInfo;
 		this.projectInfo = projectInfo;
 	}
+
+	/**
+	 * 将于字段的类型中出现的，与项目有关的类，加入到列表中。目前是直接累加在传入的列表中，并返回该列表，而不是创建一个新的列表。
+	 */
+	public List<ClassInfo> fillRelevantClassInfoToList(Type type, List<ClassInfo> qualifiedNameList) {
+		if (type.isSimpleType()) { // 退出递归的条件
+			ClassInfo fieldTypeClassInfo;
+			SimpleType simpleType = (SimpleType) type;
+			// 可能是简单类名，也可能是外部类+嵌套类名，也可能是自己的嵌套类名。外部类名可能是全限定类名。需要解析
+			String unIdentifiedTypeName = simpleType.getName().getFullyQualifiedName();
+			fieldTypeClassInfo = resolveUnidentifiedNameToClassInfo(unIdentifiedTypeName);
+			if (fieldTypeClassInfo != null) {
+				qualifiedNameList.add(fieldTypeClassInfo);
+			}
+			return qualifiedNameList;
+		} else if (type.isArrayType()) {
+			// 数组
+			ArrayType arrayType = (ArrayType) type;
+			Type newType = arrayType.getElementType();
+			fillRelevantClassInfoToList(newType, qualifiedNameList);
+		} else if (type.isParameterizedType()) {
+			// List Map Set ...
+			ParameterizedType parameterizedType = (ParameterizedType) type;
+			for (Object newType : parameterizedType.typeArguments()) {
+				fillRelevantClassInfoToList((Type) newType, qualifiedNameList);
+			}
+		} else if (type.isPrimitiveType()) {
+			//原始类型 PrimitiveType of FieldType. Skip
+		} else {
+			System.err.println("Unexpected FieldType occur: " + type.toString());
+			LOGGER.error("Unexpected FieldType occur: {}", type.toString());
+		}
+		return qualifiedNameList;
+	}
+
+
+	/**
+	 * AST获得的字段类型为字符串格式，此方法将其转换为ClassInfo格式
+	 */
+	public ClassInfo resolveUnidentifiedNameToClassInfo(String unIdentifiedTypeName) {
+		ClassInfo fieldTypeClassInfo;
+		if (!unIdentifiedTypeName.contains(".")) {
+			// shortName
+			fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByShortName(unIdentifiedTypeName,
+			                                                                             importedClassList,
+			                                                                             importedPackageList);
+		} else {
+			// 直接搜，是否为全限定外部类名
+			fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByQualifiedName(unIdentifiedTypeName,
+			                                                                                 importedClassList,
+			                                                                                 importedPackageList);
+			// 如果不是，则
+			if (fieldTypeClassInfo == null) {
+				// 将最后一个.转为$，搜索是否为外部类$嵌套类名
+				unIdentifiedTypeName = ASTVisitorUtil.transferQualifiedName(unIdentifiedTypeName);
+				if (unIdentifiedTypeName.contains(".")) {
+					//	转换后包括.，说明是qualifiedName，可能是合法的com.OuterClass$InnerClass，或不合法的com.foo$OuterClass
+					fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByQualifiedName(
+							unIdentifiedTypeName, importedClassList, importedPackageList);
+				} else {
+					//	转换后不包括.，说明是shortName，可能是合法的OuterClass$InnerClass，或不合法的com$OuterClass
+					fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByShortName(unIdentifiedTypeName,
+					                                                                             importedClassList,
+					                                                                             importedPackageList);
+				}
+			}
+		}
+		return fieldTypeClassInfo;
+	}
+
+	/*------------------------------------------------------------------------------------------*/
 
 	/**
 	 * 将当前的包加入列表中，后续可用于依赖探测等
@@ -104,7 +174,15 @@ public class CreateMethodAndFieldInfoVisitor extends ASTVisitor {
 				}
 			}
 			EntityUtil.safeAddEntityToList(fieldInfo, currentClassInfo.getFieldInfoList());
+
+			// 添加依赖关系
+			for (ClassInfo depedency : fieldInfo.getTypeAsClassInfoList()) {
+				EntityUtil.safeAddEntityToList(depedency, currentClassInfo.getActiveDependencyAkaFanOutList());
+				EntityUtil.safeAddEntityToList(currentClassInfo, depedency.getPassiveDependencyAkaFanInList());
+			}
 		}
+
+
 		return true;
 	}
 
@@ -141,84 +219,34 @@ public class CreateMethodAndFieldInfoVisitor extends ASTVisitor {
 		}
 
 		Map<String, String> paramsNameTypeMap = new LinkedHashMap<>();
+		Map<String, List<ClassInfo>> paramsAsClassInfoMap = methodInfo.getParamsTypeAsClassInfoListMap();
 		for (Object paramObj : node.parameters()) {
 			SingleVariableDeclaration param = (SingleVariableDeclaration) paramObj;
-			paramsNameTypeMap.put(param.getName().getIdentifier(), param.getType().toString());
-			fillRelevantClassInfoToList(param.getType(), methodInfo.getParamsTypeAsClassInfoList());
+			String paramName = param.getName().getIdentifier();
+			paramsNameTypeMap.put(paramName, param.getType().toString());
+			paramsAsClassInfoMap.put(paramName, new ArrayList<>());
+			fillRelevantClassInfoToList(param.getType(), paramsAsClassInfoMap.get(paramName));
 		}
 		methodInfo.setParamsNameTypeMap(paramsNameTypeMap);
+		methodInfo.setParamsTypeAsClassInfoListMap(paramsAsClassInfoMap);
 
 		EntityUtil.safeAddEntityToList(methodInfo, currentClassInfo.getMethodInfoList());
+
+		// 添加依赖关系
+		for (ClassInfo depedency : methodInfo.getReturnTypeAsClassInfoList()) {
+			EntityUtil.safeAddEntityToList(depedency, currentClassInfo.getActiveDependencyAkaFanOutList());
+			EntityUtil.safeAddEntityToList(currentClassInfo, depedency.getPassiveDependencyAkaFanInList());
+		}
+		// 添加依赖关系
+		for (List<ClassInfo> tempList : methodInfo.getParamsTypeAsClassInfoListMap().values()) {
+			for (ClassInfo depedency : tempList) {
+				EntityUtil.safeAddEntityToList(depedency, currentClassInfo.getActiveDependencyAkaFanOutList());
+				EntityUtil.safeAddEntityToList(currentClassInfo, depedency.getPassiveDependencyAkaFanInList());
+			}
+		}
+
+		node.accept(new No2_1_MethodDetailVisitor(outerClassInfo, currentClassInfo, projectInfo, importedClassList,
+		                                          importedPackageList));
 		return true;
 	}
-
-	/**
-	 * 将于字段的类型中出现的，与项目有关的类，加入到列表中。目前是直接累加在传入的列表中，并返回该列表，而不是创建一个新的列表。
-	 */
-	public List<ClassInfo> fillRelevantClassInfoToList(Type type, List<ClassInfo> qualifiedNameList) {
-		if (type.isSimpleType()) { // 退出递归的条件
-			ClassInfo fieldTypeClassInfo;
-			SimpleType simpleType = (SimpleType) type;
-			// 可能是简单类名，也可能是外部类+嵌套类名，也可能是自己的嵌套类名。外部类名可能是全限定类名。需要解析
-			String unIdentifiedTypeName = simpleType.getName().getFullyQualifiedName();
-			fieldTypeClassInfo = resolveUnidentifiedNameToClassInfo(unIdentifiedTypeName);
-			if (fieldTypeClassInfo != null) {
-				qualifiedNameList.add(fieldTypeClassInfo);
-			}
-			return qualifiedNameList;
-		} else if (type.isArrayType()) {
-			// 数组
-			ArrayType arrayType = (ArrayType) type;
-			Type newType = arrayType.getElementType();
-			fillRelevantClassInfoToList(newType, qualifiedNameList);
-		} else if (type.isParameterizedType()) {
-			// List Map Set ...
-			ParameterizedType parameterizedType = (ParameterizedType) type;
-			for (Object newType : parameterizedType.typeArguments()) {
-				fillRelevantClassInfoToList((Type) newType, qualifiedNameList);
-			}
-		} else if (type.isPrimitiveType()) {
-			//原始类型 PrimitiveType of FieldType. Skip
-		} else {
-			System.err.println("Unexpected FieldType occur: " + type.toString());
-			LOGGER.error("Unexpected FieldType occur: {}", type.toString());
-		}
-		return qualifiedNameList;
-	}
-
-	/**
-	 * AST获得的字段类型为字符串格式，此方法将其转换为ClassInfo格式
-	 */
-	public ClassInfo resolveUnidentifiedNameToClassInfo(String unIdentifiedTypeName) {
-		ClassInfo fieldTypeClassInfo;
-		if (!unIdentifiedTypeName.contains(".")) {
-			// shortName
-			fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByShortName(unIdentifiedTypeName,
-			                                                                             importedClassList,
-			                                                                             importedPackageList);
-		} else {
-			// 直接搜，是否为全限定外部类名
-			fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByQualifiedName(unIdentifiedTypeName,
-			                                                                                 importedClassList,
-			                                                                                 importedPackageList);
-			// 如果不是，则
-			if (fieldTypeClassInfo == null) {
-				// 将最后一个.转为$，搜索是否为外部类$嵌套类名
-				unIdentifiedTypeName = ASTVisitorUtil.transferQualifiedName(unIdentifiedTypeName);
-				if (unIdentifiedTypeName.contains(".")) {
-					//	转换后包括.，说明是qualifiedName，可能是合法的com.OuterClass$InnerClass，或不合法的com.foo$OuterClass
-					fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByQualifiedName(
-							unIdentifiedTypeName, importedClassList, importedPackageList);
-				} else {
-					//	转换后不包括.，说明是shortName，可能是合法的OuterClass$InnerClass，或不合法的com$OuterClass
-					fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByShortName(unIdentifiedTypeName,
-					                                                                             importedClassList,
-					                                                                             importedPackageList);
-				}
-			}
-		}
-		return fieldTypeClassInfo;
-	}
-
-
 }

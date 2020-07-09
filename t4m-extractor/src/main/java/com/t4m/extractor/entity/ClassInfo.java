@@ -34,9 +34,9 @@ public class ClassInfo implements Serializable {
 	private List<ClassInfo> nestedClassList = new ArrayList<>();
 
 	//依赖（引用的类）
-	private List<ClassInfo> activeDependencyList = new ArrayList<>();
+	private List<ClassInfo> activeDependencyAkaFanOutList = new ArrayList<>();
 	//被依赖（被其他类引用）
-	private List<ClassInfo> passiveDependencyList = new ArrayList<>();
+	private List<ClassInfo> passiveDependencyAkaFanInList = new ArrayList<>();
 
 	// 方法列表
 	private List<MethodInfo> methodInfoList = new ArrayList<>();
@@ -186,20 +186,20 @@ public class ClassInfo implements Serializable {
 		this.nestedClassList = nestedClassList;
 	}
 
-	public List<ClassInfo> getActiveDependencyList() {
-		return activeDependencyList;
+	public List<ClassInfo> getActiveDependencyAkaFanOutList() {
+		return activeDependencyAkaFanOutList;
 	}
 
-	public void setActiveDependencyList(List<ClassInfo> activeDependencyList) {
-		this.activeDependencyList = activeDependencyList;
+	public void setActiveDependencyAkaFanOutList(List<ClassInfo> activeDependencyAkaFanOutList) {
+		this.activeDependencyAkaFanOutList = activeDependencyAkaFanOutList;
 	}
 
-	public List<ClassInfo> getPassiveDependencyList() {
-		return passiveDependencyList;
+	public List<ClassInfo> getPassiveDependencyAkaFanInList() {
+		return passiveDependencyAkaFanInList;
 	}
 
-	public void setPassiveDependencyList(List<ClassInfo> passiveDependencyList) {
-		this.passiveDependencyList = passiveDependencyList;
+	public void setPassiveDependencyAkaFanInList(List<ClassInfo> passiveDependencyAkaFanInList) {
+		this.passiveDependencyAkaFanInList = passiveDependencyAkaFanInList;
 	}
 
 	public List<MethodInfo> getMethodInfoList() {
