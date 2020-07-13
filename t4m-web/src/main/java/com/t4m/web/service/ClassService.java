@@ -33,7 +33,7 @@ public class ClassService {
 				Map<String, Object> m1 = initMapList(classInfo);
 				m1.put("newness", "old");
 				classMapList.add(m1);
-				for (ClassInfo innerClass : classInfo.getInnerClassList()) {
+				for (ClassInfo innerClass : classInfo.getNestedClassList()) {
 					Map<String, Object> m2 = initMapList(innerClass);
 					m2.put("newness", "old");
 					classMapList.add(m2);

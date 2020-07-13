@@ -1,5 +1,7 @@
 package com.t4m.extractor.entity;
 
+import com.github.javaparser.Range;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,7 +14,11 @@ public class MethodInfo implements Serializable {
 	private static final long serialVersionUID = -8167843312218383438L;
 
 	private String shortName;
-	private String fullyQualifiedName; // fully-qualified class name: pkga.b.c#method
+	private String fullyQualifiedName; // fully-qualified class name: pkg.b.c.Class.method
+	private Range rangeLocator;
+	private String methodDeclarationString;
+
+	private ClassInfo classInfo;
 
 	private String returnTypeString = ""; // 空字符串表示无返回（即构造器）
 	private List<ClassInfo> returnTypeAsClassInfoList = new ArrayList<>();
@@ -20,9 +26,15 @@ public class MethodInfo implements Serializable {
 	private Map<String, String> paramsNameTypeMap = new LinkedHashMap<>(); // key为参数名，value为参数类型字符串
 	private Map<String, List<ClassInfo>> paramsTypeAsClassInfoListMap = new LinkedHashMap<>();
 
+	private List<String> thrownExceptionStringList = new ArrayList<>(); // 异常类型字符串
+	private List<ClassInfo> thrownExceptionClassList = new ArrayList<>();
+
 	private boolean abstractMethod = false;
 	private boolean staticMethod = false;
 	private AccessModifierEnum accessModifierEnum = AccessModifierEnum.DEFAULT;
+
+	//if、while、for、&&、||、cases and default of switch, catches of try
+	private int cyclomaticComplexity;
 
 	public MethodInfo(String shortName) {
 		this.shortName = shortName;
@@ -30,8 +42,8 @@ public class MethodInfo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MethodInfo{" + "shortName='" + shortName + '\'' + ", returnTypeString='" + returnTypeString + '\'' +
-				", paramsNameTypeMap=" + paramsNameTypeMap + '}';
+		return "MethodInfo{" + "rangeLocator=" + rangeLocator + ", methodDeclarationString='" +
+				methodDeclarationString + '\'' + '}';
 	}
 
 	@Override
@@ -41,13 +53,13 @@ public class MethodInfo implements Serializable {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		MethodInfo that = (MethodInfo) o;
-		return Objects.equals(shortName, that.shortName) && Objects.equals(returnTypeString, that.returnTypeString) &&
-				Objects.equals(paramsNameTypeMap, that.paramsNameTypeMap);
+		return Objects.equals(fullyQualifiedName, that.fullyQualifiedName) && Objects.equals(rangeLocator,
+		                                                                                     that.rangeLocator);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(shortName, returnTypeString, paramsNameTypeMap);
+		return Objects.hash(fullyQualifiedName, rangeLocator);
 	}
 
 	public String getShortName() {
@@ -64,6 +76,30 @@ public class MethodInfo implements Serializable {
 
 	public void setFullyQualifiedName(String fullyQualifiedName) {
 		this.fullyQualifiedName = fullyQualifiedName;
+	}
+
+	public Range getRangeLocator() {
+		return rangeLocator;
+	}
+
+	public void setRangeLocator(Range rangeLocator) {
+		this.rangeLocator = rangeLocator;
+	}
+
+	public String getMethodDeclarationString() {
+		return methodDeclarationString;
+	}
+
+	public void setMethodDeclarationString(String methodDeclarationString) {
+		this.methodDeclarationString = methodDeclarationString;
+	}
+
+	public ClassInfo getClassInfo() {
+		return classInfo;
+	}
+
+	public void setClassInfo(ClassInfo classInfo) {
+		this.classInfo = classInfo;
 	}
 
 	public String getReturnTypeString() {
@@ -99,6 +135,22 @@ public class MethodInfo implements Serializable {
 		this.paramsTypeAsClassInfoListMap = paramsTypeAsClassInfoListMap;
 	}
 
+	public List<String> getThrownExceptionStringList() {
+		return thrownExceptionStringList;
+	}
+
+	public void setThrownExceptionStringList(List<String> thrownExceptionStringList) {
+		this.thrownExceptionStringList = thrownExceptionStringList;
+	}
+
+	public List<ClassInfo> getThrownExceptionClassList() {
+		return thrownExceptionClassList;
+	}
+
+	public void setThrownExceptionClassList(List<ClassInfo> thrownExceptionClassList) {
+		this.thrownExceptionClassList = thrownExceptionClassList;
+	}
+
 	public boolean isAbstractMethod() {
 		return abstractMethod;
 	}
@@ -123,11 +175,18 @@ public class MethodInfo implements Serializable {
 		this.accessModifierEnum = accessModifierEnum;
 	}
 
+	public int getCyclomaticComplexity() {
+		return cyclomaticComplexity;
+	}
+
+	public void setCyclomaticComplexity(int cyclomaticComplexity) {
+		this.cyclomaticComplexity = cyclomaticComplexity;
+	}
+
 	/**
 	 * 将paramsTypeAsClassInfoListMap中每个val都是一个list，该方法将之合并为一个list
 	 */
 	public List<ClassInfo> getParamsTypeAsClassInfoList() {
-		return paramsTypeAsClassInfoListMap.values().stream().flatMap(Collection::stream).collect(
-				Collectors.toList());
+		return paramsTypeAsClassInfoListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
 	}
 }

@@ -199,4 +199,18 @@ public class ModuleInfo implements Serializable {
 		}
 		return slocArray;
 	}
+
+	/**
+	 * 返回root package所在的文件夹路径，比如/.../src/main/java
+	 */
+	public String getSourcePath() {
+		if (mainScopePath != null) {
+			return mainScopePath;
+		} else if (otherScopePath != null) {
+			return otherScopePath;
+		} else {
+			return testScopePath;
+		}
+	}
+
 }

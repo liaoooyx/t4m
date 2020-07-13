@@ -1,5 +1,7 @@
 package com.t4m.extractor.entity;
 
+import com.github.javaparser.Range;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ public class FieldInfo implements Serializable {
 	private static final long serialVersionUID = -8268736331184263167L;
 
 	private String shortName;
+	private Range rangeLocator; //理论上用shortName就足够定位一个类的字段，此字段留作备用
 
 	private String typeString;
 	private List<ClassInfo> typeAsClassInfoList = new ArrayList<>(); // 该字段涉及到的所有全限定类名（只包括跟项目有关的类）
@@ -27,7 +30,8 @@ public class FieldInfo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FieldInfo{" + "shortName='" + shortName + '\'' + ", typeString='" + typeString + '\'' + '}';
+		return "FieldInfo{" + "shortName='" + shortName + '\'' + ", rangeLocator=" + rangeLocator + ", typeString='" +
+				typeString + '\'' + '}';
 	}
 
 	@Override
@@ -51,6 +55,14 @@ public class FieldInfo implements Serializable {
 
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
+	}
+
+	public Range getRangeLocator() {
+		return rangeLocator;
+	}
+
+	public void setRangeLocator(Range rangeLocator) {
+		this.rangeLocator = rangeLocator;
 	}
 
 	public String getTypeString() {

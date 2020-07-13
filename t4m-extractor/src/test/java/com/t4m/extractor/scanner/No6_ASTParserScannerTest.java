@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class No6_ASPScannerTest {
+class No6_ASTParserScannerTest {
 
 	static ProjectInfo projectInfo;
 
@@ -25,7 +25,7 @@ class No6_ASPScannerTest {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanASP();
+		t4MExtractor.scanASTParser();
 	}
 
 	@Test
@@ -44,7 +44,7 @@ class No6_ASPScannerTest {
 			          () -> assertEquals(39, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
 		});
 
-		ClassInfo innerClass = EntityUtil.getClassByShortName(classInfo.getInnerClassList(),
+		ClassInfo innerClass = EntityUtil.getClassByShortName(classInfo.getNestedClassList(),
 		                                                      "ComplexClassA$InnnerClassOfComplexClassA");
 		assertNotNull(innerClass);
 		assertAll(() -> {
@@ -66,7 +66,7 @@ class No6_ASPScannerTest {
 		assertNotNull(classInfo);
 		assertAll(() -> assertEquals(6, classInfo.getNumberOfMethods()),
 		          () -> assertEquals(2, classInfo.getNumberOfFields()));
-		List<ClassInfo> innerClassList = classInfo.getInnerClassList();
+		List<ClassInfo> innerClassList = classInfo.getNestedClassList();
 		assertEquals(1, innerClassList.size());
 		try {
 			ClassInfo innerClass = EntityUtil.getClassByShortName(innerClassList,
@@ -184,7 +184,7 @@ class No6_ASPScannerTest {
 	void testSuperClass() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.bar.SimpleClassC");
-		ClassInfo superClass = classInfo.getSupperClass();
+		ClassInfo superClass = classInfo.getExtendedClassList().get(0);
 		ClassInfo classInfo_superClass = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                                    "com.simulation.core.bar.SimpleAbstractClass");
 		assertEquals(superClass, classInfo_superClass);
@@ -195,7 +195,7 @@ class No6_ASPScannerTest {
 	void testInterface() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.bar.SimpleClassC");
-		List<ClassInfo> inferfaceList = classInfo.getNestedClassList();
+		List<ClassInfo> inferfaceList = classInfo.getImplementedClassList();
 		assertEquals(2, inferfaceList.size());
 		ClassInfo classInfo_interfaceA = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                                    "com.simulation.core.bar.SimpleInterfaceA");

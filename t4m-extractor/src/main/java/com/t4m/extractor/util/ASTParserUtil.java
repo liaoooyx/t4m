@@ -1,19 +1,18 @@
 package com.t4m.extractor.util;
 
 import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.MethodInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 
 /**
  * Created by Yuxiang Liao on 2020-07-04 02:15.
  */
-public class ASTVisitorUtil {
+public class ASTParserUtil {
 
 	/**
 	 * 如果是最外层节点，那么就是外部类，否则是内部类
@@ -41,23 +40,21 @@ public class ASTVisitorUtil {
 	}
 
 	/**
-	 * Class.InnerClass -> Class$InnerClass
+	 * 判断该节点是否处于方法内部（有可能处于代码块Initializer或字段声明FieldDeclaration中。
+	 * 如果是则返回该对应的MethodDeclaration节点，如果否则返回null
 	 */
-	public static String transferShortName(String shortName) {
-		return shortName.replaceAll("\\.", Matcher.quoteReplacement("$"));
+	public static MethodDeclaration getParentMethodDeclaration(ASTNode node) {
+		if (node instanceof MethodDeclaration) {
+			return (MethodDeclaration) node;
+		}
+		if (node instanceof CompilationUnit) {
+			return null;
+		}
+		return getParentMethodDeclaration(node.getParent());
 	}
 
-	/**
-	 * Class.InnerClass -> Class$InnerClass; com.a.b.c.Class.InnerClass -> com.a.b.c.Class$InnerClass
-	 */
-	public static String transferQualifiedName(String name) {
-		if (name.contains(".")) {
-			int index = name.lastIndexOf(".");
-			return name.substring(0, index) + "$" + name.substring(index + 1);
-		} else {
-			return name;
-		}
-	}
+
+
 
 	/**
 	 * 传入非全限定类名。 先从importedClassList中查找，如果没有，则从importedPackageList中查找。 如果都没有，说明该类并不是由项目创建（来自于外部jar包），返回null。 (注意 new
@@ -65,7 +62,7 @@ public class ASTVisitorUtil {
 	 */
 	public static ClassInfo findClassInfoFromImportedListByShortName(
 			String unIdentifiedName, List<ClassInfo> importedClassList, List<PackageInfo> importedPackageList) {
-		// com.a.b.c.Class.InnerClass -> com.a.b.c.Class$InnerClass
+		// com.a.b.c.Class.InnerClass
 		ClassInfo targetClass = null;
 		targetClass = EntityUtil.getClassOrNestedClassFromOuterClassListByShortName(importedClassList,
 		                                                                            unIdentifiedName);
@@ -90,7 +87,7 @@ public class ASTVisitorUtil {
 	 */
 	public static ClassInfo findClassInfoFromImportedListByQualifiedName(
 			String unIdentifiedName, List<ClassInfo> importedClassList, List<PackageInfo> importedPackageList) {
-		// com.a.b.c.Class.InnerClass -> com.a.b.c.Class$InnerClass
+		// com.a.b.c.Class.InnerClass
 		ClassInfo targetClass = null;
 		targetClass = EntityUtil.getClassOrNestedClassFromOuterClassListByQualifiedName(importedClassList,
 		                                                                                unIdentifiedName);
@@ -120,18 +117,18 @@ public class ASTVisitorUtil {
 				classNode = (AbstractTypeDeclaration) node;
 				break;
 			default:
-				classNode = ASTVisitorUtil.getParentAbstractTypeDeclaration(node);
+				classNode = ASTParserUtil.getParentAbstractTypeDeclaration(node);
 		}
 		ClassInfo currentClassInfo;
-		String shortClassName = transferShortName(classNode.getName().toString());
-		if (ASTVisitorUtil.isInnerClass(classNode)) {
+		String shortClassName = CommonParserUtil.transferShortNameAsInnerClassFormat(classNode.getName().toString());
+		if (ASTParserUtil.isInnerClass(classNode)) {
 			// 需要先确定对应外部类是哪个
-			AbstractTypeDeclaration parentClassNode = ASTVisitorUtil.getParentAbstractTypeDeclaration(classNode);
+			AbstractTypeDeclaration parentClassNode = ASTParserUtil.getParentAbstractTypeDeclaration(classNode);
 			ClassInfo parentClassInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(), outerClassInfo
 					.getPackageFullyQualifiedName() + "." + parentClassNode.getName().getIdentifier());
 			// 再找内部类
-			currentClassInfo = EntityUtil.getClassByQualifiedName(parentClassInfo.getInnerClassList(),
-			                                                      parentClassInfo.getFullyQualifiedName() + "$" +
+			currentClassInfo = EntityUtil.getClassByQualifiedName(parentClassInfo.getNestedClassList(),
+			                                                      parentClassInfo.getFullyQualifiedName() + "." +
 					                                                      shortClassName);
 		} else {
 			String outerClassQualifiedName = outerClassInfo.getPackageFullyQualifiedName() + "." + shortClassName;
@@ -143,5 +140,29 @@ public class ASTVisitorUtil {
 			}
 		}
 		return currentClassInfo;
+	}
+
+	/**
+	 * 根据MethodDeclaration，解析当前的方法
+	 */
+	public static MethodInfo resolveMethodInfo(MethodDeclaration node, ClassInfo currentClassInfo) {
+		String methodName = node.getName().getIdentifier();
+		MethodInfo methodInfo = new MethodInfo(methodName);
+		methodInfo.setFullyQualifiedName(currentClassInfo.getFullyQualifiedName() + "#" + methodName);
+
+		String returnTypeString = "";
+		Type returnType = node.getReturnType2();
+		if (returnType != null) {
+			returnTypeString = returnType.toString();
+		}
+
+		List<String> paramTypeList = new ArrayList<>();
+		for (Object paramObj : node.parameters()) {
+			SingleVariableDeclaration param = (SingleVariableDeclaration) paramObj;
+			paramTypeList.add(param.getType().toString());
+		}
+
+		return EntityUtil.getMethodByNameAndReturnTypeAndParams(currentClassInfo.getMethodInfoList(), methodName,
+		                                                        returnTypeString, paramTypeList);
 	}
 }

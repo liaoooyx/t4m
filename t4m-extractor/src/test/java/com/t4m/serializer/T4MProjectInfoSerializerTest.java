@@ -22,7 +22,7 @@ class T4MProjectInfoSerializerTest {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanASP();
+		t4MExtractor.scanASTParser();
 	}
 
 	@Test

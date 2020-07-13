@@ -3,11 +3,15 @@ package com.t4m.extractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.util.FileUtil;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yuxiang Liao on 2020-06-17 20:17.
@@ -20,10 +24,23 @@ public class Test {
 		ASTParser astParser = ASTParser.newParser(AST.JLS14);
 		astParser.setSource(charArray);
 		astParser.setKind(ASTParser.K_COMPILATION_UNIT);
-
-		CompilationUnit result = (CompilationUnit) (astParser.createAST(null));
-
-		return result;
+		String[] classPaths = System.getProperty("java.class.path").split(":");
+		Arrays.stream(classPaths).forEach(System.out::println);
+		astParser.setEnvironment(classPaths,new String[]{javaFilePath},null,false);
+		javaFilePath.split(File.separator);
+		astParser.setUnitName("/JSimulation/src/main/java/com/simulation/core/foo/ComplexClassA.java");
+		astParser.setBindingsRecovery(true);
+		astParser.setResolveBindings(true);
+		Map<String, String> options = JavaCore.getOptions();
+		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
+		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
+		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+		astParser.setCompilerOptions(options);
+		CompilationUnit compilationUnit = (CompilationUnit) astParser.createAST(null);
+		for (IProblem problem : compilationUnit.getProblems()) {
+			System.out.println("problem message:" + problem.getMessage());
+		}
+		return compilationUnit;
 	}
 
 	public static void main(String[] args) {
@@ -35,11 +52,9 @@ public class Test {
 		// 	compilationUnit.accept(new Test.T4MVisitor());
 		// 	System.out.println();
 		// });
-
-		Object a = new Integer(1);
-		System.out.println(a instanceof String);
-
+		System.out.println(System.getProperty("java.class.path"));
 	}
+
 
 	public static class T4MVisitor extends ASTVisitor {
 
@@ -49,24 +64,6 @@ public class Test {
 		private List<ClassInfo> importedClass = new ArrayList<>();
 		private List<PackageInfo> importedPackage = new ArrayList<>();
 
-		@Override
-		public boolean visit(PackageDeclaration node) {
-			System.out.println("current package:\t" + node.getName().getFullyQualifiedName());
-			return true;
-		}
-
-		@Override
-		public boolean visit(ImportDeclaration node) {
-			// import 直接表明了不同包之间的依赖关系，但包内类的依赖关系需要用其他方法。
-			// 但引入的类可能属于项目外的Jar包，因此需要过滤方式。
-
-			//判断引入的是包还是类
-			// 先检索是否为包
-			//如果不是在检索是否为类
-			//当出现多个同名时，打印日志
-			System.out.println("imported package:\t" + node.getName().getFullyQualifiedName());
-			return true;
-		}
 
 		@Override
 		public boolean visit(TypeDeclaration node) {
@@ -82,8 +79,7 @@ public class Test {
 			System.out.println("Num of Fields:\t" + node.getFields().length);
 			System.out.println("Num of Methods:\t" + node.getMethods().length);
 
-			System.out.println(node.toString());
-
+			System.out.println("Binding"+node.resolveBinding());
 			return true;
 		}
 
@@ -102,7 +98,7 @@ public class Test {
 					System.out.println();
 				}
 			}
-
+			System.out.println("Binding"+node.resolveBinding());
 			return super.visit(node);
 		}
 
@@ -142,15 +138,7 @@ public class Test {
 			} else {
 				System.out.println("Method:\t" + node.getName());
 			}
-
-			return super.visit(node);
-		}
-
-		@Override
-		public boolean visit(QualifiedName node) {
-			System.out.println(
-					"QualifiedName:\t" + node.getFullyQualifiedName() + ",\tgetQualifier:\t" + node.getQualifier() +
-							",\tgetName:\t" + node.getName());
+			System.out.println("Binding"+node.resolveBinding());
 			return super.visit(node);
 		}
 
@@ -158,6 +146,7 @@ public class Test {
 		public boolean visit(MethodInvocation node) {
 			System.out.println("MethodInvocation:\t" + node.getName().toString());
 			System.out.println("MethodInovcation--expression:\t" + node.getExpression().toString());
+			System.out.println("Binding"+node.resolveMethodBinding());
 			return true;
 		}
 

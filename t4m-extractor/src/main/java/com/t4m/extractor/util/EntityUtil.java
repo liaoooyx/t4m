@@ -1,5 +1,6 @@
 package com.t4m.extractor.util;
 
+import com.github.javaparser.Range;
 import com.t4m.extractor.entity.*;
 import com.t4m.extractor.exception.DuplicatedInnerClassFoundedException;
 
@@ -24,8 +25,49 @@ public class EntityUtil {
 	 * 在列表中查找指定的方法名
 	 */
 	public static List<MethodInfo> getMethodByShortName(List<MethodInfo> methodInfoList, String shortName) {
-		return methodInfoList.stream().filter(fieldInfo -> shortName.equals(fieldInfo.getShortName())).collect(
+		return methodInfoList.stream().filter(methodInfo -> shortName.equals(methodInfo.getShortName())).collect(
 				Collectors.toList());
+	}
+
+	/**
+	 * 在列表中查找指定的方法名
+	 */
+	public static MethodInfo getMethodByQualifiedNameAndRangeLocator(
+			List<MethodInfo> methodInfoList, String qualifiedName, Range rangeLocator) {
+		return methodInfoList.stream().filter(methodInfo -> qualifiedName.equals(methodInfo.getFullyQualifiedName()) &&
+				rangeLocator.equals(methodInfo.getRangeLocator())).findFirst().orElse(null);
+	}
+
+
+	/**
+	 * 在列表中查找指定的方法，根据方法名，返回类型字符串，参数类型字符串
+	 * 自动装箱和拆箱
+	 * null，表示找不到对应的类型，将该位置默认为任意匹配
+	 */
+	public static MethodInfo getMethodByNameAndReturnTypeAndParams(
+			List<MethodInfo> methodInfoList, String shortName, String returnType, List<String> paramsTypeList) {
+		Optional<MethodInfo> target = methodInfoList.stream().filter(methodInfo -> {
+			if (shortName.equals(methodInfo.getShortName())) {
+				String r1 = returnType.replaceAll("<.+>", "");
+				String r2 = methodInfo.getReturnTypeString().replaceAll("<.+>", "");
+				if (r1.equals(r2)) {
+					List<String> paramTypesStr = new ArrayList<>(methodInfo.getParamsNameTypeMap().values());
+					if (paramTypesStr.size() == paramsTypeList.size()) {
+						for (int i = 0; i < paramsTypeList.size(); i++) {
+							// 忽略泛型参数，Map<Sting,List<Sting>>[] -> Map[]
+							String p1 = paramTypesStr.get(i).replaceAll("<.+>", "");
+							String p2 = paramsTypeList.get(i).replaceAll("<.+>", "");
+							if (!Objects.equals(p1, p2)) {
+								return false;
+							}
+						}
+						return true;
+					}
+				}
+			}
+			return false;
+		}).findFirst();
+		return target.orElse(null);
 	}
 
 	/**
@@ -76,7 +118,7 @@ public class EntityUtil {
 		ClassInfo target = null;
 		List<ClassInfo> multipleInnerClassList = new ArrayList<>();
 		for (ClassInfo outerClassInfo : classInfoList) {
-			for (ClassInfo innerClassInfo : outerClassInfo.getInnerClassList()) {
+			for (ClassInfo innerClassInfo : outerClassInfo.getNestedClassList()) {
 				if (innerClassShortName.equals(innerClassInfo.getShortName().split("\\$")[1]) ||
 						innerClassShortName.equals(innerClassInfo.getShortName())) {
 					target = innerClassInfo;
@@ -123,7 +165,7 @@ public class EntityUtil {
 		ClassInfo target = null;
 		List<ClassInfo> multipleInnerClassList = new ArrayList<>();
 		for (ClassInfo outerClassInfo : classInfoList) {
-			for (ClassInfo innerClassInfo : outerClassInfo.getInnerClassList()) {
+			for (ClassInfo innerClassInfo : outerClassInfo.getNestedClassList()) {
 				if (nestedClassQualifiedName.equals(innerClassInfo.getFullyQualifiedName())) {
 					target = innerClassInfo;
 					multipleInnerClassList.add(target);

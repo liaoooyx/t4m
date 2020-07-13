@@ -4,7 +4,6 @@ import com.t4m.extractor.metric.SLOCMetric;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.regex.Matcher;
 
 /**
  * Created by Yuxiang Liao at 2020-06-09 22:55.
@@ -13,7 +12,7 @@ public class ClassInfo implements Serializable {
 
 	private static final long serialVersionUID = 2417256803742933401L;
 
-	private String shortName; // 嵌套类的类名为 A$B
+	private String shortName; // 嵌套类的类名为 A.B
 	private String fullyQualifiedName; // fully-qualified class name
 	private String absolutePath;
 
@@ -27,11 +26,11 @@ public class ClassInfo implements Serializable {
 	private ClassInfo mainPublicClass; //唯一的公共外部类
 	private ClassInfo outerClass; //内部类的外部类
 
-	private List<ClassInfo> innerClassList = new ArrayList<>();
+	private List<ClassInfo> nestedClassList = new ArrayList<>();
 	private List<ClassInfo> extraClassList = new ArrayList<>();
 
-	private ClassInfo supperClass;
-	private List<ClassInfo> nestedClassList = new ArrayList<>();
+	private List<ClassInfo> extendedClassList = new ArrayList<>();
+	private List<ClassInfo> implementedClassList = new ArrayList<>();
 
 	//依赖（引用的类）
 	private List<ClassInfo> activeDependencyAkaFanOutList = new ArrayList<>();
@@ -48,8 +47,14 @@ public class ClassInfo implements Serializable {
 	private int numberOfEnumConstants;
 	private int numberOfAnnotationMembers;
 
+	private List<String> unresolvedNodeDescriptionList = new ArrayList<>();
+
 	//SLOC counts the number of lines in the source file that are not: blank or empty lines, braces, or comments.
-	Map<SLOCType, Integer> slocCounterMap = new HashMap<>();
+	private Map<SLOCType, Integer> slocCounterMap = new HashMap<>();
+
+	//Response for class
+	private List<MethodInfo> outsideResponseForClass = new ArrayList<>(); // 调用的其他类的方法集合
+	private List<MethodInfo> insideResponseForClass = new ArrayList<>(); //自身的方法集合，以及继承的方法，排除重载方法
 
 	public ClassInfo(String shortName, String absolutePath) {
 		this.shortName = shortName;
@@ -59,9 +64,7 @@ public class ClassInfo implements Serializable {
 	public ClassInfo(String innerClassShortName, ClassInfo mainPublicClass) {
 		this.shortName = innerClassShortName;
 		this.absolutePath = mainPublicClass.absolutePath;
-		this.fullyQualifiedName = mainPublicClass.fullyQualifiedName.replaceFirst(mainPublicClass.shortName + "$",
-		                                                                          Matcher.quoteReplacement(
-				                                                                     innerClassShortName));
+		this.fullyQualifiedName = mainPublicClass.getFullyQualifiedName() + "." + innerClassShortName;
 		this.packageInfo = mainPublicClass.packageInfo;
 		this.packageFullyQualifiedName = mainPublicClass.packageFullyQualifiedName;
 	}
@@ -73,13 +76,14 @@ public class ClassInfo implements Serializable {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ClassInfo classInfo = (ClassInfo) o;
-		return Objects.equals(fullyQualifiedName, classInfo.fullyQualifiedName) && Objects.equals(absolutePath,
-		                                                                                          classInfo.absolutePath);
+		return Objects.equals(shortName, classInfo.shortName) && Objects.equals(fullyQualifiedName,
+		                                                                        classInfo.fullyQualifiedName) &&
+				Objects.equals(absolutePath, classInfo.absolutePath);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fullyQualifiedName, absolutePath);
+		return Objects.hash(shortName, fullyQualifiedName, absolutePath);
 	}
 
 	public String getShortName() {
@@ -154,12 +158,12 @@ public class ClassInfo implements Serializable {
 		this.outerClass = outerClass;
 	}
 
-	public List<ClassInfo> getInnerClassList() {
-		return innerClassList;
+	public List<ClassInfo> getNestedClassList() {
+		return nestedClassList;
 	}
 
-	public void setInnerClassList(List<ClassInfo> innerClassList) {
-		this.innerClassList = innerClassList;
+	public void setNestedClassList(List<ClassInfo> nestedClassList) {
+		this.nestedClassList = nestedClassList;
 	}
 
 	public List<ClassInfo> getExtraClassList() {
@@ -170,20 +174,20 @@ public class ClassInfo implements Serializable {
 		this.extraClassList = extraClassList;
 	}
 
-	public ClassInfo getSupperClass() {
-		return supperClass;
+	public List<ClassInfo> getExtendedClassList() {
+		return extendedClassList;
 	}
 
-	public void setSupperClass(ClassInfo supperClass) {
-		this.supperClass = supperClass;
+	public void setExtendedClassList(List<ClassInfo> extendedClassList) {
+		this.extendedClassList = extendedClassList;
 	}
 
-	public List<ClassInfo> getNestedClassList() {
-		return nestedClassList;
+	public List<ClassInfo> getImplementedClassList() {
+		return implementedClassList;
 	}
 
-	public void setNestedClassList(List<ClassInfo> nestedClassList) {
-		this.nestedClassList = nestedClassList;
+	public void setImplementedClassList(List<ClassInfo> implementedClassList) {
+		this.implementedClassList = implementedClassList;
 	}
 
 	public List<ClassInfo> getActiveDependencyAkaFanOutList() {
@@ -248,6 +252,14 @@ public class ClassInfo implements Serializable {
 
 	public void setNumberOfAnnotationMembers(int numberOfAnnotationMembers) {
 		this.numberOfAnnotationMembers = numberOfAnnotationMembers;
+	}
+
+	public List<String> getUnresolvedNodeDescriptionList() {
+		return unresolvedNodeDescriptionList;
+	}
+
+	public void setUnresolvedNodeDescriptionList(List<String> unresolvedNodeDescriptionList) {
+		this.unresolvedNodeDescriptionList = unresolvedNodeDescriptionList;
 	}
 
 	public Map<SLOCType, Integer> getSlocCounterMap() {

@@ -1,4 +1,4 @@
-package com.t4m.extractor.scanner.ast;
+package com.t4m.extractor.scanner.astparser;
 
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.*;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ class MethodAndFieldInfoVisitorTest {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanASP();
+		t4MExtractor.scanASTParser();
 	}
 
 	@Test

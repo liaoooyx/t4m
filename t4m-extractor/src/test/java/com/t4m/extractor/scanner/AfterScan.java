@@ -5,15 +5,12 @@ import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.exception.DuplicatedInnerClassFoundedException;
 import com.t4m.extractor.util.EntityUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +23,7 @@ class AfterScan {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanASP();
+		t4MExtractor.scanASTParser();
 	}
 
 	@Test

@@ -30,6 +30,7 @@ public class ProjectInfo implements Serializable {
 	private List<ClassInfo> classList = new ArrayList<>();
 	private List<ClassInfo> nestedClassList = new ArrayList<>();
 	private List<ClassInfo> extraClassList = new ArrayList<>();
+	private List<MethodInfo> methodList = new ArrayList<>();
 
 	public ProjectInfo(String absolutePath) {
 		this(new Date(), absolutePath);
@@ -133,6 +134,14 @@ public class ProjectInfo implements Serializable {
 
 	public void setPackageList(List<PackageInfo> packageList) {
 		this.packageList = packageList;
+	}
+
+	public List<MethodInfo> getMethodList() {
+		return methodList;
+	}
+
+	public void setMethodList(List<MethodInfo> methodList) {
+		this.methodList = methodList;
 	}
 
 	public List<ClassInfo> getAllClassList() {

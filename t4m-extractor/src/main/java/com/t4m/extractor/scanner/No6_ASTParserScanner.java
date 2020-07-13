@@ -3,12 +3,14 @@ package com.t4m.extractor.scanner;
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.scanner.ast.No1_ClassInfoVisitor;
-import com.t4m.extractor.scanner.ast.No2_MethodAndFieldInfoVisitor;
-import com.t4m.extractor.scanner.ast.No3_SLOCVisitor;
+import com.t4m.extractor.scanner.astparser.No1_ClassInfoVisitor;
+import com.t4m.extractor.scanner.astparser.No2_MethodAndFieldInfoVisitor;
+import com.t4m.extractor.scanner.astparser.No3_MethodDetailVisitor;
+import com.t4m.extractor.scanner.astparser.NoX_SLOCVisitor;
 import com.t4m.extractor.util.FileUtil;
 import com.t4m.extractor.util.PropertyUtil;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -21,22 +23,23 @@ import java.util.Map;
 /**
  * Created by Yuxiang Liao on 2020-06-18 01:12.
  */
-public class No6_ASPScanner {
+public class No6_ASTParserScanner {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(No6_ASPScanner.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(No6_ASTParserScanner.class);
 
 	private static final String TEMP_COMPILE_OUTPUT_PATH = PropertyUtil.getProperty("TEMP_COMPILE_OUTPUT_PATH");
 
 	private ProjectInfo projectInfo;
 
-	public No6_ASPScanner(ProjectInfo projectInfo) {
+	public No6_ASTParserScanner(ProjectInfo projectInfo) {
 		this.projectInfo = projectInfo;
 	}
 
 	public void scan() {
 		scanNestedAndExtraClass();
-		scanMethodAndField();
-		scanSLOC();
+		// scanMethodAndField();
+		// scanMethodDetail();
+		// scanSLOC();
 	}
 
 	private void scanNestedAndExtraClass() {
@@ -60,13 +63,22 @@ public class No6_ASPScanner {
 		}
 	}
 
+	private void scanMethodDetail() {
+		List<ClassInfo> classInfoList = projectInfo.getClassList();
+		for (int i = 0; i < classInfoList.size(); i++) {
+			ClassInfo classInfo = classInfoList.get(i);
+			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
+			No3_MethodDetailVisitor methodDetailVisitor = new No3_MethodDetailVisitor(classInfo, projectInfo);
+			compilationUnit.accept(methodDetailVisitor);
+		}
+	}
 
 	private void scanSLOC() {
 		List<ClassInfo> classInfoList = projectInfo.getClassList();
 		for (int i = 0; i < classInfoList.size(); i++) {
 			ClassInfo classInfo = classInfoList.get(i);
 			CompilationUnit compilationUnit = getCompilationUnit(classInfo.getAbsolutePath());
-			No3_SLOCVisitor SLOCVisitor = new No3_SLOCVisitor(classInfo, projectInfo);
+			NoX_SLOCVisitor SLOCVisitor = new NoX_SLOCVisitor(classInfo, projectInfo);
 			compilationUnit.accept(SLOCVisitor);
 		}
 	}
@@ -84,7 +96,12 @@ public class No6_ASPScanner {
 		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
 		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
 		astParser.setCompilerOptions(options);
-		return (CompilationUnit) astParser.createAST(null);
+		CompilationUnit compilationUnit = (CompilationUnit) astParser.createAST(null);
+		for (IProblem problem : compilationUnit.getProblems()) {
+			LOGGER.error("CompilationUnit [{}]'s problem" + problem.getMessage(), javaFilePath);
+			System.out.println("problem message:" + problem.getMessage());
+		}
+		return compilationUnit;
 	}
 
 	public static void main(String[] args) {
@@ -94,7 +111,7 @@ public class No6_ASPScanner {
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanDependency();
-		No6_ASPScanner aspScanner = new No6_ASPScanner(projectInfo);
+		No6_ASTParserScanner aspScanner = new No6_ASTParserScanner(projectInfo);
 		aspScanner.scan();
 
 		System.out.println();

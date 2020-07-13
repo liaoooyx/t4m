@@ -114,7 +114,7 @@ public class PackageInfo implements Serializable {
 	public int getNumberOfInnerClasses() {
 		if (numberOfInnerClasses == 0) {
 			for (ClassInfo classInfo : this.getClassList()) {
-				numberOfInnerClasses += classInfo.getInnerClassList().size();
+				numberOfInnerClasses += classInfo.getNestedClassList().size();
 			}
 		}
 		return numberOfInnerClasses;

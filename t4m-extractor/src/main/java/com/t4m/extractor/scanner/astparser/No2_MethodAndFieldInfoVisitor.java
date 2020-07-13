@@ -1,7 +1,8 @@
-package com.t4m.extractor.scanner.ast;
+package com.t4m.extractor.scanner.astparser;
 
 import com.t4m.extractor.entity.*;
-import com.t4m.extractor.util.ASTVisitorUtil;
+import com.t4m.extractor.util.ASTParserUtil;
+import com.t4m.extractor.util.CommonParserUtil;
 import com.t4m.extractor.util.EntityUtil;
 import org.eclipse.jdt.core.dom.*;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import java.util.Map;
 /**
  * 用于构造MethodInfo和FieldInfo Created by Yuxiang Liao on 2020-07-07 23:22.
  */
+@Deprecated
 public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(No2_MethodAndFieldInfoVisitor.class);
@@ -32,9 +34,9 @@ public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * 将于字段的类型中出现的，与项目有关的类，加入到列表中。目前是直接累加在传入的列表中，并返回该列表，而不是创建一个新的列表。
+	 * 将字段的类型中出现的与项目有关的类，加入到列表中。目前是直接累加在传入的列表中，并返回该列表，而不是创建一个新的列表。
 	 */
-	public List<ClassInfo> fillRelevantClassInfoToList(Type type, List<ClassInfo> qualifiedNameList) {
+	public List<ClassInfo> fillRelevantClassInfoToList(Type type, List<ClassInfo> relevantClassInfoList) {
 		if (type.isSimpleType()) { // 退出递归的条件
 			ClassInfo fieldTypeClassInfo;
 			SimpleType simpleType = (SimpleType) type;
@@ -42,59 +44,52 @@ public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 			String unIdentifiedTypeName = simpleType.getName().getFullyQualifiedName();
 			fieldTypeClassInfo = resolveUnidentifiedNameToClassInfo(unIdentifiedTypeName);
 			if (fieldTypeClassInfo != null) {
-				qualifiedNameList.add(fieldTypeClassInfo);
+				relevantClassInfoList.add(fieldTypeClassInfo);
 			}
-			return qualifiedNameList;
+			return relevantClassInfoList;
 		} else if (type.isArrayType()) {
 			// 数组
 			ArrayType arrayType = (ArrayType) type;
 			Type newType = arrayType.getElementType();
-			fillRelevantClassInfoToList(newType, qualifiedNameList);
+			fillRelevantClassInfoToList(newType, relevantClassInfoList);
 		} else if (type.isParameterizedType()) {
 			// List Map Set ...
 			ParameterizedType parameterizedType = (ParameterizedType) type;
 			for (Object newType : parameterizedType.typeArguments()) {
-				fillRelevantClassInfoToList((Type) newType, qualifiedNameList);
+				fillRelevantClassInfoToList((Type) newType, relevantClassInfoList);
 			}
 		} else if (type.isPrimitiveType()) {
 			//原始类型 PrimitiveType of FieldType. Skip
 		} else {
-			System.err.println("Unexpected FieldType occur: " + type.toString());
-			LOGGER.error("Unexpected FieldType occur: {}", type.toString());
+			System.err.println("Unexpected Type occur: " + type.toString());
+			LOGGER.error("Unexpected Type occur: {}", type.toString());
 		}
-		return qualifiedNameList;
+		return relevantClassInfoList;
 	}
 
 
 	/**
-	 * AST获得的字段类型为字符串格式，此方法将其转换为ClassInfo格式
+	 * ASTNode获得的字段类型为字符串格式，可能是简单类名，也可能是外部类+嵌套类名，也可能是自己的嵌套类名。外部类名可能是全限定类名。 此方法将其转换为ClassInfo格式
 	 */
 	public ClassInfo resolveUnidentifiedNameToClassInfo(String unIdentifiedTypeName) {
 		ClassInfo fieldTypeClassInfo;
 		if (!unIdentifiedTypeName.contains(".")) {
 			// shortName
-			fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByShortName(unIdentifiedTypeName,
-			                                                                             importedClassList,
-			                                                                             importedPackageList);
+			fieldTypeClassInfo = ASTParserUtil.findClassInfoFromImportedListByShortName(unIdentifiedTypeName,
+			                                                                            importedClassList,
+			                                                                            importedPackageList);
 		} else {
-			// 直接搜，是否为全限定外部类名
-			fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByQualifiedName(unIdentifiedTypeName,
-			                                                                                 importedClassList,
-			                                                                                 importedPackageList);
-			// 如果不是，则
+			// 直接搜，是否为全限定类名
+			fieldTypeClassInfo = ASTParserUtil.findClassInfoFromImportedListByQualifiedName(unIdentifiedTypeName,
+			                                                                                importedClassList,
+			                                                                                importedPackageList);
+			// 如果不是，则为：外部类.内部类
 			if (fieldTypeClassInfo == null) {
-				// 将最后一个.转为$，搜索是否为外部类$嵌套类名
-				unIdentifiedTypeName = ASTVisitorUtil.transferQualifiedName(unIdentifiedTypeName);
-				if (unIdentifiedTypeName.contains(".")) {
-					//	转换后包括.，说明是qualifiedName，可能是合法的com.OuterClass$InnerClass，或不合法的com.foo$OuterClass
-					fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByQualifiedName(
-							unIdentifiedTypeName, importedClassList, importedPackageList);
-				} else {
-					//	转换后不包括.，说明是shortName，可能是合法的OuterClass$InnerClass，或不合法的com$OuterClass
-					fieldTypeClassInfo = ASTVisitorUtil.findClassInfoFromImportedListByShortName(unIdentifiedTypeName,
-					                                                                             importedClassList,
-					                                                                             importedPackageList);
-				}
+				String[] names = unIdentifiedTypeName.split(".");
+				String shortName = names[names.length - 1];
+				fieldTypeClassInfo = ASTParserUtil.findClassInfoFromImportedListByShortName(shortName,
+				                                                                            importedClassList,
+				                                                                            importedPackageList);
 			}
 		}
 		return fieldTypeClassInfo;
@@ -140,15 +135,9 @@ public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(FieldDeclaration node) {
-		ClassInfo currentClassInfo = ASTVisitorUtil.resolveClassInfo(node, outerClassInfo, projectInfo);
-		// 异常日志
+		ClassInfo currentClassInfo = ASTParserUtil.resolveClassInfo(node, outerClassInfo, projectInfo);
+
 		Type type = node.getType();
-		if (node.fragments().size() > 1) {
-			LOGGER.error("Unexpected FieldDeclaration fragment size [{}]", node.fragments().size());
-			for (Object obj : node.fragments()) {
-				LOGGER.error(obj.toString());
-			}
-		}
 		// 构造FieldInfo
 		for (Object fragemtObj : node.fragments()) {
 			VariableDeclarationFragment fragment = (VariableDeclarationFragment) fragemtObj;
@@ -188,7 +177,7 @@ public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 
 	@Override
 	public boolean visit(MethodDeclaration node) {
-		ClassInfo currentClassInfo = ASTVisitorUtil.resolveClassInfo(node, outerClassInfo, projectInfo);
+		ClassInfo currentClassInfo = ASTParserUtil.resolveClassInfo(node, outerClassInfo, projectInfo);
 
 		String methodName = node.getName().getIdentifier();
 		MethodInfo methodInfo = new MethodInfo(methodName);
@@ -230,6 +219,9 @@ public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 		methodInfo.setParamsNameTypeMap(paramsNameTypeMap);
 		methodInfo.setParamsTypeAsClassInfoListMap(paramsAsClassInfoMap);
 
+		methodInfo.setClassInfo(currentClassInfo);
+		EntityUtil.safeAddEntityToList(methodInfo, projectInfo.getMethodList());
+
 		EntityUtil.safeAddEntityToList(methodInfo, currentClassInfo.getMethodInfoList());
 
 		// 添加依赖关系
@@ -244,9 +236,43 @@ public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 				EntityUtil.safeAddEntityToList(currentClassInfo, depedency.getPassiveDependencyAkaFanInList());
 			}
 		}
-
-		node.accept(new No2_1_MethodDetailVisitor(outerClassInfo, currentClassInfo, projectInfo, importedClassList,
-		                                          importedPackageList));
 		return true;
 	}
+
+	// @Override
+	// public boolean visit(VariableDeclarationStatement node) {
+	// 	ClassInfo currentClassInfo = ASTVisitorUtil.resolveClassInfo(node, outerClassInfo, projectInfo);
+	// 	// 任何地方出现了VariableDeclarationStatement，只要声明的变量是项目的类，都表示耦合
+	// 	// 注意 new ComplexClassB().new InnerClassC();会出现单独出现内部类名的情况。
+	// 	List<ClassInfo> relevantClassInfoList = new ArrayList<>();
+	// 	fillRelevantClassInfoToList(node.getType(), relevantClassInfoList);
+	// 	// 添加依赖关系
+	// 	for (ClassInfo typeClassInfo : relevantClassInfoList) {
+	// 		EntityUtil.safeAddEntityToList(typeClassInfo, currentClassInfo.getActiveDependencyAkaFanOutList());
+	// 		EntityUtil.safeAddEntityToList(currentClassInfo, typeClassInfo.getPassiveDependencyAkaFanInList());
+	// 	}
+	// 	return true;
+	// }
+
+	// @Override
+	// public boolean visit(MethodInvocation node) {
+	// 	// 静态方法调用需要想办法解决识别类
+	// 	// 普通方法调用无所谓，因为需要操作依赖时，必定要声明对象，否则无法操作，如果是通过方法操作的，那也只是依赖于方法所属的类
+	// 	// Class.InnerClass, com.foo.Class, com.foo.Class.InnnerClass
+	// 	// 下面步骤只适用于通过类之间调用静态方法；如果通过对象调用静态方法，那么默认该对象之前已经被声明过
+	// 	if (node.getExpression() != null) {
+	// 		String qualifiedNameAheadMethodName = node.getExpression().toString();
+	// 		ClassInfo staticInvokingClassInfo = retriveClassInfoInQualifiedName(qualifiedNameAheadMethodName);
+	// 		// 判断内部类或外部类
+	// 		ClassInfo currentClassInfo = resolveClassInfo(node);
+	// 		// 添加依赖关系
+	// 		if (staticInvokingClassInfo != null) {
+	// 			EntityUtil.safeAddEntityToList(staticInvokingClassInfo,
+	// 			                               currentClassInfo.getActiveDependencyAkaFanOutList());
+	// 			EntityUtil.safeAddEntityToList(currentClassInfo,
+	// 			                               staticInvokingClassInfo.getPassiveDependencyAkaFanInList());
+	// 		}
+	// 	}
+	// 	return true;
+	// }
 }

@@ -58,14 +58,20 @@ public class T4MExtractor {
 		dependencyScanner.scan();
 	}
 
-	public void scanASP() {
+	public void scanASTParser() {
 		scanDependency();
-		No6_ASPScanner aspScanner = new No6_ASPScanner(projectInfo);
-		aspScanner.scan();
+		No6_ASTParserScanner astParserScanner = new No6_ASTParserScanner(projectInfo);
+		astParserScanner.scan();
+	}
+
+	public void scanJavaParser() {
+		scanASTParser();
+		No6_JavaParserScanner javaParserScanner = new No6_JavaParserScanner(projectInfo);
+		javaParserScanner.scan();
 	}
 
 	public ProjectInfo action() {
-		scanASP();
+		scanASTParser();
 		return projectInfo;
 	}
 }
