@@ -26,7 +26,7 @@ public class Test {
 		astParser.setKind(ASTParser.K_COMPILATION_UNIT);
 		String[] classPaths = System.getProperty("java.class.path").split(":");
 		Arrays.stream(classPaths).forEach(System.out::println);
-		astParser.setEnvironment(classPaths,new String[]{javaFilePath},null,false);
+		astParser.setEnvironment(classPaths, new String[]{javaFilePath}, null, false);
 		javaFilePath.split(File.separator);
 		astParser.setUnitName("/JSimulation/src/main/java/com/simulation/core/foo/ComplexClassA.java");
 		astParser.setBindingsRecovery(true);
@@ -52,7 +52,13 @@ public class Test {
 		// 	compilationUnit.accept(new Test.T4MVisitor());
 		// 	System.out.println();
 		// });
-		System.out.println(System.getProperty("java.class.path"));
+		String currentLine = "foo/*comment*/.method();/*comment*/";
+		System.out.println(currentLine);
+		currentLine.indexOf("*/");
+		currentLine = currentLine.substring(currentLine.indexOf("*/")+2);
+		System.out.println(currentLine);
+		// Arrays.stream(currentLine.split("/\\*")).forEach(System.out::println);
+		// System.out.println(currentLine.replaceAll("/\\*.*?\\*/",""));
 	}
 
 
@@ -79,7 +85,7 @@ public class Test {
 			System.out.println("Num of Fields:\t" + node.getFields().length);
 			System.out.println("Num of Methods:\t" + node.getMethods().length);
 
-			System.out.println("Binding"+node.resolveBinding());
+			System.out.println("Binding" + node.resolveBinding());
 			return true;
 		}
 
@@ -98,7 +104,7 @@ public class Test {
 					System.out.println();
 				}
 			}
-			System.out.println("Binding"+node.resolveBinding());
+			System.out.println("Binding" + node.resolveBinding());
 			return super.visit(node);
 		}
 
@@ -138,7 +144,7 @@ public class Test {
 			} else {
 				System.out.println("Method:\t" + node.getName());
 			}
-			System.out.println("Binding"+node.resolveBinding());
+			System.out.println("Binding" + node.resolveBinding());
 			return super.visit(node);
 		}
 
@@ -146,7 +152,7 @@ public class Test {
 		public boolean visit(MethodInvocation node) {
 			System.out.println("MethodInvocation:\t" + node.getName().toString());
 			System.out.println("MethodInovcation--expression:\t" + node.getExpression().toString());
-			System.out.println("Binding"+node.resolveMethodBinding());
+			System.out.println("Binding" + node.resolveMethodBinding());
 			return true;
 		}
 

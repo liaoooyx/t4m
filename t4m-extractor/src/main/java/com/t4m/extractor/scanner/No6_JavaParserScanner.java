@@ -13,7 +13,7 @@ import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.scanner.javaparser.No2_DeclarationVisitor;
-import com.t4m.extractor.scanner.javaparser.No3_MethodCallVisitor;
+import com.t4m.extractor.scanner.javaparser.No3_InMethodDependencyVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ public class No6_JavaParserScanner {
 	public void scan() {
 		initParser();
 		scanVisitor(No2_DeclarationVisitor.class);
-		scanVisitor(No3_MethodCallVisitor.class);
+		scanVisitor(No3_InMethodDependencyVisitor.class);
 	}
 
 

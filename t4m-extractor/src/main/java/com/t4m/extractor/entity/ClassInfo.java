@@ -47,14 +47,16 @@ public class ClassInfo implements Serializable {
 	private int numberOfEnumConstants;
 	private int numberOfAnnotationMembers;
 
-	private List<String> unresolvedNodeDescriptionList = new ArrayList<>();
+	private List<String> unresolvedExceptionList = new ArrayList<>();
 
 	//SLOC counts the number of lines in the source file that are not: blank or empty lines, braces, or comments.
 	private Map<SLOCType, Integer> slocCounterMap = new HashMap<>();
 
 	//Response for class
-	private List<MethodInfo> outsideResponseForClass = new ArrayList<>(); // 调用的其他类的方法集合
-	private List<MethodInfo> insideResponseForClass = new ArrayList<>(); //自身的方法集合，以及继承的方法，排除重载方法
+	private Map<String,Integer> rfcMethodQualifiedSignatureMap = new HashMap<>(); // 调用的其他类的方法集合
+
+	//圈复杂度
+	private List<Integer> cyclomaticComplexityList = new ArrayList<>();
 
 	public ClassInfo(String shortName, String absolutePath) {
 		this.shortName = shortName;
@@ -254,12 +256,12 @@ public class ClassInfo implements Serializable {
 		this.numberOfAnnotationMembers = numberOfAnnotationMembers;
 	}
 
-	public List<String> getUnresolvedNodeDescriptionList() {
-		return unresolvedNodeDescriptionList;
+	public List<String> getUnresolvedExceptionList() {
+		return unresolvedExceptionList;
 	}
 
-	public void setUnresolvedNodeDescriptionList(List<String> unresolvedNodeDescriptionList) {
-		this.unresolvedNodeDescriptionList = unresolvedNodeDescriptionList;
+	public void setUnresolvedExceptionList(List<String> unresolvedExceptionList) {
+		this.unresolvedExceptionList = unresolvedExceptionList;
 	}
 
 	public Map<SLOCType, Integer> getSlocCounterMap() {
@@ -271,6 +273,22 @@ public class ClassInfo implements Serializable {
 
 	public void setSlocCounterMap(Map<SLOCType, Integer> slocCounterMap) {
 		this.slocCounterMap = slocCounterMap;
+	}
+
+	public Map<String, Integer> getRfcMethodQualifiedSignatureMap() {
+		return rfcMethodQualifiedSignatureMap;
+	}
+
+	public void setRfcMethodQualifiedSignatureMap(Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+		this.rfcMethodQualifiedSignatureMap = rfcMethodQualifiedSignatureMap;
+	}
+
+	public List<Integer> getCyclomaticComplexityList() {
+		return cyclomaticComplexityList;
+	}
+
+	public void setCyclomaticComplexityList(List<Integer> cyclomaticComplexityList) {
+		this.cyclomaticComplexityList = cyclomaticComplexityList;
 	}
 
 	/**
@@ -316,7 +334,7 @@ public class ClassInfo implements Serializable {
 	}
 
 	public static enum SLOCType {
-		LOGIC_CODE_LINES_FROM_SOURCE_FILE(),
+		LOGIC_CODE_LINES_FROM_SOURCE_FILE,
 		PHYSICAL_CODE_LINES_FROM_SOURCE_FILE,
 		ALL_COMMENT_LINES_FROM_SOURCE_FILE,
 		LOGIC_CODE_LINES_FROM_AST,

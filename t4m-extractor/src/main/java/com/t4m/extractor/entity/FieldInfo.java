@@ -14,7 +14,7 @@ public class FieldInfo implements Serializable {
 	private static final long serialVersionUID = -8268736331184263167L;
 
 	private String shortName;
-	private Range rangeLocator; //理论上用shortName就足够定位一个类的字段，此字段留作备用
+	private transient Range rangeLocator; //理论上用shortName就足够定位一个类的字段，此字段留作备用
 
 	private String typeString;
 	private List<ClassInfo> typeAsClassInfoList = new ArrayList<>(); // 该字段涉及到的所有全限定类名（只包括跟项目有关的类）

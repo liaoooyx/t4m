@@ -15,7 +15,7 @@ public class MethodInfo implements Serializable {
 
 	private String shortName;
 	private String fullyQualifiedName; // fully-qualified class name: pkg.b.c.Class.method
-	private Range rangeLocator;
+	private transient Range rangeLocator;
 	private String methodDeclarationString;
 
 	private ClassInfo classInfo;
@@ -32,6 +32,10 @@ public class MethodInfo implements Serializable {
 	private boolean abstractMethod = false;
 	private boolean staticMethod = false;
 	private AccessModifierEnum accessModifierEnum = AccessModifierEnum.DEFAULT;
+
+	// LOCM4度量
+	private List<FieldInfo> fieldAccessList = new ArrayList<>(); // 该方法内涉及的本地字段访问
+	private List<MethodInfo> localMethodAccessList = new ArrayList<>(); // 该方法内涉及的本地方法访问
 
 	//if、while、for、&&、||、cases and default of switch, catches of try
 	private int cyclomaticComplexity;
@@ -173,6 +177,22 @@ public class MethodInfo implements Serializable {
 
 	public void setAccessModifierEnum(AccessModifierEnum accessModifierEnum) {
 		this.accessModifierEnum = accessModifierEnum;
+	}
+
+	public List<FieldInfo> getFieldAccessList() {
+		return fieldAccessList;
+	}
+
+	public void setFieldAccessList(List<FieldInfo> fieldAccessList) {
+		this.fieldAccessList = fieldAccessList;
+	}
+
+	public List<MethodInfo> getLocalMethodAccessList() {
+		return localMethodAccessList;
+	}
+
+	public void setLocalMethodAccessList(List<MethodInfo> localMethodAccessList) {
+		this.localMethodAccessList = localMethodAccessList;
 	}
 
 	public int getCyclomaticComplexity() {

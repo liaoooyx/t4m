@@ -11,28 +11,245 @@ import static com.t4m.extractor.entity.ClassInfo.*;
  */
 public class SLOCMetric {
 
-	public static void slocCounterFromRawFile(String sourceLine, Map<SLOCType, Integer> counterMap) {
+	private boolean inBlockComment = false;
+
+	public void slocCounterFromRawFile(String sourceLine, Map<SLOCType, Integer> counterMap) {
 		String currentLine = sourceLine.strip();
 		int codeLines = counterMap.get(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE);
 		int commentLines = counterMap.get(SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE);
 		int physicalLines = counterMap.get(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE);
 		// sloc计数
 		if (!"".equals(currentLine)) {
-			if (currentLine.startsWith("//") || currentLine.startsWith("/**") || currentLine.startsWith("*")) {
-				// Comment line
+			// 将引号内容删除：".*?"
+			currentLine = currentLine.replaceAll("\".*?\"", "foo");
+			if (inBlockComment) {
 				commentLines++;
-			} else if (Pattern.compile(";[ ]*//.*").matcher(currentLine).find()) {
-				// Mix comment line
-				commentLines++;
-				codeLines++;
-				physicalLines++;
-			} else if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
-				// braces line
-				physicalLines++;
+				if (currentLine.contains("*/")) {
+					inBlockComment = false;
+					int index = currentLine.indexOf("*/");
+					if (index + 2 == currentLine.length()) {
+						// 单独注释行 comment*/
+					} else {
+						// 混合行
+						// super()/*comment
+						// comment
+						// //comment*/ foo/*comment*/.method();/*comment*/ System.out.println();
+						currentLine = currentLine.substring(currentLine.indexOf("*/") + 2).strip();
+						if (currentLine.startsWith("//")) {
+							// 单独的注释行
+						} else if (currentLine.startsWith("/*")) {
+							if (currentLine.contains("*/")) {
+								// /*comment*/foo./*comment*/method()/*
+								// comment*/;
+								// /*comment*/});/*comment*/
+								// /*comment*/}//comment
+								currentLine = currentLine.replaceAll("/\\*.*?\\*/", "").strip();
+								if (currentLine.contains("/*")) {
+									inBlockComment = true;
+									currentLine = currentLine.split("/\\*")[0].strip(); // 【/*】右边的必然是注释语句（因为没有结束符*/），因此只需要取数组的第一个即可
+									if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+										// braces line
+										physicalLines++;
+									} else {
+										codeLines++;
+										physicalLines++;
+									}
+								} else if (currentLine.contains("//")) {
+									currentLine = currentLine.split("//")[0].strip(); // 【//】右边的必然是注释语句，因此只需要取数组的第一个即可
+									if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+										// braces line
+										physicalLines++;
+									} else {
+										codeLines++;
+										physicalLines++;
+									}
+								} else {
+									// 非注释行
+									if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+										// braces line
+										physicalLines++;
+									} else {
+										codeLines++;
+										physicalLines++;
+									}
+								}
+							} else {
+								// 多行注释，当前行全是注释
+								inBlockComment = true;
+							}
+						} else if (currentLine.contains("/*")) {
+							//	混合行
+							// foo/*comment*/.method();/*comment*/
+							// }/*comment*/);/*comment*/
+							if (currentLine.contains("*/")) {
+								currentLine = currentLine.replaceAll("/\\*.*?\\*/", "");
+								// Foo foo /*//comment*/ = new Foo(); //comment
+								if (currentLine.contains("/*")) {
+									inBlockComment = true;
+									currentLine = currentLine.split("/\\*")[0].strip(); // 【/*】右边的必然是注释语句（因为没有结束符*/），因此只需要取数组的第一个即可
+									if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+										// braces line
+										physicalLines++;
+									} else {
+										codeLines++;
+										physicalLines++;
+									}
+								} else if (currentLine.contains("//")) {
+									currentLine = currentLine.split("//")[0].strip(); // 【//】右边的必然是注释语句，因此只需要取数组的第一个即可
+									if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+										// braces line
+										physicalLines++;
+									} else {
+										codeLines++;
+										physicalLines++;
+									}
+								} else {
+									// 非注释行
+									if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+										// braces line
+										physicalLines++;
+									} else {
+										codeLines++;
+										physicalLines++;
+									}
+								}
+							} else {
+								// callMethod();/*comment
+								// }/*comment
+								inBlockComment = true;
+								currentLine = currentLine.split("/\\*")[0]
+										.strip(); // 【/*】右边的必然是注释语句（因为没有结束符*/），因此只需要取数组的第一个即可
+								if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+									// braces line
+									physicalLines++;
+								} else {
+									codeLines++;
+									physicalLines++;
+								}
+							}
+						} else if (currentLine.contains("//")) {
+							//混合行
+							currentLine = currentLine.split("//")[0].strip(); // 【//】右边的必然是注释语句，因此只需要取数组的第一个即可
+							if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+								// braces line
+								physicalLines++;
+							} else {
+								codeLines++;
+								physicalLines++;
+							}
+						} else {
+							// 非注释行
+							if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+								// braces line
+								physicalLines++;
+							} else {
+
+								codeLines++;
+								physicalLines++;
+							}
+						}
+					}
+
+				} else {
+					//	还处于块注释中
+				}
 			} else {
-				codeLines++;
-				physicalLines++;
+				if (currentLine.startsWith("//")) {
+					// 单独的注释行
+					commentLines++;
+				} else if (currentLine.startsWith("/*")) {
+					commentLines++;
+					if (currentLine.contains("*/")) {
+						// /*comment*/foo.method();/*comment*/
+						// /*comment*/});/*comment*/
+						// /*comment*/}//comment
+						currentLine = currentLine.replaceAll("/\\*.*?\\*/", "").strip();
+						if (currentLine.contains("//")) {
+							currentLine = currentLine.split("//")[0].strip(); // 【//】右边的必然是注释语句，因此只需要取数组的第一个即可
+							if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+								// braces line
+								physicalLines++;
+							} else {
+								codeLines++;
+								physicalLines++;
+							}
+						} else {
+							// 非注释行
+							if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+								// braces line
+								physicalLines++;
+							} else {
+								codeLines++;
+								physicalLines++;
+							}
+						}
+					} else {
+						// 多行注释，当前行全是注释
+						inBlockComment = true;
+					}
+				} else if (currentLine.contains("/*")) {
+					//	混合行
+					// foo/*comment*/.method();/*comment*/
+					// }/*comment*/);/*comment*/
+					commentLines++;
+					if (currentLine.contains("*/")) {
+						currentLine = currentLine.replaceAll("/\\*.*?\\*/", "");
+						// Foo foo /*//comment*/ = new Foo(); //comment
+						if (currentLine.contains("//")) {
+							currentLine = currentLine.split("//")[0].strip(); // 【//】右边的必然是注释语句，因此只需要取数组的第一个即可
+							if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+								// braces line
+								physicalLines++;
+							} else {
+								codeLines++;
+								physicalLines++;
+							}
+						} else {
+							// 非注释行
+							if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+								// braces line
+								physicalLines++;
+							} else {
+								codeLines++;
+								physicalLines++;
+							}
+						}
+					} else {
+						// callMethod();/*comment
+						// }/*comment
+						inBlockComment = true;
+						currentLine = currentLine.split("/\\*")[0].strip(); // 【/*】右边的必然是注释语句（因为没有结束符*/），因此只需要取数组的第一个即可
+						if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+							// braces line
+							physicalLines++;
+						} else {
+							codeLines++;
+							physicalLines++;
+						}
+					}
+				} else if (currentLine.contains("//")) {
+					//混合行
+					commentLines++;
+					currentLine = currentLine.split("//")[0].strip(); // 【//】右边的必然是注释语句，因此只需要取数组的第一个即可
+					if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+						// braces line
+						physicalLines++;
+					} else {
+						codeLines++;
+						physicalLines++;
+					}
+				} else {
+					// 非注释行
+					if (Pattern.compile("^[{}();]*$").matcher(currentLine).matches()) {
+						// braces line
+						physicalLines++;
+					} else {
+						codeLines++;
+						physicalLines++;
+					}
+				}
 			}
+
 		}
 		counterMap.replace(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, codeLines);
 		counterMap.replace(SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE, commentLines);
@@ -83,7 +300,6 @@ public class SLOCMetric {
 	}
 
 	/**
-	 *
 	 * @param slocArray 目标数组，数值将会叠加在次数组上
 	 * @param inputSLOC 需要将此数组中的值，加到{@code slocArray}上
 	 */

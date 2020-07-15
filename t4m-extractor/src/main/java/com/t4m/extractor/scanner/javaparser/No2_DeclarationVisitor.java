@@ -1,24 +1,25 @@
 package com.t4m.extractor.scanner.javaparser;
 
+import com.github.javaparser.Range;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.expr.BinaryExpr;
+import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.ReferenceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.resolution.UnsolvedSymbolException;
+import com.github.javaparser.resolution.declarations.ResolvedValueDeclaration;
+import com.github.javaparser.resolution.types.ResolvedType;
 import com.t4m.extractor.entity.*;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.JavaParserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 补充基本信息，包括补全类信息，添加MethodInfo，FieldInfo Created by Yuxiang Liao on 2020-07-12 13:38.
@@ -43,8 +44,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error(
-					"Cannot resolve current class declaration. It may be declared in anonymous class within a method.");
+			LOGGER.error("Cannot resolve current class declaration. It may be declared within a method.");
 			return;
 		}
 		if (n.isInterface()) {
@@ -92,8 +92,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error(
-					"Cannot resolve current enum declaration. It may be declared in anonymous class within a method.");
+			LOGGER.error("Cannot resolve current enum declaration. It may be declared within a method.");
 			return;
 		}
 		currentClassInfo.setClassModifier(ClassInfo.ClassModifier.ENUM);
@@ -114,8 +113,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error(
-					"Cannot resolve current annotation declaration. It may be declared in anonymous class within a method.");
+			LOGGER.error("Cannot resolve current annotation declaration. It may be declared within a method.");
 			return;
 		}
 		currentClassInfo.setClassModifier(ClassInfo.ClassModifier.ANNOTATION);
@@ -130,8 +128,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error(
-					"Cannot resolve current field declaration. It may be declared in anonymous class within a method.");
+			LOGGER.error("Cannot resolve current field declaration. It may be declared within a method.");
 			return;
 		}
 		boolean isStatic = false;
@@ -176,17 +173,71 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	}
 
 	/**
+	 * 构造器与方法声明几乎一样，除了构造器没有返回值，和必然有方法体。
+	 */
+	@Override
+	public void visit(ConstructorDeclaration n, Void arg) {
+		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
+		if (currentClassInfo == null) {
+			LOGGER.error("Cannot resolve current method declaration. It may be declared in the class within a method.");
+			return;
+		}
+		//构造MethodInfo
+		MethodInfo methodInfo = new MethodInfo(n.getNameAsString());
+		methodInfo.setReturnTypeString("");
+		methodInfo.setMethodDeclarationString(n.getDeclarationAsString());
+		methodInfo.setRangeLocator(n.getRange().orElse(null));
+		methodInfo.setFullyQualifiedName(currentClassInfo.getFullyQualifiedName() + "." + n.getNameAsString());
+		methodInfo.setClassInfo(currentClassInfo);
+
+		Map<String, String> paramStrMap = methodInfo.getParamsNameTypeMap();
+		Map<String, List<ClassInfo>> paramClassMap = methodInfo.getParamsTypeAsClassInfoListMap();
+		for (Parameter parameter : n.getParameters()) {
+			String paramName = parameter.getName().toString();
+			paramStrMap.put(paramName, parameter.getType().toString());
+			List<ClassInfo> couplingClassList = new ArrayList<>();
+			fillRelevantClassToList(parameter, couplingClassList);
+			if (!couplingClassList.isEmpty()) {
+				paramClassMap.put(paramName, couplingClassList);
+			}
+		}
+
+		List<String> thrownExceptionStringList = methodInfo.getThrownExceptionStringList(); // 异常类型字符串
+		List<ClassInfo> thrownExceptionClassList = methodInfo.getThrownExceptionClassList();
+		for (ReferenceType referenceType : n.getThrownExceptions()) {
+			thrownExceptionStringList.add(referenceType.toString());
+			fillRelevantClassToList(referenceType, thrownExceptionClassList);
+		}
+
+		EntityUtil.safeAddEntityToList(methodInfo, currentClassInfo.getMethodInfoList());
+		EntityUtil.safeAddEntityToList(methodInfo, projectInfo.getMethodList());
+		currentClassInfo.setNumberOfMethods(currentClassInfo.getMethodInfoList().size());
+
+		// 添加方法声明出现的依赖关系
+		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
+		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getParamsTypeAsClassInfoList());
+		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getThrownExceptionClassList());
+
+		BlockStmt body = n.getBody();
+		//	解析方法复杂度
+		if (body != null) {
+			int complexityCount = resolveComplexity(body, 1);
+			methodInfo.setCyclomaticComplexity(complexityCount);
+			currentClassInfo.getCyclomaticComplexityList().add(complexityCount);
+		}
+	}
+
+	/**
 	 * 构造MethodInfo，并补充ClassInfo中的numberOfMethods，以及添加依赖
 	 */
 	@Override
 	public void visit(MethodDeclaration n, Void arg) {
-		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error(
-					"Cannot resolve current method declaration. It may be declared in anonymous class within a method.");
+			LOGGER.error("Cannot resolve current method declaration. It may be declared in the class within a method.");
 			return;
 		}
+		//构造MethodInfo
 		MethodInfo methodInfo = new MethodInfo(n.getNameAsString());
 		methodInfo.setReturnTypeString(n.getTypeAsString());
 		fillRelevantClassToList(n.getType(), methodInfo.getReturnTypeAsClassInfoList());
@@ -218,16 +269,20 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		EntityUtil.safeAddEntityToList(methodInfo, projectInfo.getMethodList());
 		currentClassInfo.setNumberOfMethods(currentClassInfo.getMethodInfoList().size());
 
+		// 添加方法声明出现的依赖关系
 		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
 		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getParamsTypeAsClassInfoList());
 		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getThrownExceptionClassList());
 
-		//	解析方法复杂度
 		BlockStmt body = n.getBody().orElse(null);
+
+		//	解析方法复杂度
 		if (body != null) {
 			int complexityCount = resolveComplexity(body, 1);
 			methodInfo.setCyclomaticComplexity(complexityCount);
+			currentClassInfo.getCyclomaticComplexityList().add(complexityCount);
 		}
+
 	}
 
 	/* -------------------------------------------------------------------------------------------------*/
@@ -254,6 +309,10 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		}
 	}
 
+	/**
+	 * 递归查询子节点，计算圈复杂度。
+	 * if, while, for, &&, ||, cases and default of switch, catches of try
+	 */
 	private int resolveComplexity(Node n, int complexityCount) {
 		for (Node node : n.getChildNodes()) {
 			complexityCount += resolveComplexity(node, 0);
@@ -278,9 +337,15 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 				if (operator.equals(BinaryExpr.Operator.AND) || operator.equals(BinaryExpr.Operator.OR)) {
 					complexityCount += 1;
 				}
+			} else if (node instanceof ConditionalExpr) {
+				//The ternary conditional expression: b==0?x:y
+				complexityCount += 1;
 			}
 		}
 		return complexityCount;
 	}
+
+
+
 
 }

@@ -31,6 +31,7 @@ public class No2_ClassScanner {
 	 */
 	public void scan(List<File> rawJavaFileList) {
 		rawJavaFileList.forEach(javaFile -> {
+			SLOCMetric slocMetric = new SLOCMetric();
 			try {
 				String line;
 				String pkgFullyQualifiedName = PackageInfo.EMPTY_IDENTIFIER;
@@ -49,7 +50,7 @@ public class No2_ClassScanner {
 						pkgFullyQualifiedName = line.replaceFirst("package", "").replace(";", "").strip();
 					}
 					// sloc计数
-					SLOCMetric.slocCounterFromRawFile(currentLine, slocCounterMap);
+					slocMetric.slocCounterFromRawFile(currentLine, slocCounterMap);
 				}
 				classInfo.setMainPublicClass(classInfo);
 				classInfo.setClassDeclaration(ClassInfo.ClassDeclaration.MAIN_PUBLIC_CLASS);
