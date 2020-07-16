@@ -12,12 +12,16 @@ import org.eclipse.jdt.core.dom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 /**
  * Created by Yuxiang Liao on 2020-06-18 13:31.
  */
+@Deprecated
 public class NoX_SLOCVisitor extends ASTVisitor {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ASTVisitor.class);
@@ -42,7 +46,8 @@ public class NoX_SLOCVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * 先从importedClassList中查找，如果没有，则从importedPackageList中查找。 如果都没有，说明该类并不是由项目创建（来自于外部jar包），返回null。 注意 new
+	 * 先从importedClassList中查找，如果没有，则从importedPackageList中查找。
+	 * 如果都没有，说明该类并不是由项目创建（来自于外部jar包），返回null。 注意 new
 	 * ComplexClassB().new InnerClassC();会出现单独出现内部类名的情况。 因此还需要进入类的内部类列表进行查询
 	 */
 	private ClassInfo findClassInfoFromImportedListByShortName(String shortName) {
@@ -125,9 +130,9 @@ public class NoX_SLOCVisitor extends ASTVisitor {
 
 		// 将AST与SOURCE_FILE分开，AST将不包括package和IMPORT语句。于是乎，只有类型为MAIN_PUBLIC_CLASS的类是才有源文件的SLOC
 		String[] sourceLines = node.toString().split(System.lineSeparator());
-		Map<ClassInfo.SLOCType, Integer> slocCounterMap = currentClassInfo.getSlocCounterMap();
-		Arrays.stream(sourceLines).forEach(line -> SLOCMetric.slocCounterFromAST(line, slocCounterMap));
-		currentClassInfo.setSlocCounterMap(slocCounterMap);
+		SLOCMetric slocMetric = new SLOCMetric();
+		Arrays.stream(sourceLines).forEach(slocMetric::countSLOCByLine);
+		slocMetric.setASTSLOCToCounterMap(currentClassInfo.getSlocCounterMap());
 	}
 
 	/*------------------------------------------------------------------------------------------*/

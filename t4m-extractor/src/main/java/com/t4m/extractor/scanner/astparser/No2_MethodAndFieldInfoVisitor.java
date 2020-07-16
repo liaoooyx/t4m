@@ -2,7 +2,6 @@ package com.t4m.extractor.scanner.astparser;
 
 import com.t4m.extractor.entity.*;
 import com.t4m.extractor.util.ASTParserUtil;
-import com.t4m.extractor.util.CommonParserUtil;
 import com.t4m.extractor.util.EntityUtil;
 import org.eclipse.jdt.core.dom.*;
 import org.slf4j.Logger;

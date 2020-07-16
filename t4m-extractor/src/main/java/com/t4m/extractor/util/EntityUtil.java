@@ -4,7 +4,10 @@ import com.github.javaparser.Range;
 import com.t4m.extractor.entity.*;
 import com.t4m.extractor.exception.DuplicatedInnerClassFoundedException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**

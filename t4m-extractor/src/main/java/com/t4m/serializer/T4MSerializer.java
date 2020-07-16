@@ -3,7 +3,6 @@ package com.t4m.serializer;
 
 import com.t4m.extractor.entity.ProjectInfo;
 
-import java.io.File;
 import java.util.List;
 
 public interface T4MSerializer {

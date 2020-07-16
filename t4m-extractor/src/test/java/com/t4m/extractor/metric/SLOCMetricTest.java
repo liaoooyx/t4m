@@ -14,13 +14,15 @@ class SLOCMetricTest {
 	void SLOCCounter() {
 		Map<ClassInfo.SLOCType, Integer> counterMap = new HashMap<>();
 		counterMap.put(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST, 0); // 不包括空白行，单独大括号和注释行
-		counterMap.put(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST, 0); // 包括这样的注释和代码混合的行
+		counterMap.put(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST, 0); // 包括这样的注释和代码混合的行
 		counterMap.put(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST, 0);  // 包括代码行、大括号，不包括单独的注释行
-		SLOCMetric.slocCounterFromAST("counterMap.put(\"codeLines\", 0); // 不包括空白行，单独大括号和注释行", counterMap);
+		SLOCMetric slocMetric = new SLOCMetric();
+		slocMetric.countSLOCByLine("counterMap.put(\"codeLines\", 0); // 不包括空白行，单独大括号和注释行");
+		slocMetric.setASTSLOCToCounterMap(counterMap);
 		counterMap.forEach((key, val) -> {
 			// System.out.println(key + ": " + val);
 			assertAll(() -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
-			          () -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST)),
+			          () -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST)),
 			          () -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
 		});
 

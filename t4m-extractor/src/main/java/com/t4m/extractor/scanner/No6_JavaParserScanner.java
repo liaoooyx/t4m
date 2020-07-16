@@ -12,6 +12,7 @@ import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.scanner.javaparser.No1_ClassInfoVisitor;
 import com.t4m.extractor.scanner.javaparser.No2_DeclarationVisitor;
 import com.t4m.extractor.scanner.javaparser.No3_InMethodDependencyVisitor;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ public class No6_JavaParserScanner {
 
 	public void scan() {
 		initParser();
+		scanVisitor(No1_ClassInfoVisitor.class);
 		scanVisitor(No2_DeclarationVisitor.class);
 		scanVisitor(No3_InMethodDependencyVisitor.class);
 	}
@@ -85,7 +87,6 @@ public class No6_JavaParserScanner {
 		ProjectInfo projectInfo = new ProjectInfo(rootPath);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanJavaParser();
-
 		System.out.println();
 	}
 }

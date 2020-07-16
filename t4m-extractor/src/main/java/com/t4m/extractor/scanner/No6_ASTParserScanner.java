@@ -23,6 +23,7 @@ import java.util.Map;
 /**
  * Created by Yuxiang Liao on 2020-06-18 01:12.
  */
+@Deprecated
 public class No6_ASTParserScanner {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(No6_ASTParserScanner.class);

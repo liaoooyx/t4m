@@ -3,7 +3,10 @@ package com.t4m.extractor.entity;
 import com.t4m.extractor.metric.SLOCMetric;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Yuxiang Liao on 2020-06-11 09:29.

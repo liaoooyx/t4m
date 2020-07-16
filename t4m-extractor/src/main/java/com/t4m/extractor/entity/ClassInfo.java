@@ -292,14 +292,17 @@ public class ClassInfo implements Serializable {
 	}
 
 	/**
-	 * 如果是内部类，那么它关于source file的三项将为0，因为无法从source file中判断出内部类。 如果是外部类，那么它的六项都包括内部类 对于AST格式的SLOC，它的数值与源文件可能不一致，因为AST格式会对部分代码行合并，比如方法注解和方法声明会合并为一行
+	 * Source File以文件为单位，包括了package, import, nested class，non public class
+	 * AST以类为单位，不包括package和 import，对于注释和代码也会进行格式化
+	 * （比如注释会与代码行不会混合，注释行会被单独提取成行；一个stmt成一行）
+	 *
 	 */
 	public Map<SLOCType, Integer> initSlocCounterMap() {
 		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, 0); // 不包括空白行，单独大括号和注释行
-		this.slocCounterMap.put(SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE, 0); // 包括这样的注释和代码混合的行
+		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE, 0); // 包括这样的注释和代码混合的行
 		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE, 0);  // 包括代码行、大括号，不包括单独的注释行
 		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_AST, 0); // 不包括空白行，单独大括号和注释行
-		this.slocCounterMap.put(SLOCType.DOC_COMMENT_LINES_FROM_AST, 0); // 不包括"//"注释行，只包括"/**/"的doc注释行
+		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_AST, 0); // 不包括"//"注释行，只包括"/**/"的doc注释行
 		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_AST, 0);  // 包括代码行、大括号，不包括单独的注释行
 		return slocCounterMap;
 	}
@@ -314,7 +317,7 @@ public class ClassInfo implements Serializable {
 		return slocArray;
 	}
 
-	public static enum ClassModifier {
+	public enum ClassModifier {
 		CLASS("class"),
 		ENUM("enum"),
 		ANNOTATION("annotation"),
@@ -333,19 +336,19 @@ public class ClassInfo implements Serializable {
 		}
 	}
 
-	public static enum SLOCType {
+	public enum SLOCType {
 		LOGIC_CODE_LINES_FROM_SOURCE_FILE,
 		PHYSICAL_CODE_LINES_FROM_SOURCE_FILE,
-		ALL_COMMENT_LINES_FROM_SOURCE_FILE,
+		COMMENT_LINES_FROM_SOURCE_FILE,
 		LOGIC_CODE_LINES_FROM_AST,
 		PHYSICAL_CODE_LINES_FROM_AST,
-		DOC_COMMENT_LINES_FROM_AST;
+		COMMENT_LINES_FROM_AST
 	}
 
-	public static enum ClassDeclaration {
-		INNER_CLASS, // 内部类
+	public enum ClassDeclaration {
+		NESTED_CLASS, // 嵌套类：包括static nested class和inner class
 		EXTRA_CLASS, // 非public的外部类
-		MAIN_PUBLIC_CLASS; // 唯一的public外部类，与java文件名一致
+		MAIN_PUBLIC_CLASS // 唯一的public外部类，与java文件名一致
 	}
 
 	@Override

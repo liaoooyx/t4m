@@ -1,18 +1,10 @@
 package com.t4m.extractor.util;
 
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.body.AnnotationDeclaration;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.MethodInfo;
-import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 
-import javax.imageio.metadata.IIOMetadataFormat;
 import java.util.List;
 
 /**

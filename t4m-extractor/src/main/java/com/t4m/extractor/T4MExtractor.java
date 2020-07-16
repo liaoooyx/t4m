@@ -65,7 +65,7 @@ public class T4MExtractor {
 	}
 
 	public void scanJavaParser() {
-		scanASTParser();
+		scanDependency();
 		No6_JavaParserScanner javaParserScanner = new No6_JavaParserScanner(projectInfo);
 		javaParserScanner.scan();
 	}

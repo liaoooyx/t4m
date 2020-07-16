@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 通过反射来扫描类信息 Created by Yuxiang Liao on 2020-06-16 13:42.
@@ -31,7 +30,7 @@ public class No2_ClassScanner {
 	 */
 	public void scan(List<File> rawJavaFileList) {
 		rawJavaFileList.forEach(javaFile -> {
-			SLOCMetric slocMetric = new SLOCMetric();
+
 			try {
 				String line;
 				String pkgFullyQualifiedName = PackageInfo.EMPTY_IDENTIFIER;
@@ -42,7 +41,7 @@ public class No2_ClassScanner {
 				ClassInfo classInfo = EntityUtil.safeAddEntityToList(
 						new ClassInfo(classShortName, javaFile.getAbsolutePath().strip()), projectInfo.getClassList());
 				// SLOC from source file
-				Map<ClassInfo.SLOCType, Integer> slocCounterMap = classInfo.getSlocCounterMap();
+				SLOCMetric slocMetric = new SLOCMetric();
 				while ((line = reader.readLine()) != null) {
 					String currentLine = line.strip();
 					// 读java文件的包路径
@@ -50,13 +49,13 @@ public class No2_ClassScanner {
 						pkgFullyQualifiedName = line.replaceFirst("package", "").replace(";", "").strip();
 					}
 					// sloc计数
-					slocMetric.slocCounterFromRawFile(currentLine, slocCounterMap);
+					slocMetric.countSLOCByLine(currentLine);
 				}
+				slocMetric.setSourceFileSLOCToCounterMap(classInfo.getSlocCounterMap());
 				classInfo.setMainPublicClass(classInfo);
 				classInfo.setClassDeclaration(ClassInfo.ClassDeclaration.MAIN_PUBLIC_CLASS);
 				classInfo.setFullyQualifiedName(pkgFullyQualifiedName + "." + classShortName);
 				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
-				classInfo.setSlocCounterMap(slocCounterMap);
 
 			} catch (FileNotFoundException e) {
 				LOGGER.error("No such file to be converted to ClassInfo object.%n[{}]", e.toString(), e);

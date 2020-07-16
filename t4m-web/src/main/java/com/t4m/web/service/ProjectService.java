@@ -1,8 +1,6 @@
 package com.t4m.web.service;
 
 import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.DirHierarchyNode;
-import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.util.ProjectRecord;
@@ -159,8 +157,8 @@ public class ProjectService {
 		List<Object> cols = new ArrayList<>();
 		Map<ClassInfo.SLOCType, Integer> couterMap = classInfo.getSlocCounterMap();
 		cols.add(couterMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)); // logic code line
-		cols.add(couterMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST)); // comment line
-		int classSize = couterMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST) + couterMap.get(
+		cols.add(couterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST)); // comment line
+		int classSize = couterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST) + couterMap.get(
 				ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST);
 		cols.add(classSize);
 		cols.add(classInfo.getFullyQualifiedName()); // class qualified name
@@ -172,8 +170,8 @@ public class ProjectService {
 		List<Object> cols = new ArrayList<>();
 		Map<ClassInfo.SLOCType, Integer> couterMap = classInfo.getSlocCounterMap();
 		cols.add(couterMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE)); // logic code line
-		cols.add(couterMap.get(ClassInfo.SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE)); // comment line
-		int classSize = couterMap.get(ClassInfo.SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE) + couterMap.get(
+		cols.add(couterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE)); // comment line
+		int classSize = couterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE) + couterMap.get(
 				ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE);
 		cols.add(classSize);
 		cols.add(classInfo.getFullyQualifiedName()); // class qualified name

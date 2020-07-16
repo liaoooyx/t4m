@@ -1,25 +1,30 @@
 package com.t4m.extractor.scanner.javaparser;
 
-import com.github.javaparser.Range;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.expr.BinaryExpr;
+import com.github.javaparser.ast.expr.ConditionalExpr;
+import com.github.javaparser.ast.nodeTypes.NodeWithExtends;
+import com.github.javaparser.ast.nodeTypes.NodeWithImplements;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.ReferenceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.resolution.UnsolvedSymbolException;
-import com.github.javaparser.resolution.declarations.ResolvedValueDeclaration;
-import com.github.javaparser.resolution.types.ResolvedType;
 import com.t4m.extractor.entity.*;
+import com.t4m.extractor.metric.SLOCMetric;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.JavaParserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 补充基本信息，包括补全类信息，添加MethodInfo，FieldInfo Created by Yuxiang Liao on 2020-07-12 13:38.
@@ -54,34 +59,13 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		} else {
 			currentClassInfo.setClassModifier(ClassInfo.ClassModifier.CLASS);
 		}
-		// 继承关系，接口可以多继承
-		List<ClassOrInterfaceType> extendedTypes = n.getExtendedTypes();
-		for (ClassOrInterfaceType extendedType : extendedTypes) {
-			try {
-				ClassInfo extendedClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
-				                                                             extendedTypes.get(0).resolve()
-				                                                                          .getQualifiedName());
-				EntityUtil.safeAddEntityToList(extendedClass, currentClassInfo.getExtendedClassList());
-			} catch (UnsolvedSymbolException e) {
-				//无法解析，说明不是项目内定义的类，使用类名创建单独的的ClassInfo
-				EntityUtil.safeAddEntityToList(new ClassInfo(extendedTypes.get(0).getNameAsString(), ""),
-				                               currentClassInfo.getExtendedClassList());
-			}
-		}
-		// 实现关系
-		List<ClassOrInterfaceType> implementedTypes = n.getImplementedTypes();
-		for (ClassOrInterfaceType implementedType : implementedTypes) {
-			try {
-				ClassInfo implementedClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
-				                                                                implementedType.resolve()
-				                                                                               .getQualifiedName());
-				EntityUtil.safeAddEntityToList(implementedClass, currentClassInfo.getImplementedClassList());
-			} catch (UnsolvedSymbolException e) {
-				//无法解析，说明不是项目内定义的类，使用类名创建单独的的ClassInfo
-				EntityUtil.safeAddEntityToList(new ClassInfo(implementedType.getNameAsString(), ""),
-				                               currentClassInfo.getImplementedClassList());
-			}
-		}
+		// 添加继承关系，接口可以多继承
+		addExtendsRelationship(n, currentClassInfo);
+		// 添加实现关系
+		addImplementationRelationship(n, currentClassInfo);
+
+		// SLOC
+		countAstSLOCMetaAndAddToClassInfo(n,currentClassInfo);
 	}
 
 	/**
@@ -103,6 +87,10 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 			}
 		}
 		currentClassInfo.setNumberOfEnumConstants(numOfEnumConstant);
+		// 实现关系
+		addImplementationRelationship(n, currentClassInfo);
+		// SLOC
+		countAstSLOCMetaAndAddToClassInfo(n,currentClassInfo);
 	}
 
 	/**
@@ -118,6 +106,8 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		}
 		currentClassInfo.setClassModifier(ClassInfo.ClassModifier.ANNOTATION);
 		currentClassInfo.setNumberOfAnnotationMembers(n.getMembers().size());
+		// SLOC
+		countAstSLOCMetaAndAddToClassInfo(n,currentClassInfo);
 	}
 
 	/**
@@ -185,33 +175,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		//构造MethodInfo
 		MethodInfo methodInfo = new MethodInfo(n.getNameAsString());
 		methodInfo.setReturnTypeString("");
-		methodInfo.setMethodDeclarationString(n.getDeclarationAsString());
-		methodInfo.setRangeLocator(n.getRange().orElse(null));
-		methodInfo.setFullyQualifiedName(currentClassInfo.getFullyQualifiedName() + "." + n.getNameAsString());
-		methodInfo.setClassInfo(currentClassInfo);
-
-		Map<String, String> paramStrMap = methodInfo.getParamsNameTypeMap();
-		Map<String, List<ClassInfo>> paramClassMap = methodInfo.getParamsTypeAsClassInfoListMap();
-		for (Parameter parameter : n.getParameters()) {
-			String paramName = parameter.getName().toString();
-			paramStrMap.put(paramName, parameter.getType().toString());
-			List<ClassInfo> couplingClassList = new ArrayList<>();
-			fillRelevantClassToList(parameter, couplingClassList);
-			if (!couplingClassList.isEmpty()) {
-				paramClassMap.put(paramName, couplingClassList);
-			}
-		}
-
-		List<String> thrownExceptionStringList = methodInfo.getThrownExceptionStringList(); // 异常类型字符串
-		List<ClassInfo> thrownExceptionClassList = methodInfo.getThrownExceptionClassList();
-		for (ReferenceType referenceType : n.getThrownExceptions()) {
-			thrownExceptionStringList.add(referenceType.toString());
-			fillRelevantClassToList(referenceType, thrownExceptionClassList);
-		}
-
-		EntityUtil.safeAddEntityToList(methodInfo, currentClassInfo.getMethodInfoList());
-		EntityUtil.safeAddEntityToList(methodInfo, projectInfo.getMethodList());
-		currentClassInfo.setNumberOfMethods(currentClassInfo.getMethodInfoList().size());
+		commonMethodInitOperation(n,methodInfo,currentClassInfo);
 
 		// 添加方法声明出现的依赖关系
 		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
@@ -241,33 +205,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		MethodInfo methodInfo = new MethodInfo(n.getNameAsString());
 		methodInfo.setReturnTypeString(n.getTypeAsString());
 		fillRelevantClassToList(n.getType(), methodInfo.getReturnTypeAsClassInfoList());
-		methodInfo.setMethodDeclarationString(n.getDeclarationAsString());
-		methodInfo.setRangeLocator(n.getRange().orElse(null));
-		methodInfo.setFullyQualifiedName(currentClassInfo.getFullyQualifiedName() + "." + n.getNameAsString());
-		methodInfo.setClassInfo(currentClassInfo);
-
-		Map<String, String> paramStrMap = methodInfo.getParamsNameTypeMap();
-		Map<String, List<ClassInfo>> paramClassMap = methodInfo.getParamsTypeAsClassInfoListMap();
-		for (Parameter parameter : n.getParameters()) {
-			String paramName = parameter.getName().toString();
-			paramStrMap.put(paramName, parameter.getType().toString());
-			List<ClassInfo> couplingClassList = new ArrayList<>();
-			fillRelevantClassToList(parameter, couplingClassList);
-			if (!couplingClassList.isEmpty()) {
-				paramClassMap.put(paramName, couplingClassList);
-			}
-		}
-
-		List<String> thrownExceptionStringList = methodInfo.getThrownExceptionStringList(); // 异常类型字符串
-		List<ClassInfo> thrownExceptionClassList = methodInfo.getThrownExceptionClassList();
-		for (ReferenceType referenceType : n.getThrownExceptions()) {
-			thrownExceptionStringList.add(referenceType.toString());
-			fillRelevantClassToList(referenceType, thrownExceptionClassList);
-		}
-
-		EntityUtil.safeAddEntityToList(methodInfo, currentClassInfo.getMethodInfoList());
-		EntityUtil.safeAddEntityToList(methodInfo, projectInfo.getMethodList());
-		currentClassInfo.setNumberOfMethods(currentClassInfo.getMethodInfoList().size());
+		commonMethodInitOperation(n,methodInfo,currentClassInfo);
 
 		// 添加方法声明出现的依赖关系
 		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
@@ -286,6 +224,94 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	}
 
 	/* -------------------------------------------------------------------------------------------------*/
+
+
+	/**
+	 * 计算并添加类级别的SLOC计数，AST后缀对应的3项。
+	 * 通常代码行会变少（因为stmt会合并成一行）
+	 * 而注释行可能变多（因为混合行的注释和代码会被差分为多行）
+	 * 注意，类外的注释语句可能被忽略（比如在类结束符的的后面的注释）（类的JavaDoc会被保留）
+	 */
+	private void countAstSLOCMetaAndAddToClassInfo(Node n, ClassInfo currentClassInfo){
+		// LexicalPreservingPrinter.setup(n);
+		// LexicalPreservingPrinter.print(n);
+		String[] sourceLines = n.toString().split(System.lineSeparator());
+		SLOCMetric slocMetric = new SLOCMetric();
+		Arrays.stream(sourceLines).forEach(slocMetric::countSLOCByLine);
+		slocMetric.setASTSLOCToCounterMap(currentClassInfo.getSlocCounterMap());
+	}
+
+	/**
+	 * 用于构造器和方法声明visitor中，创建MethodInfo的公共部分
+	 */
+	private void commonMethodInitOperation(CallableDeclaration n, MethodInfo methodInfo, ClassInfo currentClassInfo) {
+		methodInfo.setMethodDeclarationString(n.getDeclarationAsString());
+		methodInfo.setRangeLocator(n.getRange().orElse(null));
+		methodInfo.setFullyQualifiedName(currentClassInfo.getFullyQualifiedName() + "." + n.getNameAsString());
+		methodInfo.setClassInfo(currentClassInfo);
+
+		Map<String, String> paramStrMap = methodInfo.getParamsNameTypeMap();
+		Map<String, List<ClassInfo>> paramClassMap = methodInfo.getParamsTypeAsClassInfoListMap();
+		for (Parameter parameter : (NodeList<Parameter>) n.getParameters()) {
+			String paramName = parameter.getName().toString();
+			paramStrMap.put(paramName, parameter.getType().toString());
+			List<ClassInfo> couplingClassList = new ArrayList<>();
+			fillRelevantClassToList(parameter, couplingClassList);
+			if (!couplingClassList.isEmpty()) {
+				paramClassMap.put(paramName, couplingClassList);
+			}
+		}
+
+		List<String> thrownExceptionStringList = methodInfo.getThrownExceptionStringList(); // 异常类型字符串
+		List<ClassInfo> thrownExceptionClassList = methodInfo.getThrownExceptionClassList();
+		for (ReferenceType referenceType : (NodeList<ReferenceType>) n.getThrownExceptions()) {
+			thrownExceptionStringList.add(referenceType.toString());
+			fillRelevantClassToList(referenceType, thrownExceptionClassList);
+		}
+
+		EntityUtil.safeAddEntityToList(methodInfo, currentClassInfo.getMethodInfoList());
+		EntityUtil.safeAddEntityToList(methodInfo, projectInfo.getMethodList());
+		currentClassInfo.setNumberOfMethods(currentClassInfo.getMethodInfoList().size());
+	}
+
+	/**
+	 * 添加实现关系
+	 */
+	private void addImplementationRelationship(NodeWithImplements n, ClassInfo currentClassInfo) {
+		// 实现关系
+		List<ClassOrInterfaceType> implementedTypes = n.getImplementedTypes();
+		for (ClassOrInterfaceType implementedType : implementedTypes) {
+			try {
+				ClassInfo implementedClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
+				                                                                implementedType.resolve()
+				                                                                               .getQualifiedName());
+				EntityUtil.safeAddEntityToList(implementedClass, currentClassInfo.getImplementedClassList());
+			} catch (UnsolvedSymbolException e) {
+				//无法解析，说明不是项目内定义的类，使用类名创建单独的的ClassInfo
+				EntityUtil.safeAddEntityToList(new ClassInfo(implementedType.getNameAsString(), ""),
+				                               currentClassInfo.getImplementedClassList());
+			}
+		}
+	}
+
+	/**
+	 * 添加继承关系，接口可以多继承
+	 */
+	private void addExtendsRelationship(NodeWithExtends n, ClassInfo currentClassInfo) {
+		// 实现关系
+		List<ClassOrInterfaceType> extendedTypes = n.getExtendedTypes();
+		for (ClassOrInterfaceType extendedType : extendedTypes) {
+			try {
+				ClassInfo extendedClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
+				                                                             extendedType.resolve().getQualifiedName());
+				EntityUtil.safeAddEntityToList(extendedClass, currentClassInfo.getExtendedClassList());
+			} catch (UnsolvedSymbolException e) {
+				//无法解析，说明不是项目内定义的类，使用类名创建单独的的ClassInfo
+				EntityUtil.safeAddEntityToList(new ClassInfo(extendedType.getNameAsString(), ""),
+				                               currentClassInfo.getExtendedClassList());
+			}
+		}
+	}
 
 	/**
 	 * 找到该字段涉及到的所有全限定类名（只包括跟项目有关的类）
@@ -344,8 +370,6 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		}
 		return complexityCount;
 	}
-
-
 
 
 }

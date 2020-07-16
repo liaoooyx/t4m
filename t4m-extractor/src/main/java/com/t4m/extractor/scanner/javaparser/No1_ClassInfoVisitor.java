@@ -1,20 +1,25 @@
-package com.t4m.extractor.scanner.astparser;
+package com.t4m.extractor.scanner.javaparser;
 
+import com.github.javaparser.ast.body.AnnotationDeclaration;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.util.ASTParserUtil;
 import com.t4m.extractor.util.EntityUtil;
-import org.eclipse.jdt.core.dom.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用于构造非公共类和嵌套类
- * Created by Yuxiang Liao on 2020-06-21 13:02.
+ * Created by Yuxiang Liao on 2020-07-16 15:52.
  */
-@Deprecated
-public class No1_ClassInfoVisitor extends ASTVisitor {
+public class No1_ClassInfoVisitor extends VoidVisitorAdapter<Void> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(No1_ClassInfoVisitor.class);
 
 	private ClassInfo outerClassInfo;
 	private ProjectInfo projectInfo;
@@ -26,14 +31,14 @@ public class No1_ClassInfoVisitor extends ASTVisitor {
 		allShownClassInfoList.add(outerClassInfo);
 	}
 
-	private void createClassInfo(AbstractTypeDeclaration node) {
-		if (ASTParserUtil.isInnerClass(node)) {
+	private void createClassInfo(TypeDeclaration n) {
+		if (n.isNestedType()) {
 			// 需要先确定上一层的类是哪个
-			AbstractTypeDeclaration parentClassNode = ASTParserUtil.getParentAbstractTypeDeclaration(node);
+			TypeDeclaration parentClassNode = (TypeDeclaration) n.findAncestor(TypeDeclaration.class).get();
 			ClassInfo parentClassInfo = EntityUtil.getClassByShortName(allShownClassInfoList,
 			                                                           parentClassNode.getName().getIdentifier());
 			// 创建新的ClassInfo作为内部类，并与外部类关联，并添加到projectInfo中
-			String innerClassName = node.getName().toString(); // InnerClass
+			String innerClassName = n.getName().toString(); // InnerClass
 			ClassInfo innerClassInfo = EntityUtil.safeAddEntityToList(new ClassInfo(innerClassName, parentClassInfo),
 			                                                          parentClassInfo.getNestedClassList());
 			innerClassInfo.setClassDeclaration(ClassInfo.ClassDeclaration.NESTED_CLASS);
@@ -43,7 +48,7 @@ public class No1_ClassInfoVisitor extends ASTVisitor {
 			allShownClassInfoList.add(innerClassInfo);
 		} else {
 			//由于一个类文件可以创建多个类，因此还需要对这些其他类进行创建。
-			String shortName = node.getName().getIdentifier();
+			String shortName = n.getName().getIdentifier();
 			if (!shortName.equals(outerClassInfo.getShortName())) {
 				ClassInfo extraClassInfo = new ClassInfo(shortName, outerClassInfo.getAbsolutePath());
 				extraClassInfo.setFullyQualifiedName(outerClassInfo.getPackageFullyQualifiedName() + "." + shortName);
@@ -58,23 +63,21 @@ public class No1_ClassInfoVisitor extends ASTVisitor {
 		}
 	}
 
-	/*------------------------------------------------------------------------------------------*/
-
 	@Override
-	public boolean visit(TypeDeclaration node) {
-		createClassInfo(node);
-		return true;
+	public void visit(ClassOrInterfaceDeclaration n, Void arg) {
+		createClassInfo(n);
+		super.visit(n, arg);
 	}
 
 	@Override
-	public boolean visit(EnumDeclaration node) {
-		createClassInfo(node);
-		return true;
+	public void visit(AnnotationDeclaration n, Void arg) {
+		createClassInfo(n);
+		super.visit(n, arg);
 	}
 
 	@Override
-	public boolean visit(AnnotationTypeDeclaration node) {
-		createClassInfo(node);
-		return true;
+	public void visit(EnumDeclaration n, Void arg) {
+		createClassInfo(n);
+		super.visit(n, arg);
 	}
 }

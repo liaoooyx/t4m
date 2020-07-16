@@ -37,10 +37,10 @@ class No6_ASTParserScannerTest {
 		assertAll(() -> {
 			Map<ClassInfo.SLOCType, Integer> slocMap = classInfo.getSlocCounterMap();
 			assertAll(() -> assertEquals(32, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(20, slocMap.get(ClassInfo.SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(20, slocMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE)),
 			          () -> assertEquals(42, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE)),
 			          () -> assertEquals(29, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
-			          () -> assertEquals(15, slocMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST)),
+			          () -> assertEquals(15, slocMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST)),
 			          () -> assertEquals(39, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
 		});
 
@@ -50,10 +50,10 @@ class No6_ASTParserScannerTest {
 		assertAll(() -> {
 			Map<ClassInfo.SLOCType, Integer> slocMap = innerClass.getSlocCounterMap();
 			assertAll(() -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE)),
-			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE)),
+			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE)),
 			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE)),
 			          () -> assertEquals(8, slocMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
-			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.DOC_COMMENT_LINES_FROM_AST)),
+			          () -> assertEquals(0, slocMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST)),
 			          () -> assertEquals(11, slocMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
 		});
 	}
