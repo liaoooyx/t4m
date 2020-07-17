@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Created by Yuxiang Liao on 2020-07-04 02:15.
  */
+@Deprecated
 public class ASTParserUtil {
 
 	/**

@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.*;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,11 +53,9 @@ public class Test {
 		// 	compilationUnit.accept(new Test.T4MVisitor());
 		// 	System.out.println();
 		// });
-		String currentLine = "foo/*comment*/.method();/*comment*/";
-		System.out.println(currentLine);
-		currentLine.indexOf("*/");
-		currentLine = currentLine.substring(currentLine.indexOf("*/")+2);
-		System.out.println(currentLine);
+		int a = 10;
+		int b = 3;
+		System.out.println(new DecimalFormat("0.00").format((float) a / b));
 		// Arrays.stream(currentLine.split("/\\*")).forEach(System.out::println);
 		// System.out.println(currentLine.replaceAll("/\\*.*?\\*/",""));
 	}

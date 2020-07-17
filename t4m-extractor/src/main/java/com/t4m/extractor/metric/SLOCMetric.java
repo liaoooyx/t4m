@@ -1,5 +1,8 @@
 package com.t4m.extractor.metric;
 
+import com.t4m.extractor.entity.ClassInfo;
+
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -187,4 +190,5 @@ public class SLOCMetric {
 		slocArray[4] += inputSLOC[4];
 		slocArray[5] += inputSLOC[5];
 	}
+
 }

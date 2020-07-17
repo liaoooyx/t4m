@@ -70,8 +70,14 @@ public class T4MExtractor {
 		javaParserScanner.scan();
 	}
 
+	public void scanMetricData(){
+		scanJavaParser();
+		No7_MetricsScanner metricsScanner = new No7_MetricsScanner(projectInfo);
+		metricsScanner.scan();
+	}
+
 	public ProjectInfo action() {
-		scanASTParser();
+		scanMetricData();
 		return projectInfo;
 	}
 }

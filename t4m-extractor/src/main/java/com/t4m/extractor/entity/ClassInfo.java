@@ -53,10 +53,16 @@ public class ClassInfo implements Serializable {
 	private Map<SLOCType, Integer> slocCounterMap = new HashMap<>();
 
 	//Response for class
-	private Map<String,Integer> rfcMethodQualifiedSignatureMap = new HashMap<>(); // 调用的其他类的方法集合
+	private Map<String, Integer> rfcMethodQualifiedSignatureMap = new HashMap<>(); // 调用的其他类的方法集合
+	// 所有可以对一个类的消息做出响应的方法个数: 类中的所有方法集合，包括从父类继承的方法（但不包括重写的方法，因为方法签名应该唯一）
+	// 类中所有方法所调用的方法集合（所有方法，但不可重复）
+	private int responseForClass;
 
 	//圈复杂度
 	private List<Integer> cyclomaticComplexityList = new ArrayList<>();
+	private int maxCyclomaticComplexity;
+	private float avgCyclomaticComplexity;
+	private int weightedMethodsCount; // sum of all methods complexity;
 
 	public ClassInfo(String shortName, String absolutePath) {
 		this.shortName = shortName;
@@ -283,6 +289,14 @@ public class ClassInfo implements Serializable {
 		this.rfcMethodQualifiedSignatureMap = rfcMethodQualifiedSignatureMap;
 	}
 
+	public int getResponseForClass() {
+		return responseForClass;
+	}
+
+	public void setResponseForClass(int responseForClass) {
+		this.responseForClass = responseForClass;
+	}
+
 	public List<Integer> getCyclomaticComplexityList() {
 		return cyclomaticComplexityList;
 	}
@@ -291,11 +305,34 @@ public class ClassInfo implements Serializable {
 		this.cyclomaticComplexityList = cyclomaticComplexityList;
 	}
 
+	public int getMaxCyclomaticComplexity() {
+		return maxCyclomaticComplexity;
+	}
+
+	public void setMaxCyclomaticComplexity(int maxCyclomaticComplexity) {
+		this.maxCyclomaticComplexity = maxCyclomaticComplexity;
+	}
+
+	public float getAvgCyclomaticComplexity() {
+		return avgCyclomaticComplexity;
+	}
+
+	public void setAvgCyclomaticComplexity(float avgCyclomaticComplexity) {
+		this.avgCyclomaticComplexity = avgCyclomaticComplexity;
+	}
+
+	public int getWeightedMethodsCount() {
+		return weightedMethodsCount;
+	}
+
+	public void setWeightedMethodsCount(int weightedMethodsCount) {
+		this.weightedMethodsCount = weightedMethodsCount;
+	}
+
 	/**
 	 * Source File以文件为单位，包括了package, import, nested class，non public class
 	 * AST以类为单位，不包括package和 import，对于注释和代码也会进行格式化
 	 * （比如注释会与代码行不会混合，注释行会被单独提取成行；一个stmt成一行）
-	 *
 	 */
 	public Map<SLOCType, Integer> initSlocCounterMap() {
 		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, 0); // 不包括空白行，单独大括号和注释行

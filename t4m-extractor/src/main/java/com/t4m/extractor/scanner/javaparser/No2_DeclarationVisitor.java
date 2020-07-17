@@ -15,6 +15,7 @@ import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.resolution.UnsolvedSymbolException;
 import com.t4m.extractor.entity.*;
+import com.t4m.extractor.metric.ComplexityMetric;
 import com.t4m.extractor.metric.SLOCMetric;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.JavaParserUtil;
@@ -65,7 +66,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		addImplementationRelationship(n, currentClassInfo);
 
 		// SLOC
-		countAstSLOCMetaAndAddToClassInfo(n,currentClassInfo);
+		countAstSLOCMetaAndAddToClassInfo(n, currentClassInfo);
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		// 实现关系
 		addImplementationRelationship(n, currentClassInfo);
 		// SLOC
-		countAstSLOCMetaAndAddToClassInfo(n,currentClassInfo);
+		countAstSLOCMetaAndAddToClassInfo(n, currentClassInfo);
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		currentClassInfo.setClassModifier(ClassInfo.ClassModifier.ANNOTATION);
 		currentClassInfo.setNumberOfAnnotationMembers(n.getMembers().size());
 		// SLOC
-		countAstSLOCMetaAndAddToClassInfo(n,currentClassInfo);
+		countAstSLOCMetaAndAddToClassInfo(n, currentClassInfo);
 	}
 
 	/**
@@ -175,7 +176,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		//构造MethodInfo
 		MethodInfo methodInfo = new MethodInfo(n.getNameAsString());
 		methodInfo.setReturnTypeString("");
-		commonMethodInitOperation(n,methodInfo,currentClassInfo);
+		commonMethodInitOperation(n, methodInfo, currentClassInfo);
 
 		// 添加方法声明出现的依赖关系
 		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
@@ -185,7 +186,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		BlockStmt body = n.getBody();
 		//	解析方法复杂度
 		if (body != null) {
-			int complexityCount = resolveComplexity(body, 1);
+			int complexityCount = ComplexityMetric.resolveComplexity(body, 1);
 			methodInfo.setCyclomaticComplexity(complexityCount);
 			currentClassInfo.getCyclomaticComplexityList().add(complexityCount);
 		}
@@ -205,7 +206,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		MethodInfo methodInfo = new MethodInfo(n.getNameAsString());
 		methodInfo.setReturnTypeString(n.getTypeAsString());
 		fillRelevantClassToList(n.getType(), methodInfo.getReturnTypeAsClassInfoList());
-		commonMethodInitOperation(n,methodInfo,currentClassInfo);
+		commonMethodInitOperation(n, methodInfo, currentClassInfo);
 
 		// 添加方法声明出现的依赖关系
 		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
@@ -216,7 +217,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 
 		//	解析方法复杂度
 		if (body != null) {
-			int complexityCount = resolveComplexity(body, 1);
+			int complexityCount = ComplexityMetric.resolveComplexity(body, 1);
 			methodInfo.setCyclomaticComplexity(complexityCount);
 			currentClassInfo.getCyclomaticComplexityList().add(complexityCount);
 		}
@@ -232,7 +233,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	 * 而注释行可能变多（因为混合行的注释和代码会被差分为多行）
 	 * 注意，类外的注释语句可能被忽略（比如在类结束符的的后面的注释）（类的JavaDoc会被保留）
 	 */
-	private void countAstSLOCMetaAndAddToClassInfo(Node n, ClassInfo currentClassInfo){
+	private void countAstSLOCMetaAndAddToClassInfo(Node n, ClassInfo currentClassInfo) {
 		// LexicalPreservingPrinter.setup(n);
 		// LexicalPreservingPrinter.print(n);
 		String[] sourceLines = n.toString().split(System.lineSeparator());
@@ -334,42 +335,5 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 			fillRelevantClassToList(n, typeAsClassInfoList);
 		}
 	}
-
-	/**
-	 * 递归查询子节点，计算圈复杂度。
-	 * if, while, for, &&, ||, cases and default of switch, catches of try
-	 */
-	private int resolveComplexity(Node n, int complexityCount) {
-		for (Node node : n.getChildNodes()) {
-			complexityCount += resolveComplexity(node, 0);
-			if (node instanceof DoStmt) {
-				complexityCount += 1;
-			} else if (node instanceof WhileStmt) {
-				complexityCount += 1;
-			} else if (node instanceof ForEachStmt) {
-				complexityCount += 1;
-			} else if (node instanceof ForStmt) {
-				complexityCount += 1;
-			} else if (node instanceof IfStmt) {
-				complexityCount += 1;
-			} else if (node instanceof SwitchEntry) {
-				// default case does not have label.
-				complexityCount +=
-						((SwitchEntry) node).getLabels().isEmpty() ? 1 : ((SwitchEntry) node).getLabels().size();
-			} else if (node instanceof CatchClause) {
-				complexityCount += 1;
-			} else if (node instanceof BinaryExpr) {
-				BinaryExpr.Operator operator = ((BinaryExpr) node).getOperator();
-				if (operator.equals(BinaryExpr.Operator.AND) || operator.equals(BinaryExpr.Operator.OR)) {
-					complexityCount += 1;
-				}
-			} else if (node instanceof ConditionalExpr) {
-				//The ternary conditional expression: b==0?x:y
-				complexityCount += 1;
-			}
-		}
-		return complexityCount;
-	}
-
 
 }

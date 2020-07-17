@@ -94,11 +94,11 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			String methodQualifiedSignature = n.resolve().getQualifiedSignature();
 			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getRfcMethodQualifiedSignatureMap(),
 			                                              methodQualifiedSignature);
-		}catch (UnsolvedSymbolException e){
-			//RFC：无法定位该方法，添加默认计数
+		} catch (UnsolvedSymbolException e) {
+			//RFC：无法定位该方法，使用非全限定路径签名，有概率可以解决部分方法重载的去重问题。
 			currentClassInfo.getUnresolvedExceptionList().add("When resolving ConstructorDeclaration: " + e.toString());
 			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getRfcMethodQualifiedSignatureMap(),
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			                                              n.getSignature().toString());
 		}
 	}
 
@@ -127,11 +127,11 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			String methodQualifiedSignature = n.resolve().getQualifiedSignature();
 			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getRfcMethodQualifiedSignatureMap(),
 			                                              methodQualifiedSignature);
-		}catch (UnsolvedSymbolException e){
-			//RFC：无法定位该方法，添加默认计数
+		} catch (UnsolvedSymbolException e) {
+			//RFC：无法定位该方法，使用非全限定路径签名，有概率可以解决部分方法重载的去重问题。
 			currentClassInfo.getUnresolvedExceptionList().add("When resolving MethodDeclaration: " + e.toString());
 			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getRfcMethodQualifiedSignatureMap(),
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			                                              n.getSignature().toString());
 		}
 	}
 
@@ -147,20 +147,9 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		List<MethodInfo> localMethodInfoList = currentMethodInfo.getLocalMethodAccessList();
 		// LOCM4: 涉及的本地字段调用
 		List<FieldInfo> fieldInfoList = currentMethodInfo.getFieldAccessList();
-		// RFC的所有方法全限定签名
-		Map<String, Integer> rfcMethodQualifiedSignatureMap = currentClassInfo.getRfcMethodQualifiedSignatureMap();
 
-		scanChildNode(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList, fieldInfoList,
-		              rfcMethodQualifiedSignatureMap);
-
-		// 添加方法内部出现的依赖关系
-		for (String dependencyClassName : dependencySet) {
-			ClassInfo referenceClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
-			                                                              dependencyClassName);
-			if (referenceClass != null) {
-				JavaParserUtil.addDependency(currentClassInfo, referenceClass);
-			}
-		}
+		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList,
+		                                 fieldInfoList);
 	}
 
 	/**
@@ -175,9 +164,22 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		List<MethodInfo> localMethodInfoList = new ArrayList<>();
 		// LOCM4: 涉及的本地字段调用
 		List<FieldInfo> fieldInfoList = new ArrayList<>();
+
+		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList,
+		                                 fieldInfoList);
+	}
+
+	/**
+	 * 包括构造需要的列表，扫描子节点，并在扫描后添加依赖
+	 */
+	private void commonOperationToResolveMetaInfo(
+			Node body, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
+			List<MethodInfo> localMethodInfoList, List<FieldInfo> fieldInfoList) {
+
 		// RFC的所有方法全限定签名
 		Map<String, Integer> rfcMethodQualifiedSignatureMap = currentClassInfo.getRfcMethodQualifiedSignatureMap();
 
+		//扫描子节点
 		scanChildNode(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList, fieldInfoList,
 		              rfcMethodQualifiedSignatureMap);
 
