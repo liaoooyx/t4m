@@ -5,6 +5,7 @@ import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.ConditionalExpr;
 import com.github.javaparser.ast.stmt.*;
 import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.util.MathUtil;
 
 import java.text.DecimalFormat;
 import java.util.HashSet;
@@ -64,8 +65,7 @@ public class ComplexityMetric {
 		}
 		classInfo.setWeightedMethodsCount(sum);
 		classInfo.setMaxCyclomaticComplexity(max);
-		float avg = Float.parseFloat(
-				new DecimalFormat(".00").format((float) max / classInfo.getCyclomaticComplexityList().size()));
+		float avg = MathUtil.divide(max, classInfo.getCyclomaticComplexityList().size());
 		classInfo.setAvgCyclomaticComplexity(avg);
 	}
 

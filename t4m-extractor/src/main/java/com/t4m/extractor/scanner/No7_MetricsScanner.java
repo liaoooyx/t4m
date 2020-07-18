@@ -2,13 +2,9 @@ package com.t4m.extractor.scanner;
 
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.metric.ComplexityMetric;
-import com.t4m.extractor.metric.RFCMetric;
-
-import java.text.DecimalFormat;
-import java.util.HashSet;
-import java.util.Set;
+import com.t4m.extractor.metric.*;
 
 /**
  * 扫描meta数据，转化为metric数据
@@ -23,9 +19,15 @@ public class No7_MetricsScanner {
 	}
 
 	public void scan() {
-		for (ClassInfo classInfo : projectInfo.getClassList()) {
+		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
 			ComplexityMetric.calculateComplexityForClass(classInfo);
 			RFCMetric.calculateRfcForClass(classInfo);
+			InheritanceMetric.calculateInheritanceForClass(classInfo);
+			CouplingMetric.calculateCouplingForClass(classInfo);
+			CohesionMetric.calculateCohesionMetricForClass(classInfo);
+		}
+		for (PackageInfo packageInfo: projectInfo.getPackageList()){
+
 		}
 	}
 

@@ -31,6 +31,12 @@ public class PackageInfo implements Serializable {
 	private int numberOfClasses;
 	private int numberOfInnerClasses;
 
+	// Coupling
+	private int abstractness; //一个组件中抽象类和接口的数量与所有类的数量的比例
+	private int afferentCoupling; // fanin
+	private int efferentCoupling; // fanout
+	private float instability; // fanout/fanin+out
+
 	public PackageInfo(String absolutePath) {
 		this.absolutePath = absolutePath;
 	}
@@ -100,6 +106,38 @@ public class PackageInfo implements Serializable {
 
 	public void setClassList(List<ClassInfo> classList) {
 		this.classList = classList;
+	}
+
+	public int getAbstractness() {
+		return abstractness;
+	}
+
+	public void setAbstractness(int abstractness) {
+		this.abstractness = abstractness;
+	}
+
+	public int getAfferentCoupling() {
+		return afferentCoupling;
+	}
+
+	public void setAfferentCoupling(int afferentCoupling) {
+		this.afferentCoupling = afferentCoupling;
+	}
+
+	public int getEfferentCoupling() {
+		return efferentCoupling;
+	}
+
+	public void setEfferentCoupling(int efferentCoupling) {
+		this.efferentCoupling = efferentCoupling;
+	}
+
+	public float getInstability() {
+		return instability;
+	}
+
+	public void setInstability(float instability) {
+		this.instability = instability;
 	}
 
 	public int getNumberOfClasses() {

@@ -34,8 +34,9 @@ public class MethodInfo implements Serializable {
 	private AccessModifierEnum accessModifierEnum = AccessModifierEnum.DEFAULT;
 
 	// LOCM4度量
-	private List<FieldInfo> fieldAccessList = new ArrayList<>(); // 该方法内涉及的本地字段访问
-	private List<MethodInfo> localMethodAccessList = new ArrayList<>(); // 该方法内涉及的本地方法访问
+	private Set<FieldInfo> fieldAccessSet = new HashSet<>(); // 该方法内涉及的本地字段访问
+	private Set<MethodInfo> localMethodAccessSet = new HashSet<>(); // 该方法内涉及的本地方法访问
+	private Set<MethodInfo> beingAccessedByLocalMethodSet = new HashSet<>(); // 被哪些本地方法访问
 
 	//if、while、for、&&、||、cases and default of switch, catches of try
 	private int cyclomaticComplexity;
@@ -179,20 +180,29 @@ public class MethodInfo implements Serializable {
 		this.accessModifierEnum = accessModifierEnum;
 	}
 
-	public List<FieldInfo> getFieldAccessList() {
-		return fieldAccessList;
+	public Set<FieldInfo> getFieldAccessSet() {
+		return fieldAccessSet;
 	}
 
-	public void setFieldAccessList(List<FieldInfo> fieldAccessList) {
-		this.fieldAccessList = fieldAccessList;
+	public void setFieldAccessSet(Set<FieldInfo> fieldAccessSet) {
+		this.fieldAccessSet = fieldAccessSet;
 	}
 
-	public List<MethodInfo> getLocalMethodAccessList() {
-		return localMethodAccessList;
+	public Set<MethodInfo> getLocalMethodAccessSet() {
+		return localMethodAccessSet;
 	}
 
-	public void setLocalMethodAccessList(List<MethodInfo> localMethodAccessList) {
-		this.localMethodAccessList = localMethodAccessList;
+	public void setLocalMethodAccessSet(Set<MethodInfo> localMethodAccessSet) {
+		this.localMethodAccessSet = localMethodAccessSet;
+	}
+
+	public Set<MethodInfo> getBeingAccessedByLocalMethodSet() {
+		return beingAccessedByLocalMethodSet;
+	}
+
+	public void setBeingAccessedByLocalMethodSet(
+			Set<MethodInfo> beingAccessedByLocalMethodSet) {
+		this.beingAccessedByLocalMethodSet = beingAccessedByLocalMethodSet;
 	}
 
 	public int getCyclomaticComplexity() {

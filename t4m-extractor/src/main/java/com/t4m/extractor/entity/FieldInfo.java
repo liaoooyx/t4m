@@ -3,9 +3,7 @@ package com.t4m.extractor.entity;
 import com.github.javaparser.Range;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-07-07 16:35.
@@ -22,6 +20,11 @@ public class FieldInfo implements Serializable {
 	private boolean isStatic = false;
 	private boolean isFinal = false;
 	private AccessModifierEnum accessModifierEnum = AccessModifierEnum.DEFAULT;
+
+	private Set<MethodInfo> beingPassingAccessedByLocalMethodSet = new HashSet<>(); // 所有直接访问和间接访问
+	private Set<MethodInfo> beingAccessedDirectlyByLocalMethodSet = new HashSet<>();
+	private Set<MethodInfo> cohesionMethodSet = new HashSet<>(); // 在调用树中最终指向该字段的方法
+
 
 	public FieldInfo(String shortName, String typeString) {
 		this.shortName = shortName;
@@ -104,5 +107,31 @@ public class FieldInfo implements Serializable {
 
 	public void setAccessModifierEnum(AccessModifierEnum accessModifierEnum) {
 		this.accessModifierEnum = accessModifierEnum;
+	}
+
+	public Set<MethodInfo> getBeingPassingAccessedByLocalMethodSet() {
+		return beingPassingAccessedByLocalMethodSet;
+	}
+
+	public void setBeingPassingAccessedByLocalMethodSet(
+			Set<MethodInfo> beingPassingAccessedByLocalMethodSet) {
+		this.beingPassingAccessedByLocalMethodSet = beingPassingAccessedByLocalMethodSet;
+	}
+
+	public Set<MethodInfo> getBeingAccessedDirectlyByLocalMethodSet() {
+		return beingAccessedDirectlyByLocalMethodSet;
+	}
+
+	public void setBeingAccessedDirectlyByLocalMethodSet(
+			Set<MethodInfo> beingAccessedDirectlyByLocalMethodSet) {
+		this.beingAccessedDirectlyByLocalMethodSet = beingAccessedDirectlyByLocalMethodSet;
+	}
+
+	public Set<MethodInfo> getCohesionMethodSet() {
+		return cohesionMethodSet;
+	}
+
+	public void setCohesionMethodSet(Set<MethodInfo> cohesionMethodSet) {
+		this.cohesionMethodSet = cohesionMethodSet;
 	}
 }

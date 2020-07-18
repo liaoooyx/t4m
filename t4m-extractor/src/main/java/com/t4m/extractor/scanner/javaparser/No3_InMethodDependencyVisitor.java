@@ -11,9 +11,7 @@ import com.github.javaparser.ast.stmt.ExplicitConstructorInvocationStmt;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.resolution.UnsolvedSymbolException;
-import com.github.javaparser.resolution.declarations.ResolvedConstructorDeclaration;
-import com.github.javaparser.resolution.declarations.ResolvedMethodDeclaration;
-import com.github.javaparser.resolution.declarations.ResolvedValueDeclaration;
+import com.github.javaparser.resolution.declarations.*;
 import com.github.javaparser.resolution.types.ResolvedType;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.FieldInfo;
@@ -89,15 +87,15 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		if (body != null) {
 			resolveMetaInfoForMetric(body, currentClassInfo, currentMethodInfo);
 		}
-
+		// 添加所有本地方法到RFC列表中
 		try {
 			String methodQualifiedSignature = n.resolve().getQualifiedSignature();
-			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getRfcMethodQualifiedSignatureMap(),
+			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(),
 			                                              methodQualifiedSignature);
 		} catch (UnsolvedSymbolException e) {
 			//RFC：无法定位该方法，使用非全限定路径签名，有概率可以解决部分方法重载的去重问题。
 			currentClassInfo.getUnresolvedExceptionList().add("When resolving ConstructorDeclaration: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getRfcMethodQualifiedSignatureMap(),
+			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(),
 			                                              n.getSignature().toString());
 		}
 	}
@@ -122,15 +120,15 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		if (body != null) {
 			resolveMetaInfoForMetric(body, currentClassInfo, currentMethodInfo);
 		}
-
+		// 添加所有本地方法到RFC列表中
 		try {
 			String methodQualifiedSignature = n.resolve().getQualifiedSignature();
-			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getRfcMethodQualifiedSignatureMap(),
+			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(),
 			                                              methodQualifiedSignature);
 		} catch (UnsolvedSymbolException e) {
 			//RFC：无法定位该方法，使用非全限定路径签名，有概率可以解决部分方法重载的去重问题。
 			currentClassInfo.getUnresolvedExceptionList().add("When resolving MethodDeclaration: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getRfcMethodQualifiedSignatureMap(),
+			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(),
 			                                              n.getSignature().toString());
 		}
 	}
@@ -144,12 +142,12 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		// 任何解析时出现的异常，用于没有提供jar路径的项目
 		List<String> exceptionList = currentClassInfo.getUnresolvedExceptionList();
 		// LOCM4: 涉及的本地方法调用
-		List<MethodInfo> localMethodInfoList = currentMethodInfo.getLocalMethodAccessList();
+		Set<MethodInfo> localMethodInfoSet = currentMethodInfo.getLocalMethodAccessSet();
 		// LOCM4: 涉及的本地字段调用
-		List<FieldInfo> fieldInfoList = currentMethodInfo.getFieldAccessList();
+		Set<FieldInfo> fieldInfoSet = currentMethodInfo.getFieldAccessSet();
 
-		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList,
-		                                 fieldInfoList);
+		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet,
+		                                 fieldInfoSet);
 	}
 
 	/**
@@ -161,12 +159,12 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		// 任何解析时出现的异常，用于没有提供jar路径的项目
 		List<String> exceptionList = currentClassInfo.getUnresolvedExceptionList();
 		// LOCM4: 涉及的本地方法调用
-		List<MethodInfo> localMethodInfoList = new ArrayList<>();
+		Set<MethodInfo> localMethodInfoSet = new HashSet<>();
 		// LOCM4: 涉及的本地字段调用
-		List<FieldInfo> fieldInfoList = new ArrayList<>();
+		Set<FieldInfo> fieldInfoSet = new HashSet<>();
 
-		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList,
-		                                 fieldInfoList);
+		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet,
+		                                 fieldInfoSet);
 	}
 
 	/**
@@ -174,13 +172,13 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void commonOperationToResolveMetaInfo(
 			Node body, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
-			List<MethodInfo> localMethodInfoList, List<FieldInfo> fieldInfoList) {
+			Set<MethodInfo> localMethodInfoList, Set<FieldInfo> fieldInfoSet) {
 
 		// RFC的所有方法全限定签名
-		Map<String, Integer> rfcMethodQualifiedSignatureMap = currentClassInfo.getRfcMethodQualifiedSignatureMap();
+		Map<String, Integer> rfcMethodQualifiedSignatureMap = currentClassInfo.getOutClassMethodCallQualifiedSignatureMap();
 
 		//扫描子节点
-		scanChildNode(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList, fieldInfoList,
+		scanChildNode(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList, fieldInfoSet,
 		              rfcMethodQualifiedSignatureMap);
 
 		// 添加方法内部出现的依赖关系
@@ -198,7 +196,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void scanChildNode(
 			Node n, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
-			List<MethodInfo> localMethodInfoList, List<FieldInfo> fieldInfoList,
+			Set<MethodInfo> localMethodInfoSet, Set<FieldInfo> fieldInfoSet,
 			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		if (n.getChildNodes().isEmpty()) {
 			return;
@@ -212,34 +210,34 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 				// 如果调用的是外部类，最后会出现FieldAccessExpr以及NameExpr，如果没有上述2个，那么一定是类内的非静态方法（也可能是内部类调用外部类的方法）
 				// 如果它的父类是方法调用，那么通过解析方法的返回类型，可以间接的方法所属的类
 				resolveMethodCallExpr((MethodCallExpr) node, currentClassInfo, dependencySet, exceptionList,
-				                      localMethodInfoList, rfcMethodQualifiedSignatureMap);
+				                      localMethodInfoSet, rfcMethodQualifiedSignatureMap);
 			} else if (node instanceof MethodReferenceExpr) {
 				// System.out::println
 				// 只能在这里解析调用的方法所属的类，子类无法解析包装类
 				resolveMethodReferenceExpr((MethodReferenceExpr) node, currentClassInfo, dependencySet, exceptionList,
-				                           localMethodInfoList, rfcMethodQualifiedSignatureMap);
+				                           localMethodInfoSet, rfcMethodQualifiedSignatureMap);
 			} else if (node instanceof ObjectCreationExpr) {
 				// ObjectCreationExpr，它的子节点ClassOrInterfaceType是无法解析的(会产生异常)
 				resloveObjectCreationExpr((ObjectCreationExpr) node, currentClassInfo, dependencySet, exceptionList,
-				                          localMethodInfoList, rfcMethodQualifiedSignatureMap);
+				                          localMethodInfoSet, rfcMethodQualifiedSignatureMap);
 			} else if (node instanceof ExplicitConstructorInvocationStmt) {
 				// ExplicitConstructorInvocationStmt，没有子节点
 				resolveExplicitConstructorInvocationStmt((ExplicitConstructorInvocationStmt) node, currentClassInfo,
-				                                         dependencySet, exceptionList, localMethodInfoList,
+				                                         dependencySet, exceptionList, localMethodInfoSet,
 				                                         rfcMethodQualifiedSignatureMap);
 			} else if (node instanceof FieldAccessExpr) {
 				// 字段访问,可能会访问到其他类的字段，比如System.out,
 				resolveFieldAccessExpr((FieldAccessExpr) node, currentClassInfo, dependencySet, exceptionList,
-				                       fieldInfoList);
+				                       fieldInfoSet);
 			} else if (node instanceof NameExpr) {
 				// 可以解析变量对应的类型，如果它的父类是方法调用，那么间接的可以定位方法所属的类
-				resolveNameExpr((NameExpr) node, currentClassInfo, dependencySet, exceptionList, fieldInfoList);
+				resolveNameExpr((NameExpr) node, currentClassInfo, dependencySet, exceptionList, fieldInfoSet);
 			} else if (node instanceof ClassOrInterfaceType) {
 				// 出现了类型引用，即直接声明了某个类，比如 ClassA a = ..., ClassA.class
 				// MethodReferenceExpr的子节点TypeExpr中出现的类最终还是会在这里出现
 				resolveClassOrInterfaceType((ClassOrInterfaceType) node, dependencySet, exceptionList);
 			}
-			scanChildNode(node, currentClassInfo, dependencySet, exceptionList, localMethodInfoList, fieldInfoList,
+			scanChildNode(node, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet, fieldInfoSet,
 			              rfcMethodQualifiedSignatureMap);
 		}
 	}
@@ -254,12 +252,12 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void resolveMethodCallExpr(
 			MethodCallExpr methodCallExpr, ClassInfo currentClassInfo, Set<String> dependencySet,
-			List<String> exceptionList, List<MethodInfo> localMethodInfoList,
+			List<String> exceptionList, Set<MethodInfo> localMethodInfoList,
 			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		try {
 			ResolvedMethodDeclaration resolvedMethodDeclaration = methodCallExpr.resolve();
-			methodCallOrReference(resolvedMethodDeclaration, currentClassInfo, dependencySet, exceptionList,
-			                      localMethodInfoList, rfcMethodQualifiedSignatureMap);
+			methodCallOrReference(resolvedMethodDeclaration, currentClassInfo, dependencySet, localMethodInfoList,
+			                      rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving MethodCallExpr: " + e.toString());
 			System.out.println("\t" + " -- " + e.getMessage());
@@ -275,14 +273,14 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void resolveMethodReferenceExpr(
 			MethodReferenceExpr methodReferenceExpr, ClassInfo currentClassInfo, Set<String> dependencySet,
-			List<String> exceptionList, List<MethodInfo> localMethodInfoList,
+			List<String> exceptionList, Set<MethodInfo> localMethodInfoList,
 			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		// System.out::println
 		// 只能在这里解析调用的方法所属的类，子类无法解析包装类
 		try {
 			ResolvedMethodDeclaration resolvedMethodDeclaration = methodReferenceExpr.resolve();
-			methodCallOrReference(resolvedMethodDeclaration, currentClassInfo, dependencySet, exceptionList,
-			                      localMethodInfoList, rfcMethodQualifiedSignatureMap);
+			methodCallOrReference(resolvedMethodDeclaration, currentClassInfo, dependencySet, localMethodInfoList,
+			                      rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving MethodReferenceExpr: " + e.toString());
 			System.out.println("\t" + " -- " + e.getMessage());
@@ -297,11 +295,11 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void resloveObjectCreationExpr(
 			ObjectCreationExpr objectCreationExpr, ClassInfo currentClassInfo, Set<String> dependencySet,
-			List<String> exceptionList, List<MethodInfo> localMethodInfoList,
+			List<String> exceptionList, Set<MethodInfo> localMethodInfoList,
 			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		try {
 			ResolvedConstructorDeclaration constructorDeclaration = objectCreationExpr.resolve();
-			constructorCall(constructorDeclaration, currentClassInfo, dependencySet, exceptionList, localMethodInfoList,
+			constructorCall(constructorDeclaration, currentClassInfo, dependencySet, localMethodInfoList,
 			                rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ObjectCreationExpr: " + e.toString());
@@ -316,11 +314,11 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void resolveExplicitConstructorInvocationStmt(
 			ExplicitConstructorInvocationStmt constructorInvocationStmt, ClassInfo currentClassInfo,
-			Set<String> dependencySet, List<String> exceptionList, List<MethodInfo> localMethodInfoList,
+			Set<String> dependencySet, List<String> exceptionList, Set<MethodInfo> localMethodInfoList,
 			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		try {
 			ResolvedConstructorDeclaration constructorDeclaration = constructorInvocationStmt.resolve();
-			constructorCall(constructorDeclaration, currentClassInfo, dependencySet, exceptionList, localMethodInfoList,
+			constructorCall(constructorDeclaration, currentClassInfo, dependencySet, localMethodInfoList,
 			                rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ExplicitConstructorInvocationStmt: " + e.toString());
@@ -336,7 +334,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void resolveFieldAccessExpr(
 			FieldAccessExpr fieldAccessExpr, ClassInfo currentClassInfo, Set<String> dependencySet,
-			List<String> exceptionList, List<FieldInfo> fieldInfoList) {
+			List<String> exceptionList, Set<FieldInfo> fieldInfoSet) {
 		try {
 			ResolvedValueDeclaration valueDeclaration = fieldAccessExpr.resolve();
 			ResolvedType resolvedType = valueDeclaration.getType();
@@ -351,7 +349,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			FieldInfo fieldInfo = EntityUtil.getFieldByShortName(currentClassInfo.getFieldInfoList(),
 			                                                     valueDeclaration.getName());
 			if (fieldInfo != null) {
-				EntityUtil.safeAddEntityToList(fieldInfo, fieldInfoList);
+				fieldInfoSet.add(fieldInfo);
 			}
 
 		} catch (UnsolvedSymbolException e) {
@@ -365,7 +363,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void resolveNameExpr(
 			NameExpr nameExpr, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
-			List<FieldInfo> fieldInfoList) {
+			Set<FieldInfo> fieldInfoSet) {
 		try {
 			ResolvedValueDeclaration valueDeclaration = nameExpr.resolve();
 			//依赖
@@ -381,7 +379,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 				FieldInfo fieldInfo = EntityUtil.getFieldByShortName(currentClassInfo.getFieldInfoList(),
 				                                                     valueDeclaration.getName());
 				if (fieldInfo != null) {
-					EntityUtil.safeAddEntityToList(fieldInfo, fieldInfoList);
+					fieldInfoSet.add(fieldInfo);
 				}
 			}
 		} catch (UnsolvedSymbolException e) {
@@ -411,8 +409,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void methodCallOrReference(
 			ResolvedMethodDeclaration resolvedMethodDeclaration, ClassInfo currentClassInfo, Set<String> dependencySet,
-			List<String> exceptionList, List<MethodInfo> localMethodInfoList,
-			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+			Set<MethodInfo> localMethodInfoList, Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		// RFC：唯一定位方法：方法全限定路径+参数
 		String methodQualifiedSignature = resolvedMethodDeclaration.getQualifiedSignature();
 		RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, methodQualifiedSignature);
@@ -429,7 +426,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 				Range range = methodDeclaration.getRange().orElse(null);
 				MethodInfo methodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(
 						currentClassInfo.getMethodInfoList(), methodQualifiedName, range);
-				EntityUtil.safeAddEntityToList(methodInfo, localMethodInfoList);
+				localMethodInfoList.add(methodInfo);
 			});
 		}
 		System.out.println("\tMethodCallOrReference-declaring: " + declaringClassName);
@@ -449,7 +446,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void constructorCall(
 			ResolvedConstructorDeclaration resolvedConstructorDeclaration, ClassInfo currentClassInfo,
-			Set<String> dependencySet, List<String> exceptionList, List<MethodInfo> localMethodInfoList,
+			Set<String> dependencySet, Set<MethodInfo> localMethodInfoList,
 			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		// RFC：唯一定位方法：方法全限定路径+参数
 		String methodQualifiedSignature = resolvedConstructorDeclaration.getQualifiedSignature();
@@ -469,9 +466,37 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 				Range range = constructorDeclaration.getRange().orElse(null);
 				MethodInfo methodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(
 						currentClassInfo.getMethodInfoList(), methodQualifiedName, range);
-				EntityUtil.safeAddEntityToList(methodInfo, localMethodInfoList);
+				localMethodInfoList.add(methodInfo);
 			});
 		}
 	}
+
+	// private void commonOperationForMethodLikeCall(
+	// 		Node n, ClassInfo currentClassInfo, Set<String> dependencySet, List<MethodInfo> localMethodInfoList,
+	// 		Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+	// 	// RFC：唯一定位方法：方法全限定路径+参数
+	// 	ResolvedMethodLikeDeclaration methodLikeDeclaration = ((ResolvedMethodLikeDeclaration) n);
+	// 	AssociableToAST associableToAST = ((AssociableToAST) n);
+	// 	String methodQualifiedSignature = methodLikeDeclaration.getQualifiedSignature();
+	// 	RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, methodQualifiedSignature);
+	//
+	// 	// 耦合：找到定义该构造器的位置（类）
+	// 	String declaringClassName = methodLikeDeclaration.declaringType().getQualifiedName();
+	// 	dependencySet.add(declaringClassName);
+	//
+	// 	// 内聚：本地构造器调用
+	// 	// 比如this()，或普通构造对象
+	// 	// 有时候类没有重写任何构造器（找不到对应的构造器），此时isPresent将不会执行内部的代码
+	// 	if (declaringClassName.equals(currentClassInfo.getFullyQualifiedName())) {
+	// 		associableToAST.toAst().ifPresent(declaration -> {
+	// 			String methodQualifiedName = currentClassInfo.getFullyQualifiedName() + "." +
+	// 					((NodeWithSimpleName) declaration).getNameAsString();
+	// 			Range range = (Range) ((NodeWithRange) declaration).getRange().orElse(null);
+	// 			MethodInfo methodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(
+	// 					currentClassInfo.getMethodInfoList(), methodQualifiedName, range);
+	// 			EntityUtil.safeAddEntityToList(methodInfo, localMethodInfoList);
+	// 		});
+	// 	}
+	// }
 
 }

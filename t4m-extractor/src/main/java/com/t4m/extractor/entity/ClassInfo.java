@@ -26,43 +26,48 @@ public class ClassInfo implements Serializable {
 	private ClassInfo mainPublicClass; //唯一的公共外部类
 	private ClassInfo outerClass; //内部类的外部类
 
+	// Metric Meta data
 	private List<ClassInfo> nestedClassList = new ArrayList<>();
 	private List<ClassInfo> extraClassList = new ArrayList<>();
-
 	private List<ClassInfo> extendedClassList = new ArrayList<>();
 	private List<ClassInfo> implementedClassList = new ArrayList<>();
+	private List<ClassInfo> immediateSubClassList = new ArrayList<>();
+	private List<MethodInfo> methodInfoList = new ArrayList<>();// 方法列表
+	private List<FieldInfo> fieldInfoList = new ArrayList<>();// 类的class-variable，包括静态变量，不包括常量
+	private List<ClassInfo> activeDependencyAkaFanOutList = new ArrayList<>();//依赖（引用的类）
+	private List<ClassInfo> passiveDependencyAkaFanInList = new ArrayList<>();//被依赖（被其他类引用）
+	private Map<String, Integer> outClassMethodCallQualifiedSignatureMap = new HashMap<>(); // 调用的其他类的方法集合
+	private Map<String, Integer> localMethodCallQualifiedSignatureMap = new HashMap<>(); // 类的本身方法集合
+	private List<Integer> cyclomaticComplexityList = new ArrayList<>();
+	private List<String> unresolvedExceptionList = new ArrayList<>();
 
-	//依赖（引用的类）
-	private List<ClassInfo> activeDependencyAkaFanOutList = new ArrayList<>();
-	//被依赖（被其他类引用）
-	private List<ClassInfo> passiveDependencyAkaFanInList = new ArrayList<>();
-
-	// 方法列表
-	private List<MethodInfo> methodInfoList = new ArrayList<>();
-	// 类的class-variable，包括静态变量，不包括常量
-	private List<FieldInfo> fieldInfoList = new ArrayList<>();
-
+	// Actual Metric Data
+	// basic
 	private int numberOfMethods;
 	private int numberOfFields;
 	private int numberOfEnumConstants;
 	private int numberOfAnnotationMembers;
-
-	private List<String> unresolvedExceptionList = new ArrayList<>();
-
-	//SLOC counts the number of lines in the source file that are not: blank or empty lines, braces, or comments.
-	private Map<SLOCType, Integer> slocCounterMap = new HashMap<>();
-
+	// Coupling
+	private int couplingBetweenObjects;
+	private int afferentCoupling; // fanin
+	private int efferentCoupling; // fanout
+	private float instability; // fanout/fanin+out
+	private int messagePassingCoupling; // 类中的本地方法，调用其他类的方法的数量
+	//SLOC
+	private Map<SLOCType, Integer> slocCounterMap = new EnumMap<>(SLOCType.class);
 	//Response for class
-	private Map<String, Integer> rfcMethodQualifiedSignatureMap = new HashMap<>(); // 调用的其他类的方法集合
-	// 所有可以对一个类的消息做出响应的方法个数: 类中的所有方法集合，包括从父类继承的方法（但不包括重写的方法，因为方法签名应该唯一）
-	// 类中所有方法所调用的方法集合（所有方法，但不可重复）
-	private int responseForClass;
-
+	private int responseForClass;// 所有可以对一个类的消息做出响应的方法个数: 父类方法集合+本地方法集合+调用其他类的方法集合
+	// Inheritance
+	private int deepOfInheritanceTree;//一个类的父类可以向上追溯的数量，也就是在继承树中，一个类到根类经过了多少次继承。
+	private int numberOfChildren;//一个类的直接子类的数量
 	//圈复杂度
-	private List<Integer> cyclomaticComplexityList = new ArrayList<>();
 	private int maxCyclomaticComplexity;
 	private float avgCyclomaticComplexity;
-	private int weightedMethodsCount; // sum of all methods complexity;
+	private int weightedMethodsCount;    // sum of all methods complexity
+	// cohesion
+	private int lackOfCohesionInMethods4;
+	private float tightClassCohesion;
+	private float looseClassCohesion;
 
 	public ClassInfo(String shortName, String absolutePath) {
 		this.shortName = shortName;
@@ -198,6 +203,14 @@ public class ClassInfo implements Serializable {
 		this.implementedClassList = implementedClassList;
 	}
 
+	public List<ClassInfo> getImmediateSubClassList() {
+		return immediateSubClassList;
+	}
+
+	public void setImmediateSubClassList(List<ClassInfo> immediateSubClassList) {
+		this.immediateSubClassList = immediateSubClassList;
+	}
+
 	public List<ClassInfo> getActiveDependencyAkaFanOutList() {
 		return activeDependencyAkaFanOutList;
 	}
@@ -212,6 +225,46 @@ public class ClassInfo implements Serializable {
 
 	public void setPassiveDependencyAkaFanInList(List<ClassInfo> passiveDependencyAkaFanInList) {
 		this.passiveDependencyAkaFanInList = passiveDependencyAkaFanInList;
+	}
+
+	public int getCouplingBetweenObjects() {
+		return couplingBetweenObjects;
+	}
+
+	public void setCouplingBetweenObjects(int couplingBetweenObjects) {
+		this.couplingBetweenObjects = couplingBetweenObjects;
+	}
+
+	public int getAfferentCoupling() {
+		return afferentCoupling;
+	}
+
+	public void setAfferentCoupling(int afferentCoupling) {
+		this.afferentCoupling = afferentCoupling;
+	}
+
+	public int getEfferentCoupling() {
+		return efferentCoupling;
+	}
+
+	public void setEfferentCoupling(int efferentCoupling) {
+		this.efferentCoupling = efferentCoupling;
+	}
+
+	public float getInstability() {
+		return instability;
+	}
+
+	public void setInstability(float instability) {
+		this.instability = instability;
+	}
+
+	public int getMessagePassingCoupling() {
+		return messagePassingCoupling;
+	}
+
+	public void setMessagePassingCoupling(int messagePassingCoupling) {
+		this.messagePassingCoupling = messagePassingCoupling;
 	}
 
 	public List<MethodInfo> getMethodInfoList() {
@@ -281,12 +334,22 @@ public class ClassInfo implements Serializable {
 		this.slocCounterMap = slocCounterMap;
 	}
 
-	public Map<String, Integer> getRfcMethodQualifiedSignatureMap() {
-		return rfcMethodQualifiedSignatureMap;
+	public Map<String, Integer> getOutClassMethodCallQualifiedSignatureMap() {
+		return outClassMethodCallQualifiedSignatureMap;
 	}
 
-	public void setRfcMethodQualifiedSignatureMap(Map<String, Integer> rfcMethodQualifiedSignatureMap) {
-		this.rfcMethodQualifiedSignatureMap = rfcMethodQualifiedSignatureMap;
+	public void setOutClassMethodCallQualifiedSignatureMap(
+			Map<String, Integer> outClassMethodCallQualifiedSignatureMap) {
+		this.outClassMethodCallQualifiedSignatureMap = outClassMethodCallQualifiedSignatureMap;
+	}
+
+	public Map<String, Integer> getLocalMethodCallQualifiedSignatureMap() {
+		return localMethodCallQualifiedSignatureMap;
+	}
+
+	public void setLocalMethodCallQualifiedSignatureMap(
+			Map<String, Integer> localMethodCallQualifiedSignatureMap) {
+		this.localMethodCallQualifiedSignatureMap = localMethodCallQualifiedSignatureMap;
 	}
 
 	public int getResponseForClass() {
@@ -295,6 +358,22 @@ public class ClassInfo implements Serializable {
 
 	public void setResponseForClass(int responseForClass) {
 		this.responseForClass = responseForClass;
+	}
+
+	public int getDeepOfInheritanceTree() {
+		return deepOfInheritanceTree;
+	}
+
+	public void setDeepOfInheritanceTree(int deepOfInheritanceTree) {
+		this.deepOfInheritanceTree = deepOfInheritanceTree;
+	}
+
+	public int getNumberOfChildren() {
+		return numberOfChildren;
+	}
+
+	public void setNumberOfChildren(int numberOfChildren) {
+		this.numberOfChildren = numberOfChildren;
 	}
 
 	public List<Integer> getCyclomaticComplexityList() {
@@ -327,6 +406,30 @@ public class ClassInfo implements Serializable {
 
 	public void setWeightedMethodsCount(int weightedMethodsCount) {
 		this.weightedMethodsCount = weightedMethodsCount;
+	}
+
+	public int getLackOfCohesionInMethods4() {
+		return lackOfCohesionInMethods4;
+	}
+
+	public void setLackOfCohesionInMethods4(int lackOfCohesionInMethods4) {
+		this.lackOfCohesionInMethods4 = lackOfCohesionInMethods4;
+	}
+
+	public float getTightClassCohesion() {
+		return tightClassCohesion;
+	}
+
+	public void setTightClassCohesion(float tightClassCohesion) {
+		this.tightClassCohesion = tightClassCohesion;
+	}
+
+	public float getLooseClassCohesion() {
+		return looseClassCohesion;
+	}
+
+	public void setLooseClassCohesion(float looseClassCohesion) {
+		this.looseClassCohesion = looseClassCohesion;
 	}
 
 	/**

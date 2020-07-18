@@ -19,6 +19,7 @@ import com.t4m.extractor.metric.ComplexityMetric;
 import com.t4m.extractor.metric.SLOCMetric;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.JavaParserUtil;
+import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -305,11 +306,19 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 			try {
 				ClassInfo extendedClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
 				                                                             extendedType.resolve().getQualifiedName());
-				EntityUtil.safeAddEntityToList(extendedClass, currentClassInfo.getExtendedClassList());
+				if (extendedClass == null){
+					ClassInfo unknownClassInfo = new ClassInfo(extendedType.getNameAsString(), "");
+					EntityUtil.safeAddEntityToList(unknownClassInfo, currentClassInfo.getExtendedClassList());
+					EntityUtil.safeAddEntityToList(currentClassInfo, unknownClassInfo.getImmediateSubClassList());
+				}else {
+					EntityUtil.safeAddEntityToList(extendedClass, currentClassInfo.getExtendedClassList());
+					EntityUtil.safeAddEntityToList(currentClassInfo, extendedClass.getImmediateSubClassList());
+				}
 			} catch (UnsolvedSymbolException e) {
 				//无法解析，说明不是项目内定义的类，使用类名创建单独的的ClassInfo
-				EntityUtil.safeAddEntityToList(new ClassInfo(extendedType.getNameAsString(), ""),
-				                               currentClassInfo.getExtendedClassList());
+				ClassInfo unknownClassInfo = new ClassInfo(extendedType.getNameAsString(), "");
+				EntityUtil.safeAddEntityToList(unknownClassInfo, currentClassInfo.getExtendedClassList());
+				EntityUtil.safeAddEntityToList(currentClassInfo, unknownClassInfo.getImmediateSubClassList());
 			}
 		}
 	}
