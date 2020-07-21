@@ -30,9 +30,9 @@ public class RFCMetric {
 	 * 递归遍历所有父类。将父类的所有本地方法集合合并到列表中
 	 */
 	private static void accumulateRFCFromExtendsClass(ClassInfo classInfo, Set<String> rfcSet) {
-		for (ClassInfo extendsClass : classInfo.getExtendedClassList()) {
+		for (ClassInfo extendsClass : classInfo.getExtendsClassList()) {
 			rfcSet.addAll(extendsClass.getLocalMethodCallQualifiedSignatureMap().keySet());
-			if (!extendsClass.getExtendedClassList().isEmpty()) {
+			if (!extendsClass.getExtendsClassList().isEmpty()) {
 				accumulateRFCFromExtendsClass(extendsClass, rfcSet);
 			}
 		}
@@ -57,7 +57,7 @@ public class RFCMetric {
 	/**
 	 * 将父类的所有方法集合和自身的调用方法集合合并。
 	 */
-	public static void calculateRfcForClass(ClassInfo targetClass) {
+	public static void calculateRfc(ClassInfo targetClass) {
 		// todo 需要处理RFC不精确的情况
 		Set<String> accumulatedRfcSet = calculateAccumulatedRFCSet(targetClass);
 		targetClass.setResponseForClass(accumulatedRfcSet.size());

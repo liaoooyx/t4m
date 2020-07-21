@@ -1,8 +1,10 @@
 package com.t4m.extractor.metric;
 
 import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.ModuleInfo;
+import com.t4m.extractor.entity.PackageInfo;
 
-import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -134,9 +136,7 @@ public class SLOCMetric {
 			} else {
 				countAndCheckToMeetInBlockComment(currentLine);
 			}
-
 		}
-
 	}
 
 	/**
@@ -159,6 +159,39 @@ public class SLOCMetric {
 		counterMap.replace(SLOCType.PHYSICAL_CODE_LINES_FROM_AST, physicalLines);
 	}
 
+
+	/**
+	 * 将SLOCMap转换成Array
+	 */
+	public static void calculateSloc(ClassInfo classInfo) {
+		int[] slocArray = new int[6];
+		Arrays.fill(slocArray, 0);
+		sumSLOC(slocArray, classInfo.getSlocCounterMap());
+		classInfo.setSlocArray(slocArray);
+	}
+
+	/**
+	 * 计算各个类的SLOC之和：1，计算当前包，2，计算当前包+子包
+	 */
+	public static void calculateSloc(PackageInfo packageInfo) {
+		int[] slocArray = sumSLOCForCurrentPkg(packageInfo);
+		packageInfo.setSlocArrayForCurrentPkg(slocArray);
+		int[] slocArrayPlus = sumSLOCForCurrentAndSubPkg(packageInfo);
+		packageInfo.setSlocArrayForCurrentAndSubPkg(slocArrayPlus);
+	}
+
+	/**
+	 * 计算各个包的SLOC之和
+	 */
+	public static void calculateSloc(ModuleInfo moduleInfo) {
+		int[] slocArray = new int[6];
+		Arrays.fill(slocArray, 0);
+		for (PackageInfo packageInfo : moduleInfo.getPackageList()) {
+			SLOCMetric.sumSLOC(slocArray, packageInfo.getSlocArrayForCurrentPkg());
+		}
+		moduleInfo.setSlocArray(slocArray);
+	}
+
 	/**
 	 * 该方法会直接将数值叠加在传入参数{@code slocArray}上
 	 * 索引与对应的SLOC：
@@ -169,7 +202,7 @@ public class SLOCMetric {
 	 * 4--SLOCType.PHYSICAL_CODE_LINES_FROM_AST；
 	 * 5--SLOCType.COMMENT_LINES_FROM_AST
 	 */
-	public static void sumSLOC(int[] slocArray, Map<SLOCType, Integer> slocMap) {
+	private static void sumSLOC(int[] slocArray, Map<SLOCType, Integer> slocMap) {
 		slocArray[0] += slocMap.get(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE);
 		slocArray[1] += slocMap.get(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE);
 		slocArray[2] += slocMap.get(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE);
@@ -182,7 +215,7 @@ public class SLOCMetric {
 	 * @param slocArray 目标数组，数值将会叠加在次数组上
 	 * @param inputSLOC 需要将此数组中的值，加到{@code slocArray}上
 	 */
-	public static void sumSLOC(int[] slocArray, int[] inputSLOC) {
+	private static void sumSLOC(int[] slocArray, int[] inputSLOC) {
 		slocArray[0] += inputSLOC[0];
 		slocArray[1] += inputSLOC[1];
 		slocArray[2] += inputSLOC[2];
@@ -190,5 +223,40 @@ public class SLOCMetric {
 		slocArray[4] += inputSLOC[4];
 		slocArray[5] += inputSLOC[5];
 	}
+
+
+	/**
+	 * 获取自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以数组形式返回。
+	 * 索引与对应的值，查看{@link SLOCMetric#sumSLOC}
+	 */
+	private static int[] sumSLOCForCurrentPkg(PackageInfo packageInfo) {
+		int[] slocArray = new int[6];
+		Arrays.fill(slocArray, 0);
+		for (ClassInfo classInfo : packageInfo.getAllClassList()) {
+			SLOCMetric.sumSLOC(slocArray, classInfo.getSlocArray());
+		}
+		return slocArray;
+	}
+
+	/**
+	 * 获取自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以及子包的SLOC，以数组形式返回。
+	 * 如果没有子包则返回自身的sloc
+	 * 索引与对应的值，查看{@link SLOCMetric#sumSLOC}
+	 */
+	private static int[] sumSLOCForCurrentAndSubPkg(PackageInfo packageInfo) {
+		int[] slocArray = sumSLOCForCurrentPkg(packageInfo);
+		if (packageInfo.getSubPackageList().isEmpty()){
+			return slocArray;
+		}
+		for (PackageInfo subPackageInfo : packageInfo.getSubPackageList()) {
+			if (subPackageInfo.getSlocArrayForCurrentAndSubPkg()==null){
+				int[] slocArrayPlusForSubPkg = sumSLOCForCurrentAndSubPkg(subPackageInfo);
+				subPackageInfo.setSlocArrayForCurrentAndSubPkg(slocArrayPlusForSubPkg);
+			}
+			SLOCMetric.sumSLOC(slocArray, subPackageInfo.getSlocArrayForCurrentAndSubPkg());
+		}
+		return slocArray;
+	}
+
 
 }

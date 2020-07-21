@@ -13,7 +13,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class No5DependencyScannerTest {
+class No5_DependencyScannerTest {
 
 	static ProjectInfo projectInfo;
 

@@ -132,7 +132,7 @@ public class ClassService {
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			Arrays.fill(tempRow, 1, 6, null);
 			if (classInfo != null) {
-				int[] slocArray = classInfo.getSumOfSLOC();
+				int[] slocArray = classInfo.getSlocArray();
 				for (int i = 0; i < 6; i++) {
 					tempRow[i + 1] = String.valueOf(slocArray[i]);
 				}

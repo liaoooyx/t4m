@@ -196,7 +196,7 @@ public class NoX_SLOCVisitor extends ASTVisitor {
 			String supperClassShortName = node.getSuperclassType().toString();
 			ClassInfo supperClassInfo = null;
 			supperClassInfo = findClassInfoFromImportedListByShortName(supperClassShortName);
-			EntityUtil.safeAddEntityToList(supperClassInfo, currentClassInfo.getExtendedClassList());
+			EntityUtil.safeAddEntityToList(supperClassInfo, currentClassInfo.getExtendsClassList());
 		}
 		// 接口
 		if (node.superInterfaceTypes() != null) {
@@ -204,7 +204,7 @@ public class NoX_SLOCVisitor extends ASTVisitor {
 				String interfaceShortName = interf.toString();
 				ClassInfo interfaceClass = null;
 				interfaceClass = findClassInfoFromImportedListByShortName(interfaceShortName);
-				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getImplementedClassList());
+				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getImplementsClassList());
 			});
 		}
 		return true;
@@ -242,7 +242,7 @@ public class NoX_SLOCVisitor extends ASTVisitor {
 				String interfaceShortName = interf.toString();
 				ClassInfo interfaceClass = null;
 				interfaceClass = findClassInfoFromImportedListByShortName(interfaceShortName);
-				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getImplementedClassList());
+				EntityUtil.safeAddEntityToList(interfaceClass, currentClassInfo.getImplementsClassList());
 			});
 		}
 		return true;

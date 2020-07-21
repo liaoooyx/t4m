@@ -36,7 +36,7 @@ public class OperationController {
 		ProjectInfo projectInfo = new ProjectInfo(new File(projectPath).getAbsolutePath());
 		// 扫描项目
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.action();
+		t4MExtractor.extract();
 		// 持久化该记录
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		String recordFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
@@ -72,7 +72,7 @@ public class OperationController {
 		ProjectInfo projectInfo = new ProjectInfo(oldProjectInfo.getAbsolutePath());
 		// 扫描项目
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.action();
+		t4MExtractor.extract();
 		// 持久化该记录
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		String recordFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());

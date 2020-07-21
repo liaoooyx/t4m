@@ -165,8 +165,7 @@ public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 
 			// 添加依赖关系
 			for (ClassInfo depedency : fieldInfo.getTypeAsClassInfoList()) {
-				EntityUtil.safeAddEntityToList(depedency, currentClassInfo.getActiveDependencyAkaFanOutList());
-				EntityUtil.safeAddEntityToList(currentClassInfo, depedency.getPassiveDependencyAkaFanInList());
+				EntityUtil.addDependency(currentClassInfo,depedency);
 			}
 		}
 
@@ -225,14 +224,12 @@ public class No2_MethodAndFieldInfoVisitor extends ASTVisitor {
 
 		// 添加依赖关系
 		for (ClassInfo depedency : methodInfo.getReturnTypeAsClassInfoList()) {
-			EntityUtil.safeAddEntityToList(depedency, currentClassInfo.getActiveDependencyAkaFanOutList());
-			EntityUtil.safeAddEntityToList(currentClassInfo, depedency.getPassiveDependencyAkaFanInList());
+			EntityUtil.addDependency(currentClassInfo,depedency);
 		}
 		// 添加依赖关系
 		for (List<ClassInfo> tempList : methodInfo.getParamsTypeAsClassInfoListMap().values()) {
 			for (ClassInfo depedency : tempList) {
-				EntityUtil.safeAddEntityToList(depedency, currentClassInfo.getActiveDependencyAkaFanOutList());
-				EntityUtil.safeAddEntityToList(currentClassInfo, depedency.getPassiveDependencyAkaFanInList());
+				EntityUtil.addDependency(currentClassInfo,depedency);
 			}
 		}
 		return true;

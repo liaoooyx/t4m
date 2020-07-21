@@ -4,8 +4,6 @@ import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.expr.BinaryExpr;
-import com.github.javaparser.ast.expr.ConditionalExpr;
 import com.github.javaparser.ast.nodeTypes.NodeWithExtends;
 import com.github.javaparser.ast.nodeTypes.NodeWithImplements;
 import com.github.javaparser.ast.stmt.*;
@@ -19,7 +17,6 @@ import com.t4m.extractor.metric.ComplexityMetric;
 import com.t4m.extractor.metric.SLOCMetric;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.JavaParserUtil;
-import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,7 +158,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		}
 
 		currentClassInfo.setNumberOfFields(currentClassInfo.getFieldInfoList().size());
-		JavaParserUtil.addDependency(currentClassInfo, typeAsClassInfoList);
+		EntityUtil.addDependency(currentClassInfo, typeAsClassInfoList);
 	}
 
 	/**
@@ -180,9 +177,9 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		commonMethodInitOperation(n, methodInfo, currentClassInfo);
 
 		// 添加方法声明出现的依赖关系
-		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
-		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getParamsTypeAsClassInfoList());
-		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getThrownExceptionClassList());
+		EntityUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
+		EntityUtil.addDependency(currentClassInfo, methodInfo.getParamsTypeAsClassInfoList());
+		EntityUtil.addDependency(currentClassInfo, methodInfo.getThrownExceptionClassList());
 
 		BlockStmt body = n.getBody();
 		//	解析方法复杂度
@@ -210,9 +207,9 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		commonMethodInitOperation(n, methodInfo, currentClassInfo);
 
 		// 添加方法声明出现的依赖关系
-		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
-		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getParamsTypeAsClassInfoList());
-		JavaParserUtil.addDependency(currentClassInfo, methodInfo.getThrownExceptionClassList());
+		EntityUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
+		EntityUtil.addDependency(currentClassInfo, methodInfo.getParamsTypeAsClassInfoList());
+		EntityUtil.addDependency(currentClassInfo, methodInfo.getThrownExceptionClassList());
 
 		BlockStmt body = n.getBody().orElse(null);
 
@@ -287,11 +284,11 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 				ClassInfo implementedClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
 				                                                                implementedType.resolve()
 				                                                                               .getQualifiedName());
-				EntityUtil.safeAddEntityToList(implementedClass, currentClassInfo.getImplementedClassList());
+				EntityUtil.safeAddEntityToList(implementedClass, currentClassInfo.getImplementsClassList());
 			} catch (UnsolvedSymbolException e) {
 				//无法解析，说明不是项目内定义的类，使用类名创建单独的的ClassInfo
 				EntityUtil.safeAddEntityToList(new ClassInfo(implementedType.getNameAsString(), ""),
-				                               currentClassInfo.getImplementedClassList());
+				                               currentClassInfo.getImplementsClassList());
 			}
 		}
 	}
@@ -308,16 +305,16 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 				                                                             extendedType.resolve().getQualifiedName());
 				if (extendedClass == null){
 					ClassInfo unknownClassInfo = new ClassInfo(extendedType.getNameAsString(), "");
-					EntityUtil.safeAddEntityToList(unknownClassInfo, currentClassInfo.getExtendedClassList());
+					EntityUtil.safeAddEntityToList(unknownClassInfo, currentClassInfo.getExtendsClassList());
 					EntityUtil.safeAddEntityToList(currentClassInfo, unknownClassInfo.getImmediateSubClassList());
 				}else {
-					EntityUtil.safeAddEntityToList(extendedClass, currentClassInfo.getExtendedClassList());
+					EntityUtil.safeAddEntityToList(extendedClass, currentClassInfo.getExtendsClassList());
 					EntityUtil.safeAddEntityToList(currentClassInfo, extendedClass.getImmediateSubClassList());
 				}
 			} catch (UnsolvedSymbolException e) {
 				//无法解析，说明不是项目内定义的类，使用类名创建单独的的ClassInfo
 				ClassInfo unknownClassInfo = new ClassInfo(extendedType.getNameAsString(), "");
-				EntityUtil.safeAddEntityToList(unknownClassInfo, currentClassInfo.getExtendedClassList());
+				EntityUtil.safeAddEntityToList(unknownClassInfo, currentClassInfo.getExtendsClassList());
 				EntityUtil.safeAddEntityToList(currentClassInfo, unknownClassInfo.getImmediateSubClassList());
 			}
 		}

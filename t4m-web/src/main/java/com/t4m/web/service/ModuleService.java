@@ -78,8 +78,8 @@ public class ModuleService {
 		} else {
 			map.put("numOfPkg", "0");
 		}
-		map.put("numOfClass", String.valueOf(moduleInfo.getNumberOfClasses()));
-		map.put("numOfInnerClass", String.valueOf(moduleInfo.getNumberOfInnerClasses()));
+		map.put("numOfClass", String.valueOf(moduleInfo.getNumberOfJavaFile()));
+		map.put("numOfInnerClass", String.valueOf(moduleInfo.getNumberOfAllClass()));
 		return map;
 	}
 
@@ -91,7 +91,7 @@ public class ModuleService {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
 			Map<String, Object> cols = SLOCUtil.initSLOCRowRecordForFrontPage(moduleInfo.getRelativePath(), "module",
-			                                                                  moduleInfo.getSumOfSLOC());
+			                                                                  moduleInfo.getSlocArray());
 			rows.add(cols);
 		}
 		return rows;
@@ -107,7 +107,7 @@ public class ModuleService {
 		for (PackageInfo packageInfo : moduleInfo.getPackageList()) {
 			if (!packageInfo.hasPreviousPackage()) { // 说明是第一层包
 				Map<String, Object> colsAkaRow = SLOCUtil.initSLOCRowRecordForFrontPage(
-						packageInfo.getFullyQualifiedName(), "package", packageInfo.getSumOfSLOCForCurrentAndSubPkg());
+						packageInfo.getFullyQualifiedName(), "package", packageInfo.getSlocArrayForCurrentAndSubPkg());
 				rows.add(colsAkaRow);
 			}
 		}
@@ -128,7 +128,7 @@ public class ModuleService {
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			Arrays.fill(tempRow,1,6,null);
 			if (moduleInfo != null){
-				int[] slocArray = moduleInfo.getSumOfSLOC();
+				int[] slocArray = moduleInfo.getSlocArray();
 				for (int i = 0; i < 6; i++) {
 					tempRow[i + 1] = String.valueOf(slocArray[i]);
 				}

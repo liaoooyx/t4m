@@ -73,8 +73,8 @@ public class PackageService {
 		Map<String, Object> map = new HashMap<>();
 		map.put("packageInfo", packageInfo);
 		map.put("packageName", packageInfo.getFullyQualifiedName());
-		map.put("numOfClass", String.valueOf(packageInfo.getNumberOfClasses()));
-		map.put("numOfInnerClass", String.valueOf(packageInfo.getNumberOfInnerClasses()));
+		map.put("numOfClass", String.valueOf(packageInfo.getNumberOfJavaFile()));
+		map.put("numOfInnerClass", String.valueOf(packageInfo.getNumberOfAllClass()));
 		return map;
 	}
 
@@ -88,16 +88,16 @@ public class PackageService {
 		// 子包的SLOC（直接类，和下一层的子包）
 		for (PackageInfo subPkg : packageInfo.getSubPackageList()) {
 			Map<String, Object> rowForSubPkg = SLOCUtil.initSLOCRowRecordForFrontPage(
-					subPkg.getFullyQualifiedName(), "package", subPkg.getSumOfSLOCForCurrentAndSubPkg());
+					subPkg.getFullyQualifiedName(), "package", subPkg.getSlocArrayForCurrentAndSubPkg());
 			rows.add(rowForSubPkg);
 		}
 		// 当前包的SLOC（直接类，不包括子包）
 		Map<String, Object> rowForPkg = SLOCUtil.initSLOCRowRecordForFrontPage(
-				packageInfo.getFullyQualifiedName(), "current package", packageInfo.getSumOfSLOCForCurrentPkg());
+				packageInfo.getFullyQualifiedName(), "current package", packageInfo.getSlocArrayForCurrentPkg());
 		rows.add(rowForPkg);
 		for (ClassInfo classInfo : packageInfo.getClassList()) {
 			Map<String, Object> rowForClass = SLOCUtil.initSLOCRowRecordForFrontPage(
-					classInfo.getFullyQualifiedName(), "class", classInfo.getSumOfSLOC());
+					classInfo.getFullyQualifiedName(), "class", classInfo.getSlocArray());
 			rows.add(rowForClass);
 		}
 		return rows;
@@ -119,9 +119,9 @@ public class PackageService {
 			if (packageInfo != null){
 				int[] slocArray;
 				if (includeSubPkgSLOC){
-					slocArray = packageInfo.getSumOfSLOCForCurrentAndSubPkg();
+					slocArray = packageInfo.getSlocArrayForCurrentAndSubPkg();
 				}else {
-					slocArray = packageInfo.getSumOfSLOCForCurrentPkg();
+					slocArray = packageInfo.getSlocArrayForCurrentPkg();
 				}
 				for (int i = 0; i < 6; i++) {
 					tempRow[i + 1] = String.valueOf(slocArray[i]);

@@ -56,7 +56,7 @@ public class ComplexityMetric {
 	/**
 	 * 以类为单位，计算cyclomatic Complexity的相关度量
 	 */
-	public static void calculateComplexityForClass(ClassInfo classInfo) {
+	public static void calculateComplexity(ClassInfo classInfo) {
 		int sum = 0;
 		int max = 0;
 		for (int i : classInfo.getCyclomaticComplexityList()) {
@@ -65,7 +65,7 @@ public class ComplexityMetric {
 		}
 		classInfo.setWeightedMethodsCount(sum);
 		classInfo.setMaxCyclomaticComplexity(max);
-		float avg = MathUtil.divide(max, classInfo.getCyclomaticComplexityList().size());
+		String avg = MathUtil.divide(max, classInfo.getCyclomaticComplexityList().size());
 		classInfo.setAvgCyclomaticComplexity(avg);
 	}
 

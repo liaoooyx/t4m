@@ -1,7 +1,9 @@
 package com.t4m.extractor.scanner;
 
 import com.t4m.extractor.T4MExtractor;
+import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
+import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,7 +14,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class No4ModuleScannerTest {
+class AfterScanAndExtract {
 
 	static ProjectInfo projectInfo;
 
@@ -21,13 +23,9 @@ class No4ModuleScannerTest {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanModule();
+		t4MExtractor.extract();
 	}
 
-	@Test
-	@DisplayName("测试模块数量")
-	void scan() {
-		assertEquals(2, projectInfo.getModuleList().size());
-	}
+
 
 }

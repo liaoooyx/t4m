@@ -26,21 +26,4 @@ public class JavaParserUtil {
 		return EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
 	}
 
-	/**
-	 * 添加依赖关系
-	 */
-	public static void addDependency(ClassInfo currentClassInfo, List<ClassInfo> referenceClass) {
-		for (ClassInfo referClass : referenceClass) {
-			EntityUtil.safeAddEntityToList(referClass, currentClassInfo.getActiveDependencyAkaFanOutList());
-			EntityUtil.safeAddEntityToList(currentClassInfo, referClass.getPassiveDependencyAkaFanInList());
-		}
-	}
-
-	/**
-	 * 添加依赖关系
-	 */
-	public static void addDependency(ClassInfo currentClassInfo, ClassInfo referenceClass) {
-		EntityUtil.safeAddEntityToList(referenceClass, currentClassInfo.getActiveDependencyAkaFanOutList());
-		EntityUtil.safeAddEntityToList(currentClassInfo, referenceClass.getPassiveDependencyAkaFanInList());
-	}
 }

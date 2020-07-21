@@ -7,8 +7,7 @@ import java.text.DecimalFormat;
  */
 public class MathUtil {
 
-	public static float divide(float a, float b) {
-
-		return b == 0 ? 0 : Float.parseFloat(new DecimalFormat("0.00").format(a / b));
+	public static String divide(float a, float b) {
+		return b == 0 ? "0" : new DecimalFormat("0.00").format(a / b);
 	}
 }

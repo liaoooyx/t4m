@@ -2,6 +2,7 @@ package com.t4m.extractor.scanner;
 
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.metric.*;
@@ -20,14 +21,21 @@ public class No7_MetricsScanner {
 
 	public void scan() {
 		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-			ComplexityMetric.calculateComplexityForClass(classInfo);
-			RFCMetric.calculateRfcForClass(classInfo);
-			InheritanceMetric.calculateInheritanceForClass(classInfo);
-			CouplingMetric.calculateCouplingForClass(classInfo);
-			CohesionMetric.calculateCohesionMetricForClass(classInfo);
+			ComplexityMetric.calculateComplexity(classInfo);
+			RFCMetric.calculateRfc(classInfo);
+			InheritanceMetric.calculateInheritance(classInfo);
+			CouplingMetric.calculateCoupling(classInfo);
+			CohesionMetric.calculateCohesionMetric(classInfo);
+			SLOCMetric.calculateSloc(classInfo);
 		}
-		for (PackageInfo packageInfo: projectInfo.getPackageList()){
-
+		for (PackageInfo packageInfo : projectInfo.getPackageList()) {
+			BasicMetric.calculateBasic(packageInfo);
+			CouplingMetric.calculateCoupling(packageInfo);
+			SLOCMetric.calculateSloc(packageInfo);
+		}
+		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
+			BasicMetric.calculateBasic(moduleInfo);
+			SLOCMetric.calculateSloc(moduleInfo);
 		}
 	}
 

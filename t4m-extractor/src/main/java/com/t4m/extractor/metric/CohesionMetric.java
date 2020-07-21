@@ -13,7 +13,7 @@ import java.util.*;
 public class CohesionMetric {
 
 
-	public static void calculateCohesionMetricForClass(ClassInfo classInfo) {
+	public static void calculateCohesionMetric(ClassInfo classInfo) {
 		if (classInfo.getShortName().equals("CohesionClass")) {
 			System.out.println();
 		}
@@ -59,8 +59,8 @@ public class CohesionMetric {
 		int numberOfAllConnections = nacMethodPairSet.size(); // NDC：直接和间接连接的（访问同一个字段）方法对数量
 		int numberOfMethods = classInfo.getNumberOfMethods();
 		int numberOfPossibleConnections = numberOfMethods * (numberOfMethods - 1) / 2;
-		float tcc = MathUtil.divide(numberOfDirectConnections, numberOfPossibleConnections);
-		float lcc = MathUtil.divide(numberOfAllConnections, numberOfPossibleConnections);
+		String tcc = MathUtil.divide(numberOfDirectConnections, numberOfPossibleConnections);
+		String lcc = MathUtil.divide(numberOfAllConnections, numberOfPossibleConnections);
 		classInfo.setLackOfCohesionInMethods4(locm);
 		classInfo.setTightClassCohesion(tcc);
 		classInfo.setLooseClassCohesion(lcc);

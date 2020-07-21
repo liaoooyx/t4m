@@ -1,10 +1,7 @@
 package com.t4m.extractor.entity;
 
-import com.t4m.extractor.metric.SLOCMetric;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,8 +27,9 @@ public class ModuleInfo implements Serializable {
 	private String testScopePath;
 	private String otherScopePath;
 
-	private int numberOfClasses;
-	private int numberOfInnerClasses;
+	private int numberOfJavaFile;
+	private int numberOfAllClass;
+	private int[] slocArray;
 
 	public ModuleInfo(String absolutePath) {
 		this.absolutePath = absolutePath;
@@ -128,19 +126,6 @@ public class ModuleInfo implements Serializable {
 		return otherPackageList.size() > 0;
 	}
 
-	/**
-	 * 优先返回mainPackageList，然后是otherPackageList，最后是testPackageList
-	 */
-	public List<PackageInfo> getPackageList() {
-		if (hasMainPackageList()) {
-			return mainPackageList;
-		} else if (hasOtherPackageList()) {
-			return otherPackageList;
-		} else {
-			return testPackageList;
-		}
-	}
-
 	public String getMainScopePath() {
 		return mainScopePath;
 	}
@@ -165,42 +150,42 @@ public class ModuleInfo implements Serializable {
 		this.otherScopePath = otherScopePath;
 	}
 
-	public int getNumberOfClasses() {
-		if (numberOfClasses == 0) {
-			for (PackageInfo packageInfo : this.getPackageList()) {
-				numberOfClasses += packageInfo.getNumberOfClasses();
-			}
-		}
-		return numberOfClasses;
+	public int[] getSlocArray() {
+		return slocArray;
 	}
 
-	public void setNumberOfClasses(int numberOfClasses) {
-		this.numberOfClasses = numberOfClasses;
+	public void setSlocArray(int[] slocArray) {
+		this.slocArray = slocArray;
 	}
 
-	public int getNumberOfInnerClasses() {
-		if (numberOfInnerClasses == 0) {
-			for (PackageInfo packageInfo : this.getPackageList()) {
-				numberOfInnerClasses += packageInfo.getNumberOfInnerClasses();
-			}
-		}
-		return numberOfInnerClasses;
+	public int getNumberOfJavaFile() {
+		return numberOfJavaFile;
 	}
 
-	public void setNumberOfInnerClasses(int numberOfInnerClasses) {
-		this.numberOfInnerClasses = numberOfInnerClasses;
+	public void setNumberOfJavaFile(int numberOfJavaFile) {
+		this.numberOfJavaFile = numberOfJavaFile;
 	}
+
+	public int getNumberOfAllClass() {
+		return numberOfAllClass;
+	}
+
+	public void setNumberOfAllClass(int numberOfAllClass) {
+		this.numberOfAllClass = numberOfAllClass;
+	}
+
 
 	/**
-	 * 获取自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以数组形式返回。索引与对应的值，查看{@link SLOCMetric.sumSLOC()}
+	 * 优先返回mainPackageList，然后是otherPackageList，最后是testPackageList
 	 */
-	public int[] getSumOfSLOC() {
-		int[] slocArray = new int[6];
-		Arrays.fill(slocArray, 0);
-		for (PackageInfo packageInfo : getPackageList()) {
-			SLOCMetric.sumSLOC(slocArray, packageInfo.getSumOfSLOCForCurrentPkg());
+	public List<PackageInfo> getPackageList() {
+		if (hasMainPackageList()) {
+			return mainPackageList;
+		} else if (hasOtherPackageList()) {
+			return otherPackageList;
+		} else {
+			return testPackageList;
 		}
-		return slocArray;
 	}
 
 	/**

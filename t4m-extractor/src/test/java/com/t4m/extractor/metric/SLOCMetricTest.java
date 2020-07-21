@@ -19,12 +19,9 @@ class SLOCMetricTest {
 		SLOCMetric slocMetric = new SLOCMetric();
 		slocMetric.countSLOCByLine("counterMap.put(\"codeLines\", 0); // 不包括空白行，单独大括号和注释行");
 		slocMetric.setASTSLOCToCounterMap(counterMap);
-		counterMap.forEach((key, val) -> {
-			// System.out.println(key + ": " + val);
-			assertAll(() -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
-			          () -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST)),
-			          () -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
-		});
+		assertAll(() -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),
+		          () -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST)),
+		          () -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST)));
 
 	}
 }

@@ -4,6 +4,7 @@ import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.*;
 import com.t4m.extractor.util.EntityUtil;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@Disabled
+@Deprecated
 class MethodAndFieldInfoVisitorTest {
 
 	static ProjectInfo projectInfo;

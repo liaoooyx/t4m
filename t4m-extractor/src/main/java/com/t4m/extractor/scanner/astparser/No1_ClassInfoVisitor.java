@@ -40,6 +40,7 @@ public class No1_ClassInfoVisitor extends ASTVisitor {
 			innerClassInfo.setOuterClass(parentClassInfo);
 			innerClassInfo.setMainPublicClass(outerClassInfo);
 			EntityUtil.safeAddEntityToList(innerClassInfo, projectInfo.getNestedClassList());
+			EntityUtil.safeAddEntityToList(innerClassInfo, innerClassInfo.getPackageInfo().getNestedClassList());
 			allShownClassInfoList.add(innerClassInfo);
 		} else {
 			//由于一个类文件可以创建多个类，因此还需要对这些其他类进行创建。
@@ -53,6 +54,7 @@ public class No1_ClassInfoVisitor extends ASTVisitor {
 				extraClassInfo.setMainPublicClass(outerClassInfo);
 				EntityUtil.safeAddEntityToList(extraClassInfo, outerClassInfo.getExtraClassList());
 				EntityUtil.safeAddEntityToList(extraClassInfo, projectInfo.getExtraClassList());
+				EntityUtil.safeAddEntityToList(extraClassInfo, extraClassInfo.getPackageInfo().getExtraClassList());
 				allShownClassInfoList.add(extraClassInfo);
 			}
 		}

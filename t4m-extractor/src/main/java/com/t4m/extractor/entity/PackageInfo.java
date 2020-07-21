@@ -1,10 +1,7 @@
 package com.t4m.extractor.entity;
 
-import com.t4m.extractor.metric.SLOCMetric;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,18 +21,25 @@ public class PackageInfo implements Serializable {
 	private PackageInfo previousPackage;
 	private List<PackageInfo> subPackageList = new ArrayList<>();
 	private List<ClassInfo> classList = new ArrayList<>(); // 目前不包括内部类，只有外部类
+	private List<ClassInfo> nestedClassList = new ArrayList<>();
+	private List<ClassInfo> extraClassList = new ArrayList<>();
 
-	// private Map<PackageInfo, Integer> dependsOn;
-	// private Map<PackageInfo, Integer> dependedBy;
+	// metric meta data
+	private List<PackageInfo> activeDependencyAkaFanOutList = new ArrayList<>();//依赖
+	private List<PackageInfo> passiveDependencyAkaFanInList = new ArrayList<>();//被依赖
 
-	private int numberOfClasses;
-	private int numberOfInnerClasses;
+	//basic
+	private int numberOfJavaFile;
+	private int numberOfAllClass;
+	//sloc
+	private int[] slocArrayForCurrentPkg; //自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC）
+	private int[] slocArrayForCurrentAndSubPkg; //自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以及子包的SLOC，
 
 	// Coupling
-	private int abstractness; //一个组件中抽象类和接口的数量与所有类的数量的比例
 	private int afferentCoupling; // fanin
 	private int efferentCoupling; // fanout
-	private float instability; // fanout/fanin+out
+	private String instability; // fanout/fanin+out
+	private String abstractness; //一个组件中抽象类和接口的数量与所有类的数量的比例
 
 	public PackageInfo(String absolutePath) {
 		this.absolutePath = absolutePath;
@@ -108,11 +112,45 @@ public class PackageInfo implements Serializable {
 		this.classList = classList;
 	}
 
-	public int getAbstractness() {
+	public List<ClassInfo> getNestedClassList() {
+		return nestedClassList;
+	}
+
+	public void setNestedClassList(List<ClassInfo> nestedClassList) {
+		this.nestedClassList = nestedClassList;
+	}
+
+	public List<ClassInfo> getExtraClassList() {
+		return extraClassList;
+	}
+
+	public void setExtraClassList(List<ClassInfo> extraClassList) {
+		this.extraClassList = extraClassList;
+	}
+
+	public List<PackageInfo> getActiveDependencyAkaFanOutList() {
+		return activeDependencyAkaFanOutList;
+	}
+
+	public void setActiveDependencyAkaFanOutList(
+			List<PackageInfo> activeDependencyAkaFanOutList) {
+		this.activeDependencyAkaFanOutList = activeDependencyAkaFanOutList;
+	}
+
+	public List<PackageInfo> getPassiveDependencyAkaFanInList() {
+		return passiveDependencyAkaFanInList;
+	}
+
+	public void setPassiveDependencyAkaFanInList(
+			List<PackageInfo> passiveDependencyAkaFanInList) {
+		this.passiveDependencyAkaFanInList = passiveDependencyAkaFanInList;
+	}
+
+	public String getAbstractness() {
 		return abstractness;
 	}
 
-	public void setAbstractness(int abstractness) {
+	public void setAbstractness(String abstractness) {
 		this.abstractness = abstractness;
 	}
 
@@ -132,60 +170,54 @@ public class PackageInfo implements Serializable {
 		this.efferentCoupling = efferentCoupling;
 	}
 
-	public float getInstability() {
+	public String getInstability() {
 		return instability;
 	}
 
-	public void setInstability(float instability) {
+	public void setInstability(String instability) {
 		this.instability = instability;
 	}
 
-	public int getNumberOfClasses() {
-		if (numberOfClasses == 0) {
-			numberOfClasses += this.getClassList().size();
-		}
-		return numberOfClasses;
+	public int getNumberOfJavaFile() {
+		return numberOfJavaFile;
 	}
 
-	public void setNumberOfClasses(int numberOfClasses) {
-		this.numberOfClasses = numberOfClasses;
+	public void setNumberOfJavaFile(int numberOfJavaFile) {
+		this.numberOfJavaFile = numberOfJavaFile;
 	}
 
-	//TODO 如果确实没有内部类，那么每次都要重新计算显得多余
-	public int getNumberOfInnerClasses() {
-		if (numberOfInnerClasses == 0) {
-			for (ClassInfo classInfo : this.getClassList()) {
-				numberOfInnerClasses += classInfo.getNestedClassList().size();
-			}
-		}
-		return numberOfInnerClasses;
+	public int getNumberOfAllClass() {
+		return numberOfAllClass;
+	}
+
+	public void setNumberOfAllClass(int numberOfAllClass) {
+		this.numberOfAllClass = numberOfAllClass;
+	}
+
+	public int[] getSlocArrayForCurrentPkg() {
+		return slocArrayForCurrentPkg;
+	}
+
+	public void setSlocArrayForCurrentPkg(int[] slocArrayForCurrentPkg) {
+		this.slocArrayForCurrentPkg = slocArrayForCurrentPkg;
+	}
+
+	public int[] getSlocArrayForCurrentAndSubPkg() {
+		return slocArrayForCurrentAndSubPkg;
+	}
+
+	public void setSlocArrayForCurrentAndSubPkg(int[] slocArrayForCurrentAndSubPkg) {
+		this.slocArrayForCurrentAndSubPkg = slocArrayForCurrentAndSubPkg;
 	}
 
 	/**
-	 * 获取自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以数组形式返回。索引与对应的值，查看{@link SLOCMetric sumSLOC()}
+	 * 返回所有类，包括唯一公共类，非公共类，嵌套类
 	 */
-	public int[] getSumOfSLOCForCurrentPkg() {
-		int[] slocArray = new int[6];
-		Arrays.fill(slocArray, 0);
-		for (ClassInfo classInfo : classList) {
-			SLOCMetric.sumSLOC(slocArray, classInfo.getSumOfSLOC());
-		}
-		return slocArray;
+	public List<ClassInfo> getAllClassList() {
+		List<ClassInfo> all = new ArrayList<>();
+		all.addAll(classList);
+		all.addAll(nestedClassList);
+		all.addAll(extraClassList);
+		return all;
 	}
-
-	/**
-	 * 获取自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以及子包的SLOC，以数组形式返回。索引与对应的值，查看{@link SLOCMetric sumSLOC()}
-	 */
-	public int[] getSumOfSLOCForCurrentAndSubPkg() {
-		int[] slocArray = getSumOfSLOCForCurrentPkg();
-		for (PackageInfo subPackageInfo : subPackageList){
-			SLOCMetric.sumSLOC(slocArray, subPackageInfo.getSumOfSLOCForCurrentAndSubPkg());
-		}
-		return slocArray;
-	}
-
-	public void setNumberOfInnerClasses(int numberOfInnerClasses) {
-		this.numberOfInnerClasses = numberOfInnerClasses;
-	}
-
 }

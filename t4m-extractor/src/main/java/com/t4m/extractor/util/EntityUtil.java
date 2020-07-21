@@ -97,6 +97,7 @@ public class EntityUtil {
 	 *
 	 * @param classInfoList 储存着外部类的列表
 	 * @param rawShortName 原始类名。即Class或InnerClass或Class$InnerClass）
+	 *
 	 * @throws DuplicatedInnerClassFoundedException 如果指定的列表中包含的类的内部类的类名重复，那么会抛出异常。
 	 */
 	public static ClassInfo getClassOrNestedClassFromOuterClassListByShortName(
@@ -114,6 +115,7 @@ public class EntityUtil {
 	 *
 	 * @param classInfoList 储存着外部类的列表
 	 * @param innerClassShortName 内部类的类名: InnerClass或Class$InnerClass
+	 *
 	 * @throws DuplicatedInnerClassFoundedException 如果指定的列表中的类的内部类的类名重复，那么会抛出异常。
 	 */
 	public static ClassInfo getNestedClassFromOuterClassListByShortName(
@@ -143,6 +145,7 @@ public class EntityUtil {
 	 *
 	 * @param classInfoList 储存着外部类的列表
 	 * @param qualifiedName 全限定类名。即com.a.Class或com.a.Class$InnerClass
+	 *
 	 * @throws DuplicatedInnerClassFoundedException 如果指定的列表中包含的类的内部类的类名重复，那么会抛出异常。
 	 */
 	public static ClassInfo getClassOrNestedClassFromOuterClassListByQualifiedName(
@@ -160,6 +163,7 @@ public class EntityUtil {
 	 *
 	 * @param classInfoList 储存着外部类的列表
 	 * @param nestedClassQualifiedName 内部类的全限定类名。即com.a.Class或com.a.Class$InnerClass
+	 *
 	 * @throws DuplicatedInnerClassFoundedException 如果指定的列表中的类的内部类的类名重复，那么会抛出异常。
 	 */
 	public static ClassInfo getNestedClassFromOuterClassListByQualifiedName(
@@ -220,6 +224,36 @@ public class EntityUtil {
 			return entity;
 		} else {
 			return targetList.get(index);
+		}
+	}
+
+	/**
+	 * 为两边都添加依赖关系
+	 */
+	public static void addDependency(ClassInfo current, ClassInfo target) {
+		if (!Objects.equals(current, target)) {
+			EntityUtil.safeAddEntityToList(target, current.getActiveDependencyAkaFanOutList());
+			EntityUtil.safeAddEntityToList(current, target.getPassiveDependencyAkaFanInList());
+			addDependency(current.getPackageInfo(), target.getPackageInfo());
+		}
+	}
+
+	/**
+	 * 为列表中的所有类添加依赖关系
+	 */
+	public static void addDependency(ClassInfo currentClassInfo, List<ClassInfo> referenceClass) {
+		for (ClassInfo referClass : referenceClass) {
+			addDependency(currentClassInfo, referClass);
+		}
+	}
+
+	/**
+	 * 为两边都添加依赖关系
+	 */
+	public static void addDependency(PackageInfo current, PackageInfo target) {
+		if (!Objects.equals(current, target)) {
+			EntityUtil.safeAddEntityToList(target, current.getActiveDependencyAkaFanOutList());
+			EntityUtil.safeAddEntityToList(current, target.getPassiveDependencyAkaFanInList());
 		}
 	}
 

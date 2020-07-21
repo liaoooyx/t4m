@@ -27,13 +27,14 @@ public class ClassInfo implements Serializable {
 	private ClassInfo outerClass; //内部类的外部类
 
 	// Metric Meta data
+	private Map<SLOCType, Integer> slocCounterMap = new EnumMap<>(SLOCType.class);
 	private List<ClassInfo> nestedClassList = new ArrayList<>();
 	private List<ClassInfo> extraClassList = new ArrayList<>();
-	private List<ClassInfo> extendedClassList = new ArrayList<>();
-	private List<ClassInfo> implementedClassList = new ArrayList<>();
+	private List<ClassInfo> extendsClassList = new ArrayList<>();
+	private List<ClassInfo> implementsClassList = new ArrayList<>();
 	private List<ClassInfo> immediateSubClassList = new ArrayList<>();
 	private List<MethodInfo> methodInfoList = new ArrayList<>();// 方法列表
-	private List<FieldInfo> fieldInfoList = new ArrayList<>();// 类的class-variable，包括静态变量，不包括常量
+	private List<FieldInfo> fieldInfoList = new ArrayList<>();// 类的class-variable，包括静态变量，（当前实现包括常量）
 	private List<ClassInfo> activeDependencyAkaFanOutList = new ArrayList<>();//依赖（引用的类）
 	private List<ClassInfo> passiveDependencyAkaFanInList = new ArrayList<>();//被依赖（被其他类引用）
 	private Map<String, Integer> outClassMethodCallQualifiedSignatureMap = new HashMap<>(); // 调用的其他类的方法集合
@@ -51,10 +52,18 @@ public class ClassInfo implements Serializable {
 	private int couplingBetweenObjects;
 	private int afferentCoupling; // fanin
 	private int efferentCoupling; // fanout
-	private float instability; // fanout/fanin+out
+	private String instability; // fanout/fanin+out
 	private int messagePassingCoupling; // 类中的本地方法，调用其他类的方法的数量
 	//SLOC
-	private Map<SLOCType, Integer> slocCounterMap = new EnumMap<>(SLOCType.class);
+	/*
+	0--SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE；
+	1--SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+	2--SLOCType.COMMENT_LINES_FROM_SOURCE_FILE；
+	3--SLOCType.LOGIC_CODE_LINES_FROM_AST；
+	4--SLOCType.PHYSICAL_CODE_LINES_FROM_AST；
+	5--SLOCType.COMMENT_LINES_FROM_AST
+	*/
+	private int[] slocArray = new int[6];
 	//Response for class
 	private int responseForClass;// 所有可以对一个类的消息做出响应的方法个数: 父类方法集合+本地方法集合+调用其他类的方法集合
 	// Inheritance
@@ -62,12 +71,12 @@ public class ClassInfo implements Serializable {
 	private int numberOfChildren;//一个类的直接子类的数量
 	//圈复杂度
 	private int maxCyclomaticComplexity;
-	private float avgCyclomaticComplexity;
+	private String avgCyclomaticComplexity;
 	private int weightedMethodsCount;    // sum of all methods complexity
 	// cohesion
 	private int lackOfCohesionInMethods4;
-	private float tightClassCohesion;
-	private float looseClassCohesion;
+	private String tightClassCohesion;
+	private String looseClassCohesion;
 
 	public ClassInfo(String shortName, String absolutePath) {
 		this.shortName = shortName;
@@ -187,20 +196,20 @@ public class ClassInfo implements Serializable {
 		this.extraClassList = extraClassList;
 	}
 
-	public List<ClassInfo> getExtendedClassList() {
-		return extendedClassList;
+	public List<ClassInfo> getExtendsClassList() {
+		return extendsClassList;
 	}
 
-	public void setExtendedClassList(List<ClassInfo> extendedClassList) {
-		this.extendedClassList = extendedClassList;
+	public void setExtendsClassList(List<ClassInfo> extendsClassList) {
+		this.extendsClassList = extendsClassList;
 	}
 
-	public List<ClassInfo> getImplementedClassList() {
-		return implementedClassList;
+	public List<ClassInfo> getImplementsClassList() {
+		return implementsClassList;
 	}
 
-	public void setImplementedClassList(List<ClassInfo> implementedClassList) {
-		this.implementedClassList = implementedClassList;
+	public void setImplementsClassList(List<ClassInfo> implementsClassList) {
+		this.implementsClassList = implementsClassList;
 	}
 
 	public List<ClassInfo> getImmediateSubClassList() {
@@ -251,11 +260,11 @@ public class ClassInfo implements Serializable {
 		this.efferentCoupling = efferentCoupling;
 	}
 
-	public float getInstability() {
+	public String getInstability() {
 		return instability;
 	}
 
-	public void setInstability(float instability) {
+	public void setInstability(String instability) {
 		this.instability = instability;
 	}
 
@@ -392,11 +401,11 @@ public class ClassInfo implements Serializable {
 		this.maxCyclomaticComplexity = maxCyclomaticComplexity;
 	}
 
-	public float getAvgCyclomaticComplexity() {
+	public String getAvgCyclomaticComplexity() {
 		return avgCyclomaticComplexity;
 	}
 
-	public void setAvgCyclomaticComplexity(float avgCyclomaticComplexity) {
+	public void setAvgCyclomaticComplexity(String avgCyclomaticComplexity) {
 		this.avgCyclomaticComplexity = avgCyclomaticComplexity;
 	}
 
@@ -416,20 +425,28 @@ public class ClassInfo implements Serializable {
 		this.lackOfCohesionInMethods4 = lackOfCohesionInMethods4;
 	}
 
-	public float getTightClassCohesion() {
+	public String getTightClassCohesion() {
 		return tightClassCohesion;
 	}
 
-	public void setTightClassCohesion(float tightClassCohesion) {
+	public void setTightClassCohesion(String tightClassCohesion) {
 		this.tightClassCohesion = tightClassCohesion;
 	}
 
-	public float getLooseClassCohesion() {
+	public String getLooseClassCohesion() {
 		return looseClassCohesion;
 	}
 
-	public void setLooseClassCohesion(float looseClassCohesion) {
+	public void setLooseClassCohesion(String looseClassCohesion) {
 		this.looseClassCohesion = looseClassCohesion;
+	}
+
+	public int[] getSlocArray() {
+		return slocArray;
+	}
+
+	public void setSlocArray(int[] slocArray) {
+		this.slocArray = slocArray;
 	}
 
 	/**
@@ -445,16 +462,6 @@ public class ClassInfo implements Serializable {
 		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_AST, 0); // 不包括"//"注释行，只包括"/**/"的doc注释行
 		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_AST, 0);  // 包括代码行、大括号，不包括单独的注释行
 		return slocCounterMap;
-	}
-
-	/**
-	 * 获取自身的SLOC，以数组形式返回。索引与对应的值，查看{@link SLOCMetric#sumSLOC(int[], Map)}
-	 */
-	public int[] getSumOfSLOC() {
-		int[] slocArray = new int[6];
-		Arrays.fill(slocArray, 0);
-		SLOCMetric.sumSLOC(slocArray, slocCounterMap);
-		return slocArray;
 	}
 
 	public enum ClassModifier {

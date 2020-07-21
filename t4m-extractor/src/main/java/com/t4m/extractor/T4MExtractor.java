@@ -58,6 +58,7 @@ public class T4MExtractor {
 		dependencyScanner.scan();
 	}
 
+	@Deprecated
 	public void scanASTParser() {
 		scanDependency();
 		No6_ASTParserScanner astParserScanner = new No6_ASTParserScanner(projectInfo);
@@ -76,7 +77,7 @@ public class T4MExtractor {
 		metricsScanner.scan();
 	}
 
-	public ProjectInfo action() {
+	public ProjectInfo extract() {
 		scanMetricData();
 		return projectInfo;
 	}

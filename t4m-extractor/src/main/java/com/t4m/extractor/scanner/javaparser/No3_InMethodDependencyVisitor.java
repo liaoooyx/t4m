@@ -186,7 +186,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			ClassInfo referenceClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
 			                                                              dependencyClassName);
 			if (referenceClass != null) {
-				JavaParserUtil.addDependency(currentClassInfo, referenceClass);
+				EntityUtil.addDependency(currentClassInfo, referenceClass);
 			}
 		}
 	}
@@ -202,7 +202,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			return;
 		}
 		for (Node node : n.getChildNodes()) {
-			System.out.println("[" + node.getMetaModel().getTypeName() + "]: " + node.toString());
+			// System.out.println("[" + node.getMetaModel().getTypeName() + "]: " + node.toString());
 			if (node instanceof MethodCallExpr) {
 				// 方法调用 methodA()
 				// 只能在这里解析调用的方法所属的类，子节点无法解析出包装类
@@ -260,7 +260,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			                      rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving MethodCallExpr: " + e.toString());
-			System.out.println("\t" + " -- " + e.getMessage());
+			// System.out.println("\t" + " -- " + e.getMessage());
 			//RFC：无法定位该方法，添加默认计数
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
@@ -283,7 +283,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			                      rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving MethodReferenceExpr: " + e.toString());
-			System.out.println("\t" + " -- " + e.getMessage());
+			// System.out.println("\t" + " -- " + e.getMessage());
 			//RFC：无法定位该方法，添加默认计数
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
@@ -303,7 +303,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			                rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ObjectCreationExpr: " + e.toString());
-			System.out.println("\t" + " -- " + e.getMessage());
+			// System.out.println("\t" + " -- " + e.getMessage());
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
 		}
@@ -322,7 +322,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			                rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ExplicitConstructorInvocationStmt: " + e.toString());
-			System.out.println("\t" + " -- " + e.getMessage());
+			// System.out.println("\t" + " -- " + e.getMessage());
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
 		}
@@ -342,7 +342,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			if (resolvedType.isReferenceType()) {
 				// 这里会解析项目内的类。变量则获取声明类型
 				String declaredClassName = resolvedType.asReferenceType().getQualifiedName();
-				System.out.println("\tFieldAccessExpr: " + declaredClassName);
+				// System.out.println("\tFieldAccessExpr: " + declaredClassName);
 				dependencySet.add(declaredClassName);
 			}
 			// 字段访问，用于LOCM
@@ -354,7 +354,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving FieldAccessExpr: " + e.toString());
-			System.out.println("\t" + " -- " + e.getMessage());
+			// System.out.println("\t" + " -- " + e.getMessage());
 		}
 	}
 
@@ -371,7 +371,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			if (resolvedType.isReferenceType()) {
 				// 这里会解析项目内的类。变量则获取声明类型
 				String declaredClassName = resolvedType.asReferenceType().getQualifiedName();
-				System.out.println("\tNameExpr: " + declaredClassName);
+				// System.out.println("\tNameExpr: " + declaredClassName);
 				dependencySet.add(declaredClassName);
 			}
 			// 字段访问，用于LOCM
@@ -384,7 +384,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			}
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving NameExpr: " + e.toString());
-			System.out.println("\t" + " -- " + e.getMessage());
+			// System.out.println("\t" + " -- " + e.getMessage());
 		}
 	}
 
@@ -396,11 +396,11 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			ClassOrInterfaceType classOrInterfaceType, Set<String> dependencySet, List<String> exceptionList) {
 		try {
 			String declaredClassName = classOrInterfaceType.resolve().getQualifiedName();
-			System.out.println("\tClassOrInterfaceType: " + declaredClassName);
+			// System.out.println("\tClassOrInterfaceType: " + declaredClassName);
 			dependencySet.add(declaredClassName);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ClassOrInterfaceType: " + e.toString());
-			System.out.println("\t" + " -- " + e.getMessage());
+			// System.out.println("\t" + " -- " + e.getMessage());
 		}
 	}
 
@@ -429,14 +429,14 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 				localMethodInfoList.add(methodInfo);
 			});
 		}
-		System.out.println("\tMethodCallOrReference-declaring: " + declaringClassName);
+		// System.out.println("\tMethodCallOrReference-declaring: " + declaringClassName);
 
 		// 耦合找到方法的返回值。链式方法调用中，中间调用的方法的返回值也算依赖
 		ResolvedType resolvedType = resolvedMethodDeclaration.getReturnType();
 		if (resolvedType.isReferenceType()) {
 			// 这里会解析项目内的类。获取返回类型
 			String returnClassName = resolvedType.asReferenceType().getQualifiedName();
-			System.out.println("\tMethodCallOrReference-return: " + returnClassName);
+			// System.out.println("\tMethodCallOrReference-return: " + returnClassName);
 			dependencySet.add(returnClassName);
 		}
 	}

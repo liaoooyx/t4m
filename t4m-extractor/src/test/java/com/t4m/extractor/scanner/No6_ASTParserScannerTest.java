@@ -7,6 +7,7 @@ import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.exception.DuplicatedInnerClassFoundedException;
 import com.t4m.extractor.util.EntityUtil;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +17,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
+@Deprecated
 class No6_ASTParserScannerTest {
 
 	static ProjectInfo projectInfo;
@@ -184,7 +187,7 @@ class No6_ASTParserScannerTest {
 	void testSuperClass() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.bar.SimpleClassC");
-		ClassInfo superClass = classInfo.getExtendedClassList().get(0);
+		ClassInfo superClass = classInfo.getExtendsClassList().get(0);
 		ClassInfo classInfo_superClass = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                                    "com.simulation.core.bar.SimpleAbstractClass");
 		assertEquals(superClass, classInfo_superClass);
@@ -195,7 +198,7 @@ class No6_ASTParserScannerTest {
 	void testInterface() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.bar.SimpleClassC");
-		List<ClassInfo> inferfaceList = classInfo.getImplementedClassList();
+		List<ClassInfo> inferfaceList = classInfo.getImplementsClassList();
 		assertEquals(2, inferfaceList.size());
 		ClassInfo classInfo_interfaceA = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                                    "com.simulation.core.bar.SimpleInterfaceA");
@@ -209,8 +212,8 @@ class No6_ASTParserScannerTest {
 	@DisplayName("测试ModuleInfo下的类数量和内部类数量")
 	void testNumberOfClassAndInnerClass() {
 		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
-		assertEquals(14,moduleInfo.getNumberOfClasses());
-		assertEquals(4,moduleInfo.getNumberOfInnerClasses());
+		assertEquals(14,moduleInfo.getNumberOfJavaFile());
+		assertEquals(4,moduleInfo.getNumberOfAllClass());
 	}
 
 	@Test
@@ -218,7 +221,7 @@ class No6_ASTParserScannerTest {
 	void testSumSLOCforClass(){
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.foo.ComplexClassA");
-		int[] slocArray = classInfo.getSumOfSLOC();
+		int[] slocArray = classInfo.getSlocArray();
 		assertEquals(32,slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
 		assertEquals(42,slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
 		assertEquals(20,slocArray[2]); //SLOCType.ALL_COMMENT_LINES_FROM_SOURCE_FILE
