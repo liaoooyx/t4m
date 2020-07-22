@@ -1,5 +1,7 @@
 package com.t4m.web.controller;
 
+import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
@@ -18,8 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-07-21 23:23.
@@ -60,37 +61,26 @@ public class ComplexityController {
 	}
 
 	@GetMapping("/table")
-	public String selectRecord(
-			@RequestParam(name = "name", defaultValue = "") String name,
-			@RequestParam(name = "type", defaultValue = "") String type,
-			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex, Model model) {
-		//用于"返回上级"的操作
-		boolean isRoot = false;
-		String preName = "";
-		String preType = "";
-		if ("".equals(type) || "".equals(name)) { // 获取所有模块信息
-			isRoot = true; // root没有"返回上级"选项
-			model.addAttribute("dataList", moduleService.getAllModulesSLOC(projectRecordIndex));
-		} else if ("module".equals(type)) { // 获取指定模块下的第一层包和类
-			// "返回上级"后，直接回到所有模块SLOC的展示
-			model.addAttribute("dataList", moduleService.getSLOCRecordByModuleName(name, projectRecordIndex));
-		} else if ("package".equals(type)) { // 获取指定包的类和直接子包
-			ProjectInfo projectInfo = Objects.requireNonNull(
-					ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex))[0];
-			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), name);
-			if (packageInfo.hasPreviousPackage()) {
-				preName = packageInfo.getPreviousPackage().getFullyQualifiedName();
-				preType = "package";
-			} else {
-				preName = packageInfo.getModuleInfo().getRelativePath();
-				preType = "module";
-			}
-			model.addAttribute("dataList", packageService.getSLOCRecordByPackageName(name, projectRecordIndex));
+	@ResponseBody
+	public List<Map<String, Object>> selectRecord() {
+		List<Map<String, Object>> rows = new ArrayList<>();
+		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(-1)[0];
+		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+			Map<String, Object> row = new LinkedHashMap<>();
+			row.put("name", classInfo.getShortName());
+			row.put("type", classInfo.getClassModifier().toString());
+			row.put("declaration", classInfo.getClassDeclaration().toString());
+			row.put("package", classInfo.getPackageFullyQualifiedName());
+			row.put("module", classInfo.getPackageInfo().getModuleInfo().getShortName());
+			row.put("numOfMethod", classInfo.getNumberOfMethods());
+			row.put("weightedMethodsCount", classInfo.getWeightedMethodsCount());
+			row.put("maxComplexity", classInfo.getMaxCyclomaticComplexity());
+			row.put("avgComplexity", classInfo.getAvgCyclomaticComplexity());
+			row.put("responseForClass", classInfo.getResponseForClass());
+			row.put("qualifiedName",classInfo.getFullyQualifiedName());
+			rows.add(row);
 		}
-		model.addAttribute("previousName", preName);
-		model.addAttribute("previousType", preType);
-		model.addAttribute("isRoot", isRoot);
-		return "fragments/dashboard/sloc_list_template";
+		return rows;
 	}
 
 	@GetMapping("/table/chart")

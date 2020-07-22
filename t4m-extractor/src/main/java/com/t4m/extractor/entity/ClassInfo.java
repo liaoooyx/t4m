@@ -493,9 +493,20 @@ public class ClassInfo implements Serializable {
 	}
 
 	public enum ClassDeclaration {
-		NESTED_CLASS, // 嵌套类：包括static nested class和inner class
-		EXTRA_CLASS, // 非public的外部类
-		MAIN_PUBLIC_CLASS // 唯一的public外部类，与java文件名一致
+		PUBLIC_OUTER_CLASS("public outer class"), // 唯一的public外部类，与java文件名一致
+		NON_PUBLIC_OUTER_CLASS("package private outer class"), // 非public的外部类
+		NESTED_CLASS("nested class"); // 嵌套类：包括static nested class和inner class
+
+		String str;
+
+		ClassDeclaration(String str) {
+			this.str = str;
+		}
+
+		@Override
+		public String toString() {
+			return str;
+		}
 	}
 
 	@Override

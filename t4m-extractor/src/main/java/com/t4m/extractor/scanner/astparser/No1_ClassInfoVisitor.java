@@ -50,7 +50,7 @@ public class No1_ClassInfoVisitor extends ASTVisitor {
 				extraClassInfo.setFullyQualifiedName(outerClassInfo.getPackageFullyQualifiedName() + "." + shortName);
 				extraClassInfo.setPackageInfo(outerClassInfo.getPackageInfo());
 				extraClassInfo.setPackageFullyQualifiedName(outerClassInfo.getPackageFullyQualifiedName());
-				extraClassInfo.setClassDeclaration(ClassInfo.ClassDeclaration.EXTRA_CLASS);
+				extraClassInfo.setClassDeclaration(ClassInfo.ClassDeclaration.NON_PUBLIC_OUTER_CLASS);
 				extraClassInfo.setMainPublicClass(outerClassInfo);
 				EntityUtil.safeAddEntityToList(extraClassInfo, outerClassInfo.getExtraClassList());
 				EntityUtil.safeAddEntityToList(extraClassInfo, projectInfo.getExtraClassList());

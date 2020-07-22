@@ -53,7 +53,7 @@ public class No2_ClassScanner {
 				}
 				slocMetric.setSourceFileSLOCToCounterMap(classInfo.getSlocCounterMap());
 				classInfo.setMainPublicClass(classInfo);
-				classInfo.setClassDeclaration(ClassInfo.ClassDeclaration.MAIN_PUBLIC_CLASS);
+				classInfo.setClassDeclaration(ClassInfo.ClassDeclaration.PUBLIC_OUTER_CLASS);
 				classInfo.setFullyQualifiedName(pkgFullyQualifiedName + "." + classShortName);
 				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
 

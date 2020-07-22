@@ -31,7 +31,6 @@
 				
 				<!-- Path nav -->
 				<div class="row col-auto align-items-center ">
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Cyclomatic Complexity & Response For Class</h6>
 					<nav aria-label="breadcrumb col-auto" class="d-none d-md-inline-block ml-md-4">
 						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
 							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
@@ -39,6 +38,7 @@
 							<li class="breadcrumb-item active" aria-current="page">Complexity</li>
 						</ol>
 					</nav>
+					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Cyclomatic Complexity & Response For Class</h6>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -73,323 +73,323 @@
 	<div class="container-fluid mt--6" th:with="currentProjectInfo = ${projectList.get(projectList.size()-1)}">
 		<div class="row">
 			<!-- chart -->
-			<div class="col-xl-12">
-				<div class="card">
-					<div class="card-header bg-transparent">
-						<div class="row align-items-center">
-							<div class="col">
-								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-								<h5 class="h3 mb-0">Timeline of the class SLOC</h5>
-							</div>
-							<div class="col">
-								<ul class="nav nav-pills justify-content-end">
-									<li class="nav-item mr-2 mr-md-0">
-										<a href="javascript:void(0);" class="nav-link py-2 px-3"
-										   data-toggle="tab"
-										   onclick="changeDataSet('allClass')">
-											<span class="d-none d-md-block">Class Level (AST Format)</span>
-											<span class="d-md-none">C</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a id='sloc_timeline_chart' href="javascript:void(0);" class="nav-link py-2 px-3 active"
-										   data-toggle="tab" onclick="changeDataSet('mainClass')">
-											<span class="d-none d-md-block">File Level (Raw)</span>
-											<span class="d-md-none">F</span>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:550px;"></div>
-					<script type="text/javascript" th:inline="javascript">
-              var datasetAllClass = /*[[${datasetAllClass}]]*/;
-              var datasetMainClass = /*[[${datasetMainClass}]]*/;
-              var timeRecords = /*[[${timeRecords}]]*/;
-
-              function changeDataSet(type) {
-                  let dataset;
-                  let label;
-                  if (type === 'allClass') {
-                      dataset = datasetAllClass;
-                      label = ['Class', '', 'Physical Code Lines',
-                          'Comment Lines', '% of comment lines']
-                  } else if (type === 'mainClass') {
-                      dataset = datasetMainClass;
-                      label = ['Source File', '.java',
-                          'Physical Code Lines',
-                          'Comment Lines', '% of comment lines']
-                  }
-                  let dataMax = getMax(dataset);
-                  let options = optionsFormatter(dataset);
-                  let option = {
-                      baseOption: {
-                          timeline: {
-                              axisType: 'category', //轴的类型，value是数值轴；category是类目轴；
-                              // orient: 'horizontal',//摆放方式；vertical/horizontal
-                              loop: true,
-                              // autoPlay: true,
-                              currentIndex: timeRecords.length - 1,
-                              playInterval: 1000,
-                              symbol: 'circle',//timeline标记的图形: circle,rect,roundRect,triangle,diamond,pin,arrow,none;可以通过‘image://url"设置为图片
-                              controlStyle: {//控制按钮的样式；包括播放/前进/后退按钮
-                                  showNextBtn: true,//是否显示播放按钮；
-                                  showPrevBtn: true,//是否显示后退按钮；
-                                  showPlayBtn: true,//是否显示播放按钮
-                              },
-                              data: timeRecords,
-                              label: {
-                                  formatter: function (s) {
-                                      var date = new Date(s);
-                                      return date.getMonth() + "-" + date.getDate();
-                                  }
-                              }
-                          },
-                          legend: {
-                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class'],
-                          },
-                          xAxis: {
-                              name: 'Physical Code Lines',
-                              type: 'value',
-                              max: Math.ceil(dataMax[0] / 5) * 5
-                          },
-                          yAxis: {
-                              name: 'Comment Lines',
-                              type: 'value',
-                              max: Math.ceil(dataMax[1] / 5) * 5
-                          },
-                          tooltip: {
-                              // 显示额外信息
-                              padding: 10,
-                              borderWidth: 1,
-                              formatter: function (params) {
-                                  let text = '';
-                                  let triggerLabel = false;
-                                  params.forEach(row => {
-                                      if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
-                                          triggerLabel = true;
-                                          let value = row.value;
-                                          text +=
-                                              '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
-                                              + label[0] + ': ' + value[3] + label[1] + '<br>'
-                                              + '<span style="font: 12px">'
-                                              + 'of Module: ' + value[4] + '</span>' + '<br>'
-                                              + '</div>';
-                                      }
-                                  });
-                                  if (triggerLabel) {
-                                      text += label[2] + ': ' + pointedData[0] + '<br>'
-                                          + label[3] + ': ' + pointedData[1] + '<br>'
-                                          + label[4] + ': ' + pointedData[2] + '%<br>'
-                                  }
-                                  return text;
-
-                              },
-                              // 重叠问题
-                              show: true,
-                              // enterable: true,
-                              trigger: 'axis',
-                              axisPointer: {
-                                  type: 'cross',
-                                  snap: false,
-                                  axis: 'x', // y轴选项
-                                  label: {
-                                      // show: false,
-                                      color: '#fff',
-                                      backgroundColor: 'rgba(0, 0, 0, .55)'
-                                  }
-                              },
-                          },
-                          grid: {
-                              // left: '10%',
-                              right: 150,
-                              // top: '18%',
-                              // bottom: '10%'
-                          },
-                          color: ['#c23531'],
-                          //右侧视觉映射
-                          visualMap: [
-                              {
-                                  type: 'continuous',
-                                  left: 'right',
-                                  top: 'middle',
-                                  // itemWidth: 30,
-                                  // itemHeight: 120,
-                                  calculable: true,
-                                  precision: 0.1,
-                                  text: ['% of comment lines'],
-                                  textGap: 30,
-                                  //以commentline + codeline作为参数，表示类的大小
-                                  dimension: 2,
-                                  max: 200,
-                                  inRange: {
-                                      symbolSize: [10, 30]
-                                  },
-                                  controller: {
-                                      inRange: {
-                                          color: ['#c23531']
-                                      },
-                                  }
-                              },
-                              // {
-                              //     type: 'continuous',
-                              //     left: 'right',
-                              //     bottom: '10%',
-                              //     text: ['Easy to Read', 'Hard to Read'],
-                              //     //以comment line作为参数，表示类的理解难易程度
-                              //     dimension: 1,
-                              //     min: 0,
-                              //     max: dataMax[1],
-                              //     precision: 1,
-                              //     inRange: {
-                              //         colorLightness: [0.4, 0.8]
-                              //     },
-                              //     controller: {
-                              //         inRange: {
-                              //             color: ['#c23531']
-                              //         },
-                              //     },
-                              // }
-                          ],
-                      },
-                      options: options
-
-                  };
-                  myChart.setOption(option);
-              }
-
-              function getMax(dataset) {
-                  let xMax = 0;
-                  let yMax = 0;
-                  let d2Max = 0;
-                  for (let key in dataset) {
-                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation']) {
-                          for (let cols of dataset[key][key2]) {
-                              xMax = Number(cols[0]) > xMax ? Number(cols[0]) : xMax;
-                              yMax = Number(cols[1]) > yMax ? Number(cols[1]) : yMax;
-                              d2Max = Number(cols[2]) > d2Max ? Number(cols[2]) : d2Max;
-                          }
-                      }
-                  }
-                  return [xMax, yMax, d2Max];
-              }
-
-              function optionsFormatter(dataset) {
-                  let options = [];
-                  for (let i = 0; i < timeRecords.length; i++) {
-                      options[i] = {
-                          series: [{
-                              name: 'Interface',
-                              data: dataset[timeRecords[i]]['Interface'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#69bae5',
-                              },
-                              emphasis: {
-                                  label: {
-                                      show: true,
-                                      formatter: function (params) {
-                                          return params.data[3];
-                                      },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
-                                  },
-                              },
-                          }, {
-                              name: 'Abstract Class',
-                              data: dataset[timeRecords[i]]['Abstract Class'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#54ba3d',
-                              },
-                              emphasis: {
-                                  label: {
-                                      show: true,
-                                      formatter: function (params) {
-                                          return params.data[3];
-                                      },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
-                                  },
-                              },
-                          }, {
-                              name: 'Class',
-                              data: dataset[timeRecords[i]]['Class'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#c23531',
-                              },
-                              emphasis: {
-                                  label: {
-                                      show: true,
-                                      formatter: function (params) {
-                                          return params.data[3];
-                                      },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
-                                  },
-                              },
-                          }, {
-                              name: 'Enum',
-                              data: dataset[timeRecords[i]]['Enum'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#e7ad70',
-                              },
-                              emphasis: {
-                                  label: {
-                                      show: true,
-                                      formatter: function (params) {
-                                          return params.data[3];
-                                      },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
-                                  },
-                              },
-                          }, {
-                              name: 'Annotation',
-                              data: dataset[timeRecords[i]]['Annotation'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#e770e1',
-                              },
-                              emphasis: {
-                                  label: {
-                                      show: true,
-                                      formatter: function (params) {
-                                          return params.data[3];
-                                      },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
-                                  },
-                              },
-                          }]
-                      }
-                  }
-                  return options;
-              }
-
-              // 基于准备好的dom，初始化echarts实例
-              var myChart = echarts.init(document.getElementById('chart'));
-
-              // $('#sloc_timeline_chart').trigger('click');
-              document.getElementById('sloc_timeline_chart').click()
-
-              var pointedData = [];
-              myChart.on('mouseover', function (params) {
-                  pointedData = params.data;
-              })
-					
-					
-					</script>
-				</div>
-			</div>
+			<!--			<div class="col-xl-12">-->
+			<!--				<div class="card">-->
+			<!--					<div class="card-header bg-transparent">-->
+			<!--						<div class="row align-items-center">-->
+			<!--							<div class="col">-->
+			<!--								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>-->
+			<!--								<h5 class="h3 mb-0">Timeline of the class SLOC</h5>-->
+			<!--							</div>-->
+			<!--							<div class="col">-->
+			<!--								<ul class="nav nav-pills justify-content-end">-->
+			<!--									<li class="nav-item mr-2 mr-md-0">-->
+			<!--										<a href="javascript:void(0);" class="nav-link py-2 px-3"-->
+			<!--										   data-toggle="tab"-->
+			<!--										   onclick="changeDataSet('allClass')">-->
+			<!--											<span class="d-none d-md-block">Class Level (AST Format)</span>-->
+			<!--											<span class="d-md-none">C</span>-->
+			<!--										</a>-->
+			<!--									</li>-->
+			<!--									<li class="nav-item">-->
+			<!--										<a id='sloc_timeline_chart' href="javascript:void(0);" class="nav-link py-2 px-3 active"-->
+			<!--										   data-toggle="tab" onclick="changeDataSet('mainClass')">-->
+			<!--											<span class="d-none d-md-block">File Level (Raw)</span>-->
+			<!--											<span class="d-md-none">F</span>-->
+			<!--										</a>-->
+			<!--									</li>-->
+			<!--								</ul>-->
+			<!--							</div>-->
+			<!--						</div>-->
+			<!--					</div>-->
+			<!--					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:550px;"></div>-->
+			<!--					<script type="text/javascript" th:inline="javascript">-->
+			<!--              var datasetAllClass = /*[[${datasetAllClass}]]*/;-->
+			<!--              var datasetMainClass = /*[[${datasetMainClass}]]*/;-->
+			<!--              var timeRecords = /*[[${timeRecords}]]*/;-->
+			
+			<!--              function changeDataSet(type) {-->
+			<!--                  let dataset;-->
+			<!--                  let label;-->
+			<!--                  if (type === 'allClass') {-->
+			<!--                      dataset = datasetAllClass;-->
+			<!--                      label = ['Class', '', 'Physical Code Lines',-->
+			<!--                          'Comment Lines', '% of comment lines']-->
+			<!--                  } else if (type === 'mainClass') {-->
+			<!--                      dataset = datasetMainClass;-->
+			<!--                      label = ['Source File', '.java',-->
+			<!--                          'Physical Code Lines',-->
+			<!--                          'Comment Lines', '% of comment lines']-->
+			<!--                  }-->
+			<!--                  let dataMax = getMax(dataset);-->
+			<!--                  let options = optionsFormatter(dataset);-->
+			<!--                  let option = {-->
+			<!--                      baseOption: {-->
+			<!--                          timeline: {-->
+			<!--                              axisType: 'category', //轴的类型，value是数值轴；category是类目轴；-->
+			<!--                              // orient: 'horizontal',//摆放方式；vertical/horizontal-->
+			<!--                              loop: true,-->
+			<!--                              // autoPlay: true,-->
+			<!--                              currentIndex: timeRecords.length - 1,-->
+			<!--                              playInterval: 1000,-->
+			<!--                              symbol: 'circle',//timeline标记的图形: circle,rect,roundRect,triangle,diamond,pin,arrow,none;可以通过‘image://url"设置为图片-->
+			<!--                              controlStyle: {//控制按钮的样式；包括播放/前进/后退按钮-->
+			<!--                                  showNextBtn: true,//是否显示播放按钮；-->
+			<!--                                  showPrevBtn: true,//是否显示后退按钮；-->
+			<!--                                  showPlayBtn: true,//是否显示播放按钮-->
+			<!--                              },-->
+			<!--                              data: timeRecords,-->
+			<!--                              label: {-->
+			<!--                                  formatter: function (s) {-->
+			<!--                                      var date = new Date(s);-->
+			<!--                                      return date.getMonth() + "-" + date.getDate();-->
+			<!--                                  }-->
+			<!--                              }-->
+			<!--                          },-->
+			<!--                          legend: {-->
+			<!--                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class'],-->
+			<!--                          },-->
+			<!--                          xAxis: {-->
+			<!--                              name: 'Physical Code Lines',-->
+			<!--                              type: 'value',-->
+			<!--                              max: Math.ceil(dataMax[0] / 5) * 5-->
+			<!--                          },-->
+			<!--                          yAxis: {-->
+			<!--                              name: 'Comment Lines',-->
+			<!--                              type: 'value',-->
+			<!--                              max: Math.ceil(dataMax[1] / 5) * 5-->
+			<!--                          },-->
+			<!--                          tooltip: {-->
+			<!--                              // 显示额外信息-->
+			<!--                              padding: 10,-->
+			<!--                              borderWidth: 1,-->
+			<!--                              formatter: function (params) {-->
+			<!--                                  let text = '';-->
+			<!--                                  let triggerLabel = false;-->
+			<!--                                  params.forEach(row => {-->
+			<!--                                      if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {-->
+			<!--                                          triggerLabel = true;-->
+			<!--                                          let value = row.value;-->
+			<!--                                          text +=-->
+			<!--                                              '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'-->
+			<!--                                              + label[0] + ': ' + value[3] + label[1] + '<br>'-->
+			<!--                                              + '<span style="font: 12px">'-->
+			<!--                                              + 'of Module: ' + value[4] + '</span>' + '<br>'-->
+			<!--                                              + '</div>';-->
+			<!--                                      }-->
+			<!--                                  });-->
+			<!--                                  if (triggerLabel) {-->
+			<!--                                      text += label[2] + ': ' + pointedData[0] + '<br>'-->
+			<!--                                          + label[3] + ': ' + pointedData[1] + '<br>'-->
+			<!--                                          + label[4] + ': ' + pointedData[2] + '%<br>'-->
+			<!--                                  }-->
+			<!--                                  return text;-->
+			
+			<!--                              },-->
+			<!--                              // 重叠问题-->
+			<!--                              show: true,-->
+			<!--                              // enterable: true,-->
+			<!--                              trigger: 'axis',-->
+			<!--                              axisPointer: {-->
+			<!--                                  type: 'cross',-->
+			<!--                                  snap: false,-->
+			<!--                                  axis: 'x', // y轴选项-->
+			<!--                                  label: {-->
+			<!--                                      // show: false,-->
+			<!--                                      color: '#fff',-->
+			<!--                                      backgroundColor: 'rgba(0, 0, 0, .55)'-->
+			<!--                                  }-->
+			<!--                              },-->
+			<!--                          },-->
+			<!--                          grid: {-->
+			<!--                              // left: '10%',-->
+			<!--                              right: 150,-->
+			<!--                              // top: '18%',-->
+			<!--                              // bottom: '10%'-->
+			<!--                          },-->
+			<!--                          color: ['#c23531'],-->
+			<!--                          //右侧视觉映射-->
+			<!--                          visualMap: [-->
+			<!--                              {-->
+			<!--                                  type: 'continuous',-->
+			<!--                                  left: 'right',-->
+			<!--                                  top: 'middle',-->
+			<!--                                  // itemWidth: 30,-->
+			<!--                                  // itemHeight: 120,-->
+			<!--                                  calculable: true,-->
+			<!--                                  precision: 0.1,-->
+			<!--                                  text: ['% of comment lines'],-->
+			<!--                                  textGap: 30,-->
+			<!--                                  //以commentline + codeline作为参数，表示类的大小-->
+			<!--                                  dimension: 2,-->
+			<!--                                  max: 200,-->
+			<!--                                  inRange: {-->
+			<!--                                      symbolSize: [10, 30]-->
+			<!--                                  },-->
+			<!--                                  controller: {-->
+			<!--                                      inRange: {-->
+			<!--                                          color: ['#c23531']-->
+			<!--                                      },-->
+			<!--                                  }-->
+			<!--                              },-->
+			<!--                              // {-->
+			<!--                              //     type: 'continuous',-->
+			<!--                              //     left: 'right',-->
+			<!--                              //     bottom: '10%',-->
+			<!--                              //     text: ['Easy to Read', 'Hard to Read'],-->
+			<!--                              //     //以comment line作为参数，表示类的理解难易程度-->
+			<!--                              //     dimension: 1,-->
+			<!--                              //     min: 0,-->
+			<!--                              //     max: dataMax[1],-->
+			<!--                              //     precision: 1,-->
+			<!--                              //     inRange: {-->
+			<!--                              //         colorLightness: [0.4, 0.8]-->
+			<!--                              //     },-->
+			<!--                              //     controller: {-->
+			<!--                              //         inRange: {-->
+			<!--                              //             color: ['#c23531']-->
+			<!--                              //         },-->
+			<!--                              //     },-->
+			<!--                              // }-->
+			<!--                          ],-->
+			<!--                      },-->
+			<!--                      options: options-->
+			
+			<!--                  };-->
+			<!--                  myChart.setOption(option);-->
+			<!--              }-->
+			
+			<!--              function getMax(dataset) {-->
+			<!--                  let xMax = 0;-->
+			<!--                  let yMax = 0;-->
+			<!--                  let d2Max = 0;-->
+			<!--                  for (let key in dataset) {-->
+			<!--                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation']) {-->
+			<!--                          for (let cols of dataset[key][key2]) {-->
+			<!--                              xMax = Number(cols[0]) > xMax ? Number(cols[0]) : xMax;-->
+			<!--                              yMax = Number(cols[1]) > yMax ? Number(cols[1]) : yMax;-->
+			<!--                              d2Max = Number(cols[2]) > d2Max ? Number(cols[2]) : d2Max;-->
+			<!--                          }-->
+			<!--                      }-->
+			<!--                  }-->
+			<!--                  return [xMax, yMax, d2Max];-->
+			<!--              }-->
+			
+			<!--              function optionsFormatter(dataset) {-->
+			<!--                  let options = [];-->
+			<!--                  for (let i = 0; i < timeRecords.length; i++) {-->
+			<!--                      options[i] = {-->
+			<!--                          series: [{-->
+			<!--                              name: 'Interface',-->
+			<!--                              data: dataset[timeRecords[i]]['Interface'],-->
+			<!--                              type: 'scatter',-->
+			<!--                              itemStyle: {-->
+			<!--                                  color: '#69bae5',-->
+			<!--                              },-->
+			<!--                              emphasis: {-->
+			<!--                                  label: {-->
+			<!--                                      show: true,-->
+			<!--                                      formatter: function (params) {-->
+			<!--                                          return params.data[3];-->
+			<!--                                      },-->
+			<!--                                      color: '#000000',-->
+			<!--                                      position: 'top',-->
+			<!--                                      fontWeight: 'normal',-->
+			<!--                                  },-->
+			<!--                              },-->
+			<!--                          }, {-->
+			<!--                              name: 'Abstract Class',-->
+			<!--                              data: dataset[timeRecords[i]]['Abstract Class'],-->
+			<!--                              type: 'scatter',-->
+			<!--                              itemStyle: {-->
+			<!--                                  color: '#54ba3d',-->
+			<!--                              },-->
+			<!--                              emphasis: {-->
+			<!--                                  label: {-->
+			<!--                                      show: true,-->
+			<!--                                      formatter: function (params) {-->
+			<!--                                          return params.data[3];-->
+			<!--                                      },-->
+			<!--                                      color: '#000000',-->
+			<!--                                      position: 'top',-->
+			<!--                                      fontWeight: 'normal',-->
+			<!--                                  },-->
+			<!--                              },-->
+			<!--                          }, {-->
+			<!--                              name: 'Class',-->
+			<!--                              data: dataset[timeRecords[i]]['Class'],-->
+			<!--                              type: 'scatter',-->
+			<!--                              itemStyle: {-->
+			<!--                                  color: '#c23531',-->
+			<!--                              },-->
+			<!--                              emphasis: {-->
+			<!--                                  label: {-->
+			<!--                                      show: true,-->
+			<!--                                      formatter: function (params) {-->
+			<!--                                          return params.data[3];-->
+			<!--                                      },-->
+			<!--                                      color: '#000000',-->
+			<!--                                      position: 'top',-->
+			<!--                                      fontWeight: 'normal',-->
+			<!--                                  },-->
+			<!--                              },-->
+			<!--                          }, {-->
+			<!--                              name: 'Enum',-->
+			<!--                              data: dataset[timeRecords[i]]['Enum'],-->
+			<!--                              type: 'scatter',-->
+			<!--                              itemStyle: {-->
+			<!--                                  color: '#e7ad70',-->
+			<!--                              },-->
+			<!--                              emphasis: {-->
+			<!--                                  label: {-->
+			<!--                                      show: true,-->
+			<!--                                      formatter: function (params) {-->
+			<!--                                          return params.data[3];-->
+			<!--                                      },-->
+			<!--                                      color: '#000000',-->
+			<!--                                      position: 'top',-->
+			<!--                                      fontWeight: 'normal',-->
+			<!--                                  },-->
+			<!--                              },-->
+			<!--                          }, {-->
+			<!--                              name: 'Annotation',-->
+			<!--                              data: dataset[timeRecords[i]]['Annotation'],-->
+			<!--                              type: 'scatter',-->
+			<!--                              itemStyle: {-->
+			<!--                                  color: '#e770e1',-->
+			<!--                              },-->
+			<!--                              emphasis: {-->
+			<!--                                  label: {-->
+			<!--                                      show: true,-->
+			<!--                                      formatter: function (params) {-->
+			<!--                                          return params.data[3];-->
+			<!--                                      },-->
+			<!--                                      color: '#000000',-->
+			<!--                                      position: 'top',-->
+			<!--                                      fontWeight: 'normal',-->
+			<!--                                  },-->
+			<!--                              },-->
+			<!--                          }]-->
+			<!--                      }-->
+			<!--                  }-->
+			<!--                  return options;-->
+			<!--              }-->
+			
+			<!--              // 基于准备好的dom，初始化echarts实例-->
+			<!--              var myChart = echarts.init(document.getElementById('chart'));-->
+			
+			<!--              // $('#sloc_timeline_chart').trigger('click');-->
+			<!--              document.getElementById('sloc_timeline_chart').click()-->
+			
+			<!--              var pointedData = [];-->
+			<!--              myChart.on('mouseover', function (params) {-->
+			<!--                  pointedData = params.data;-->
+			<!--              })-->
+			<!--					-->
+			<!--					-->
+			<!--					</script>-->
+			<!--				</div>-->
+			<!--			</div>-->
 		</div>
 		
 		<div class="row">
@@ -430,55 +430,7 @@
 				
 				<div class="card">
 					<div class="table-responsive">
-						<table id="sloc-table" class="table align-items-center table-flush">
-							<thead class="thead-light">
-							<tr>
-								<th></th>
-								<th scope="col">Name</th>
-								<th scope="col">Level</th>
-								<th scope="col">Logic Code Lines<br>(Source File)</th>
-								<th scope="col">Physical Code Lines<br>(Source File)</th>
-								<th scope="col">Comment Lines<br>(Source File)</th>
-								<th scope="col">% of Comments<br>(Source File)</th>
-								<th scope="col">Logic Code Lines<br>(JavaParser)</th>
-								<th scope="col">Physical Code Lines<br>(JavaParser)</th>
-								<th scope="col">Comment Lines<br>(JavaParser)</th>
-								<th scope="col">% of Comments<br>(JavaParser)</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr>
-								<th scope="row" th:if="${!isRoot}">
-									<a href="javascript:void(0);"
-									   th:onclick="getNextLevel([[${previousName}]],[[${previousType}]])">(Go back)</a>
-								</th>
-							</tr>
-							<tr th:each="colMap : ${dataList}" th:object="${colMap}" th:inline="text">
-								<td>
-									<a class="sloc-table-chart-icon" href="javascript:void(0);" data-toggle="modal"
-									   data-target="#sloc_row_model" th:onclick="showTableChart([[*{name}]],[[*{type}]])">
-										<i class="fas fa-chart-bar"></i>
-									</a>
-								</td>
-								<th scope="row" th:if="*{type} eq 'module' or *{type} eq 'package'">
-									<a href="javascript:void(0);"
-									   th:onclick="getNextLevel([[*{name}]],[[*{type}]])">
-										[[*{name}]]</a>
-								</th>
-								<th scope="row" th:unless="*{type} eq 'module' or *{type} eq 'package'" th:text="*{name}">
-								</th>
-								<td th:text="*{type}"></td>
-								<td th:text="*{logicCodeLineFromSourceFile}"></td>
-								<td th:text="*{physicalCodeLineFromSourceFile}"></td>
-								<td th:text="*{commentLineFromSourceFile}"></td>
-								<td th:text="*{percentageOfCommentFromSourceFile}+'%'"></td>
-								<td th:text="*{logicCodeLineFromAST}"></td>
-								<td th:text="*{physicalCodeLineFromAST}"></td>
-								<td th:text="*{commentLineFromAST}"></td>
-								<td th:text="*{percentageOfCommentFromAST}+'%'"></td>
-							</tr>
-							</tbody>
-						</table>
+						<table id="table"></table>
 					</div>
 				</div>
 			
@@ -517,129 +469,63 @@
 </div>
 <script th:replace="fragments/common :: footer_imports"></script>
 <script>
-    var recordRowName = "";
-    var recordRowType = "";
-    var projectRecordIndex = -1;
+    var $table = $('#table')
 
-    function selectRecordTime(obj, index) {
-        projectRecordIndex = index;
-        let newTime = $(obj).text()
-        $('#current_record_time').text(newTime)
-        $(obj).siblings().removeClass("active")
-        $(obj).addClass("active");
-        recordRowName = "";
-        recordRowType = "";
-        requestSLOCRecords(recordRowName, recordRowType, projectRecordIndex);
+    function buildTable($el, dataset, columns) {
+        $el.bootstrapTable('destroy').bootstrapTable({
+            height: 500,
+            columns: columns,
+            data: dataset,
+            toolbar: '.toolbar',
+            search: true,
+            showColumns: true,
+            fixedColumns: true,
+            fixedNumber: 2,
+
+        })
     }
 
-    function getNextLevel(name, type) {
-        recordRowName = name;
-        recordRowType = type;
-        requestSLOCRecords(recordRowName, recordRowType, projectRecordIndex);
-    }
-
-    function requestSLOCRecords(name, type, index, preName, preType) {
-        $.get("/dashboard/sloc/table?name=" + name + "&type=" + type
-            + "&projectRecordIndex=" + index, function (data) {
-            if ("undefined" == typeof vm.$el) {
-                vm.sloc_list_fragment = data;
-                // 挂载vue实例到DOM上，继续声明周期
-                vm.$mount('#sloc_info_records');
-            }
-            vm.sloc_list_fragment = data;
-            console.log("build")
-        });
-    }
-
-    var vm = new Vue({
-        // Vue实例将在created后停止声明周期，等到调用updateProjectInfomation()时才继续
-        // el: '#project_info_overview',
-        data: {
-            sloc_list_fragment: ""
-        }
-    })
-
-    // 指定图表的配置项和数据
-    var option2 = {
-        legend: {
-            data: ["Logic Code Lines (Source File)", "Logic Code Lines (AST)",
-                "Physical Code Lines (Source File)", "Physical Code Lines (AST)",
-                "Comment Lines (Source File)", "Comment Lines (AST)"]
-        },
-        grid: {
-            bottom: '100'
-        },
-        // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
-        xAxis: {
-            type: 'category'
-        },
-        yAxis: {},
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                snap: true,
-                type: "line",
-            }
-        },
-        dataZoom: [
-            {
-                type: 'slider',
-                xAxisIndex: 0,
-                start: 20,
-                end: 100
+    $(function () {
+        let columns = [{
+            field: 'chart', title: ''
+        }, {
+            field: 'name', title: 'Name', sortable: true,
+            formatter: function (value, row) {
+                return '<a href="javascript:void(0);" ' +
+                    'onclick="getMethodComplexity(' + row.qualifiedName + ')">' +
+                    value + '</a>';
             },
-            {
-                type: 'inside',
-                xAxisIndex: 0,
-                start: 20,
-                end: 100
-            },
-            {
-                type: 'slider',
-                yAxisIndex: 0,
-                start: 0,
-                end: 100
+        }, {
+            field: 'type', title: 'Class Type', sortable: true
+        }, {
+            field: 'declaration', title: 'Class Declaration', sortable: true
+        }, {
+            field: 'package', title: 'of Which Package', sortable: true
+        }, {
+            field: 'module', title: 'of Which Module', sortable: true
+        }, {
+            field: 'numOfMethod', title: 'Number of Method', sortable: true
+        }, {
+            field: 'weightedMethodsCount', title: 'Weighted Method Count', sortable: true
+        }, {
+            field: 'maxComplexity', title: 'Max Complexity of Class', sortable: true
+        }, {
+            field: 'avgComplexity', title: 'Avg Complexity of Class', sortable: true
+        }, {
+            field: 'responseForClass', title: 'Response for Class', sortable: true
+        }];
+        let dataset;
+        $.get("/dashboard/complexity/table").done(function (data) {
+            dataset = data;
+            //给每行前面加上趋势图按钮（弹出模态框）
+            for (i = 0; i < dataset.length; i++) {
+                dataset[i].chart =
+                    '<a class="sloc-table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
+                    + 'data-target="#sloc_row_model" onclick="showTableChart(' + dataset[i].name + ',' + dataset[i].type + ')">'
+                    + '<i class="fas fa-chart-bar"></i></a>'
             }
-        ],
-    };
-    var myChart2 = echarts.init(document.getElementById('sloc_row_chart'));
-    myChart2.setOption(option2);
-
-    // 用于修改模块框title
-    var vm_sloc_chart_title = new Vue({
-        el: '#sloc_row_model_label',
-        data: {
-            recordType: '',
-            recordName: '',
-        }
-    })
-
-    function showTableChart(name, type) {
-        vm_sloc_chart_title.recordName = name;
-        vm_sloc_chart_title.recordType = type;
-        // 异步加载数据
-        $.get("/dashboard/sloc/table/chart?name=" + name + "&type=" + type).done(function (data) {
-            // 填入数据
-            myChart2.setOption({
-                dataset: {
-                    // 提供一份数据。
-                    source: data
-                },
-                series: [
-                    {type: 'line', name: 'Logic Code Lines (Source File)'},
-                    {type: 'line', name: 'Physical Code Lines (Source File)'},
-                    {type: 'line', name: 'Comment Lines (Source File)'},
-                    {type: 'line', name: 'Logic Code Lines (AST)'},
-                    {type: 'line', name: 'Physical Code Lines (AST)'},
-                    {type: 'line', name: 'Comment Lines (AST)'},
-                ],
-            });
+            buildTable($table, dataset, columns)
         });
-    }
-
-    // 让echarts在模态框打开后重新渲染
-    $('#sloc_row_model').on('shown.bs.modal', function () {
-        myChart2.resize()
     })
 
 </script>
