@@ -16,11 +16,34 @@
 	<!-- Page plugins -->
 	<!-- Argon CSS -->
 	<link rel="stylesheet" th:href="@{/assets/css/argon.css?v=1.2.0}" type="text/css">
+	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-table/bootstrap-table.min.css}">
+	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-table/bootstrap-table-fixed-columns.min.css}">
+	
 	<script th:src="@{/assets/vendor/echart/dist/echarts.js}"></script>
 	<script th:src="@{/assets/js/vue.js}"></script>
 	<style>
-		.card-table {
-			max-height: 21rem;
+		/*.card-table {*/
+		/*	max-height: 21rem;*/
+		/*}*/
+		.bootstrap-table .fixed-table-container .table{
+			border-left: 0!important;
+			border-right: 0!important;
+		}
+		.bootstrap-table .fixed-table-container.fixed-height .table thead th {
+			border-bottom: 0!important;
+		}
+		.bootstrap-table .fixed-table-container.fixed-height .fixed-table-border {
+			border-left: 0!important;
+			border-right: 0!important;
+		}
+		.bootstrap-table .fixed-table-container.fixed-height:not(.has-footer) {
+			border-bottom: 0!important;
+		}
+		.bootstrap-table .fixed-table-container .table thead th .th-inner {
+			padding: .75rem 1.5rem;
+		}
+		.bootstrap-table .fixed-table-container .fixed-table-header{
+			margin-right: 0 !important;
 		}
 		
 		/*custom bootstrap .dropdown-menu for max height*/
@@ -157,6 +180,14 @@
 						</a>
 					</li>
 				</ul>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" th:classappend="${selectedElementID==2}?'active':''" href="/dashboard/complexity">
+							<i class="ni ni-tv-2 text-primary"></i>
+							<span class="nav-link-text">Complexity</span>
+						</a>
+					</li>
+				</ul>
 				
 				<!-- Divider -->
 				<hr class="my-3">
@@ -223,6 +254,9 @@
 	<!-- Argon JS -->
 	<script th:src="@{/assets/js/argon.js?v=1.2.0}"></script>
 	<!--	<script th:src="@{/assets/js/fileinput.js}"></script>-->
+	<!-- Bootstrap-table -->
+	<script th:src="@{/assets/vendor/bootstrap-table/bootstrap-table.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap-table/bootstrap-table-fixed-columns.min.js}"></script>
 	
 	<script th:inline="javascript">
       var blank_page_trigger = [[${isBlank}]];
@@ -248,7 +282,7 @@
       function scanNewProject() {
           let projectPath = $('#new_project_path').val()
           $.get("/operation/new?path=" + projectPath, function (data) {
-              if (data ==="success") {
+              if (data === "success") {
                   window.location.reload();
               }
           })

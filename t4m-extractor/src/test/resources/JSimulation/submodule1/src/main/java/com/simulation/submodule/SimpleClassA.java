@@ -1,18 +1,14 @@
 package com.simulation.submodule;
+
 /**
- * javaDoc comment
+ * Created by Yuxiang Liao on 2020-06-22 03:54.
  */
 public class SimpleClassA {
-	public static void main(String[] args) {///*comment*/.method();/*comment*/
-		//line comment
-		System.out.println();//line comment
-		/*block comment*/System.out./*block comment*/println();/*block comment*/
-		/*block comment*/System.out./*block
-		 comment*/println();///*comment*/.method();/*comment*/
-		int i; /*block
-		comment
-		// comment*/ //= 1;
-		String string /*block
-		comment*/= /*block comment*/"teststring";/*block
-		 comment*/}
-}/*block comment*/
+	public static void main(String[] args) {
+
+	}
+}
+
+class ExtraClass{
+	
+}

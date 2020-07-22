@@ -1,22 +1,14 @@
 package com.simulation.core.foo;
 
-import com.simulation.core.bar.SimpleClassA;
-
 /**
  * Created by Yuxiang Liao on 2020-06-21 19:57.
  */
-public class ComplexClassD implements Runnable{
+public class ComplexClassD {
 
 	public static class InnerClassOfD {
 
-		public static void method(SimpleClassA simpleClassA) {
+		public static void method() {
 
 		}
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
 	}
 }

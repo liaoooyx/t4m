@@ -328,9 +328,10 @@
 			<!-- 修改代码后，需要同步更新至templates/fragments/dashboard/project_list_template.html -->
 			<div id="project_info_basic" v-html="project_info_fragment" class="col-xl-12">
 				<!-- module -->
-				<div class="card">
+				<div class="card mb-0">
 					<div class="table-responsive card-table">
-						<table class="table align-items-center table-flush">
+						<table class="table align-items-center table-flush" data-toggle="table" data-height="360"
+						       data-fixed-columns="true" data-fixed-number="2">
 							<thead class="thead-light">
 							<tr>
 								<th scope="col">Module</th>
@@ -351,11 +352,10 @@
 					</div>
 				</div>
 				<!-- package -->
-				<div class="card">
-					<div class="card-header border-0 py-2">
-					</div>
+				<div class="card mb-0">
 					<div class="table-responsive card-table">
-						<table class="table align-items-center table-flush">
+						<table class="table align-items-center table-flush" data-toggle="table" data-height="360"
+						       data-fixed-columns="true" data-fixed-number="2">
 							<thead class="thead-light">
 							<tr>
 								<th scope="col">Package</th>
@@ -376,12 +376,11 @@
 					</div>
 				</div>
 				<!-- class -->
-				<div class="card">
-					<div class="card-header border-0 py-2">
-					</div>
+				<div class="card mb-0">
 					<div class="table-responsive card-table">
 						<!-- Projects table -->
-						<table class="table align-items-center table-flush">
+						<table class="table align-items-center table-flush" data-toggle="table" data-height="360"
+						       data-fixed-columns="true" data-fixed-number="2">
 							<thead class="thead-light">
 							<tr>
 								<th scope="col">Type</th>
@@ -418,8 +417,8 @@
 		</div>
 		
 		<script>
+
         function selectRecordTime(obj, index) {
-            console.log(obj);
             let newTime = $(obj).text()
             $('#current_record_time').text(newTime)
             $(obj).siblings().removeClass("active")
