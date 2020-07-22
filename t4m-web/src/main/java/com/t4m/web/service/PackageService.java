@@ -95,7 +95,7 @@ public class PackageService {
 		Map<String, Object> rowForPkg = SLOCUtil.initSLOCRowRecordForFrontPage(
 				packageInfo.getFullyQualifiedName(), "current package", packageInfo.getSlocArrayForCurrentPkg());
 		rows.add(rowForPkg);
-		for (ClassInfo classInfo : packageInfo.getClassList()) {
+		for (ClassInfo classInfo : packageInfo.getAllClassList()) {
 			Map<String, Object> rowForClass = SLOCUtil.initSLOCRowRecordForFrontPage(
 					classInfo.getFullyQualifiedName(), "class", classInfo.getSlocArray());
 			rows.add(rowForClass);

@@ -2,6 +2,7 @@ package com.t4m.web.service;
 
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.util.ProjectRecord;
 import org.slf4j.Logger;
@@ -145,38 +146,26 @@ public class ProjectService {
 				throw new RuntimeException(
 						"Should not go into this statement, please use debug and check the program again.");
 			}
+			List<Object> cols = new ArrayList<>();
+			int codeLine = 0;
+			int commentLine = 0;
 			if (flag == FLAG_ALL_CLASS) {
-				addFromAST(rows, classInfo);
+				Map<ClassInfo.SLOCType, Integer> counterMap = classInfo.getSlocCounterMap();
+				codeLine = counterMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST);
+				commentLine = counterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST);
 			} else if (flag == FLAG_MAIN_PUBLIC_CLASS) {
-				addFromSourceFile(rows, classInfo);
+				Map<ClassInfo.SLOCType, Integer> counterMap = classInfo.getSlocCounterMap();
+				codeLine = counterMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE);
+				commentLine = counterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE);
 			}
+			cols.add(codeLine); // code line
+			cols.add(commentLine); // comment line
+			String percentage = MathUtil.percentage(commentLine, codeLine);
+			cols.add(percentage);
+			cols.add(classInfo.getFullyQualifiedName()); // class qualified name
+			cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
+			rows.add(cols);
 		}
-	}
-
-	private void addFromAST(List<Object> rows, ClassInfo classInfo) {
-		List<Object> cols = new ArrayList<>();
-		Map<ClassInfo.SLOCType, Integer> couterMap = classInfo.getSlocCounterMap();
-		cols.add(couterMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)); // logic code line
-		cols.add(couterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST)); // comment line
-		int classSize = couterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST) + couterMap.get(
-				ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST);
-		cols.add(classSize);
-		cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-		cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-		rows.add(cols);
-	}
-
-	private void addFromSourceFile(List<Object> rows, ClassInfo classInfo) {
-		List<Object> cols = new ArrayList<>();
-		Map<ClassInfo.SLOCType, Integer> couterMap = classInfo.getSlocCounterMap();
-		cols.add(couterMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE)); // logic code line
-		cols.add(couterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE)); // comment line
-		int classSize = couterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE) + couterMap.get(
-				ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE);
-		cols.add(classSize);
-		cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-		cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-		rows.add(cols);
 	}
 
 }

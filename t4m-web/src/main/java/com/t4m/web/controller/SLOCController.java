@@ -17,15 +17,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * Created by Yuxiang Liao on 2020-06-23 22:50.
+ * Created by Yuxiang Liao on 2020-07-21 23:23.
  */
 @Controller
-@RequestMapping("/dashboard")
-public class DashboardController {
+@RequestMapping("/dashboard/sloc")
+public class SLOCController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DashboardController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SLOCController.class);
 
 	@Resource(name = "ProjectService")
 	private ProjectService projectService;
@@ -39,39 +40,7 @@ public class DashboardController {
 	@Resource(name = "ClassService")
 	private ClassService classService;
 
-	@GetMapping("/overview")
-	public String overview(Model model) {
-		ProjectInfo[] projectInfos = ProjectRecord.getTwoProjectInfoRecordByIndex(-1);
-		// 基本信息
-		model.addAttribute("currentProjectInfo", projectInfos[0]);
-		model.addAttribute("preProjectInfo", projectInfos[1]);
-		model.addAttribute("currentProjectName", GlobalVariable.CURRENT_PROJECT_NAME);
-		// 用于趋势图
-		model.addAttribute("timeRecords", projectService.getTimeRecords());
-		model.addAttribute("moduleRecords", projectService.getNumOfModuleRecords());
-		model.addAttribute("packageRecords", projectService.getNumOfPackageRecords());
-		model.addAttribute("javaFileRecords", projectService.getNumOfJavaFileRecords());
-		model.addAttribute("classRecords", projectService.getNumOfClassRecords());
-		model.addAttribute("allClassRecords", projectService.getNumOfAllClassRecords());
-		// 用于表格
-		model.addAttribute("moduleMapList", moduleService.getModuleMapList(-1));
-		model.addAttribute("packageMapList", packageService.getPackageMapList(-1));
-		model.addAttribute("classMapList", classService.getClassMapList(-1));
-		return "page/dashboard/overview";
-	}
-
-	@GetMapping("/overview/select/{projectRecordIndex}")
-	public String selectProjectRecordByIndex(
-			Model model, @PathVariable(name = "projectRecordIndex") int projectRecordIndex) {
-		// 用于表格
-		model.addAttribute("moduleMapList", moduleService.getModuleMapList(projectRecordIndex));
-		model.addAttribute("packageMapList", packageService.getPackageMapList(projectRecordIndex));
-		// TODO 关于SLOC的参数选择有问题。外部类的参数包括内部类，且ast格式的commentline只有docline，不包括"//"。需要更周全的选择
-		model.addAttribute("classMapList", classService.getClassMapList(projectRecordIndex));
-		return "fragments/dashboard/project_list_template";
-	}
-
-	@GetMapping("/sloc")
+	@GetMapping("")
 	public String slocMetric(Model model) {
 		List<ProjectInfo> projectInfoList = ProjectRecord.getProjectInfoList();
 		// 基本信息
@@ -88,7 +57,7 @@ public class DashboardController {
 		return "page/dashboard/sloc_metric";
 	}
 
-	@GetMapping("/sloc/table")
+	@GetMapping("/table")
 	public String selectRecord(
 			@RequestParam(name = "name", defaultValue = "") String name,
 			@RequestParam(name = "type", defaultValue = "") String type,
@@ -104,7 +73,8 @@ public class DashboardController {
 			// "返回上级"后，直接回到所有模块SLOC的展示
 			model.addAttribute("dataList", moduleService.getSLOCRecordByModuleName(name, projectRecordIndex));
 		} else if ("package".equals(type)) { // 获取指定包的类和直接子包
-			ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+			ProjectInfo projectInfo = Objects.requireNonNull(
+					ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex))[0];
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), name);
 			if (packageInfo.hasPreviousPackage()) {
 				preName = packageInfo.getPreviousPackage().getFullyQualifiedName();
@@ -121,7 +91,7 @@ public class DashboardController {
 		return "fragments/dashboard/sloc_list_template";
 	}
 
-	@GetMapping("/sloc/table/chart")
+	@GetMapping("/table/chart")
 	@ResponseBody
 	public List<String[]> selectTableChartRecord(
 			@RequestParam(name = "name") String name, @RequestParam(name = "type") String type) {

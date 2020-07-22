@@ -16,7 +16,7 @@ import org.springframework.ui.Model;
 @Aspect
 public class AOPHandler {
 
-	@Pointcut("execution(public * com.t4m.web.controller.DashboardController.*(org.springframework.ui.Model))")
+	@Pointcut("execution(public * com.t4m.web.controller.BasicController.*(org.springframework.ui.Model))")
 	public void dashboardController() {
 	}
 

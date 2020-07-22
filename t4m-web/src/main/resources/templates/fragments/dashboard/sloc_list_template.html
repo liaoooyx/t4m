@@ -5,13 +5,15 @@
 			<tr>
 				<th></th>
 				<th scope="col">Name</th>
-				<th scope="col">Type</th>
-				<th scope="col">Logic Code Line<br>(Source File)</th>
-				<th scope="col">Logic Code Line<br>(Eclipse AST)</th>
-				<th scope="col">Physical Code Line<br>(Source File)</th>
-				<th scope="col">Physical Code Line<br>(Eclipse AST)</th>
-				<th scope="col">All Comment Line<br>(Source File)</th>
-				<th scope="col">Document Comment Line<br>(Eclipse AST)</th>
+				<th scope="col">Level</th>
+				<th scope="col">Logic Code Lines<br>(Source File)</th>
+				<th scope="col">Physical Code Lines<br>(Source File)</th>
+				<th scope="col">Comment Lines<br>(Source File)</th>
+				<th scope="col">% of Comments<br>(Source File)</th>
+				<th scope="col">Logic Code Lines<br>(JavaParser)</th>
+				<th scope="col">Physical Code Lines<br>(JavaParser)</th>
+				<th scope="col">Comment Lines<br>(JavaParser)</th>
+				<th scope="col">% of Comments<br>(JavaParser)</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -37,11 +39,13 @@
 				</th>
 				<td th:text="*{type}"></td>
 				<td th:text="*{logicCodeLineFromSourceFile}"></td>
-				<td th:text="*{logicCodeLineFromAST}"></td>
 				<td th:text="*{physicalCodeLineFromSourceFile}"></td>
+				<td th:text="*{commentLineFromSourceFile}"></td>
+				<td th:text="*{percentageOfCommentFromSourceFile}+'%'"></td>
+				<td th:text="*{logicCodeLineFromAST}"></td>
 				<td th:text="*{physicalCodeLineFromAST}"></td>
-				<td th:text="*{allCommentLineFromSourceFile}"></td>
-				<td th:text="*{docCommentLineFromAST}"></td>
+				<td th:text="*{commentLineFromAST}"></td>
+				<td th:text="*{percentageOfCommentFromAST}+'%'"></td>
 			</tr>
 			</tbody>
 		</table>

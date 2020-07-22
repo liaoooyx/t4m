@@ -36,7 +36,7 @@
 						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
 							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
 							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Overview</li>
+							<li class="breadcrumb-item active" aria-current="page">Basic</li>
 						</ol>
 					</nav>
 				</div>
@@ -136,21 +136,21 @@
 								<!-- Current Info -->
 								<div class="row">
 									<div class="col">
-										<h5 class="card-title text-uppercase text-muted mb-0">Number Of Classes + (InnerClasses)</h5>
+										<h5 class="card-title text-uppercase text-muted mb-0">Number Of Class Files / (All Classes)</h5>
 										<span class="h2 font-weight-bold mb-0"
-										      th:text="${currentProjectInfo.getClassList().size()}+' + ('+${currentProjectInfo.getNestedClassList().size()}+')'"></span>
+										      th:text="${currentProjectInfo.getClassList().size()} +' / ('+ ${currentProjectInfo.getAllClassList().size()} +')'"></span>
 									</div>
 								</div>
 								<!-- Update Info -->
 								<p class="mt-3 mb-0 text-sm" th:inline="text"
-								   th:with="numDiff=${currentProjectInfo.getClassList().size() - preProjectInfo.getClassList().size()}, numDiff2=${currentProjectInfo.getNestedClassList().size() - preProjectInfo.getNestedClassList().size()}">
+								   th:with="numDiff=${currentProjectInfo.getClassList().size() - preProjectInfo.getClassList().size()}, numDiff2=${currentProjectInfo.getAllClassList().size() - preProjectInfo.getAllClassList().size()}">
 									<span class="text-success mr-0" th:if="${numDiff} ge '0'">
 										<i class="fa fa-arrow-up"></i>[[${numDiff}]]
 									</span>
 									<span class="text-danger mr-0" th:if="${numDiff} lt '0'">
 										<i class="fa fa-arrow-down"></i>[[${numDiff}]]
 									</span>
-									<span>&nbsp;+&nbsp;(</span>
+									<span>&nbsp;/&nbsp;&nbsp;(</span>
 									<span class="text-success ml-0" th:if="${numDiff2} ge '0'">
 										<i class="fa fa-arrow-up"></i>[[${numDiff2}]]
 									</span>
@@ -180,7 +180,7 @@
 					<div class="card-header bg-transparent">
 						<div class="row align-items-center">
 							<div class="col">
-								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
+								<h6 class="text-muted text-uppercase ls-1 mb-1">basic</h6>
 								<h5 class="h3 mb-0">Trends for Number of Module, Package and Class</h5>
 							</div>
 							<div class="col">
@@ -213,9 +213,9 @@
                           ['level'].concat(/*[[${timeRecords}]]*/),
                           ['Module Number'].concat(/*[[${moduleRecords}]]*/),
                           ['Package Number'].concat(/*[[${packageRecords}]]*/),
-                          ['Java File Number (eq. public class)'].concat(/*[[${javaFileRecords}]]*/),
-                          ['Class Number (include non-public outer class)'].concat(/*[[${classRecords}]]*/),
-                          ['All Classes Number (include inner class and non-public outer class)'].concat(/*[[${allClassRecords}]]*/),
+                          ['Java File Number'].concat(/*[[${javaFileRecords}]]*/),
+                          ['Outer Class Number'].concat(/*[[${classRecords}]]*/),
+                          ['All Classes Number (append all nested classes)'].concat(/*[[${allClassRecords}]]*/),
                       ]
                   },
                   // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。
@@ -326,7 +326,7 @@
 			
 			<!-- 这部分的动态更新由vue.js支持，模板语法有thymeleaf支持 -->
 			<!-- 修改代码后，需要同步更新至templates/fragments/dashboard/project_list_template.html -->
-			<div id="project_info_overview" v-html="project_info_fragment" class="col-xl-12">
+			<div id="project_info_basic" v-html="project_info_fragment" class="col-xl-12">
 				<!-- module -->
 				<div class="card">
 					<div class="table-responsive card-table">
@@ -407,7 +407,7 @@
 								<td th:text="*{classInfo.getNumberOfMethods()}"></td>
 								<td th:text="*{classInfo.getNumberOfEnumConstants()}"></td>
 								<td th:text="*{classInfo.getNumberOfAnnotationMembers()}"></td>
-								<td th:text="*{classInfo.getInnerClassList().size()}"></td>
+								<td th:text="*{classInfo.getNestedClassList().size()}"></td>
 							</tr>
 							</tbody>
 						</table>
@@ -424,11 +424,11 @@
             $('#current_record_time').text(newTime)
             $(obj).siblings().removeClass("active")
             $(obj).addClass("active");
-            $.get("/dashboard/overview/select/" + index, function (data) {
+            $.get("/dashboard/basic/select/" + index, function (data) {
                 if ("undefined" == typeof vm.$el) {
                     vm.project_info_fragment = data;
                     // 挂载vue实例到DOM上，继续声明周期
-                    vm.$mount('#project_info_overview');
+                    vm.$mount('#project_info_basic');
                 }
                 vm.project_info_fragment = data;
             });
@@ -436,7 +436,7 @@
 
         var vm = new Vue({
             // Vue实例将在created后停止声明周期，等到调用updateProjectInfomation()时才继续
-            // el: '#project_info_overview',
+            // el: '#project_info_basic',
             data: {
                 project_info_fragment: ""
             }
@@ -447,6 +447,7 @@
 		<footer th:replace="fragments/common :: footer"></footer>
 	</div>
 </div>
+
 <script th:replace="fragments/common :: footer_imports"></script>
 </body>
 

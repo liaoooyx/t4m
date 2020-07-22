@@ -84,15 +84,17 @@
 							<div class="col">
 								<ul class="nav nav-pills justify-content-end">
 									<li class="nav-item mr-2 mr-md-0">
-										<a id='sloc_chart_for_all_class' href="javascript:void(0);" class="nav-link py-2 px-3 active" data-toggle="tab"
+										<a href="javascript:void(0);" class="nav-link py-2 px-3"
+										   data-toggle="tab"
 										   onclick="changeDataSet('allClass')">
-											<span class="d-none d-md-block">Class Level</span>
+											<span class="d-none d-md-block">Class Level (AST Format)</span>
 											<span class="d-md-none">C</span>
 										</a>
 									</li>
 									<li class="nav-item">
-										<a href="javascript:void(0);" class="nav-link py-2 px-3" data-toggle="tab" onclick="changeDataSet('mainClass')">
-											<span class="d-none d-md-block">File Level</span>
+										<a id='sloc_timeline_chart' href="javascript:void(0);" class="nav-link py-2 px-3 active"
+										   data-toggle="tab" onclick="changeDataSet('mainClass')">
+											<span class="d-none d-md-block">File Level (Raw)</span>
 											<span class="d-md-none">F</span>
 										</a>
 									</li>
@@ -108,17 +110,16 @@
 
               function changeDataSet(type) {
                   let dataset;
-                  let label
-                  [];
+                  let label;
                   if (type === 'allClass') {
                       dataset = datasetAllClass;
-                      label = ['Class', '', 'Logic Code Line (AST format, without package and import rows)',
-		                      'JavaDoc Comment Line']
+                      label = ['Class', '', 'Physical Code Lines',
+                          'Comment Lines','% of comment lines']
                   } else if (type === 'mainClass') {
                       dataset = datasetMainClass;
                       label = ['Source File', '.java',
-		                      'Logic Code Line (Without format, with package and import rows)',
-		                      'All Comment Line']
+                          'Physical Code Lines',
+                          'Comment Lines','% of comment lines']
                   }
                   let dataMax = getMax(dataset);
                   let options = optionsFormatter(dataset);
@@ -149,12 +150,12 @@
                               data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class'],
                           },
                           xAxis: {
-                              name: 'Logic Code Line',
+                              name: 'Physical Code Lines',
                               type: 'value',
                               max: Math.ceil(dataMax[0] / 5) * 5
                           },
                           yAxis: {
-                              name: 'Comment Line',
+                              name: 'Comment Lines',
                               type: 'value',
                               max: Math.ceil(dataMax[1] / 5) * 5
                           },
@@ -163,30 +164,35 @@
                               padding: 10,
                               borderWidth: 1,
                               formatter: function (params) {
-                                  var text = '';
+                                  let text = '';
+                                  let triggerLabel = false;
                                   params.forEach(row => {
                                       if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
+                                          triggerLabel = true;
                                           let value = row.value;
                                           text +=
                                               '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
                                               + label[0] + ': ' + value[3] + label[1] + '<br>'
                                               + '<span style="font: 12px">'
-                                              + 'of Module: ' + value[4] +'</span>' + '<br>'
+                                              + 'of Module: ' + value[4] + '</span>' + '<br>'
                                               + '</div>';
                                       }
                                   });
-                                  text += label[2] + ': ' + pointedData[0] + '<br>'
-                                      + label[3] + ': ' + pointedData[1] + '<br>'
+                                  if (triggerLabel) {
+                                      text += label[2] + ': ' + pointedData[0] + '<br>'
+                                          + label[3] + ': ' + pointedData[1] + '<br>'
+                                          + label[4] + ': ' + pointedData[2] + '%<br>'
+                                  }
                                   return text;
 
                               },
                               // 重叠问题
                               show: true,
-                              enterable: true,
+                              // enterable: true,
                               trigger: 'axis',
                               axisPointer: {
                                   type: 'cross',
-                                  snap: true,
+                                  snap: false,
                                   axis: 'x', // y轴选项
                                   label: {
                                       // show: false,
@@ -212,13 +218,13 @@
                                   // itemHeight: 120,
                                   calculable: true,
                                   precision: 0.1,
-                                  text: ['Class Logic Size (X+Y)'],
+                                  text: ['% of comment lines'],
                                   textGap: 30,
                                   //以commentline + codeline作为参数，表示类的大小
                                   dimension: 2,
-                                  max: (Math.ceil(dataMax[0] / 5) * 5) + (Math.ceil(dataMax[1] / 5) * 5),
+                                  max: 200,
                                   inRange: {
-                                      symbolSize: [10, 70]
+                                      symbolSize: [10, 30]
                                   },
                                   controller: {
                                       inRange: {
@@ -372,8 +378,8 @@
               // 基于准备好的dom，初始化echarts实例
               var myChart = echarts.init(document.getElementById('chart'));
 
-              // $('#sloc_chart_for_all_class').trigger('click');
-              document.getElementById('sloc_chart_for_all_class').click()
+              // $('#sloc_timeline_chart').trigger('click');
+              document.getElementById('sloc_timeline_chart').click()
 
               var pointedData = [];
               myChart.on('mouseover', function (params) {
@@ -430,13 +436,15 @@
 							<tr>
 								<th></th>
 								<th scope="col">Name</th>
-								<th scope="col">Type</th>
-								<th scope="col">Logic Code Line<br>(Source File)</th>
-								<th scope="col">Logic Code Line<br>(Eclipse AST)</th>
-								<th scope="col">Physical Code Line<br>(Source File)</th>
-								<th scope="col">Physical Code Line<br>(Eclipse AST)</th>
-								<th scope="col">All Comment Line<br>(Source File)</th>
-								<th scope="col">Document Comment Line<br>(Eclipse AST)</th>
+								<th scope="col">Level</th>
+								<th scope="col">Logic Code Lines<br>(Source File)</th>
+								<th scope="col">Physical Code Lines<br>(Source File)</th>
+								<th scope="col">Comment Lines<br>(Source File)</th>
+								<th scope="col">% of Comments<br>(Source File)</th>
+								<th scope="col">Logic Code Lines<br>(JavaParser)</th>
+								<th scope="col">Physical Code Lines<br>(JavaParser)</th>
+								<th scope="col">Comment Lines<br>(JavaParser)</th>
+								<th scope="col">% of Comments<br>(JavaParser)</th>
 							</tr>
 							</thead>
 							<tbody>
@@ -462,11 +470,13 @@
 								</th>
 								<td th:text="*{type}"></td>
 								<td th:text="*{logicCodeLineFromSourceFile}"></td>
-								<td th:text="*{logicCodeLineFromAST}"></td>
 								<td th:text="*{physicalCodeLineFromSourceFile}"></td>
+								<td th:text="*{commentLineFromSourceFile}"></td>
+								<td th:text="*{percentageOfCommentFromSourceFile}+'%'"></td>
+								<td th:text="*{logicCodeLineFromAST}"></td>
 								<td th:text="*{physicalCodeLineFromAST}"></td>
-								<td th:text="*{allCommentLineFromSourceFile}"></td>
-								<td th:text="*{docCommentLineFromAST}"></td>
+								<td th:text="*{commentLineFromAST}"></td>
+								<td th:text="*{percentageOfCommentFromAST}+'%'"></td>
 							</tr>
 							</tbody>
 						</table>
@@ -552,9 +562,9 @@
     // 指定图表的配置项和数据
     var option2 = {
         legend: {
-            data: ["Logic Code Line (Source File)", "Logic Code Line (AST)",
-                "Physical Code Line (Source File)", "Physical Code Line (AST)",
-                "All Comment Line", "JavaDoc Comment Line"]
+            data: ["Logic Code Lines (Source File)", "Logic Code Lines (AST)",
+                "Physical Code Lines (Source File)", "Physical Code Lines (AST)",
+                "All Comment Lines", "JavaDoc Comment Lines"]
         },
         grid: {
             bottom: '100'
@@ -616,12 +626,12 @@
                     source: data
                 },
                 series: [
-                    {type: 'line', name: 'Logic Code Line (Source File)'},
-                    {type: 'line', name: 'Physical Code Line (Source File)'},
-                    {type: 'line', name: 'All Comment Line'},
-                    {type: 'line', name: 'Logic Code Line (AST)'},
-                    {type: 'line', name: 'Physical Code Line (AST)'},
-                    {type: 'line', name: 'JavaDoc Comment Line'},
+                    {type: 'line', name: 'Logic Code Lines (Source File)'},
+                    {type: 'line', name: 'Physical Code Lines (Source File)'},
+                    {type: 'line', name: 'Comment Lines (Source File)'},
+                    {type: 'line', name: 'Logic Code Lines (AST)'},
+                    {type: 'line', name: 'Physical Code Lines (AST)'},
+                    {type: 'line', name: 'Comment Lines (AST)'},
                 ],
             });
         });

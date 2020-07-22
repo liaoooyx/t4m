@@ -43,7 +43,7 @@
 	<div class="scrollbar-inner">
 		<!-- Brand -->
 		<div class="sidenav-header  align-items-center">
-			<a class="navbar-brand" th:href="@{/dashboard/overview}">
+			<a class="navbar-brand" th:href="@{/dashboard/basic}">
 				<h1>t4m</h1>
 			</a>
 		</div>
@@ -143,9 +143,9 @@
 				<!-- Nav items -->
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						<a class="nav-link" th:classappend="${selectedElementID==0}?'active':''" href="/dashboard/overview">
+						<a class="nav-link" th:classappend="${selectedElementID==0}?'active':''" href="/dashboard/basic">
 							<i class="ni ni-tv-2 text-primary"></i>
-							<span class="nav-link-text">Overview</span>
+							<span class="nav-link-text">Basic</span>
 						</a>
 					</li>
 				</ul>
@@ -168,7 +168,7 @@
 				<!-- Navigation -->
 				<ul class="navbar-nav mb-md-3">
 					<li class="nav-item">
-						<a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/getting-started/overview.html"
+						<a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/getting-started/basic.html"
 						   target="_blank">
 							<i class="ni ni-spaceship"></i>
 							<span class="nav-link-text">Getting started</span>
@@ -273,7 +273,7 @@
                   console.log(targetProjectName)
                   $.get("/operation/switch/" + targetProjectName, function (data) {
                       if (data === "success") {
-                          window.location.href = "/dashboard/overview";
+                          window.location.href = "/dashboard/basic";
                       }
                   })
               },
