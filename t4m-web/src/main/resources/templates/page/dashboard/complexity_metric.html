@@ -71,6 +71,7 @@
 	
 	<!-- Page content -->
 	<div class="container-fluid mt--6" th:with="currentProjectInfo = ${projectList.get(projectList.size()-1)}">
+		<!--图表-->
 		<div class="row">
 			<!-- chart -->
 			<!--			<div class="col-xl-12">-->
@@ -391,8 +392,9 @@
 			<!--				</div>-->
 			<!--			</div>-->
 		</div>
-		
+		<!--表格-->
 		<div class="row">
+			<!-- 选择记录时间 -->
 			<div class="col-xl-12">
 				<div class="card-header border-0">
 					<div class="row align-items-center">
@@ -423,19 +425,24 @@
 					</div>
 				</div>
 			</div>
-			
-			<!-- 这部分的动态更新由vue.js支持，模板语法有thymeleaf支持 -->
-			<!-- 修改代码后，需要同步更新至templates/fragments/dashboard/sloc_list_template.html -->
+			<!--表格-->
 			<div class="col-xl-12" id="sloc_info_records" v-html="sloc_list_fragment">
 				
 				<div class="card">
 					<div class="table-responsive">
+						<div id="toolbar">
+							<div class="form-inline" role="form">
+								<a id="complexity-previous-btn" class="btn btn-outline-primary btn-sm invisible"
+								   href="javascript:void(0);"
+								   onclick="showClassComplexity()">
+									< previous</a>
+							</div>
+						</div>
 						<table id="table"></table>
 					</div>
 				</div>
 			
 			</div>
-			
 			<!-- Modal -->
 			<div class="modal fade" id="sloc_row_model" tabindex="-1" role="dialog"
 			     aria-labelledby="sloc_row_model_label" aria-hidden="true">
@@ -469,36 +476,51 @@
 </div>
 <script th:replace="fragments/common :: footer_imports"></script>
 <script>
-    var $table = $('#table')
-
-    function buildTable($el, dataset, columns) {
-        $el.bootstrapTable('destroy').bootstrapTable({
-            height: 500,
-            columns: columns,
-            data: dataset,
-            toolbar: '.toolbar',
-            search: true,
-            showColumns: true,
-            fixedColumns: true,
-            fixedNumber: 2,
-
-        })
-    }
 
     $(function () {
+        showClassComplexity();
+    })
+
+    var $table = $('#table')
+    var projectRecordIndex = -1;
+
+    function selectRecordTime(obj, index) {
+        projectRecordIndex = index;
+        let newTime = $(obj).text()
+        $('#current_record_time').text(newTime)
+        $(obj).siblings().removeClass("active")
+        $(obj).addClass("active");
+        showClassComplexity();
+    }
+
+    function requestComplexityRecords(name, type, index) {
+        $.get("/dashboard/sloc/table/class?name=" + name + "&type=" + type
+            + "&projectRecordIndex=" + index, function (data) {
+            if ("undefined" == typeof vm.$el) {
+                vm.sloc_list_fragment = data;
+                // 挂载vue实例到DOM上，继续声明周期
+                vm.$mount('#sloc_info_records');
+            }
+            vm.sloc_list_fragment = data;
+            console.log("build")
+        });
+    }
+
+
+    function showClassComplexity() {
         let columns = [{
             field: 'chart', title: ''
         }, {
-            field: 'name', title: 'Name', sortable: true,
+            field: 'name', title: 'Class Name', sortable: true,
             formatter: function (value, row) {
                 return '<a href="javascript:void(0);" ' +
-                    'onclick="getMethodComplexity(' + row.qualifiedName + ')">' +
+                    'onclick="showMethodComplexity(\'' + row.qualifiedName + '\')">' +
                     value + '</a>';
             },
         }, {
             field: 'type', title: 'Class Type', sortable: true
         }, {
-            field: 'declaration', title: 'Class Declaration', sortable: true
+            field: 'declaration', title: 'Class Location', sortable: true
         }, {
             field: 'package', title: 'of Which Package', sortable: true
         }, {
@@ -514,19 +536,69 @@
         }, {
             field: 'responseForClass', title: 'Response for Class', sortable: true
         }];
-        let dataset;
-        $.get("/dashboard/complexity/table").done(function (data) {
-            dataset = data;
+        $.get("/dashboard/complexity/table/class?projectRecordIndex=" + projectRecordIndex).done(function (data) {
+            let dataset = data;
             //给每行前面加上趋势图按钮（弹出模态框）
             for (i = 0; i < dataset.length; i++) {
                 dataset[i].chart =
                     '<a class="sloc-table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
-                    + 'data-target="#sloc_row_model" onclick="showTableChart(' + dataset[i].name + ',' + dataset[i].type + ')">'
+                    + 'data-target="#sloc_row_model" onclick="showTableChart(\'' + dataset[i].qualifiedName + '\')">'
                     + '<i class="fas fa-chart-bar"></i></a>'
             }
-            buildTable($table, dataset, columns)
+            buildTable($table, dataset, columns, 0)
+            $("#complexity-previous-btn").addClass("invisible");
         });
-    })
+    }
+
+    function showMethodComplexity(qualifiedName) {
+        let columns = [{
+            field: 'chart', title: ''
+        }, {
+            field: 'name', title: 'Method Name', sortable: true,
+        }, {
+            field: 'declaration', title: 'Method Declaration', sortable: true
+        }, {
+            field: 'class', title: 'of Which Class', sortable: true
+        }, {
+            field: 'module', title: 'of Which Module', sortable: true
+        }, {
+            field: 'cyclomaticComplexity', title: 'Cyclomatic Complexity', sortable: true
+        }];
+        $.get("/dashboard/complexity/table/method?classQualifiedName=" + qualifiedName +
+            "&projectRecordIndex=" + projectRecordIndex).done(function (data) {
+            let dataset = data;
+            //给每行前面加上趋势图按钮（弹出模态框）
+            for (i = 0; i < dataset.length; i++) {
+                dataset[i].chart =
+                    '<a class="sloc-table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
+                    + 'data-target="#sloc_row_model" onclick="showTableChart(\'' + dataset[i].qualifiedName + '\')">'
+                    + '<i class="fas fa-chart-bar"></i></a>'
+            }
+            buildTable($table, dataset, columns, 1)
+            $("#complexity-previous-btn").removeClass("invisible");
+        });
+    }
+
+    function buildTable($el, dataset, columns, fixedRightNumber) {
+        $el.bootstrapTable('destroy').bootstrapTable({
+            height: 500,
+            columns: columns,
+            data: dataset,
+            toolbar: '#toolbar',
+            search: true,
+            showColumns: true,
+            fixedColumns: true,
+            fixedNumber: 2,
+            fixedRightNumber: fixedRightNumber,
+            buttons: "",
+            buttonsPrefix: "",
+            buttonsClass: "btn btn-sm btn-outline-primary",
+        })
+    }
+
+    function showTableChart(name, type) {
+
+    }
 
 </script>
 

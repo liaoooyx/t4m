@@ -539,7 +539,7 @@
         requestSLOCRecords(recordRowName, recordRowType, projectRecordIndex);
     }
 
-    function requestSLOCRecords(name, type, index, preName, preType) {
+    function requestSLOCRecords(name, type, index) {
         $.get("/dashboard/sloc/table?name=" + name + "&type=" + type
             + "&projectRecordIndex=" + index, function (data) {
             if ("undefined" == typeof vm.$el) {

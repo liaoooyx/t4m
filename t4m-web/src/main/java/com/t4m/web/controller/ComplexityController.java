@@ -1,9 +1,6 @@
 package com.t4m.web.controller;
 
-import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.ModuleInfo;
-import com.t4m.extractor.entity.PackageInfo;
-import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.entity.*;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
@@ -60,11 +57,33 @@ public class ComplexityController {
 		return "page/dashboard/complexity_metric";
 	}
 
-	@GetMapping("/table")
+	@GetMapping("/table/method")
 	@ResponseBody
-	public List<Map<String, Object>> selectRecord() {
+	public List<Map<String, Object>> selectMethodRecord(
+			@RequestParam(name = "classQualifiedName") String classQualifiedName,
+			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(-1)[0];
+		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), classQualifiedName);
+		for (MethodInfo methodInfo : classInfo.getMethodInfoList()) {
+			Map<String, Object> row = new LinkedHashMap<>();
+			row.put("name", methodInfo.getShortName());
+			row.put("declaration", methodInfo.getMethodDeclarationString());
+			row.put("class", methodInfo.getClassInfo().getFullyQualifiedName());
+			row.put("module", methodInfo.getClassInfo().getPackageInfo().getModuleInfo().getShortName());
+			row.put("cyclomaticComplexity", methodInfo.getCyclomaticComplexity());
+			row.put("qualifiedName", methodInfo.getFullyQualifiedName());
+			rows.add(row);
+		}
+		return rows;
+	}
+
+	@GetMapping("/table/class")
+	@ResponseBody
+	public List<Map<String, Object>> selectClassRecord(
+			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
+		List<Map<String, Object>> rows = new ArrayList<>();
+		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", classInfo.getShortName());
@@ -77,7 +96,7 @@ public class ComplexityController {
 			row.put("maxComplexity", classInfo.getMaxCyclomaticComplexity());
 			row.put("avgComplexity", classInfo.getAvgCyclomaticComplexity());
 			row.put("responseForClass", classInfo.getResponseForClass());
-			row.put("qualifiedName",classInfo.getFullyQualifiedName());
+			row.put("qualifiedName", classInfo.getFullyQualifiedName());
 			rows.add(row);
 		}
 		return rows;

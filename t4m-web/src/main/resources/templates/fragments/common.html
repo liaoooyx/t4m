@@ -17,8 +17,8 @@
 	<!-- Argon CSS -->
 	<link rel="stylesheet" th:href="@{/assets/css/argon.css?v=1.2.0}" type="text/css">
 	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-table/bootstrap-table.min.css}">
-	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-table/bootstrap-table-fixed-columns.min.css}">
-	
+	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.css}">
+	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-table/group-by-v2/bootstrap-table-group-by.min.css}">
 	<script th:src="@{/assets/vendor/echart/dist/echarts.js}"></script>
 	<script th:src="@{/assets/js/vue.js}"></script>
 	<style>
@@ -45,6 +45,17 @@
 		/*.bootstrap-table .fixed-table-container .fixed-table-header{*/
 		/*	margin-right: 0 !important;*/
 		/*}*/
+		
+		/*bootstrap-table搜索框改为适应btn-sm*/
+		div.search input.search-input{
+			padding: 3px 8px;
+			height: auto;
+		}
+		/*bootstrap-table toolbar增加左右margin*/
+		.bootstrap-table .fixed-table-toolbar {
+			margin-left: 20px;
+			margin-right: 20px;
+		}
 		
 		/*custom bootstrap .dropdown-menu for max height*/
 		.dropdown-menu {
@@ -256,8 +267,8 @@
 	<!--	<script th:src="@{/assets/js/fileinput.js}"></script>-->
 	<!-- Bootstrap-table -->
 	<script th:src="@{/assets/vendor/bootstrap-table/bootstrap-table.min.js}"></script>
-	<script th:src="@{/assets/vendor/bootstrap-table/bootstrap-table-fixed-columns.min.js}"></script>
-	
+	<script th:src="@{/assets/vendor/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap-table/group-by-v2/bootstrap-table-group-by.min.js}"></script>
 	<script th:inline="javascript">
       var blank_page_trigger = [[${isBlank}]];
       if (blank_page_trigger) {
