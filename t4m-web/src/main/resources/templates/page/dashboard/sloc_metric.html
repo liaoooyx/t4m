@@ -38,7 +38,7 @@
 							<li class="breadcrumb-item active" aria-current="page">SLOC</li>
 						</ol>
 					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Source Line Of Code</h6>
+					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Source Line of Code</h6>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -189,6 +189,7 @@
                               // 重叠问题
                               show: true,
                               // enterable: true,
+                              confine: true,
                               trigger: 'axis',
                               axisPointer: {
                                   type: 'cross',
@@ -456,7 +457,7 @@
 							</tr>
 							<tr th:each="colMap : ${dataList}" th:object="${colMap}" th:inline="text">
 								<td>
-									<a class="sloc-table-chart-icon" href="javascript:void(0);" data-toggle="modal"
+									<a class="table-chart-icon" href="javascript:void(0);" data-toggle="modal"
 									   data-target="#sloc_row_model" th:onclick="showTableChart([[*{name}]],[[*{type}]])">
 										<i class="fas fa-chart-bar"></i>
 									</a>
@@ -548,7 +549,6 @@
                 vm.$mount('#sloc_info_records');
             }
             vm.sloc_list_fragment = data;
-            console.log("build")
         });
     }
 

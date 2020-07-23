@@ -90,7 +90,7 @@ public class ProjectService {
 
 	/**
 	 * 用于Dashboard-SLOC页面中timeline chart的数据集。 第1层：Map，key为创建时间，嵌套List 第2层：Map，key为前端Echart需要的4个series，分别为Interface,
-	 * Abstract Class, Class and Inner Class，嵌套List 第3层：List，包括SLOC-code, SLOC-comment, SLOC-code + SLOC-comment,
+	 * Abstract Class, Class and Inner Class，嵌套List 第3层：List，包括SLOC-code, SLOC-comment, SLOC-comment / SLOC-code,
 	 * ClassName, OfWhichModule。
 	 *
 	 * @param flag 当为1时，使用所有类（包括内部类和extra类）；当为2时，仅使用与java文件对应的main public类

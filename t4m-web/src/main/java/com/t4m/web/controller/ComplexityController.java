@@ -2,6 +2,8 @@ package com.t4m.web.controller;
 
 import com.t4m.extractor.entity.*;
 import com.t4m.extractor.util.EntityUtil;
+import com.t4m.extractor.util.MathUtil;
+import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
@@ -47,13 +49,71 @@ public class ComplexityController {
 		model.addAttribute("projectList", projectInfoList);
 		// 用于timeline chart
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
-		model.addAttribute("datasetAllClass", projectService.getDataSetOfSLOC(ProjectService.FLAG_ALL_CLASS));
-		model.addAttribute("datasetMainClass", projectService.getDataSetOfSLOC(ProjectService.FLAG_MAIN_PUBLIC_CLASS));
-		// 用于table
-		model.addAttribute("dataList", moduleService.getAllModulesSLOC(-1));
-		model.addAttribute("previousName", "");
-		model.addAttribute("previousType", "");
-		model.addAttribute("isRoot", true);
+		LinkedHashMap<String, List<List<Object>>> weightedMethodsCountDataset = new LinkedHashMap<>();
+		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			List<List<Object>> rows = new ArrayList<>();
+			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+				List<Object> cols = new ArrayList<>();
+				cols.add(classInfo.getNumberOfMethods()); // code line
+				cols.add(classInfo.getWeightedMethodsCount()); // code line
+				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
+				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
+				rows.add(cols);
+			}
+			weightedMethodsCountDataset.put(time, rows);
+		}
+		model.addAttribute("weightedMethodsCountDataset", weightedMethodsCountDataset);
+
+		LinkedHashMap<String, List<List<Object>>> maxComplexityOfClassDataset = new LinkedHashMap<>();
+		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			List<List<Object>> rows = new ArrayList<>();
+			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+				List<Object> cols = new ArrayList<>();
+				cols.add(classInfo.getNumberOfMethods()); // code line
+				cols.add(classInfo.getMaxCyclomaticComplexity()); // code line
+				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
+				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
+				rows.add(cols);
+			}
+			weightedMethodsCountDataset.put(time, rows);
+		}
+		model.addAttribute("maxComplexityOfClassDataset", maxComplexityOfClassDataset);
+
+		LinkedHashMap<String, List<List<Object>>> avgComplexityOfClassDataset = new LinkedHashMap<>();
+		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			List<List<Object>> rows = new ArrayList<>();
+			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+				List<Object> cols = new ArrayList<>();
+				cols.add(classInfo.getNumberOfMethods());
+				cols.add(classInfo.getAvgCyclomaticComplexity());
+				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
+				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
+				rows.add(cols);
+			}
+			weightedMethodsCountDataset.put(time, rows);
+		}
+		model.addAttribute("avgComplexityOfClassDataset", avgComplexityOfClassDataset);
+
+		LinkedHashMap<String, List<List<Object>>> responseForClassDataset = new LinkedHashMap<>();
+		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			List<List<Object>> rows = new ArrayList<>();
+			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+				List<Object> cols = new ArrayList<>();
+				cols.add(classInfo.getNumberOfMethods());
+				cols.add(classInfo.getResponseForClass());
+				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
+				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
+				rows.add(cols);
+			}
+			weightedMethodsCountDataset.put(time, rows);
+		}
+		model.addAttribute("responseForClassDataset", responseForClassDataset);
+
+
 		return "page/dashboard/complexity_metric";
 	}
 
@@ -102,22 +162,29 @@ public class ComplexityController {
 		return rows;
 	}
 
-	@GetMapping("/table/chart")
+	@GetMapping("/table/chart/class")
 	@ResponseBody
-	public List<String[]> selectTableChartRecord(
-			@RequestParam(name = "name") String name, @RequestParam(name = "type") String type) {
-		if ("module".equals(type)) {
-			return moduleService.getSLOCTableChartDataset(name);
-		} else if ("package".equals(type)) {
-			return packageService.getSLOCTableChartDataset(name, true);
-		} else if ("current package".equals(type)) {
-			return packageService.getSLOCTableChartDataset(name, false);
-		} else if ("class".equals(type)) {
-			return classService.getSLOCTableChartDataset(name);
-		} else {
-			LOGGER.error("Unexpected type received [{}] where record name is [{}]", type, name);
-			return null;
+	public List<Object[]> selectTableChartRecordForClass(@RequestParam(name = "qualifiedName") String qualifiedName) {
+
+		//	第一行是系列名，从第二行开始，每一行是一条记录的数据，其中第一列是时间
+		List<Object[]> dataset = new ArrayList<>();
+		dataset.add(new String[]{"time", "Number of Method", "Weighted Method Count", "Max Complexity of Class",
+		                         "Avg Complexity of Class", "Response for Class"});
+		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
+			Object[] tempRow = new Object[6];
+			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			Arrays.fill(tempRow, 1, 5, null);
+			if (classInfo != null) { //类可能还未创建或已经删除
+				tempRow[1] = classInfo.getNumberOfMethods();
+				tempRow[2] = classInfo.getWeightedMethodsCount();
+				tempRow[3] = classInfo.getMaxCyclomaticComplexity();
+				tempRow[4] = classInfo.getAvgCyclomaticComplexity();
+				tempRow[5] = classInfo.getResponseForClass();
+			}
+			dataset.add(tempRow);
 		}
+		return dataset;
 	}
 
 }
