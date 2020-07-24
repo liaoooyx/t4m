@@ -27,10 +27,10 @@ import java.util.*;
  * Created by Yuxiang Liao on 2020-07-21 23:23.
  */
 @Controller
-@RequestMapping("/dashboard/coupling")
-public class CouplingController {
+@RequestMapping("/dashboard/inheritance")
+public class InheritanceController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CouplingController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(InheritanceController.class);
 
 	@Resource(name = "ProjectService")
 	private ProjectService projectService;
@@ -136,71 +136,25 @@ public class CouplingController {
 		}
 		model.addAttribute("methodNumDataset", methodNumDataset);
 
-		return "page/dashboard/coupling_metric";
+		return "page/dashboard/inheritance_metric";
 	}
 
-	@GetMapping("/table/package")
-	@ResponseBody
-	public List<Map<String, Object>> selectPackageRecord(
-			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
-		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
-		for (PackageInfo packageInfo: projectInfo.getPackageList()) {
-			Map<String, Object> row = new LinkedHashMap<>();
-			row.put("name", packageInfo.getFullyQualifiedName());
-			row.put("module", packageInfo.getModuleInfo().getShortName());
-			row.put("afferentCoupling", packageInfo.getAfferentCoupling());
-			row.put("efferentCoupling", packageInfo.getEfferentCoupling());
-			row.put("instability", packageInfo.getInstability());
-			row.put("abstractness", packageInfo.getAbstractness());
-			rows.add(row);
-		}
-		return rows;
-	}
-
-	@GetMapping("/table/chart/package")
-	@ResponseBody
-	public List<Object[]> selectTableChartRecordForPackage(@RequestParam(name = "qualifiedName") String qualifiedName) {
-
-		//	第一行是系列名，从第二行开始，每一行是一条记录的数据，其中第一列是时间
-		List<Object[]> dataset = new ArrayList<>();
-		dataset.add(new String[]{"time", "Afferent Coupling", "Efferent Coupling", "Instability", "Abstractness"});
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), qualifiedName);
-			Object[] tempRow = new Object[5];
-			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			Arrays.fill(tempRow, 1, 4, null);
-			if (packageInfo != null) { //类可能还未创建或已经删除
-				tempRow[1] = packageInfo.getAfferentCoupling();
-				tempRow[2] = packageInfo.getEfferentCoupling();
-				tempRow[3] = packageInfo.getInstability();
-				tempRow[4] = packageInfo.getAbstractness();
-			}
-			dataset.add(tempRow);
-		}
-		return dataset;
-	}
 
 	@GetMapping("/table/class")
 	@ResponseBody
 	public List<Map<String, Object>> selectClassRecord(
-			@RequestParam(name = "pkgQualifiedName") String pkgQualifiedName,
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
-		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), pkgQualifiedName);
-		for (ClassInfo classInfo : packageInfo.getAllClassList()) {
+		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", classInfo.getShortName());
 			row.put("type", classInfo.getClassModifier().toString());
 			row.put("declaration", classInfo.getClassDeclaration().toString());
 			row.put("package", classInfo.getPackageFullyQualifiedName());
 			row.put("module", classInfo.getPackageInfo().getModuleInfo().getShortName());
-			row.put("couplingBetweenObjects", classInfo.getCouplingBetweenObjects());
-			row.put("afferentCoupling", classInfo.getAfferentCoupling());
-			row.put("efferentCoupling", classInfo.getEfferentCoupling());
-			row.put("instability", classInfo.getInstability());
-			row.put("messagePassingCoupling", classInfo.getMessagePassingCoupling());
+			row.put("deepOfInheritanceTree", classInfo.getDeepOfInheritanceTree());
+			row.put("numberOfChildren", classInfo.getNumberOfChildren());
 			row.put("qualifiedName", classInfo.getFullyQualifiedName());
 			rows.add(row);
 		}
@@ -213,19 +167,15 @@ public class CouplingController {
 
 		//	第一行是系列名，从第二行开始，每一行是一条记录的数据，其中第一列是时间
 		List<Object[]> dataset = new ArrayList<>();
-		dataset.add(new String[]{"time", "Coupling Between Objects", "Afferent Coupling", "Efferent Coupling",
-		                         "Instability", "Message Passing Coupling"});
+		dataset.add(new String[]{"time", "Deep of Inheritance Tree", "Number of Children"});
 		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
-			Object[] tempRow = new Object[6];
+			Object[] tempRow = new Object[3];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			Arrays.fill(tempRow, 1, 5, null);
+			Arrays.fill(tempRow, 1, 2, null);
 			if (classInfo != null) { //类可能还未创建或已经删除
-				tempRow[1] = classInfo.getCouplingBetweenObjects();
-				tempRow[2] = classInfo.getAfferentCoupling();
-				tempRow[3] = classInfo.getEfferentCoupling();
-				tempRow[4] = classInfo.getInstability();
-				tempRow[5] = classInfo.getMessagePassingCoupling();
+				tempRow[1] = classInfo.getDeepOfInheritanceTree();
+				tempRow[2] = classInfo.getNumberOfChildren();
 			}
 			dataset.add(tempRow);
 		}

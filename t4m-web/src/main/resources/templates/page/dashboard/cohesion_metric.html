@@ -20,7 +20,7 @@
 
 <body>
 <!-- Sidenav -->
-<nav th:replace="fragments/common :: sidnav(3)"></nav>
+<nav th:replace="fragments/common :: sidnav(5)"></nav>
 
 <!-- Main content -->
 <div class="main-content" id="panel">
@@ -517,7 +517,7 @@
 							<div class="form-inline" role="form">
 								<a id="previous-btn" class="btn btn-outline-primary btn-sm invisible"
 								   href="javascript:void(0);"
-								   onclick="showPackageCoupling()">
+								   onclick="showClassCohesion()">
 									< previous</a>
 							</div>
 						</div>
@@ -540,7 +540,7 @@
 							</button>
 						</div>
 						<div class="modal-body">
-							<div id="complexity_row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
+							<div id="row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -562,14 +562,11 @@
         // 首次渲染图表
         // showTimelineChartForClass();
         // 首次渲染表格
-        showPackageCoupling();
+        showClassCohesion();
     })
 
     let $table = $('#table')
     let projectRecordIndex = -1;
-    let currentPackageQualifiedName = "";
-    let isCurrentLevelClass = false;
-
 
     // 选择记录
     function selectRecordTime(obj, index) {
@@ -578,70 +575,22 @@
         $('#current_record_time').text(newTime)
         $(obj).siblings().removeClass("active")
         $(obj).addClass("active");
-        if (isCurrentLevelClass) {
-            showClassCoupling(currentPackageQualifiedName);
-        } else {
-            showPackageCoupling();
-        }
+        showClassCohesion();
     }
-
-    // 表格：包级别的度量数据
-    function showPackageCoupling() {
-        isCurrentLevelClass = false;
-        let columns = [{
-            field: 'chart', title: ''
-        }, {
-            field: 'name', title: 'Package Name', sortable: true,
-            formatter: function (value, row) {
-                return '<a href="javascript:void(0);" ' +
-                    'onclick="showClassCoupling(\'' + row.name + '\')">' +
-                    value + '</a>';
-            },
-        }, {
-            field: 'afferentCoupling', title: 'Afferent Coupling', sortable: true
-        }, {
-            field: 'efferentCoupling', title: 'Efferent Coupling', sortable: true
-        }, {
-            field: 'instability', title: 'Instability', sortable: true
-        }, {
-            field: 'abstractness', title: 'Abstractness', sortable: true
-        }, {
-            field: 'module', title: 'of Which Module', sortable: true
-        }];
-        $.get("/dashboard/coupling/table/package?projectRecordIndex=" + projectRecordIndex).done(function (data) {
-            let dataset = data;
-            //给每行前面加上趋势图按钮（弹出模态框）
-            for (i = 0; i < dataset.length; i++) {
-                dataset[i].chart =
-                    '<a class="table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
-                    + 'data-target="#row_model" onclick="showTableChartForPackage(\'' +
-                    dataset[i].name + '\')">'
-                    + '<i class="fas fa-chart-bar"></i></a>'
-            }
-            buildTable($table, dataset, columns, 2, 0)
-            $("#previous-btn").addClass("invisible");
-        });
-    }
-
+    
     //表格：类级别的度量数据
-    function showClassCoupling(qualifiedName) {
-        currentPackageQualifiedName = qualifiedName;
-        isCurrentLevelClass = true;
+    function showClassCohesion() {
         let columns = [{
             field: 'chart', title: ''
         }, {
             field: 'name', title: 'Class Name', sortable: true
         }, {
-            field: 'couplingBetweenObjects', title: 'Coupling Between Objects', sortable: true
+            field: 'lackOfCohesionInMethods4', title: 'Lack of Cohesion in Methods (LOCM4)', sortable: true
         }, {
-            field: 'afferentCoupling', title: 'Afferent Coupling', sortable: true
+            field: 'tightClassCohesion', title: 'Tight Class Cohesion', sortable: true
         }, {
-            field: 'efferentCoupling', title: 'Efferent Coupling', sortable: true
-        }, {
-            field: 'instability', title: 'Instability', sortable: true
-        }, {
-            field: 'messagePassingCoupling', title: 'Message Passing Coupling', sortable: true
-        }, {
+            field: 'looseClassCohesion', title: 'Loose Class Cohesion', sortable: true
+        },{
             field: 'type', title: 'Class Type', sortable: true
         }, {
             field: 'declaration', title: 'Class Location', sortable: true
@@ -650,8 +599,7 @@
         }, {
             field: 'module', title: 'of Which Module', sortable: true
         }];
-        $.get("/dashboard/coupling/table/class?pkgQualifiedName=" + qualifiedName +
-            "&projectRecordIndex=" + projectRecordIndex).done(function (data) {
+        $.get("/dashboard/cohesion/table/class?projectRecordIndex=" + projectRecordIndex).done(function (data) {
             let dataset = data;
             //给每行前面加上趋势图按钮（弹出模态框）
             for (i = 0; i < dataset.length; i++) {
@@ -662,7 +610,7 @@
                     + '<i class="fas fa-chart-bar"></i></a>'
             }
             buildTable($table, dataset, columns, 2, 0)
-            $("#previous-btn").removeClass("invisible");
+            $("#previous-btn").addClass("invisible");
         });
     }
 
@@ -689,7 +637,7 @@
     }
 
     // 用于修改模块框title
-    let coupling_table_chart_title_vm = new Vue({
+    let inheritance_table_chart_title_vm = new Vue({
         el: '#row_model_label',
         data: {
             recordType: '',
@@ -735,58 +683,29 @@
             }
         ],
     };
-    let complexityTableChart = echarts.init(document.getElementById('complexity_row_chart'));
-    
+    let inheritanceTableChart = echarts.init(document.getElementById('row_chart'));
 
-    function showTableChartForPackage(qualifiedName) {
-        coupling_table_chart_title_vm.recordName = qualifiedName;
-        coupling_table_chart_title_vm.recordType = "Package";
-        // 异步加载数据
-        complexityTableChart.clear();
-        complexityTableChart.setOption(tableChartOptForClass);
-        $.get("/dashboard/coupling/table/chart/package?qualifiedName=" + qualifiedName).done(function (data) {
-            // 填入数据
-            complexityTableChart.setOption({
-                legend: {
-                    data: ["Afferent Coupling", "Efferent Coupling", "Instability", "Abstractness"]
-                },
-                dataset: {
-                    // 提供一份数据。
-                    source: data
-                },
-                series: [
-                    {type: 'line', name: 'Afferent Coupling'},
-                    {type: 'line', name: 'Efferent Coupling'},
-                    {type: 'line', name: 'Instability'},
-                    {type: 'line', name: 'Abstractness'},
-                ],
-            });
-        });
-    }
 
     function showTableChartForClass(qualifiedName) {
-        coupling_table_chart_title_vm.recordName = qualifiedName;
-        coupling_table_chart_title_vm.recordType = "Class";
+        inheritance_table_chart_title_vm.recordName = qualifiedName;
+        inheritance_table_chart_title_vm.recordType = "Class";
         // 异步加载数据
-        complexityTableChart.clear();
-        complexityTableChart.setOption(tableChartOptForClass);
-        $.get("/dashboard/coupling/table/chart/class?qualifiedName=" + qualifiedName).done(function (data) {
+        inheritanceTableChart.clear();
+        inheritanceTableChart.setOption(tableChartOptForClass);
+        $.get("/dashboard/cohesion/table/chart/class?qualifiedName=" + qualifiedName).done(function (data) {
             // 填入数据
-            complexityTableChart.setOption({
+            inheritanceTableChart.setOption({
                 legend: {
-                    data: ["Coupling Between Objects", "Afferent Coupling", "Efferent Coupling",
-                        "Instability", "Message Passing Coupling"]
+                    data: ["Lack of Cohesion in Methods (LOCM4)", "Tight Class Cohesion", "Loose Class Cohesion"]
                 },
                 dataset: {
                     // 提供一份数据。
                     source: data
                 },
                 series: [
-                    {type: 'line', name: 'Coupling Between Objects'},
-                    {type: 'line', name: 'Afferent Coupling'},
-                    {type: 'line', name: 'Efferent Coupling'},
-                    {type: 'line', name: 'Instability'},
-                    {type: 'line', name: 'Message Passing Coupling'},
+                    {type: 'line', name: 'Lack of Cohesion in Methods (LOCM4)'},
+                    {type: 'line', name: 'Tight Class Cohesion'},
+                    {type: 'line', name: 'Loose Class Cohesion'},
                 ],
             });
         });
@@ -794,7 +713,7 @@
 
     // 让echarts在模态框打开后重新渲染
     $('#row_model').on('shown.bs.modal', function () {
-        complexityTableChart.resize()
+        inheritanceTableChart.resize()
     })
 
 

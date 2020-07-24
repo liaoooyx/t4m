@@ -600,14 +600,6 @@
                     value + '</a>';
             },
         }, {
-            field: 'type', title: 'Class Type', sortable: true
-        }, {
-            field: 'declaration', title: 'Class Location', sortable: true
-        }, {
-            field: 'package', title: 'of Which Package', sortable: true
-        }, {
-            field: 'module', title: 'of Which Module', sortable: true
-        }, {
             field: 'numOfMethod', title: 'Number of Method', sortable: true
         }, {
             field: 'weightedMethodsCount', title: 'Weighted Method Count', sortable: true
@@ -617,6 +609,14 @@
             field: 'avgComplexity', title: 'Avg Complexity of Class', sortable: true
         }, {
             field: 'responseForClass', title: 'Response for Class', sortable: true
+        }, {
+            field: 'type', title: 'Class Type', sortable: true
+        }, {
+            field: 'declaration', title: 'Class Location', sortable: true
+        }, {
+            field: 'package', title: 'of Which Package', sortable: true
+        }, {
+            field: 'module', title: 'of Which Module', sortable: true
         }];
         $.get("/dashboard/complexity/table/class?projectRecordIndex=" + projectRecordIndex).done(function (data) {
             let dataset = data;

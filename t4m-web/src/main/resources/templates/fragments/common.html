@@ -210,9 +210,25 @@
 				</ul>
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						<a class="nav-link" th:classappend="${selectedElementID==2}?'active':''" href="/dashboard/coupling">
+						<a class="nav-link" th:classappend="${selectedElementID==3}?'active':''" href="/dashboard/coupling">
 							<i class="ni ni-tv-2 text-primary"></i>
 							<span class="nav-link-text">Coupling</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" th:classappend="${selectedElementID==4}?'active':''" href="/dashboard/inheritance">
+							<i class="ni ni-tv-2 text-primary"></i>
+							<span class="nav-link-text">Inheritance</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" th:classappend="${selectedElementID==5}?'active':''" href="/dashboard/cohesion">
+							<i class="ni ni-tv-2 text-primary"></i>
+							<span class="nav-link-text">Cohesion</span>
 						</a>
 					</li>
 				</ul>
