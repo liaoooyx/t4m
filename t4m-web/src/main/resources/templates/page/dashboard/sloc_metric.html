@@ -104,9 +104,9 @@
 					</div>
 					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:550px;"></div>
 					<script type="text/javascript" th:inline="javascript">
-              var datasetAllClass = /*[[${datasetAllClass}]]*/;
-              var datasetMainClass = /*[[${datasetMainClass}]]*/;
-              var timeRecords = /*[[${timeRecords}]]*/;
+              let datasetAllClass = /*[[${datasetAllClass}]]*/;
+              let datasetMainClass = /*[[${datasetMainClass}]]*/;
+              let timeRecords = /*[[${timeRecords}]]*/;
 
               function changeDataSet(type) {
                   let dataset;
@@ -164,27 +164,30 @@
                               padding: 10,
                               borderWidth: 1,
                               formatter: function (params) {
-                                  let text = '';
-                                  let triggerLabel = false;
-                                  params.forEach(row => {
-                                      if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
-                                          triggerLabel = true;
-                                          let value = row.value;
-                                          text +=
-                                              '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
-                                              + label[0] + ': ' + value[3] + label[1] + '<br>'
-                                              + '<span style="font: 12px">'
-                                              + 'of Module: ' + value[4] + '</span>' + '<br>'
-                                              + '</div>';
+                                  if (params.componentType === "timeline") {
+                                      return params.name;
+                                  } else if (params[0].componentType === "series") {
+                                      let text = '';
+                                      let triggerLabel = false;
+                                      params.forEach(row => {
+                                          if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
+                                              triggerLabel = true;
+                                              let value = row.value;
+                                              text +=
+                                                  '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                                  + label[0] + ': ' + value[3] + label[1] + '<br>'
+                                                  + '<span style="font: 12px">'
+                                                  + 'of Module: ' + value[4] + '</span>' + '<br>'
+                                                  + '</div>';
+                                          }
+                                      });
+                                      if (triggerLabel) {
+                                          text += label[2] + ': ' + pointedData[0] + '<br>'
+                                              + label[3] + ': ' + pointedData[1] + '<br>'
+                                              + label[4] + ': ' + pointedData[2] + '%<br>'
                                       }
-                                  });
-                                  if (triggerLabel) {
-                                      text += label[2] + ': ' + pointedData[0] + '<br>'
-                                          + label[3] + ': ' + pointedData[1] + '<br>'
-                                          + label[4] + ': ' + pointedData[2] + '%<br>'
+                                      return text;
                                   }
-                                  return text;
-
                               },
                               // 重叠问题
                               show: true,
@@ -377,12 +380,12 @@
               }
 
               // 基于准备好的dom，初始化echarts实例
-              var myChart = echarts.init(document.getElementById('chart'));
+              let myChart = echarts.init(document.getElementById('chart'));
 
               // $('#sloc_timeline_chart').trigger('click');
               document.getElementById('sloc_timeline_chart').click()
 
-              var pointedData = [];
+              let pointedData = [];
               myChart.on('mouseover', function (params) {
                   pointedData = params.data;
               })
@@ -519,9 +522,9 @@
 </div>
 <script th:replace="fragments/common :: footer_imports"></script>
 <script>
-    var recordRowName = "";
-    var recordRowType = "";
-    var projectRecordIndex = -1;
+    let recordRowName = "";
+    let recordRowType = "";
+    let projectRecordIndex = -1;
 
     function selectRecordTime(obj, index) {
         projectRecordIndex = index;
@@ -552,7 +555,7 @@
         });
     }
 
-    var vm = new Vue({
+    let vm = new Vue({
         // Vue实例将在created后停止声明周期，等到调用updateProjectInfomation()时才继续
         // el: '#project_info_overview',
         data: {
@@ -561,7 +564,7 @@
     })
 
     // 指定图表的配置项和数据
-    var option2 = {
+    let option2 = {
         legend: {
             data: ["Logic Code Lines (Source File)", "Logic Code Lines (AST)",
                 "Physical Code Lines (Source File)", "Physical Code Lines (AST)",
@@ -603,11 +606,11 @@
             }
         ],
     };
-    var myChart2 = echarts.init(document.getElementById('sloc_row_chart'));
+    let myChart2 = echarts.init(document.getElementById('sloc_row_chart'));
     myChart2.setOption(option2);
 
     // 用于修改模块框title
-    var vm_sloc_chart_title = new Vue({
+    let vm_sloc_chart_title = new Vue({
         el: '#sloc_row_model_label',
         data: {
             recordType: '',

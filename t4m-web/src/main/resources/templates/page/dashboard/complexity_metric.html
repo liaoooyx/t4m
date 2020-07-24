@@ -84,77 +84,38 @@
 							</div>
 							<div class="col">
 								<ul class="nav nav-pills justify-content-end">
-									<!-- dropdown -->
-									<div class="dropdown">
-										<a class="dropdown-arrow-color pr-0" href="#" role="button" data-toggle="dropdown"
-										   aria-haspopup="true"
-										   aria-expanded="false">
-											<span class="h3 mb-0 mr-2" id="complexity_chart_dropdown">Weighted Method Count</span>
-											<i class="fas fa-caret-down"></i>
+									<li class="nav-item mr-2 mr-md-0">
+										<a href="javascript:void(0);" class="nav-link py-2 px-3 active"
+										   data-toggle="tab"
+										   onclick="showTimelineChartForClass()">
+											<span class="d-none d-md-block">Class Level</span>
+											<span class="d-md-none">C</span>
 										</a>
-										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item active" href="javascript:void(0);" onclick="foo(this,0)">
-												<span>Weighted Method Count</span>
-											</a>
-											<a class="dropdown-item" href="javascript:void(0);" onclick="foo(this,1)">
-												<span>Max Complexity of Class</span>
-											</a>
-											<a class="dropdown-item" href="javascript:void(0);" onclick="foo(this,2)">
-												<span>Average Complexity of Class</span>
-											</a>
-											<a class="dropdown-item" href="javascript:void(0);" onclick="foo(this,3)">
-												<span>Response for Class</span>
-											</a>
-											<a class="dropdown-item" href="javascript:void(0);" onclick="foo(this,4)">
-												<span>Cyclomatic complexity of Method</span>
-											</a>
-										</div>
-									</div>
+									</li>
+									<li class="nav-item">
+										<a id='sloc_timeline_chart' href="javascript:void(0);" class="nav-link py-2 px-3"
+										   data-toggle="tab" onclick="showTimelineChartForMethod()">
+											<span class="d-none d-md-block">Method Level</span>
+											<span class="d-md-none">F</span>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</div>
 					</div>
-					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:550px;"></div>
+					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:680px;"></div>
 					<script type="text/javascript" th:inline="javascript">
               let timeRecords = /*[[${timeRecords}]]*/;
               let weightedMethodsCountDataset = /*[[${weightedMethodsCountDataset}]]*/;
               let maxComplexityOfClassDataset = /*[[${maxComplexityOfClassDataset}]]*/;
               let avgComplexityOfClassDataset = /*[[${avgComplexityOfClassDataset}]]*/;
               let responseForClassDataset = /*[[${responseForClassDataset}]]*/;
+              let methodComplexityDataset = /*[[${methodComplexityDataset}]]*/;
+              let methodNumDataset = /*[[${methodNumDataset}]]*/;
+
               // let cyclomaticComplexityForMethodDataset = /*[[${cyclomaticComplexityForMethodDataset}]]*/;
 
-              function changeDataSet(type) {
-                  let dataset;
-                  let label;
-                  switch (index) {
-                      case 0:
-                          dataset = weightedMethodsCountDataset;
-                          label = ['Class', 'of Module', 'Number of Methods',
-                              'Weighted Methods Count']
-                          break;
-                      case 1:
-                          dataset = maxComplexityOfClassDataset;
-                          label = ['Class', 'of Module', 'Number of Methods',
-                              'Weighted Methods Count']
-                          break;
-                      case 2:
-                          dataset = avgComplexityOfClassDataset;
-                          label = ['Class', 'of Module', 'Number of Methods',
-                              'Weighted Methods Count']
-                          break;
-                      case 3:
-                          dataset = responseForClassDataset;
-                          label = ['Class', 'of Module', 'Number of Methods',
-                              'Weighted Methods Count']
-                          break;
-                      case 4:
-                          dataset = cyclomaticComplexityForMethodDataset;
-                          label = ['Method', 'of Class', 'Number of Methods',
-                              'Weighted Methods Count']
-                          break;
-                  }
-                  let dataMax = getMax(dataset);
-                  let options = optionsFormatter(dataset);
+              function showTimelineChartForClass() {
                   let option = {
                       baseOption: {
                           timeline: {
@@ -178,43 +139,73 @@
                                   }
                               }
                           },
-                          legend: {
-                              data: [label[0]],
-                          },
-                          xAxis: {
-                              name: label[2],
-                              type: 'value',
-                              max: Math.ceil(dataMax[0] / 5) * 5
-                          },
-                          yAxis: {
-                              name: label[3],
-                              type: 'value',
-                              max: Math.ceil(dataMax[1] / 5) * 5
-                          },
+                          legend: {},
+                          yAxis: [
+                              {
+                                  gridIndex: 0,
+                                  name: 'Weighted Method Count',
+                                  nameLocation: 'center',
+                                  nameRotate: 90,
+                                  nameGap: 30
+                              },
+                              {
+                                  gridIndex: 1,
+                                  name: 'Max Complexity of Class',
+                                  nameLocation: 'center',
+                                  nameRotate: 90,
+                                  nameGap: 30
+                              },
+                              {
+                                  gridIndex: 2,
+                                  name: 'Avg Complexity of Class',
+                                  nameLocation: 'center',
+                                  nameRotate: 90,
+                                  nameGap: 30
+                              },
+                              {
+                                  gridIndex: 3,
+                                  name: 'Response for class',
+                                  nameLocation: 'center',
+                                  nameRotate: 90,
+                                  nameGap: 30
+                              }
+                          ],
+                          xAxis: [
+                              {gridIndex: 0, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},
+                              {gridIndex: 1, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},
+                              {gridIndex: 2},
+                              {gridIndex: 3},
+                          ],
                           tooltip: {
                               // 显示额外信息
                               padding: 10,
                               borderWidth: 1,
                               formatter: function (params) {
-                                  let text = '';
-                                  let triggerLabel = false;
-                                  params.forEach(row => {
-                                      if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
-                                          triggerLabel = true;
-                                          let value = row.value;
-                                          text +=
-                                              '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
-                                              + label[0] + ': ' + value[2] + '<br>'
-                                              + '<span style="font: 12px">'
-                                              + label[1] + ': ' + value[3] + '</span>' + '<br>'
-                                              + '</div>';
+                                  if (params.componentType === "timeline") {
+                                      return params.name;
+                                  } else if (params[0].componentType === "series") {
+                                      let text = '';
+                                      let yLabelName = ''
+                                      let triggerLabel = false;
+                                      params.forEach(row => {
+                                          yLabelName = row.seriesName;
+                                          if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
+                                              triggerLabel = true;
+                                              let value = row.value;
+                                              text +=
+                                                  '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                                  + 'Class: ' + value[2] + '<br>'
+                                                  + '<span style="font: 12px">'
+                                                  + 'of Module: ' + value[3] + '</span>' + '<br>'
+                                                  + '</div>';
+                                          }
+                                      });
+                                      if (triggerLabel) {
+                                          text += 'Number of Methods : ' + pointedData[0] + '<br>' +
+                                              yLabelName + ': ' + pointedData[1] + '<br>'
                                       }
-                                  });
-                                  if (triggerLabel) {
-                                      text += label[2] + ': ' + pointedData[0] + '<br>'
-                                          + label[3] + ': ' + pointedData[1] + '<br>'
+                                      return text;
                                   }
-                                  return text;
                               },
                               // 重叠问题
                               show: true,
@@ -231,70 +222,258 @@
                                   }
                               },
                           },
-                          grid: {
-                              // left: '10%',
-                              right: 150,
-                              // top: '18%',
-                              // bottom: '10%'
-                          },
-                          color: ['#c23531'],
+                          grid: [
+                              {x: '7%', y: '5%', width: '40%', height: '38%'},
+                              {x2: '5%', y: '5%', width: '40%', height: '38%'},
+                              {x: '7%', y2: '11%', width: '40%', height: '38%'},
+                              {x2: '5%', y2: '11%', width: '40%', height: '38%'}
+                          ],
                       },
-                      options: options
-
+                      options: initOptions()
                   };
-                  myChart.setOption(option);
+                  document.getElementById("chart").style.height = "680px";
+                  complexityTimelineChart.clear();
+                  complexityTimelineChart.resize();
+                  complexityTimelineChart.setOption(option);
               }
 
-              function getMax(dataset) {
-                  let xMax = 0;
-                  let yMax = 0;
-                  for (let key in dataset) {
-                      for (let cols of dataset[key]) {
-                          xMax = Number(cols[0]) > xMax ? Number(cols[0]) : xMax;
-                          yMax = Number(cols[1]) > yMax ? Number(cols[1]) : yMax;
-                      }
-                  }
-                  return [xMax, yMax];
-              }
-
-              function optionsFormatter(dataset) {
+              function initOptions() {
                   let options = [];
                   for (let i = 0; i < timeRecords.length; i++) {
                       options[i] = {
-                          series: [{
-                              name: 'Class',
-                              data: dataset[timeRecords[i]],
-                              type: 'scatter',
-                              emphasis: {
-                                  label: {
-                                      show: true,
-                                      formatter: function (params) {
-                                          return params.data[3];
+                          series: [
+                              {
+                                  name: 'Weighted Methods Count',
+                                  type: 'scatter',
+                                  xAxisIndex: 0,
+                                  yAxisIndex: 0,
+                                  data: weightedMethodsCountDataset[timeRecords[i]],
+                                  emphasis: {
+                                      label: {
+                                          show: true,
+                                          formatter: function (params) {
+                                              return params.data[2];
+                                          },
+                                          color: '#000000',
+                                          position: 'top',
+                                          fontWeight: 'normal',
                                       },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
                                   },
                               },
-                          }]
+                              {
+                                  name: 'Max Complexity of Class',
+                                  type: 'scatter',
+                                  xAxisIndex: 1,
+                                  yAxisIndex: 1,
+                                  data: maxComplexityOfClassDataset[timeRecords[i]],
+                                  emphasis: {
+                                      label: {
+                                          show: true,
+                                          formatter: function (params) {
+                                              return params.data[2];
+                                          },
+                                          color: '#000000',
+                                          position: 'top',
+                                          fontWeight: 'normal',
+                                      },
+                                  },
+                              },
+                              {
+                                  name: 'Avg Complexity of Class',
+                                  type: 'scatter',
+                                  xAxisIndex: 2,
+                                  yAxisIndex: 2,
+                                  data: avgComplexityOfClassDataset[timeRecords[i]],
+                                  emphasis: {
+                                      label: {
+                                          show: true,
+                                          formatter: function (params) {
+                                              return params.data[2];
+                                          },
+                                          color: '#000000',
+                                          position: 'top',
+                                          fontWeight: 'normal',
+                                      },
+                                  },
+                              },
+                              {
+                                  name: 'Response for Class',
+                                  type: 'scatter',
+                                  xAxisIndex: 3,
+                                  yAxisIndex: 3,
+                                  data: responseForClassDataset[timeRecords[i]],
+                                  emphasis: {
+                                      label: {
+                                          show: true,
+                                          formatter: function (params) {
+                                              return params.data[2];
+                                          },
+                                          color: '#000000',
+                                          position: 'top',
+                                          fontWeight: 'normal',
+                                      },
+                                  },
+                              }
+                          ]
                       }
                   }
                   return options;
               }
 
-              // 基于准备好的dom，初始化echarts实例
-              var myChart = echarts.init(document.getElementById('chart'));
+              function showTimelineChartForMethod() {
+                  let option = {
+                      grid: {
+                          bottom: '100'
+                      },
+                      legend: {},
+                      xAxis: {
+                          name: "Time",
+                          type: 'category',
+                          splitLine: {
+                              show: true,
+                              lineStyle: {
+                                  type: 'solid'
+                              }
+                          },
+                          splitArea: {
+                              interval: 0,
+                          }
+                      },
+                      yAxis: [{
+                          name: "Cyclomatic of Methods",
+                          type: 'value',
+                          nameLocation: 'center',
+                          nameRotate: 90,
+                          nameGap: 30
+                      }, {
+                          name: "Number of All Methods in the Project",
+                          type: 'value',
+                          nameLocation: 'center',
+                          nameRotate: 270,
+                          nameGap: 30
+                      }],
+                      series: [{
+                          name: 'Cyclomatic Complexity of Method',
+                          type: 'scatter',
+                          yAxisIndex: 0,
+                          data: methodComplexityDataset,
+                          emphasis: {
+                              label: {
+                                  show: true,
+                                  formatter: function (params) {
+                                      return params.data[2];
+                                  },
+                                  color: '#000000',
+                                  position: 'top',
+                                  fontWeight: 'normal',
+                              },
+                          },
+                      }, {
+                          name: 'Number of All Methods',
+                          type: 'bar',
+                          yAxisIndex: 1,
+                          data: methodNumDataset,
+                          itemStyle: {
+                              color: 'rgba(229,229,229,0.8)',
+                          },
+		                      label:{
+                              show:true,
+                              position: 'top',
+				                      distance: 20,
+                              formatter: '{@[1]}',
+                              color: '#000000',
+		                      }
+                      }],
+                      dataZoom: [
+                          {
+                              type: 'slider',
+                              xAxisIndex: 0,
+                              start: 20,
+                              end: 100
+                          },
+                          {
+                              type: 'inside',
+                              xAxisIndex: 0,
+                              start: 20,
+                              end: 100
+                          },
+                          {
+                              type: 'slider',
+                              yAxisIndex: 0,
+                              left: 20,
+                              start: 0,
+                              end: 100
+                          },
+                          {
+                              type: 'slider',
+                              yAxisIndex: 1,
+                              right: 20,
+                              start: 0,
+                              end: 100
+                          }
+                      ],
+                      tooltip: {
+                          // 显示额外信息
+                          padding: 10,
+                          borderWidth: 1,
+                          formatter: function (params) {
+                                  let text = '';
+                                  let triggerLabel = false;
+                                  params.forEach(row => {
+                                      if (row.componentSubType === "scatter" && pointedData[0] === row.data[0] &&
+                                          pointedData[1] === row.data[1]) {
+                                          triggerLabel = true;
+                                          let value = row.value;
+                                          text +=
+                                              '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                              + 'Method: ' + value[2] + '<br>'
+                                              + '<span style="font: 12px">'
+                                              + 'Declaration: ' + value[3] + '</span>' + '<br>'
+                                              + '</div>';
+                                      }
+                                  });
+                                  if (triggerLabel) {
+                                      text += 'Cyclomatic Complexity of Method : ' + pointedData[1] + '<br>'
+                                  }
+                                  return text;
+                          },
+                          // 重叠问题
+                          show: true,
+                          enterable: true,
+                          trigger: 'axis',
+                          confine: true,
+                          axisPointer: {
+                              type: 'cross',
+                              snap: false,
+                              axis: 'x', // y轴选项
+                              label: {
+                                  // show: false,
+                                  color: '#fff',
+                                  backgroundColor: 'rgba(0, 0, 0, .55)'
+                              }
+                          },
+                      },
+                  };
+                  document.getElementById("chart").style.height = "550px";
+                  complexityTimelineChart.clear();
+                  complexityTimelineChart.resize();
+                  complexityTimelineChart.setOption(option);
+              }
 
-              var pointedData = [];
-              myChart.on('mouseover', function (params) {
+              // 基于准备好的dom，初始化echarts实例
+              let complexityTimelineChart = echarts.init(document.getElementById('chart'));
+
+              let pointedData = [];
+              complexityTimelineChart.on('mouseover', function (params) {
                   pointedData = params.data;
               })
-              myChart.on('mouseout', function (params) {
+              complexityTimelineChart.on('mouseout', function () {
                   pointedData = [];
               })
 					
 					
 					</script>
+				
 				</div>
 			</div>
 		</div>
@@ -380,9 +559,11 @@
 <script th:replace="fragments/common :: footer_imports"></script>
 <script>
 
-    // 首次渲染表格
+
     $(function () {
-        changeDataSet(0);
+        // 首次渲染图表
+        showTimelineChartForClass();
+        // 首次渲染表格
         showClassComplexity();
     })
 
@@ -391,14 +572,6 @@
     let currentClassQualifiedName = "";
     let isCurrentLevelMethod = false;
 
-    // 选择记录
-    function foo(obj, index) {
-        let selectedItem = $(obj).text()
-        $('#complexity_chart_dropdown').text(selectedItem)
-        $(obj).siblings().removeClass("active")
-        $(obj).addClass("active");
-        changeDataSet(index);
-    }
 
     // 选择记录
     function selectRecordTime(obj, index) {
@@ -505,7 +678,7 @@
     }
 
     // 用于修改模块框title
-    let vm_complexity_table_chart_title = new Vue({
+    let complexity_table_chart_title_vm = new Vue({
         el: '#complexity_row_model_label',
         data: {
             recordType: '',
@@ -555,8 +728,8 @@
     complexityTableChart.setOption(tableChartOptForClass);
 
     function showTableChartForClass(qualifiedName) {
-        vm_complexity_table_chart_title.recordName = qualifiedName;
-        vm_complexity_table_chart_title.recordType = "Class";
+        complexity_table_chart_title_vm.recordName = qualifiedName;
+        complexity_table_chart_title_vm.recordType = "Class";
         // 异步加载数据
         $.get("/dashboard/complexity/table/chart/class?qualifiedName=" + qualifiedName).done(function (data) {
             // 填入数据

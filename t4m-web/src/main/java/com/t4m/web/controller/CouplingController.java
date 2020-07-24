@@ -1,8 +1,10 @@
 package com.t4m.web.controller;
 
-import com.t4m.extractor.entity.*;
+import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.MethodInfo;
+import com.t4m.extractor.entity.PackageInfo;
+import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
-import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
@@ -25,10 +27,10 @@ import java.util.*;
  * Created by Yuxiang Liao on 2020-07-21 23:23.
  */
 @Controller
-@RequestMapping("/dashboard/complexity")
-public class ComplexityController {
+@RequestMapping("/dashboard/coupling")
+public class CouplingController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ComplexityController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CouplingController.class);
 
 	@Resource(name = "ProjectService")
 	private ProjectService projectService;
@@ -134,48 +136,71 @@ public class ComplexityController {
 		}
 		model.addAttribute("methodNumDataset", methodNumDataset);
 
-		return "page/dashboard/complexity_metric";
+		return "page/dashboard/coupling_metric";
 	}
 
-	@GetMapping("/table/method")
+	@GetMapping("/table/package")
 	@ResponseBody
-	public List<Map<String, Object>> selectMethodRecord(
-			@RequestParam(name = "classQualifiedName") String classQualifiedName,
+	public List<Map<String, Object>> selectPackageRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
-		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), classQualifiedName);
-		for (MethodInfo methodInfo : classInfo.getMethodInfoList()) {
+		for (PackageInfo packageInfo: projectInfo.getPackageList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
-			row.put("name", methodInfo.getShortName());
-			row.put("declaration", methodInfo.getMethodDeclarationString());
-			row.put("class", methodInfo.getClassInfo().getFullyQualifiedName());
-			row.put("module", methodInfo.getClassInfo().getPackageInfo().getModuleInfo().getShortName());
-			row.put("cyclomaticComplexity", methodInfo.getCyclomaticComplexity());
-			row.put("qualifiedName", methodInfo.getFullyQualifiedName());
+			row.put("name", packageInfo.getFullyQualifiedName());
+			row.put("module", packageInfo.getModuleInfo().getShortName());
+			row.put("afferentCoupling", packageInfo.getAfferentCoupling());
+			row.put("efferentCoupling", packageInfo.getEfferentCoupling());
+			row.put("instability", packageInfo.getInstability());
+			row.put("abstractness", packageInfo.getAbstractness());
 			rows.add(row);
 		}
 		return rows;
 	}
 
+	@GetMapping("/table/chart/package")
+	@ResponseBody
+	public List<Object[]> selectTableChartRecordForPackage(@RequestParam(name = "qualifiedName") String qualifiedName) {
+
+		//	第一行是系列名，从第二行开始，每一行是一条记录的数据，其中第一列是时间
+		List<Object[]> dataset = new ArrayList<>();
+		dataset.add(new String[]{"time", "Afferent Coupling", "Efferent Coupling", "Instability", "Abstractness"});
+		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), qualifiedName);
+			Object[] tempRow = new Object[6];
+			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			Arrays.fill(tempRow, 1, 5, null);
+			if (packageInfo != null) { //类可能还未创建或已经删除
+				tempRow[1] = packageInfo.getAfferentCoupling();
+				tempRow[2] = packageInfo.getEfferentCoupling();
+				tempRow[3] = packageInfo.getInstability();
+				tempRow[4] = packageInfo.getAbstractness();
+			}
+			dataset.add(tempRow);
+		}
+		return dataset;
+	}
+
 	@GetMapping("/table/class")
 	@ResponseBody
 	public List<Map<String, Object>> selectClassRecord(
+			@RequestParam(name = "pkgQualifiedName") String pkgQualifiedName,
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
-		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), pkgQualifiedName);
+		for (ClassInfo classInfo : packageInfo.getAllClassList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", classInfo.getShortName());
 			row.put("type", classInfo.getClassModifier().toString());
 			row.put("declaration", classInfo.getClassDeclaration().toString());
 			row.put("package", classInfo.getPackageFullyQualifiedName());
 			row.put("module", classInfo.getPackageInfo().getModuleInfo().getShortName());
-			row.put("numOfMethod", classInfo.getNumberOfMethods());
-			row.put("weightedMethodsCount", classInfo.getWeightedMethodsCount());
-			row.put("maxComplexity", classInfo.getMaxCyclomaticComplexity());
-			row.put("avgComplexity", classInfo.getAvgCyclomaticComplexity());
-			row.put("responseForClass", classInfo.getResponseForClass());
+			row.put("couplingBetweenObjects", classInfo.getCouplingBetweenObjects());
+			row.put("afferentCoupling", classInfo.getAfferentCoupling());
+			row.put("efferentCoupling", classInfo.getEfferentCoupling());
+			row.put("instability", classInfo.getInstability());
+			row.put("messagePassingCoupling", classInfo.getMessagePassingCoupling());
 			row.put("qualifiedName", classInfo.getFullyQualifiedName());
 			rows.add(row);
 		}
@@ -188,19 +213,19 @@ public class ComplexityController {
 
 		//	第一行是系列名，从第二行开始，每一行是一条记录的数据，其中第一列是时间
 		List<Object[]> dataset = new ArrayList<>();
-		dataset.add(new String[]{"time", "Number of Method", "Weighted Method Count", "Max Complexity of Class",
-		                         "Avg Complexity of Class", "Response for Class"});
+		dataset.add(new String[]{"time", "Coupling Between Objects", "Afferent Coupling", "Efferent Coupling",
+		                         "Instability", "Message Passing Coupling"});
 		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
 			Object[] tempRow = new Object[6];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			Arrays.fill(tempRow, 1, 5, null);
 			if (classInfo != null) { //类可能还未创建或已经删除
-				tempRow[1] = classInfo.getNumberOfMethods();
-				tempRow[2] = classInfo.getWeightedMethodsCount();
-				tempRow[3] = classInfo.getMaxCyclomaticComplexity();
-				tempRow[4] = classInfo.getAvgCyclomaticComplexity();
-				tempRow[5] = classInfo.getResponseForClass();
+				tempRow[1] = classInfo.getCouplingBetweenObjects();
+				tempRow[2] = classInfo.getAfferentCoupling();
+				tempRow[3] = classInfo.getEfferentCoupling();
+				tempRow[4] = classInfo.getInstability();
+				tempRow[5] = classInfo.getMessagePassingCoupling();
 			}
 			dataset.add(tempRow);
 		}
