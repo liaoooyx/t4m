@@ -289,7 +289,7 @@
 		</div>
 		
 		<div class="row">
-			
+			<!-- 选择记录时间 -->
 			<div class="col-xl-12">
 				<div class="card-header border-0">
 					<div class="row align-items-center">
@@ -305,11 +305,7 @@
 									<i class="fas fa-caret-down"></i>
 								</a>
 								<div class="dropdown-menu">
-									<!--											<div class="dropdown-header noti-title">-->
-									<!--												<h6 class="text-overflow m-0">History Record</h6>-->
-									<!--											</div>-->
-									<a class="dropdown-item"
-									   th:classappend="${timeRecordStat.index} eq ${timeRecords.size()-1} ? 'active' : ''"
+									<a th:class="${timeRecordStat.index} eq ${timeRecords.size()-1} ? 'dropdown-item active' : 'dropdown-item'"
 									   href="javascript:void(0);"
 									   th:each="timeRecord,timeRecordStat : ${timeRecords}"
 									   th:onclick="selectRecordTime(this,[[${timeRecordStat.index}]])">
@@ -323,131 +319,136 @@
 					</div>
 				</div>
 			</div>
-			
-			<!-- 这部分的动态更新由vue.js支持，模板语法有thymeleaf支持 -->
-			<!-- 修改代码后，需要同步更新至templates/fragments/dashboard/project_list_template.html -->
-			<div id="project_info_basic" v-html="project_info_fragment" class="col-xl-12">
-				<!-- module -->
-				<div class="card mb-0">
-					<div class="table-responsive card-table">
-						<table class="table align-items-center table-flush" data-toggle="table" data-height="360"
-						       data-fixed-columns="true" data-fixed-number="2">
-							<thead class="thead-light">
-							<tr>
-								<th scope="col">Module</th>
-								<th scope="col">Package Number</th>
-								<th scope="col">Class + (InnerClass) Number</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr th:each="moduleMap : ${moduleMapList}" th:object="${moduleMap}"
-							    th:class="(*{newness} eq 'new')? 'text-success' : ((*{newness} eq 'delete')? 'text-danger': '')"
-							    th:styleappend="(*{newness} eq 'delete')? 'text-decoration: line-through;' : ''">
-								<th scope="row" th:text="(*{newness} eq 'new') ? '(new) '+ *{moduleName} : *{moduleName}"></th>
-								<td th:text="*{numOfPkg}">num of pkg</td>
-								<td th:text="*{numOfClass}+' + ('+*{numOfInnerClass}+')'">num of class</td>
-							</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<!-- package -->
-				<div class="card mb-0">
-					<div class="table-responsive card-table">
-						<table class="table align-items-center table-flush" data-toggle="table" data-height="360"
-						       data-fixed-columns="true" data-fixed-number="2">
-							<thead class="thead-light">
-							<tr>
-								<th scope="col">Package</th>
-								<th scope="col">of Module</th>
-								<th scope="col">Class + (InnerClass) Number</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr th:each="packageMap : ${packageMapList}" th:object="${packageMap}"
-							    th:class="(*{newness} eq 'new')? 'text-success' : ((*{newness} eq 'delete')? 'text-danger': '')"
-							    th:styleappend="(*{newness} eq 'delete')? 'text-decoration: line-through;' : ''">
-								<th scope="row" th:text="(*{newness} eq 'new') ? '(new) '+ *{packageName} : *{packageName}"></th>
-								<td th:text="*{packageInfo.getModuleInfo().getRelativePath()}"></td>
-								<td th:text="*{numOfClass}+' + ('+*{numOfInnerClass}+')'"></td>
-							</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<!-- class -->
-				<div class="card mb-0">
-					<div class="table-responsive card-table">
-						<!-- Projects table -->
-						<table class="table align-items-center table-flush" data-toggle="table" data-height="360"
-						       data-fixed-columns="true" data-fixed-number="2">
-							<thead class="thead-light">
-							<tr>
-								<th scope="col">Type</th>
-								<th scope="col">Class</th>
-								<th scope="col">of Package</th>
-								<th scope="col">of Module</th>
-								<th scope="col">Fields</th>
-								<th scope="col">Methods</th>
-								<th scope="col">Enum Constants</th>
-								<th scope="col">Annotation Members</th>
-								<th scope="col">Inner Classes</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr th:each="classMap : ${classMapList}" th:object="${classMap}"
-							    th:class="(*{newness} eq 'new')? 'text-success' : ((*{newness} eq 'delete')? 'text-danger': '')"
-							    th:styleappend="(*{newness} eq 'delete')? 'text-decoration: line-through;' : ''">
-								<th scope="row" th:text="*{classModifier}"></th>
-								<td th:text="(*{newness} eq 'new') ? '(new) '+ *{className} : *{className}"></td>
-								<td th:text="*{classInfo.getPackageInfo().getFullyQualifiedName()}"></td>
-								<td th:text="*{classInfo.getPackageInfo().getModuleInfo().getRelativePath()}"></td>
-								<td th:text="*{classInfo.getNumberOfFields()}"></td>
-								<td th:text="*{classInfo.getNumberOfMethods()}"></td>
-								<td th:text="*{classInfo.getNumberOfEnumConstants()}"></td>
-								<td th:text="*{classInfo.getNumberOfAnnotationMembers()}"></td>
-								<td th:text="*{classInfo.getNestedClassList().size()}"></td>
-							</tr>
-							</tbody>
-						</table>
+			<!--表格-->
+			<div class="col-xl-12">
+				<div class="card">
+					<div class="table-responsive">
+						<div id="toolbar">
+							<div class="form-inline" role="form">
+								<a id="previous-btn" class="btn btn-outline-primary btn-sm invisible"
+								   href="javascript:void(0);"
+								   onclick="showClassCohesion()">
+									< previous</a>
+							</div>
+						</div>
+						<table id="table1"></table>
+						<table id="table2"></table>
+						<table id="table3"></table>
 					</div>
 				</div>
 			</div>
-		
 		</div>
-		
-		<script>
-
-        function selectRecordTime(obj, index) {
-            let newTime = $(obj).text()
-            $('#current_record_time').text(newTime)
-            $(obj).siblings().removeClass("active")
-            $(obj).addClass("active");
-            $.get("/dashboard/basic/select/" + index, function (data) {
-                if ("undefined" == typeof vm.$el) {
-                    vm.project_info_fragment = data;
-                    // 挂载vue实例到DOM上，继续声明周期
-                    vm.$mount('#project_info_basic');
-                }
-                vm.project_info_fragment = data;
-            });
-        }
-
-        var vm = new Vue({
-            // Vue实例将在created后停止声明周期，等到调用updateProjectInfomation()时才继续
-            // el: '#project_info_basic',
-            data: {
-                project_info_fragment: ""
-            }
-        })
-		</script>
-		
 		<!-- Footer -->
 		<footer th:replace="fragments/common :: footer"></footer>
 	</div>
 </div>
-
 <script th:replace="fragments/common :: footer_imports"></script>
+<script>
+
+    $(function () {
+        // 首次渲染图表
+        // showTimelineChartForClass();
+        // 首次渲染表格
+        showModuleBasic();
+        showPackageBasic();
+        showClassBasic();
+    })
+
+    let projectRecordIndex = -1;
+
+    // 选择记录
+    function selectRecordTime(obj, index) {
+        projectRecordIndex = index;
+        let newTime = $(obj).text()
+        $('#current_record_time').text(newTime)
+        $(obj).siblings().removeClass("active")
+        $(obj).addClass("active");
+        showModuleBasic();
+        showPackageBasic();
+        showClassBasic();
+    }
+
+    //表格：类级别的度量数据
+    function showModuleBasic() {
+        let columns = [{
+            field: 'name', title: 'Module Name', sortable: true
+        }, {
+            field: 'packageNum', title: 'Packages', sortable: true
+        }, {
+            field: 'classNum', title: 'Java Files / Classes', sortable: true
+        }];
+        $.get("/dashboard/basic/table/module?projectRecordIndex=" + projectRecordIndex).done(function (data) {
+            buildTable($('#table1'), data, columns, 1, 0, 300)
+            $("#previous-btn").addClass("invisible");
+        });
+    }
+
+    //表格：类级别的度量数据
+    function showPackageBasic() {
+        let columns = [{
+            field: 'name', title: 'Module Name', sortable: true
+        }, {
+            field: 'javaFileNum', title: 'Packages', sortable: true
+        }, {
+            field: 'classNum', title: 'Java Files / Classes', sortable: true
+        }, {
+            field: 'module', title: 'of Which Module', sortable: true
+        }];
+        $.get("/dashboard/basic/table/package?projectRecordIndex=" + projectRecordIndex).done(function (data) {
+            buildTable($('#table2'), data, columns, 1, 0, 400)
+            $("#previous-btn").addClass("invisible");
+        });
+    }
+
+    //表格：类级别的度量数据
+    function showClassBasic() {
+        let columns = [{
+            field: 'name', title: 'Class Name', sortable: true
+        }, {
+            field: 'fieldNum', title: 'Fields', sortable: true
+        }, {
+            field: 'methodNum', title: 'Methods', sortable: true
+        }, {
+            field: 'enumConstantsNum', title: 'Enum Constants', sortable: true
+        }, {
+            field: 'annotationMembers', title: 'Annotation Members', sortable: true
+        }, {
+            field: 'type', title: 'Class Type', sortable: true
+        }, {
+            field: 'declaration', title: 'Class Location', sortable: true
+        }, {
+            field: 'package', title: 'of Which Package', sortable: true
+        }, {
+            field: 'module', title: 'of Which Module', sortable: true
+        }];
+        $.get("/dashboard/basic/table/class?projectRecordIndex=" + projectRecordIndex).done(function (data) {
+            buildTable($('#table3'), data, columns, 1, 0, 500)
+            $("#previous-btn").addClass("invisible");
+        });
+    }
+
+    // 重新渲染表格
+    function buildTable($el, dataset, columns, fixedNumber, fixedRightNumber, height) {
+        $el.bootstrapTable('destroy').bootstrapTable({
+            height: height,
+            columns: columns,
+            data: dataset,
+            toolbar: '#toolbar',
+            search: true,
+            showColumns: true,
+            fixedColumns: true,
+            fixedNumber: fixedNumber,
+            fixedRightNumber: fixedRightNumber,
+            // buttons: "",
+            // buttonsPrefix: "",
+            // buttonsClass: "btn btn-sm btn-outline-primary",
+            showColumnsToggleAll: true,
+            detailViewByClick: true,
+            iconSize: "sm",
+            showFullscreen: true,
+        })
+    }
+</script>
 </body>
 
 </html>

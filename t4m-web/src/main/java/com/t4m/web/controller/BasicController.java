@@ -1,6 +1,11 @@
 package com.t4m.web.controller;
 
+import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.ModuleInfo;
+import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.util.EntityUtil;
+import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
@@ -14,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * Created by Yuxiang Liao on 2020-06-23 22:50.
@@ -66,6 +72,62 @@ public class BasicController {
 		// TODO 关于SLOC的参数选择有问题。外部类的参数包括内部类，且ast格式的commentline只有docline，不包括"//"。需要更周全的选择
 		model.addAttribute("classMapList", classService.getClassMapList(projectRecordIndex));
 		return "fragments/dashboard/project_list_template";
+	}
+
+	@GetMapping("/table/module")
+	@ResponseBody
+	public List<Map<String, Object>> selectModuleRecord(
+			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
+		List<Map<String, Object>> rows = new ArrayList<>();
+		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
+			Map<String, Object> row = new LinkedHashMap<>();
+			row.put("name", moduleInfo.getRelativePath());
+			row.put("packageNum", moduleInfo.getPackageList().size());
+			row.put("classNum", moduleInfo.getNumberOfJavaFile() + " / " + moduleInfo.getNumberOfAllClass());
+			rows.add(row);
+		}
+		return rows;
+	}
+
+	@GetMapping("/table/package")
+	@ResponseBody
+	public List<Map<String, Object>> selectPackageRecord(
+			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
+		List<Map<String, Object>> rows = new ArrayList<>();
+		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		for (PackageInfo packageInfo : projectInfo.getPackageList()) {
+			Map<String, Object> row = new LinkedHashMap<>();
+			row.put("name", packageInfo.getFullyQualifiedName());
+			row.put("javaFileNum", packageInfo.getNumberOfJavaFile());
+			row.put("classNum", packageInfo.getNumberOfAllClass());
+			row.put("module",packageInfo.getModuleInfo().getShortName());
+			rows.add(row);
+		}
+		return rows;
+	}
+
+	@GetMapping("/table/class")
+	@ResponseBody
+	public List<Map<String, Object>> selectClassRecord(
+			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
+		List<Map<String, Object>> rows = new ArrayList<>();
+		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+			Map<String, Object> row = new LinkedHashMap<>();
+			row.put("name", classInfo.getShortName());
+			row.put("type", classInfo.getClassModifier().toString());
+			row.put("declaration", classInfo.getClassDeclaration().toString());
+			row.put("package", classInfo.getPackageFullyQualifiedName());
+			row.put("module", classInfo.getPackageInfo().getModuleInfo().getShortName());
+			row.put("fieldNum",classInfo.getNumberOfFields());
+			row.put("methodNum",classInfo.getNumberOfMethods());
+			row.put("enumConstantsNum",classInfo.getNumberOfEnumConstants());
+			row.put("annotationMembers",classInfo.getNumberOfAnnotationMembers());
+			row.put("qualifiedName", classInfo.getFullyQualifiedName());
+			rows.add(row);
+		}
+		return rows;
 	}
 
 }
