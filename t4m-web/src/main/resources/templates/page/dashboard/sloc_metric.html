@@ -396,8 +396,9 @@
 			</div>
 		</div>
 		
+		<!--表格-->
 		<div class="row">
-			
+			<!-- 选择记录时间 -->
 			<div class="col-xl-12">
 				<div class="card-header border-0">
 					<div class="row align-items-center">
@@ -413,7 +414,6 @@
 									<i class="fas fa-caret-down"></i>
 								</a>
 								<div class="dropdown-menu">
-									
 									<a th:class="${timeRecordStat.index} eq ${timeRecords.size()-1} ? 'dropdown-item active' : 'dropdown-item'"
 									   href="javascript:void(0);"
 									   th:each="timeRecord,timeRecordStat : ${timeRecords}"
@@ -428,74 +428,29 @@
 					</div>
 				</div>
 			</div>
-			
-			<!-- 这部分的动态更新由vue.js支持，模板语法有thymeleaf支持 -->
-			<!-- 修改代码后，需要同步更新至templates/fragments/dashboard/sloc_list_template.html -->
-			<div class="col-xl-12" id="sloc_info_records" v-html="sloc_list_fragment">
-				
+			<!--表格-->
+			<div class="col-xl-12">
 				<div class="card">
 					<div class="table-responsive">
-						<table id="sloc-table" class="table align-items-center table-flush">
-							<thead class="thead-light">
-							<tr>
-								<th></th>
-								<th scope="col">Name</th>
-								<th scope="col">Level</th>
-								<th scope="col">Logic Code Lines<br>(Source File)</th>
-								<th scope="col">Physical Code Lines<br>(Source File)</th>
-								<th scope="col">Comment Lines<br>(Source File)</th>
-								<th scope="col">% of Comments<br>(Source File)</th>
-								<th scope="col">Logic Code Lines<br>(JavaParser)</th>
-								<th scope="col">Physical Code Lines<br>(JavaParser)</th>
-								<th scope="col">Comment Lines<br>(JavaParser)</th>
-								<th scope="col">% of Comments<br>(JavaParser)</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr>
-								<th scope="row" th:if="${!isRoot}">
-									<a href="javascript:void(0);"
-									   th:onclick="getNextLevel([[${previousName}]],[[${previousType}]])">(Go back)</a>
-								</th>
-							</tr>
-							<tr th:each="colMap : ${dataList}" th:object="${colMap}" th:inline="text">
-								<td>
-									<a class="table-chart-icon" href="javascript:void(0);" data-toggle="modal"
-									   data-target="#sloc_row_model" th:onclick="showTableChart([[*{name}]],[[*{type}]])">
-										<i class="fas fa-chart-bar"></i>
-									</a>
-								</td>
-								<th scope="row" th:if="*{type} eq 'module' or *{type} eq 'package'">
-									<a href="javascript:void(0);"
-									   th:onclick="getNextLevel([[*{name}]],[[*{type}]])">
-										[[*{name}]]</a>
-								</th>
-								<th scope="row" th:unless="*{type} eq 'module' or *{type} eq 'package'" th:text="*{name}">
-								</th>
-								<td th:text="*{type}"></td>
-								<td th:text="*{logicCodeLineFromSourceFile}"></td>
-								<td th:text="*{physicalCodeLineFromSourceFile}"></td>
-								<td th:text="*{commentLineFromSourceFile}"></td>
-								<td th:text="*{percentageOfCommentFromSourceFile}+'%'"></td>
-								<td th:text="*{logicCodeLineFromAST}"></td>
-								<td th:text="*{physicalCodeLineFromAST}"></td>
-								<td th:text="*{commentLineFromAST}"></td>
-								<td th:text="*{percentageOfCommentFromAST}+'%'"></td>
-							</tr>
-							</tbody>
-						</table>
+						<div id="toolbar">
+							<div class="form-inline" role="form">
+								<a id="previous-btn" class="btn btn-outline-primary btn-sm invisible"
+								   href="javascript:void(0);"
+								   onclick="previousTable()">
+									< previous</a>
+							</div>
+						</div>
+						<table id="table"></table>
 					</div>
 				</div>
-			
 			</div>
-			
 			<!-- Modal -->
-			<div class="modal fade" id="sloc_row_model" tabindex="-1" role="dialog"
-			     aria-labelledby="sloc_row_model_label" aria-hidden="true">
+			<div class="modal fade" id="row_model" tabindex="-1" role="dialog"
+			     aria-labelledby="row_model_label" aria-hidden="true">
 				<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="sloc_row_model_label">
+							<h5 class="modal-title" id="row_model_label">
 								<span class="h3 text-uppercase text-muted mr-2">{{ recordType }}</span>
 								<span class="h3">{{ recordName }}</span>
 							</h5>
@@ -504,7 +459,7 @@
 							</button>
 						</div>
 						<div class="modal-body">
-							<div id="sloc_row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
+							<div id="row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -522,54 +477,187 @@
 </div>
 <script th:replace="fragments/common :: footer_imports"></script>
 <script>
-    let recordRowName = "";
-    let recordRowType = "";
-    let projectRecordIndex = -1;
 
+    $(function () {
+        // 首次渲染图表
+        // showTimelineChartForClass();
+        // 首次渲染表格
+        showModuleSloc();
+    })
+
+    let $table = $('#table')
+    let projectRecordIndex = -1;
+    let currentIndex = 0;
+    let requestHistory = new Array();
+
+    // 选择记录
     function selectRecordTime(obj, index) {
         projectRecordIndex = index;
         let newTime = $(obj).text()
         $('#current_record_time').text(newTime)
         $(obj).siblings().removeClass("active")
         $(obj).addClass("active");
-        recordRowName = "";
-        recordRowType = "";
-        requestSLOCRecords(recordRowName, recordRowType, projectRecordIndex);
+        if (currentIndex === 0) {
+            showModuleSloc();
+        } else {
+            showPackageSloc(requestHistory[currentIndex].name, requestHistory[currentIndex].isNameOfModule, false);
+        }
     }
 
-    function getNextLevel(name, type) {
-        recordRowName = name;
-        recordRowType = type;
-        requestSLOCRecords(recordRowName, recordRowType, projectRecordIndex);
-    }
-
-    function requestSLOCRecords(name, type, index) {
-        $.get("/dashboard/sloc/table?name=" + name + "&type=" + type
-            + "&projectRecordIndex=" + index, function (data) {
-            if ("undefined" == typeof vm.$el) {
-                vm.sloc_list_fragment = data;
-                // 挂载vue实例到DOM上，继续声明周期
-                vm.$mount('#sloc_info_records');
+    //表格：模块级别的度量数据
+    function showModuleSloc() {
+        let columns = [{
+            field: 'chart', title: ''
+        }, {
+            field: 'name', title: 'Class Name', sortable: true,
+            formatter: function (value, row) {
+                return '<a href="javascript:void(0);" ' +
+                    'onclick="showPackageSloc(\'' + row.name + '\',true,true)">' +
+                    value + '</a>';
+            },
+        }, {
+            field: 'level', title: 'Level', sortable: true
+        }, {
+            field: 'logicCodeLinesSF', title: 'Logic Code Lines<br>(Source File)', sortable: true
+        }, {
+            field: 'physicalCodeLinesSF', title: 'Physical Code Lines<br>(Source File)', sortable: true
+        }, {
+            field: 'CommentLinesSF', title: 'Comment Lines<br>(Source File)', sortable: true
+        }, {
+            field: 'percentageOfCommentSF', title: '% of Comments<br>(Source File)', sortable: true
+        }, {
+            field: 'logicCodeLinesJP', title: 'Logic Code Lines<br>(JavaParser)', sortable: true
+        }, {
+            field: 'physicalCodeLinesJP', title: 'Physical Code Lines<br>(JavaParser)', sortable: true
+        }, {
+            field: 'CommentLinesJP', title: 'Comment Lines<br>(JavaParser)', sortable: true
+        }, {
+            field: 'percentageOfCommentJP', title: '% of Comments<br>(JavaParser)', sortable: true
+        }];
+        $.get("/dashboard/sloc/table/module?projectRecordIndex=" + projectRecordIndex).done(function (data) {
+            let dataset = data;
+            //给每行前面加上趋势图按钮（弹出模态框）
+            for (i = 0; i < dataset.length; i++) {
+                dataset[i].chart =
+                    '<a class="table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
+                    + 'data-target="#row_model" onclick="showTableChart(\'' +
+                    dataset[i].name + '\',\'' + dataset[i].level + '\')">'
+                    + '<i class="fas fa-chart-bar"></i></a>'
             }
-            vm.sloc_list_fragment = data;
+            buildTable($table, dataset, columns, 2, 0)
+            $("#previous-btn").addClass("invisible");
         });
     }
 
-    let vm = new Vue({
-        // Vue实例将在created后停止声明周期，等到调用updateProjectInfomation()时才继续
-        // el: '#project_info_overview',
-        data: {
-            sloc_list_fragment: ""
+    //表格：类级别的度量数据
+    function showPackageSloc(name, isNameOfModule, isRequestNext) {
+        if (isRequestNext) {
+            currentIndex++;
+            requestHistory[currentIndex] = {
+                name: name,
+                isNameOfModule: isNameOfModule,
+            };
         }
-    })
+        let columns = [{
+            field: 'chart', title: ''
+        }, {
+            field: 'name', title: 'Package/Class Name', sortable: true,
+            formatter: function (value, row) {
+                if (row.level === "package") {
+                    return '<a href="javascript:void(0);" ' +
+                        'onclick="showPackageSloc(\'' + value + '\',false,true)">' +
+                        value + '</a>';
+                } else {
+                    return value;
+                }
+
+            },
+        }, {
+            field: 'level', title: 'Level', sortable: true
+        }, {
+            field: 'module', title: 'of Which Module', sortable: true
+        }, {
+            field: 'logicCodeLinesSF', title: 'Logic Code Lines<br>(Source File)', sortable: true
+        }, {
+            field: 'physicalCodeLinesSF', title: 'Physical Code Lines<br>(Source File)', sortable: true
+        }, {
+            field: 'CommentLinesSF', title: 'Comment Lines<br>(Source File)', sortable: true
+        }, {
+            field: 'percentageOfCommentSF', title: '% of Comments<br>(Source File)', sortable: true
+        }, {
+            field: 'logicCodeLinesJP', title: 'Logic Code Lines<br>(JavaParser)', sortable: true
+        }, {
+            field: 'physicalCodeLinesJP', title: 'Physical Code Lines<br>(JavaParser)', sortable: true
+        }, {
+            field: 'CommentLinesJP', title: 'Comment Lines<br>(JavaParser)', sortable: true
+        }, {
+            field: 'percentageOfCommentJP', title: '% of Comments<br>(JavaParser)', sortable: true
+        }];
+        let requestPath;
+        if (isNameOfModule) {
+            requestPath =
+                "/dashboard/sloc/table/package?moduleRelativePath=" + name +
+                "&projectRecordIndex=" + projectRecordIndex;
+        } else {
+            requestPath = "/dashboard/sloc/table/subpackage?packageQualifiedName=" + name +
+                "&projectRecordIndex=" + projectRecordIndex;
+        }
+        $.get(requestPath).done(function (data) {
+            let dataset = data;
+            //给每行前面加上趋势图按钮（弹出模态框）
+            for (i = 0; i < dataset.length; i++) {
+                let param1;
+                if (dataset[i].level === "class") {
+                    param1 = dataset[i].qualifiedName;
+                } else {
+                    param1 = dataset[i].name;
+                }
+                dataset[i].chart =
+                    '<a class="table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
+                    + 'data-target="#row_model" onclick="showTableChart(\'' +
+                    param1 + '\',\'' + dataset[i].level + '\')">'
+                    + '<i class="fas fa-chart-bar"></i></a>'
+            }
+            buildTable($table, dataset, columns, 2, 0)
+            $("#previous-btn").removeClass("invisible");
+        });
+    }
+
+    // 重新渲染表格
+    function buildTable($el, dataset, columns, fixedNumber, fixedRightNumber) {
+        $el.bootstrapTable('destroy').bootstrapTable({
+            height: 500,
+            columns: columns,
+            data: dataset,
+            toolbar: '#toolbar',
+            search: true,
+            showColumns: true,
+            fixedColumns: true,
+            fixedNumber: fixedNumber,
+            fixedRightNumber: fixedRightNumber,
+            // buttons: "",
+            // buttonsPrefix: "",
+            // buttonsClass: "btn btn-sm btn-outline-primary",
+            showColumnsToggleAll: true,
+            detailViewByClick: true,
+            iconSize: "sm",
+            showFullscreen: true,
+        })
+    }
+
+    // 表格：返回上一级
+    function previousTable() {
+        currentIndex--;
+        if (currentIndex === 0) {
+            showModuleSloc();
+        } else {
+            showPackageSloc(requestHistory[currentIndex].name, requestHistory[currentIndex].isNameOfModule, false);
+        }
+    }
 
     // 指定图表的配置项和数据
     let option2 = {
-        legend: {
-            data: ["Logic Code Lines (Source File)", "Logic Code Lines (AST)",
-                "Physical Code Lines (Source File)", "Physical Code Lines (AST)",
-                "Comment Lines (Source File)", "Comment Lines (AST)"]
-        },
+        legend: {},
         grid: {
             bottom: '100'
         },
@@ -577,7 +665,21 @@
         xAxis: {
             type: 'category'
         },
-        yAxis: {},
+        yAxis: [
+            {
+                name: "Source Lines of Code",
+                type: 'value',
+                nameLocation: 'center',
+                nameRotate: 90,
+                nameGap: 40
+            }, {
+                name: "% of Comment Lines",
+                type: 'value',
+                nameLocation: 'center',
+                nameRotate: 270,
+                nameGap: 40,
+            }
+        ],
         tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -601,48 +703,62 @@
             {
                 type: 'slider',
                 yAxisIndex: 0,
+                left: 20,
+                start: 0,
+                end: 100
+            },
+            {
+                type: 'slider',
+                yAxisIndex: 1,
+                right: 20,
                 start: 0,
                 end: 100
             }
         ],
     };
-    let myChart2 = echarts.init(document.getElementById('sloc_row_chart'));
+    let myChart2 = echarts.init(document.getElementById('row_chart'));
     myChart2.setOption(option2);
 
     // 用于修改模块框title
     let vm_sloc_chart_title = new Vue({
-        el: '#sloc_row_model_label',
+        el: '#row_model_label',
         data: {
             recordType: '',
             recordName: '',
         }
     })
 
-    function showTableChart(name, type) {
+    function showTableChart(name, level) {
         vm_sloc_chart_title.recordName = name;
-        vm_sloc_chart_title.recordType = type;
+        vm_sloc_chart_title.recordType = level;
         // 异步加载数据
-        $.get("/dashboard/sloc/table/chart?name=" + name + "&type=" + type).done(function (data) {
+        myChart2.clear();
+        myChart2.setOption(option2);
+        // 异步加载数据
+        $.get("/dashboard/sloc/table/chart?name=" + name + "&level=" + level).done(function (data) {
             // 填入数据
+            console.log(data)
             myChart2.setOption({
                 dataset: {
                     // 提供一份数据。
                     source: data
                 },
                 series: [
-                    {type: 'line', name: 'Logic Code Lines (Source File)'},
-                    {type: 'line', name: 'Physical Code Lines (Source File)'},
-                    {type: 'line', name: 'Comment Lines (Source File)'},
-                    {type: 'line', name: 'Logic Code Lines (AST)'},
-                    {type: 'line', name: 'Physical Code Lines (AST)'},
-                    {type: 'line', name: 'Comment Lines (AST)'},
+                    {type: 'line', name: 'Logic Code Lines (Source File)', yAxisIndex: 0},
+                    {type: 'line', name: 'Physical Code Lines (Source File)', yAxisIndex: 0},
+                    {type: 'line', name: 'Comment Lines (Source File)', yAxisIndex: 0},
+                    {type: 'line', name: '% of Comment Lines (Source File)', yAxisIndex: 1},
+                    {type: 'line', name: 'Logic Code Lines (JavaParser)', yAxisIndex: 0},
+                    {type: 'line', name: 'Physical Code Lines (JavaParser)', yAxisIndex: 0},
+                    {type: 'line', name: 'Comment Lines (JavaParser)', yAxisIndex: 0},
+                    {type: 'line', name: '% of Comment Lines (JavaParser)', yAxisIndex: 1},
                 ],
             });
         });
     }
 
     // 让echarts在模态框打开后重新渲染
-    $('#sloc_row_model').on('shown.bs.modal', function () {
+    $('#row_model').on('shown.bs.modal', function () {
         myChart2.resize()
     })
 

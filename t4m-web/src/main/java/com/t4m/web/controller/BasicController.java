@@ -56,10 +56,6 @@ public class BasicController {
 		model.addAttribute("javaFileRecords", projectService.getNumOfJavaFileRecords());
 		model.addAttribute("classRecords", projectService.getNumOfClassRecords());
 		model.addAttribute("allClassRecords", projectService.getNumOfAllClassRecords());
-		// 用于表格
-		model.addAttribute("moduleMapList", moduleService.getModuleMapList(-1));
-		model.addAttribute("packageMapList", packageService.getPackageMapList(-1));
-		model.addAttribute("classMapList", classService.getClassMapList(-1));
 		return "page/dashboard/basic_metric";
 	}
 

@@ -29,6 +29,12 @@ public class ModuleInfo implements Serializable {
 
 	private int numberOfJavaFile;
 	private int numberOfAllClass;
+	// 0--SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE；
+	// 1--SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+	// 2--SLOCType.COMMENT_LINES_FROM_SOURCE_FILE；
+	// 3--SLOCType.LOGIC_CODE_LINES_FROM_AST；
+	// 4--SLOCType.PHYSICAL_CODE_LINES_FROM_AST；
+	// 5--SLOCType.COMMENT_LINES_FROM_AST
 	private int[] slocArray;
 
 	public ModuleInfo(String absolutePath) {

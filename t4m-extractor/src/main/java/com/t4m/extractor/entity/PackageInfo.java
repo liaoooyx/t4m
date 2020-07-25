@@ -32,6 +32,12 @@ public class PackageInfo implements Serializable {
 	private int numberOfJavaFile;
 	private int numberOfAllClass;
 	//sloc
+	// 0--SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE；
+	// 1--SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+	// 2--SLOCType.COMMENT_LINES_FROM_SOURCE_FILE；
+	// 3--SLOCType.LOGIC_CODE_LINES_FROM_AST；
+	// 4--SLOCType.PHYSICAL_CODE_LINES_FROM_AST；
+	// 5--SLOCType.COMMENT_LINES_FROM_AST
 	private int[] slocArrayForCurrentPkg; //自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC）
 	private int[] slocArrayForCurrentAndSubPkg; //自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以及子包的SLOC，
 

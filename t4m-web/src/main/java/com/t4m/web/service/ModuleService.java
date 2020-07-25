@@ -4,6 +4,7 @@ import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
+import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.util.ProjectRecord;
 import com.t4m.web.util.SLOCUtil;
@@ -119,19 +120,25 @@ public class ModuleService {
 	 */
 	public List<String[]> getSLOCTableChartDataset(String moduleName) {
 		List<String[]> dataset = new ArrayList<>();
-		dataset.add(new String[]{"time", "Logic Code Line (Source File)", "Physical Code Line (Source File)",
-		                         "All Comment Line", "Logic Code Line (AST)", "Physical Code Line (AST)",
-		                         "JavaDoc Comment Line"});
+		dataset.add(new String[]{"time", "Logic Code Lines (Source File)", "Physical Code Lines (Source File)",
+		                         "Comment Lines", "% of Comment Lines (Source File)", "Logic Code Lines (JavaParser)",
+		                         "Physical Code Lines (JavaParser)", "Comment Lines (JavaParser)",
+		                         "% of Comment Lines (JavaParser)"});
 		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
 			ModuleInfo moduleInfo = EntityUtil.getModuleByRelativeName(projectInfo.getModuleList(), moduleName);
-			String[] tempRow = new String[7];
+			String[] tempRow = new String[9];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			Arrays.fill(tempRow,1,6,null);
-			if (moduleInfo != null){
+			Arrays.fill(tempRow, 1, 9, null);
+			if (moduleInfo != null) {
 				int[] slocArray = moduleInfo.getSlocArray();
-				for (int i = 0; i < 6; i++) {
-					tempRow[i + 1] = String.valueOf(slocArray[i]);
-				}
+				tempRow[1] = String.valueOf(slocArray[0]);
+				tempRow[2] = String.valueOf(slocArray[1]);
+				tempRow[3] = String.valueOf(slocArray[2]);
+				tempRow[4] = MathUtil.percentage(slocArray[2], slocArray[1]);
+				tempRow[5] = String.valueOf(slocArray[3]);
+				tempRow[6] = String.valueOf(slocArray[4]);
+				tempRow[7] = String.valueOf(slocArray[5]);
+				tempRow[8] = MathUtil.percentage(slocArray[5], slocArray[4]);
 			}
 			dataset.add(tempRow);
 		}

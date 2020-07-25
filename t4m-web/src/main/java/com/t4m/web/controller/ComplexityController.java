@@ -145,6 +145,10 @@ public class ComplexityController {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), classQualifiedName);
+		if (classInfo == null){
+			LOGGER.info("No such class in this record.");
+			return rows;
+		}
 		for (MethodInfo methodInfo : classInfo.getMethodInfoList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", methodInfo.getShortName());

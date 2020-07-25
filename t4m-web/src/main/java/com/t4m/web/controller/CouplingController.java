@@ -145,7 +145,7 @@ public class CouplingController {
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
-		for (PackageInfo packageInfo: projectInfo.getPackageList()) {
+		for (PackageInfo packageInfo : projectInfo.getPackageList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", packageInfo.getFullyQualifiedName());
 			row.put("module", packageInfo.getModuleInfo().getShortName());
@@ -161,7 +161,6 @@ public class CouplingController {
 	@GetMapping("/table/chart/package")
 	@ResponseBody
 	public List<Object[]> selectTableChartRecordForPackage(@RequestParam(name = "qualifiedName") String qualifiedName) {
-
 		//	第一行是系列名，从第二行开始，每一行是一条记录的数据，其中第一列是时间
 		List<Object[]> dataset = new ArrayList<>();
 		dataset.add(new String[]{"time", "Afferent Coupling", "Efferent Coupling", "Instability", "Abstractness"});
@@ -189,6 +188,10 @@ public class CouplingController {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), pkgQualifiedName);
+		if (packageInfo == null){
+			LOGGER.info("No such package in this record.");
+			return rows;
+		}
 		for (ClassInfo classInfo : packageInfo.getAllClassList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", classInfo.getShortName());
