@@ -5,6 +5,7 @@ import com.t4m.extractor.entity.MethodInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
+import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
@@ -153,6 +154,9 @@ public class CouplingController {
 			row.put("efferentCoupling", packageInfo.getEfferentCoupling());
 			row.put("instability", packageInfo.getInstability());
 			row.put("abstractness", packageInfo.getAbstractness());
+			float instability = Float.parseFloat(packageInfo.getInstability());
+			float abstractness = Float.parseFloat(packageInfo.getAbstractness());
+			row.put("distance", MathUtil.abs(instability + abstractness - 1));
 			rows.add(row);
 		}
 		return rows;
@@ -163,10 +167,11 @@ public class CouplingController {
 	public List<Object[]> selectTableChartRecordForPackage(@RequestParam(name = "qualifiedName") String qualifiedName) {
 		//	第一行是系列名，从第二行开始，每一行是一条记录的数据，其中第一列是时间
 		List<Object[]> dataset = new ArrayList<>();
-		dataset.add(new String[]{"time", "Afferent Coupling", "Efferent Coupling", "Instability", "Abstractness"});
+		dataset.add(new String[]{"time", "Afferent Coupling", "Efferent Coupling", "Instability", "Abstractness",
+		                         "Distance from Main Sequence"});
 		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), qualifiedName);
-			Object[] tempRow = new Object[5];
+			Object[] tempRow = new Object[6];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			Arrays.fill(tempRow, 1, 4, null);
 			if (packageInfo != null) { //类可能还未创建或已经删除
@@ -174,6 +179,9 @@ public class CouplingController {
 				tempRow[2] = packageInfo.getEfferentCoupling();
 				tempRow[3] = packageInfo.getInstability();
 				tempRow[4] = packageInfo.getAbstractness();
+				float instability = Float.parseFloat(packageInfo.getInstability());
+				float abstractness = Float.parseFloat(packageInfo.getAbstractness());
+				tempRow[5] = MathUtil.abs(instability + abstractness - 1);
 			}
 			dataset.add(tempRow);
 		}
@@ -188,7 +196,7 @@ public class CouplingController {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), pkgQualifiedName);
-		if (packageInfo == null){
+		if (packageInfo == null) {
 			LOGGER.info("No such package in this record.");
 			return rows;
 		}
@@ -224,11 +232,11 @@ public class CouplingController {
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			Arrays.fill(tempRow, 1, 5, null);
 			if (classInfo != null) { //类可能还未创建或已经删除
-				tempRow[1] = classInfo.getCouplingBetweenObjects();
-				tempRow[2] = classInfo.getAfferentCoupling();
-				tempRow[3] = classInfo.getEfferentCoupling();
-				tempRow[4] = classInfo.getInstability();
-				tempRow[5] = classInfo.getMessagePassingCoupling();
+				tempRow[1] = classInfo.getMessagePassingCoupling();
+				tempRow[2] = classInfo.getCouplingBetweenObjects();
+				tempRow[3] = classInfo.getAfferentCoupling();
+				tempRow[4] = classInfo.getEfferentCoupling();
+				tempRow[5] = classInfo.getInstability();
 			}
 			dataset.add(tempRow);
 		}

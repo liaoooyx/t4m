@@ -606,6 +606,8 @@
         }, {
             field: 'abstractness', title: 'Abstractness', sortable: true
         }, {
+            field: 'distance', title: 'Distance from Main Sequence', sortable: true
+        }, {
             field: 'module', title: 'of Which Module', sortable: true
         }];
         $.get("/dashboard/coupling/table/package?projectRecordIndex=" + projectRecordIndex).done(function (data) {
@@ -706,7 +708,22 @@
         xAxis: {
             type: 'category'
         },
-        yAxis: {},
+        yAxis: [
+            {
+                name: "Actual values",
+                type: 'value',
+                nameLocation: 'center',
+                nameRotate: 90,
+                nameGap: 40,
+                interval: 1,
+            }, {
+                name: "Relative values",
+                type: 'value',
+                nameLocation: 'center',
+                nameRotate: 270,
+                nameGap: 40,
+            }
+        ],
         tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -730,13 +747,21 @@
             {
                 type: 'slider',
                 yAxisIndex: 0,
+                left: 20,
+                start: 0,
+                end: 100
+            },
+            {
+                type: 'slider',
+                yAxisIndex: 1,
+                right: 20,
                 start: 0,
                 end: 100
             }
         ],
     };
     let complexityTableChart = echarts.init(document.getElementById('complexity_row_chart'));
-    
+
 
     function showTableChartForPackage(qualifiedName) {
         coupling_table_chart_title_vm.recordName = qualifiedName;
@@ -746,19 +771,37 @@
         complexityTableChart.setOption(tableChartOptForClass);
         $.get("/dashboard/coupling/table/chart/package?qualifiedName=" + qualifiedName).done(function (data) {
             // 填入数据
+            console.log(data)
             complexityTableChart.setOption({
                 legend: {
-                    data: ["Afferent Coupling", "Efferent Coupling", "Instability", "Abstractness"]
+                    data: ["Afferent Coupling", "Efferent Coupling", "Instability",
+                        "Abstractness", "Distance from Main Sequence"]
                 },
                 dataset: {
                     // 提供一份数据。
                     source: data
                 },
                 series: [
-                    {type: 'line', name: 'Afferent Coupling'},
-                    {type: 'line', name: 'Efferent Coupling'},
-                    {type: 'line', name: 'Instability'},
-                    {type: 'line', name: 'Abstractness'},
+                    {
+                        type: 'line', name: 'Afferent Coupling', yAxisIndex: 0,
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Efferent Coupling', yAxisIndex: 0,
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Instability', yAxisIndex: 1,
+                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Abstractness', yAxisIndex: 1,
+                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Distance from Main Sequence', yAxisIndex: 1,
+                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                    },
                 ],
             });
         });
@@ -774,19 +817,34 @@
             // 填入数据
             complexityTableChart.setOption({
                 legend: {
-                    data: ["Coupling Between Objects", "Afferent Coupling", "Efferent Coupling",
-                        "Instability", "Message Passing Coupling"]
+                    data: ["Message Passing Coupling", "Coupling Between Objects", "Afferent Coupling",
+                        "Efferent Coupling", "Instability"]
                 },
                 dataset: {
                     // 提供一份数据。
                     source: data
                 },
                 series: [
-                    {type: 'line', name: 'Coupling Between Objects'},
-                    {type: 'line', name: 'Afferent Coupling'},
-                    {type: 'line', name: 'Efferent Coupling'},
-                    {type: 'line', name: 'Instability'},
-                    {type: 'line', name: 'Message Passing Coupling'},
+                    {
+                        type: 'line', name: 'Message Passing Coupling', yAxisIndex: 0,
+                        lineStyle: {width: 3,}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Coupling Between Objects', yAxisIndex: 0,
+                        lineStyle: {width: 3,}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Afferent Coupling', yAxisIndex: 0,
+                        lineStyle: {width: 3,}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Efferent Coupling', yAxisIndex: 0,
+                        lineStyle: {width: 3,}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Instability', yAxisIndex: 1,
+                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                    },
                 ],
             });
         });

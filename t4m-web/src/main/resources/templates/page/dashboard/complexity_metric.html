@@ -376,13 +376,13 @@
                           itemStyle: {
                               color: 'rgba(229,229,229,0.8)',
                           },
-		                      label:{
-                              show:true,
+                          label: {
+                              show: true,
                               position: 'top',
-				                      distance: 20,
+                              distance: 20,
                               formatter: '{@[1]}',
                               color: '#000000',
-		                      }
+                          }
                       }],
                       dataZoom: [
                           {
@@ -417,25 +417,25 @@
                           padding: 10,
                           borderWidth: 1,
                           formatter: function (params) {
-                                  let text = '';
-                                  let triggerLabel = false;
-                                  params.forEach(row => {
-                                      if (row.componentSubType === "scatter" && pointedData[0] === row.data[0] &&
-                                          pointedData[1] === row.data[1]) {
-                                          triggerLabel = true;
-                                          let value = row.value;
-                                          text +=
-                                              '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
-                                              + 'Method: ' + value[2] + '<br>'
-                                              + '<span style="font: 12px">'
-                                              + 'Declaration: ' + value[3] + '</span>' + '<br>'
-                                              + '</div>';
-                                      }
-                                  });
-                                  if (triggerLabel) {
-                                      text += 'Cyclomatic Complexity of Method : ' + pointedData[1] + '<br>'
+                              let text = '';
+                              let triggerLabel = false;
+                              params.forEach(row => {
+                                  if (row.componentSubType === "scatter" && pointedData[0] === row.data[0] &&
+                                      pointedData[1] === row.data[1]) {
+                                      triggerLabel = true;
+                                      let value = row.value;
+                                      text +=
+                                          '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                          + 'Method: ' + value[2] + '<br>'
+                                          + '<span style="font: 12px">'
+                                          + 'Declaration: ' + value[3] + '</span>' + '<br>'
+                                          + '</div>';
                                   }
-                                  return text;
+                              });
+                              if (triggerLabel) {
+                                  text += 'Cyclomatic Complexity of Method : ' + pointedData[1] + '<br>'
+                              }
+                              return text;
                           },
                           // 重叠问题
                           show: true,
@@ -743,11 +743,26 @@
                     source: data
                 },
                 series: [
-                    {type: 'line', name: 'Number of Method'},
-                    {type: 'line', name: 'Weighted Method Count'},
-                    {type: 'line', name: 'Max Complexity of Class'},
-                    {type: 'line', name: 'Avg Complexity of Class'},
-                    {type: 'line', name: 'Response for Class'},
+                    {
+                        type: 'line', name: 'Number of Method',
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}}
+                    },
+                    {
+                        type: 'line', name: 'Weighted Method Count',
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}}
+                    },
+                    {
+                        type: 'line', name: 'Max Complexity of Class',
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}}
+                    },
+                    {
+                        type: 'line', name: 'Avg Complexity of Class',
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}}
+                    },
+                    {
+                        type: 'line', name: 'Response for Class',
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}}
+                    },
                 ],
             });
         });

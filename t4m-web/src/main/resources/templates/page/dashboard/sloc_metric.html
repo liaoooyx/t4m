@@ -744,14 +744,38 @@
                     source: data
                 },
                 series: [
-                    {type: 'line', name: 'Logic Code Lines (Source File)', yAxisIndex: 0},
-                    {type: 'line', name: 'Physical Code Lines (Source File)', yAxisIndex: 0},
-                    {type: 'line', name: 'Comment Lines (Source File)', yAxisIndex: 0},
-                    {type: 'line', name: '% of Comment Lines (Source File)', yAxisIndex: 1},
-                    {type: 'line', name: 'Logic Code Lines (JavaParser)', yAxisIndex: 0},
-                    {type: 'line', name: 'Physical Code Lines (JavaParser)', yAxisIndex: 0},
-                    {type: 'line', name: 'Comment Lines (JavaParser)', yAxisIndex: 0},
-                    {type: 'line', name: '% of Comment Lines (JavaParser)', yAxisIndex: 1},
+                    {
+                        type: 'line', name: 'Logic Code Lines (Source File)', yAxisIndex: 0,
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Physical Code Lines (Source File)', yAxisIndex: 0,
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Comment Lines (Source File)', yAxisIndex: 0,
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: '% of Comment Lines (Source File)', yAxisIndex: 1,
+                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Logic Code Lines (JavaParser)', yAxisIndex: 0,
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Physical Code Lines (JavaParser)', yAxisIndex: 0,
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Comment Lines (JavaParser)', yAxisIndex: 0,
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: '% of Comment Lines (JavaParser)', yAxisIndex: 1,
+                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                    },
                 ],
             });
         });

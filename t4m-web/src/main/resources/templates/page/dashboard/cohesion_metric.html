@@ -577,7 +577,7 @@
         $(obj).addClass("active");
         showClassCohesion();
     }
-    
+
     //表格：类级别的度量数据
     function showClassCohesion() {
         let columns = [{
@@ -590,7 +590,7 @@
             field: 'tightClassCohesion', title: 'Tight Class Cohesion', sortable: true
         }, {
             field: 'looseClassCohesion', title: 'Loose Class Cohesion', sortable: true
-        },{
+        }, {
             field: 'type', title: 'Class Type', sortable: true
         }, {
             field: 'declaration', title: 'Class Location', sortable: true
@@ -654,32 +654,35 @@
         xAxis: {
             type: 'category'
         },
-        yAxis: {},
+        yAxis: [
+            {
+                name: "Lack of Cohesion in Methods (LCOM4)",
+                type: 'value', nameLocation: 'center',
+                nameRotate: 90, nameGap: 30, interval: 1,
+            }, {
+                name: "Tight / Loose Cohesion",
+                type: 'value', nameLocation: 'center',
+                nameRotate: 270, nameGap: 35, max: 1, min: 0,
+            }
+        ],
         tooltip: {
             trigger: 'axis',
             axisPointer: {
-                snap: true,
-                type: "line",
+                snap: true, type: "line",
             }
         },
         dataZoom: [
             {
-                type: 'slider',
-                xAxisIndex: 0,
-                start: 20,
-                end: 100
+                type: 'slider', xAxisIndex: 0, start: 20, end: 100
             },
             {
-                type: 'inside',
-                xAxisIndex: 0,
-                start: 20,
-                end: 100
+                type: 'inside', xAxisIndex: 0, start: 20, end: 100
             },
             {
-                type: 'slider',
-                yAxisIndex: 0,
-                start: 0,
-                end: 100
+                type: 'slider', yAxisIndex: 0, left: 20, start: 0, end: 100
+            },
+            {
+                type: 'slider', yAxisIndex: 1, right: 20, start: 0, end: 100
             }
         ],
     };
@@ -703,9 +706,18 @@
                     source: data
                 },
                 series: [
-                    {type: 'line', name: 'Lack of Cohesion in Methods (LOCM4)'},
-                    {type: 'line', name: 'Tight Class Cohesion'},
-                    {type: 'line', name: 'Loose Class Cohesion'},
+                    {
+                        type: 'line', name: 'Lack of Cohesion in Methods (LOCM4)', yAxisIndex: 0,
+                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Tight Class Cohesion', yAxisIndex: 1,
+                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                    },
+                    {
+                        type: 'line', name: 'Loose Class Cohesion', yAxisIndex: 1,
+                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                    },
                 ],
             });
         });
