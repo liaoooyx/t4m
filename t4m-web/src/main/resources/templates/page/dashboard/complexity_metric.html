@@ -118,6 +118,37 @@
               function showTimelineChartForClass() {
                   let option = {
                       baseOption: {
+                          legend: {},
+                          grid: [
+                              {x: '7%', y: '5%', width: '40%', height: '38%'},
+                              {x2: '5%', y: '5%', width: '40%', height: '38%'},
+                              {x: '7%', y2: '11%', width: '40%', height: '38%'},
+                              {x2: '5%', y2: '11%', width: '40%', height: '38%'}
+                          ],
+                          xAxis: [
+                              {gridIndex: 0, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},
+                              {gridIndex: 1, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},
+                              {gridIndex: 2},
+                              {gridIndex: 3},
+                          ],
+                          yAxis: [
+                              {
+                                  gridIndex: 0, name: 'Avg Complexity of Class',
+                                  nameLocation: 'center', nameRotate: 90, nameGap: 30
+                              },
+                              {
+                                  gridIndex: 1, name: 'Response for class',
+                                  nameLocation: 'center', nameRotate: 90, nameGap: 30
+                              },
+                              {
+                                  gridIndex: 2, name: 'Weighted Method Count',
+                                  nameLocation: 'center', nameRotate: 90, nameGap: 30
+                              },
+                              {
+                                  gridIndex: 3, name: 'Max Complexity of Class',
+                                  nameLocation: 'center', nameRotate: 90, nameGap: 30
+                              },
+                          ],
                           timeline: {
                               axisType: 'category', //轴的类型，value是数值轴；category是类目轴；
                               // orient: 'horizontal',//摆放方式；vertical/horizontal
@@ -139,43 +170,6 @@
                                   }
                               }
                           },
-                          legend: {},
-                          yAxis: [
-                              {
-                                  gridIndex: 0,
-                                  name: 'Weighted Method Count',
-                                  nameLocation: 'center',
-                                  nameRotate: 90,
-                                  nameGap: 30
-                              },
-                              {
-                                  gridIndex: 1,
-                                  name: 'Max Complexity of Class',
-                                  nameLocation: 'center',
-                                  nameRotate: 90,
-                                  nameGap: 30
-                              },
-                              {
-                                  gridIndex: 2,
-                                  name: 'Avg Complexity of Class',
-                                  nameLocation: 'center',
-                                  nameRotate: 90,
-                                  nameGap: 30
-                              },
-                              {
-                                  gridIndex: 3,
-                                  name: 'Response for class',
-                                  nameLocation: 'center',
-                                  nameRotate: 90,
-                                  nameGap: 30
-                              }
-                          ],
-                          xAxis: [
-                              {gridIndex: 0, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},
-                              {gridIndex: 1, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},
-                              {gridIndex: 2},
-                              {gridIndex: 3},
-                          ],
                           tooltip: {
                               // 显示额外信息
                               padding: 10,
@@ -222,12 +216,6 @@
                                   }
                               },
                           },
-                          grid: [
-                              {x: '7%', y: '5%', width: '40%', height: '38%'},
-                              {x2: '5%', y: '5%', width: '40%', height: '38%'},
-                              {x: '7%', y2: '11%', width: '40%', height: '38%'},
-                              {x2: '5%', y2: '11%', width: '40%', height: '38%'}
-                          ],
                       },
                       options: initOptions()
                   };
@@ -243,46 +231,10 @@
                       options[i] = {
                           series: [
                               {
-                                  name: 'Weighted Methods Count',
+                                  name: 'Avg Complexity of Class',
                                   type: 'scatter',
                                   xAxisIndex: 0,
                                   yAxisIndex: 0,
-                                  data: weightedMethodsCountDataset[timeRecords[i]],
-                                  emphasis: {
-                                      label: {
-                                          show: true,
-                                          formatter: function (params) {
-                                              return params.data[2];
-                                          },
-                                          color: '#000000',
-                                          position: 'top',
-                                          fontWeight: 'normal',
-                                      },
-                                  },
-                              },
-                              {
-                                  name: 'Max Complexity of Class',
-                                  type: 'scatter',
-                                  xAxisIndex: 1,
-                                  yAxisIndex: 1,
-                                  data: maxComplexityOfClassDataset[timeRecords[i]],
-                                  emphasis: {
-                                      label: {
-                                          show: true,
-                                          formatter: function (params) {
-                                              return params.data[2];
-                                          },
-                                          color: '#000000',
-                                          position: 'top',
-                                          fontWeight: 'normal',
-                                      },
-                                  },
-                              },
-                              {
-                                  name: 'Avg Complexity of Class',
-                                  type: 'scatter',
-                                  xAxisIndex: 2,
-                                  yAxisIndex: 2,
                                   data: avgComplexityOfClassDataset[timeRecords[i]],
                                   emphasis: {
                                       label: {
@@ -299,8 +251,8 @@
                               {
                                   name: 'Response for Class',
                                   type: 'scatter',
-                                  xAxisIndex: 3,
-                                  yAxisIndex: 3,
+                                  xAxisIndex: 1,
+                                  yAxisIndex: 1,
                                   data: responseForClassDataset[timeRecords[i]],
                                   emphasis: {
                                       label: {
@@ -313,7 +265,43 @@
                                           fontWeight: 'normal',
                                       },
                                   },
-                              }
+                              },
+                              {
+                                  name: 'Weighted Methods Count',
+                                  type: 'scatter',
+                                  xAxisIndex: 2,
+                                  yAxisIndex: 2,
+                                  data: weightedMethodsCountDataset[timeRecords[i]],
+                                  emphasis: {
+                                      label: {
+                                          show: true,
+                                          formatter: function (params) {
+                                              return params.data[2];
+                                          },
+                                          color: '#000000',
+                                          position: 'top',
+                                          fontWeight: 'normal',
+                                      },
+                                  },
+                              },
+                              {
+                                  name: 'Max Complexity of Class',
+                                  type: 'scatter',
+                                  xAxisIndex: 3,
+                                  yAxisIndex: 3,
+                                  data: maxComplexityOfClassDataset[timeRecords[i]],
+                                  emphasis: {
+                                      label: {
+                                          show: true,
+                                          formatter: function (params) {
+                                              return params.data[2];
+                                          },
+                                          color: '#000000',
+                                          position: 'top',
+                                          fontWeight: 'normal',
+                                      },
+                                  },
+                              },
                           ]
                       }
                   }
@@ -359,13 +347,10 @@
                           data: methodComplexityDataset,
                           emphasis: {
                               label: {
-                                  show: true,
+                                  show: true, color: '#000000', position: 'top', fontWeight: 'normal',
                                   formatter: function (params) {
                                       return params.data[2];
                                   },
-                                  color: '#000000',
-                                  position: 'top',
-                                  fontWeight: 'normal',
                               },
                           },
                       }, {
@@ -382,74 +367,24 @@
                               distance: 20,
                               formatter: '{@[1]}',
                               color: '#000000',
+                          },
+                          emphasis: {
+                              itemStyle: {color: 'rgba(201,201,201,0.8)'},
                           }
                       }],
                       dataZoom: [
-                          {
-                              type: 'slider',
-                              xAxisIndex: 0,
-                              start: 20,
-                              end: 100
-                          },
-                          {
-                              type: 'inside',
-                              xAxisIndex: 0,
-                              start: 20,
-                              end: 100
-                          },
-                          {
-                              type: 'slider',
-                              yAxisIndex: 0,
-                              left: 20,
-                              start: 0,
-                              end: 100
-                          },
-                          {
-                              type: 'slider',
-                              yAxisIndex: 1,
-                              right: 20,
-                              start: 0,
-                              end: 100
-                          }
+                          {type: 'slider', xAxisIndex: 0, start: 20, end: 100},
+                          {type: 'inside', xAxisIndex: 0, start: 20, end: 100},
+                          {type: 'slider', yAxisIndex: 0, left: 20, start: 0, end: 100},
+                          {type: 'slider', yAxisIndex: 1, right: 20, start: 0, end: 100}
                       ],
                       tooltip: {
-                          // 显示额外信息
-                          padding: 10,
-                          borderWidth: 1,
+                          show: true, enterable: true, trigger: 'item', confine: true, padding: 10, borderWidth: 1,
                           formatter: function (params) {
-                              let text = '';
-                              let triggerLabel = false;
-                              params.forEach(row => {
-                                  if (row.componentSubType === "scatter" && pointedData[0] === row.data[0] &&
-                                      pointedData[1] === row.data[1]) {
-                                      triggerLabel = true;
-                                      let value = row.value;
-                                      text +=
-                                          '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
-                                          + 'Method: ' + value[2] + '<br>'
-                                          + '<span style="font: 12px">'
-                                          + 'Declaration: ' + value[3] + '</span>' + '<br>'
-                                          + '</div>';
-                                  }
-                              });
-                              if (triggerLabel) {
-                                  text += 'Cyclomatic Complexity of Method : ' + pointedData[1] + '<br>'
-                              }
-                              return text;
-                          },
-                          // 重叠问题
-                          show: true,
-                          enterable: true,
-                          trigger: 'axis',
-                          confine: true,
-                          axisPointer: {
-                              type: 'cross',
-                              snap: false,
-                              axis: 'x', // y轴选项
-                              label: {
-                                  // show: false,
-                                  color: '#fff',
-                                  backgroundColor: 'rgba(0, 0, 0, .55)'
+                              if(params.componentSubType === "scatter"){
+                                  let value = params.data
+                                  return 'Method: ' + value[2] + '<br>' + 'Declaration: ' + value[3] + '<br>'
+                                      + params.seriesName + ": " + value[1];
                               }
                           },
                       },
