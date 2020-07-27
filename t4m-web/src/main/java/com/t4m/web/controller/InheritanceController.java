@@ -51,90 +51,30 @@ public class InheritanceController {
 		model.addAttribute("projectList", projectInfoList);
 		// 用于timeline chart
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
-		LinkedHashMap<String, List<List<Object>>> weightedMethodsCountDataset = new LinkedHashMap<>();
+
+		List<Object[]> deepOfInheritanceTreeDataset = new ArrayList<>();
 		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			List<List<Object>> rows = new ArrayList<>();
 			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-				List<Object> cols = new ArrayList<>();
-				cols.add(classInfo.getNumberOfMethods()); // code line
-				cols.add(classInfo.getWeightedMethodsCount()); // code line
-				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-				rows.add(cols);
-			}
-			weightedMethodsCountDataset.put(time, rows);
-		}
-		model.addAttribute("weightedMethodsCountDataset", weightedMethodsCountDataset);
-
-		LinkedHashMap<String, List<List<Object>>> maxComplexityOfClassDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			List<List<Object>> rows = new ArrayList<>();
-			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-				List<Object> cols = new ArrayList<>();
-				cols.add(classInfo.getNumberOfMethods()); // code line
-				cols.add(classInfo.getMaxCyclomaticComplexity()); // code line
-				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-				rows.add(cols);
-			}
-			maxComplexityOfClassDataset.put(time, rows);
-		}
-		model.addAttribute("maxComplexityOfClassDataset", maxComplexityOfClassDataset);
-
-		LinkedHashMap<String, List<List<Object>>> avgComplexityOfClassDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			List<List<Object>> rows = new ArrayList<>();
-			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-				List<Object> cols = new ArrayList<>();
-				cols.add(classInfo.getNumberOfMethods());
-				cols.add(classInfo.getAvgCyclomaticComplexity());
-				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-				rows.add(cols);
-			}
-			avgComplexityOfClassDataset.put(time, rows);
-		}
-		model.addAttribute("avgComplexityOfClassDataset", avgComplexityOfClassDataset);
-
-		LinkedHashMap<String, List<List<Object>>> responseForClassDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			List<List<Object>> rows = new ArrayList<>();
-			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-				List<Object> cols = new ArrayList<>();
-				cols.add(classInfo.getNumberOfMethods());
-				cols.add(classInfo.getResponseForClass());
-				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-				rows.add(cols);
-			}
-			responseForClassDataset.put(time, rows);
-		}
-		model.addAttribute("responseForClassDataset", responseForClassDataset);
-
-
-		List<Object[]> methodComplexityDataset = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			for (MethodInfo methodInfo : projectInfo.getMethodList()) {
 				Object[] row =
-						new Object[]{time, methodInfo.getCyclomaticComplexity(), methodInfo.getFullyQualifiedName(),
-						             methodInfo.getMethodDeclarationString()};
-				methodComplexityDataset.add(row);
+						new Object[]{time, classInfo.getDeepOfInheritanceTree(), classInfo.getFullyQualifiedName(),
+						             classInfo.getPackageInfo().getModuleInfo().getRelativePath()};
+				deepOfInheritanceTreeDataset.add(row);
 			}
 		}
-		model.addAttribute("methodComplexityDataset", methodComplexityDataset);
+		model.addAttribute("deepOfInheritanceTreeDataset", deepOfInheritanceTreeDataset);
 
-		List<Object[]> methodNumDataset = new ArrayList<>();
+		List<Object[]> numberOfChildrenDataset = new ArrayList<>();
 		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			Object[] row = new Object[]{time, projectInfo.getMethodList().size()};
-			methodNumDataset.add(row);
+			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+				Object[] row =
+						new Object[]{time, classInfo.getNumberOfChildren(), classInfo.getFullyQualifiedName(),
+						             classInfo.getPackageInfo().getModuleInfo().getRelativePath()};
+				numberOfChildrenDataset.add(row);
+			}
 		}
-		model.addAttribute("methodNumDataset", methodNumDataset);
+		model.addAttribute("numberOfChildrenDataset", numberOfChildrenDataset);
 
 		return "page/dashboard/inheritance_metric";
 	}

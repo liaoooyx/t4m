@@ -104,6 +104,33 @@
 						</div>
 					</div>
 					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:680px;"></div>
+					<div class="modal fade" id="chart_data_model" tabindex="-1" role="dialog"
+					     aria-labelledby="row_model_label" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">{{title}}</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body pt-0">
+									<hr class="my-3">
+									<div v-for="pointValue in pointValueList">
+										<span>{{pointValue}}</span><br>
+									</div>
+									<hr class="my-3">
+									<div class="mb-2" v-for="pointDescription in pointDescriptionList">
+										<div v-html="pointDescription"></div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					
 					<script type="text/javascript" th:inline="javascript">
               let timeRecords = /*[[${timeRecords}]]*/;
               let weightedMethodsCountDataset = /*[[${weightedMethodsCountDataset}]]*/;
@@ -112,11 +139,12 @@
               let responseForClassDataset = /*[[${responseForClassDataset}]]*/;
               let methodComplexityDataset = /*[[${methodComplexityDataset}]]*/;
               let methodNumDataset = /*[[${methodNumDataset}]]*/;
-
-              // let cyclomaticComplexityForMethodDataset = /*[[${cyclomaticComplexityForMethodDataset}]]*/;
+              let currentChartLevel = 'class';
 
               function showTimelineChartForClass() {
+                  currentChartLevel = 'class';
                   let option = {
+                      options: initOptions(),
                       baseOption: {
                           legend: {},
                           grid: [
@@ -150,19 +178,9 @@
                               },
                           ],
                           timeline: {
-                              axisType: 'category', //轴的类型，value是数值轴；category是类目轴；
-                              // orient: 'horizontal',//摆放方式；vertical/horizontal
-                              loop: true,
-                              // autoPlay: true,
-                              currentIndex: timeRecords.length - 1,
-                              playInterval: 1000,
-                              symbol: 'circle',//timeline标记的图形: circle,rect,roundRect,triangle,diamond,pin,arrow,none;可以通过‘image://url"设置为图片
-                              controlStyle: {//控制按钮的样式；包括播放/前进/后退按钮
-                                  showNextBtn: true,//是否显示播放按钮；
-                                  showPrevBtn: true,//是否显示后退按钮；
-                                  showPlayBtn: true,//是否显示播放按钮
-                              },
-                              data: timeRecords,
+                              axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
+                              playInterval: 1000, symbol: 'circle', data: timeRecords,
+                              controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
                               label: {
                                   formatter: function (s) {
                                       var date = new Date(s);
@@ -171,58 +189,33 @@
                               }
                           },
                           tooltip: {
-                              // 显示额外信息
-                              padding: 10,
-                              borderWidth: 1,
+                              padding: 10, borderWidth: 1,
+                              show: true, enterable: true, trigger: 'item', confine: true,
                               formatter: function (params) {
                                   if (params.componentType === "timeline") {
                                       return params.name;
-                                  } else if (params[0].componentType === "series") {
-                                      let text = '';
-                                      let yLabelName = ''
-                                      let triggerLabel = false;
-                                      params.forEach(row => {
-                                          yLabelName = row.seriesName;
-                                          if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
-                                              triggerLabel = true;
-                                              let value = row.value;
-                                              text +=
-                                                  '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
-                                                  + 'Class: ' + value[2] + '<br>'
-                                                  + '<span style="font: 12px">'
-                                                  + 'of Module: ' + value[3] + '</span>' + '<br>'
-                                                  + '</div>';
-                                          }
-                                      });
-                                      if (triggerLabel) {
-                                          text += 'Number of Methods : ' + pointedData[0] + '<br>' +
-                                              yLabelName + ': ' + pointedData[1] + '<br>'
-                                      }
-                                      return text;
+                                  } else if (params.componentType === "series") {
+                                      let value = params.data
+                                      let yLabelName = params.seriesName;
+                                      return '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                          + 'Class: ' + value[2] + '<br>'
+                                          + '<span style="font: 12px">'
+                                          + 'Of module: ' + value[3] + '</span>' + '<br>'
+                                          + '</div>'
+                                          + '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                          + 'Number of Methods : ' + value[0] + '<br>'
+                                          + yLabelName + ': ' + value[1] + '<br>'
+                                          + '</div>'
+                                          + 'Click the point to see all relevant records.';
                                   }
-                              },
-                              // 重叠问题
-                              show: true,
-                              trigger: 'axis',
-                              confine: true,
-                              axisPointer: {
-                                  type: 'cross',
-                                  snap: false,
-                                  axis: 'x', // y轴选项
-                                  label: {
-                                      // show: false,
-                                      color: '#fff',
-                                      backgroundColor: 'rgba(0, 0, 0, .55)'
-                                  }
-                              },
+                              }
                           },
                       },
-                      options: initOptions()
                   };
                   document.getElementById("chart").style.height = "680px";
-                  complexityTimelineChart.clear();
-                  complexityTimelineChart.resize();
-                  complexityTimelineChart.setOption(option);
+                  timelineChart.clear();
+                  timelineChart.resize();
+                  timelineChart.setOption(option);
               }
 
               function initOptions() {
@@ -309,42 +302,26 @@
               }
 
               function showTimelineChartForMethod() {
+                  currentChartLevel = 'method'
                   let option = {
                       grid: {
                           bottom: '100'
                       },
                       legend: {},
                       xAxis: {
-                          name: "Time",
-                          type: 'category',
-                          splitLine: {
-                              show: true,
-                              lineStyle: {
-                                  type: 'solid'
-                              }
-                          },
-                          splitArea: {
-                              interval: 0,
-                          }
+                          name: "Time", type: 'category', splitArea: {interval: 0},
+                          splitLine: {show: true, lineStyle: {type: 'solid'}},
                       },
                       yAxis: [{
-                          name: "Cyclomatic of Methods",
-                          type: 'value',
-                          nameLocation: 'center',
-                          nameRotate: 90,
-                          nameGap: 30
+                          name: "Cyclomatic of Methods", type: 'value',
+                          nameLocation: 'center', nameRotate: 90, nameGap: 30
                       }, {
-                          name: "Number of All Methods in the Project",
-                          type: 'value',
-                          nameLocation: 'center',
-                          nameRotate: 270,
-                          nameGap: 30
+                          name: "Number of All Methods in the Project", type: 'value',
+                          nameLocation: 'center', nameRotate: 270, nameGap: 30
                       }],
                       series: [{
                           name: 'Cyclomatic Complexity of Method',
-                          type: 'scatter',
-                          yAxisIndex: 0,
-                          data: methodComplexityDataset,
+                          type: 'scatter', yAxisIndex: 0, data: methodComplexityDataset,
                           emphasis: {
                               label: {
                                   show: true, color: '#000000', position: 'top', fontWeight: 'normal',
@@ -354,19 +331,10 @@
                               },
                           },
                       }, {
-                          name: 'Number of All Methods',
-                          type: 'bar',
-                          yAxisIndex: 1,
-                          data: methodNumDataset,
-                          itemStyle: {
-                              color: 'rgba(229,229,229,0.8)',
-                          },
+                          name: 'Number of All Methods', type: 'bar', yAxisIndex: 1, data: methodNumDataset,
+                          itemStyle: {color: 'rgba(229,229,229,0.8)',},
                           label: {
-                              show: true,
-                              position: 'top',
-                              distance: 20,
-                              formatter: '{@[1]}',
-                              color: '#000000',
+                              show: true, position: 'top', distance: 20, formatter: '{@[1]}', color: '#000000',
                           },
                           emphasis: {
                               itemStyle: {color: 'rgba(201,201,201,0.8)'},
@@ -381,30 +349,103 @@
                       tooltip: {
                           show: true, enterable: true, trigger: 'item', confine: true, padding: 10, borderWidth: 1,
                           formatter: function (params) {
-                              if(params.componentSubType === "scatter"){
+                              if (params.componentSubType === "scatter") {
                                   let value = params.data
-                                  return 'Method: ' + value[2] + '<br>' + 'Declaration: ' + value[3] + '<br>'
-                                      + params.seriesName + ": " + value[1];
+                                  return '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                      + 'Method: ' + value[2] + '<br>' + 'Declaration: ' + value[3] + '<br>'
+                                      + params.seriesName + ": " + value[1]
+                                      + '</div>'
+                                      + 'Click the point to see all relevant records.';
                               }
                           },
                       },
                   };
                   document.getElementById("chart").style.height = "550px";
-                  complexityTimelineChart.clear();
-                  complexityTimelineChart.resize();
-                  complexityTimelineChart.setOption(option);
+                  timelineChart.clear();
+                  timelineChart.resize();
+                  timelineChart.setOption(option);
               }
 
               // 基于准备好的dom，初始化echarts实例
-              let complexityTimelineChart = echarts.init(document.getElementById('chart'));
+              let timelineChart = echarts.init(document.getElementById('chart'));
 
               let pointedData = [];
-              complexityTimelineChart.on('mouseover', function (params) {
+              timelineChart.on('mouseover', function (params) {
                   pointedData = params.data;
               })
-              complexityTimelineChart.on('mouseout', function () {
+              timelineChart.on('mouseout', function () {
                   pointedData = [];
               })
+
+              // 用于显示timeline chart的重叠数据
+              let chart_data_vm = new Vue({
+                  el: '#chart_data_model',
+                  data: {
+                      title: '',
+                      pointValueList: [],
+                      pointDescriptionList: [],
+                  }
+              })
+              let currentTimelineIndex = timeRecords.length - 1;
+              timelineChart.on('timelinechanged', function (params) {
+                  currentTimelineIndex = params.currentIndex
+              });
+              timelineChart.on('click', 'series.scatter', function (param) {
+                  chart_data_vm.title = timeRecords[currentTimelineIndex];
+
+                  let targetDataset;
+                  let x = param.value[0];
+                  let y = param.value[1];
+                  if (currentChartLevel === 'class') {
+                      let pointValueList = [];
+                      pointValueList.push("Number of methods: " + param.value[0]);
+                      pointValueList.push(param.seriesName + ": " + param.value[1]);
+                      chart_data_vm.pointValueList = pointValueList;
+
+                      if (param.seriesName === "Avg Complexity of Class") {
+                          targetDataset = avgComplexityOfClassDataset;
+                      } else if (param.seriesName === "Response for Class") {
+                          targetDataset = responseForClassDataset;
+                      } else if (param.seriesName === "Weighted Methods Count") {
+                          targetDataset = weightedMethodsCountDataset;
+                      } else if (param.seriesName === "Max Complexity of Class") {
+                          targetDataset = maxComplexityOfClassDataset;
+                      }
+                      let pointDescriptionList = [];
+                      for (let key in targetDataset) {
+                          if (key === timeRecords[currentTimelineIndex]) {
+                              for (let row of targetDataset[key]) {
+                                  if (row[0] === x && row[1] === y) {
+                                      let text = '<span style="font: 12px">'
+                                          + 'Class: ' + row[2] + '</span>' + '<br>'
+                                          + '<span style="font: 12px">'
+                                          + 'of Module: ' + row[3] + '</span>' + '<br>';
+                                      pointDescriptionList.push(text);
+                                  }
+                              }
+                          }
+                      }
+                      chart_data_vm.pointDescriptionList = pointDescriptionList;
+                  } else {
+                      let pointValueList = [];
+                      pointValueList.push(param.seriesName + ": " + param.value[1]);
+                      chart_data_vm.pointValueList = pointValueList;
+
+                      let pointDescriptionList = [];
+                      methodComplexityDataset.forEach(row => {
+                          if (row[0] === x && row[1] === y) {
+                              let text = '<span style="font: 12px">'
+                                  + 'Method: ' + row[2] + '</span>' + '<br>'
+                                  + '<span style="font: 12px">'
+                                  + 'Declaration: ' + row[3] + '</span>' + '<br>';
+                              pointDescriptionList.push(text);
+                          }
+                      });
+                      chart_data_vm.pointDescriptionList = pointDescriptionList;
+                  }
+
+                  $('#chart_data_model').modal('show');
+              });
 					
 					
 					</script>

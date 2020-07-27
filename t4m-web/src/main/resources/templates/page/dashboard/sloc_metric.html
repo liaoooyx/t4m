@@ -93,7 +93,7 @@
 									</li>
 									<li class="nav-item">
 										<a id='sloc_timeline_chart' href="javascript:void(0);" class="nav-link py-2 px-3 active"
-										   data-toggle="tab" onclick="changeDataSet('mainClass')">
+										   data-toggle="tab" onclick="changeDataSet('file')">
 											<span class="d-none d-md-block">File Level (Raw)</span>
 											<span class="d-md-none">F</span>
 										</a>
@@ -102,43 +102,61 @@
 							</div>
 						</div>
 					</div>
+					
 					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:550px;"></div>
+					<div class="modal fade" id="chart_data_model" tabindex="-1" role="dialog"
+					     aria-labelledby="row_model_label" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">{{title}}</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body pt-0">
+									<hr class="my-3">
+									<div v-for="pointValue in pointValueList">
+										<span>{{pointValue}}</span><br>
+									</div>
+									<hr class="my-3">
+									<div class="mb-2" v-for="pointDescription in pointDescriptionList">
+										<div v-html="pointDescription"></div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					
 					<script type="text/javascript" th:inline="javascript">
+              let timeRecords = /*[[${timeRecords}]]*/;
               let datasetAllClass = /*[[${datasetAllClass}]]*/;
               let datasetMainClass = /*[[${datasetMainClass}]]*/;
-              let timeRecords = /*[[${timeRecords}]]*/;
+              let currentDataset;
 
               function changeDataSet(type) {
-                  let dataset;
                   let label;
                   if (type === 'allClass') {
-                      dataset = datasetAllClass;
+                      currentDataset = datasetAllClass;
                       label = ['Class', '', 'Physical Code Lines',
                           'Comment Lines', '% of comment lines']
-                  } else if (type === 'mainClass') {
-                      dataset = datasetMainClass;
+                  } else if (type === 'file') {
+                      currentDataset = datasetMainClass;
                       label = ['Source File', '.java',
                           'Physical Code Lines',
                           'Comment Lines', '% of comment lines']
                   }
-                  let dataMax = getMax(dataset);
-                  let options = optionsFormatter(dataset);
+                  let dataMax = getMax(currentDataset);
+                  let options = optionsFormatter(currentDataset);
                   let option = {
                       baseOption: {
                           timeline: {
-                              axisType: 'category', //轴的类型，value是数值轴；category是类目轴；
-                              // orient: 'horizontal',//摆放方式；vertical/horizontal
-                              loop: true,
-                              // autoPlay: true,
-                              currentIndex: timeRecords.length - 1,
-                              playInterval: 1000,
-                              symbol: 'circle',//timeline标记的图形: circle,rect,roundRect,triangle,diamond,pin,arrow,none;可以通过‘image://url"设置为图片
-                              controlStyle: {//控制按钮的样式；包括播放/前进/后退按钮
-                                  showNextBtn: true,//是否显示播放按钮；
-                                  showPrevBtn: true,//是否显示后退按钮；
-                                  showPlayBtn: true,//是否显示播放按钮
-                              },
-                              data: timeRecords,
+                              axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
+                              playInterval: 1000, symbol: 'circle', data: timeRecords,
+                              controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
                               label: {
                                   formatter: function (s) {
                                       var date = new Date(s);
@@ -150,117 +168,47 @@
                               data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class'],
                           },
                           xAxis: {
-                              name: 'Physical Code Lines',
-                              type: 'value',
-                              max: Math.ceil(dataMax[0] / 5) * 5
+                              name: 'Physical Code Lines', type: 'value', max: Math.ceil(dataMax[0] / 5) * 5
                           },
                           yAxis: {
-                              name: 'Comment Lines',
-                              type: 'value',
-                              max: Math.ceil(dataMax[1] / 5) * 5
+                              name: 'Comment Lines', type: 'value', max: Math.ceil(dataMax[1] / 5) * 5
                           },
                           tooltip: {
-                              // 显示额外信息
-                              padding: 10,
-                              borderWidth: 1,
+                              padding: 10, borderWidth: 1,
+                              show: true, enterable: true, trigger: 'item', confine: true,
                               formatter: function (params) {
                                   if (params.componentType === "timeline") {
                                       return params.name;
-                                  } else if (params[0].componentType === "series") {
-                                      let text = '';
-                                      let triggerLabel = false;
-                                      params.forEach(row => {
-                                          if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {
-                                              triggerLabel = true;
-                                              let value = row.value;
-                                              text +=
-                                                  '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
-                                                  + label[0] + ': ' + value[3] + label[1] + '<br>'
-                                                  + '<span style="font: 12px">'
-                                                  + 'of Module: ' + value[4] + '</span>' + '<br>'
-                                                  + '</div>';
-                                          }
-                                      });
-                                      if (triggerLabel) {
-                                          text += label[2] + ': ' + pointedData[0] + '<br>'
-                                              + label[3] + ': ' + pointedData[1] + '<br>'
-                                              + label[4] + ': ' + pointedData[2] + '%<br>'
-                                      }
-                                      return text;
+                                  } else {
+                                      let value = params.data
+                                      return '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                          + label[0] + ': ' + value[3] + label[1] + '<br>'
+                                          + '<span style="font: 12px">'
+                                          + 'Of Module: ' + value[4] + '</span>' + '<br>'
+                                          + '</div>'
+                                          + '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                          + label[2] + ': ' + value[0] + '<br>'
+                                          + label[3] + ': ' + value[1] + '<br>'
+                                          + label[4] + ': ' + value[2] + '%<br>'
+                                          + '</div>'
+                                          + 'Click the point to see all relevant records.'
                                   }
-                              },
-                              // 重叠问题
-                              show: true,
-                              // enterable: true,
-                              confine: true,
-                              trigger: 'axis',
-                              axisPointer: {
-                                  type: 'cross',
-                                  snap: false,
-                                  axis: 'x', // y轴选项
-                                  label: {
-                                      // show: false,
-                                      color: '#fff',
-                                      backgroundColor: 'rgba(0, 0, 0, .55)'
-                                  }
-                              },
+
+                              }
                           },
-                          grid: {
-                              // left: '10%',
-                              right: 150,
-                              // top: '18%',
-                              // bottom: '10%'
-                          },
-                          color: ['#c23531'],
-                          //右侧视觉映射
+                          grid: {right: 150,}, color: ['#c23531'],
                           visualMap: [
                               {
-                                  type: 'continuous',
-                                  left: 'right',
-                                  top: 'middle',
-                                  // itemWidth: 30,
-                                  // itemHeight: 120,
-                                  calculable: true,
-                                  precision: 0.1,
-                                  text: ['% of comment lines'],
-                                  textGap: 30,
-                                  //以commentline + codeline作为参数，表示类的大小
-                                  dimension: 2,
-                                  max: 200,
-                                  inRange: {
-                                      symbolSize: [10, 30]
-                                  },
-                                  controller: {
-                                      inRange: {
-                                          color: ['#c23531']
-                                      },
-                                  }
+                                  type: 'continuous', left: 'right', top: 'middle', calculable: true, precision: 0.1,
+                                  text: ['% of comment lines'], textGap: 30, dimension: 2, max: 200,
+                                  inRange: {symbolSize: [10, 30]}, controller: {inRange: {color: ['#c23531']},}
                               },
-                              // {
-                              //     type: 'continuous',
-                              //     left: 'right',
-                              //     bottom: '10%',
-                              //     text: ['Easy to Read', 'Hard to Read'],
-                              //     //以comment line作为参数，表示类的理解难易程度
-                              //     dimension: 1,
-                              //     min: 0,
-                              //     max: dataMax[1],
-                              //     precision: 1,
-                              //     inRange: {
-                              //         colorLightness: [0.4, 0.8]
-                              //     },
-                              //     controller: {
-                              //         inRange: {
-                              //             color: ['#c23531']
-                              //         },
-                              //     },
-                              // }
                           ],
                       },
                       options: options
 
                   };
-                  myChart.setOption(option);
+                  timelineChart.setOption(option);
               }
 
               function getMax(dataset) {
@@ -380,15 +328,51 @@
               }
 
               // 基于准备好的dom，初始化echarts实例
-              let myChart = echarts.init(document.getElementById('chart'));
+              let timelineChart = echarts.init(document.getElementById('chart'));
 
-              // $('#sloc_timeline_chart').trigger('click');
-              document.getElementById('sloc_timeline_chart').click()
-
-              let pointedData = [];
-              myChart.on('mouseover', function (params) {
-                  pointedData = params.data;
+              // 用于显示timeline chart的重叠数据
+              let chart_data_vm = new Vue({
+                  el: '#chart_data_model',
+                  data: {
+                      title: '',
+                      pointValueList: [],
+                      pointDescriptionList: [],
+                  }
               })
+              let currentTimelineIndex = timeRecords.length - 1;
+              timelineChart.on('timelinechanged', function (params) {
+                  currentTimelineIndex = params.currentIndex
+              });
+              timelineChart.on('click', function (param) {
+                  chart_data_vm.title = timeRecords[currentTimelineIndex];
+
+                  let pointValueList = [];
+                  pointValueList.push("Physical Code Lines: " + param.value[0]);
+                  pointValueList.push("Comment Lines: " + param.value[1]);
+                  pointValueList.push("% of Comment Lines: " + param.value[2] + "%");
+                  chart_data_vm.pointValueList = pointValueList;
+
+                  let x = param.value[0];
+                  let y = param.value[1];
+                  let pointDescriptionList = [];
+                  for (let key in currentDataset) {
+                      if (key === timeRecords[currentTimelineIndex]) {
+                          for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation']) {
+                              for (let row of currentDataset[key][key2]) {
+                                  if (row[0] === x && row[1] === y) {
+                                      let text = '<span style="font: 12px">'
+                                          + 'Class: ' + row[3] + '</span>' + '<br>'
+                                          + '<span style="font: 12px">'
+                                          + 'of Module: ' + row[4] + '</span>' + '<br>';
+                                      pointDescriptionList.push(text);
+                                  }
+                              }
+                          }
+                      }
+                  }
+                  chart_data_vm.pointDescriptionList = pointDescriptionList;
+                  $('#chart_data_model').modal('show');
+              });
 					
 					
 					</script>
@@ -480,7 +464,7 @@
 
     $(function () {
         // 首次渲染图表
-        // showTimelineChartForClass();
+        changeDataSet("file");
         // 首次渲染表格
         showModuleSloc();
     })
@@ -716,8 +700,8 @@
             }
         ],
     };
-    let myChart2 = echarts.init(document.getElementById('row_chart'));
-    myChart2.setOption(option2);
+    let timelineChart2 = echarts.init(document.getElementById('row_chart'));
+    timelineChart2.setOption(option2);
 
     // 用于修改模块框title
     let vm_sloc_chart_title = new Vue({
@@ -732,13 +716,13 @@
         vm_sloc_chart_title.recordName = name;
         vm_sloc_chart_title.recordType = level;
         // 异步加载数据
-        myChart2.clear();
-        myChart2.setOption(option2);
+        timelineChart2.clear();
+        timelineChart2.setOption(option2);
         // 异步加载数据
         $.get("/dashboard/sloc/table/chart?name=" + name + "&level=" + level).done(function (data) {
             // 填入数据
             console.log(data)
-            myChart2.setOption({
+            timelineChart2.setOption({
                 dataset: {
                     // 提供一份数据。
                     source: data
@@ -783,7 +767,7 @@
 
     // 让echarts在模态框打开后重新渲染
     $('#row_model').on('shown.bs.modal', function () {
-        myChart2.resize()
+        timelineChart2.resize()
     })
 
 </script>
