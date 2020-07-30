@@ -56,6 +56,9 @@ public class No2_ClassScanner {
 				classInfo.setClassDeclaration(ClassInfo.ClassDeclaration.PUBLIC_OUTER_CLASS);
 				classInfo.setFullyQualifiedName(pkgFullyQualifiedName + "." + classShortName);
 				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
+				if ("package-info".equals(classShortName)){
+					classInfo.setClassModifier(ClassInfo.ClassModifier.NONE);
+				}
 
 			} catch (FileNotFoundException e) {
 				LOGGER.error("No such file to be converted to ClassInfo object.%n[{}]", e.toString(), e);
@@ -63,13 +66,5 @@ public class No2_ClassScanner {
 				LOGGER.error("Error happened when finding package path. [{}]", e.toString(), e);
 			}
 		});
-	}
-
-	public static void main(String[] args) throws ClassNotFoundException {
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
-		// String rootPath = "/Users/liao/myProjects/IdeaProjects/comp5911m/refactor";
-		ProjectInfo projectInfo = new ProjectInfo(rootPath);
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanClass();
 	}
 }

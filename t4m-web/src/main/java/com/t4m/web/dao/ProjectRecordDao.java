@@ -1,7 +1,7 @@
-package com.t4m.web.util;
+package com.t4m.web.dao;
 
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.util.PropertyUtil;
 import com.t4m.serializer.T4MProjectInfoSerializer;
 import com.t4m.serializer.T4MSerializer;
 import org.slf4j.Logger;
@@ -14,14 +14,14 @@ import java.util.List;
 /**
  * Created by Yuxiang Liao on 2020-06-26 04:01.
  */
-public class ProjectRecord {
+public class ProjectRecordDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProjectInfo.class);
 
 	static List<ProjectInfo> projectInfoList;
 
 	/**
-	 * 当扫描，切换，新增时，需要主动调用词方法，更新记录
+	 * 当扫描，切换，新增时，需要主动调用此方法，更新记录
 	 */
 	public static List<ProjectInfo> updateProjectInfoRecord() {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
@@ -42,7 +42,7 @@ public class ProjectRecord {
 	 */
 	public static ProjectInfo[] getTwoProjectInfoRecordByIndex(int index) {
 
-		List<ProjectInfo> projectInfoList = ProjectRecord.getProjectInfoList();
+		List<ProjectInfo> projectInfoList = ProjectRecordDao.getProjectInfoList();
 		if (projectInfoList.isEmpty()) {
 			return null;
 		}
@@ -64,7 +64,7 @@ public class ProjectRecord {
 	 */
 	public static List<String> getAllProjectRecordsDirName() {
 		List<String> projectDirList = new ArrayList<>();
-		String dbPath = PropertyUtil.getProperty("ROOT_DB_PATH");
+		String dbPath = GlobalProperties.DB_ROOT_PATH;
 		File rootDir = new File(dbPath);
 		if (rootDir.exists()){
 			if (rootDir.listFiles()!=null){

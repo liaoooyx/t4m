@@ -1,7 +1,7 @@
 package com.t4m.extractor.scanner;
 
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +17,6 @@ import java.util.List;
 public class No1_DirectoryFileScanner {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(No1_DirectoryFileScanner.class);
-
-	public static String[] exclusions = PropertyUtil.getProperty("EXCLUDED_PATH").split(";");
 
 	private ProjectInfo projectInfo;
 
@@ -48,8 +46,9 @@ public class No1_DirectoryFileScanner {
 			File[] fileArray = file.listFiles(new FileFilter() {
 				@Override
 				public boolean accept(File pathname) {
+					String[] exclusions = projectInfo.getExcludedPath().split(";");
 					for (String exclusion : exclusions) {
-						if (pathname.getAbsolutePath().contains(exclusion))
+						if (!"".equals(exclusion) && pathname.getAbsolutePath().contains(exclusion))
 							return false;
 					}
 					return true;
@@ -63,12 +62,6 @@ public class No1_DirectoryFileScanner {
 				javaList.add(file);
 			}
 		}
-	}
-
-	public static void main(String[] args) {
-		ProjectInfo projectInfo = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/sonarqube");
-		No1_DirectoryFileScanner directoryFileScanner = new No1_DirectoryFileScanner(projectInfo);
-		directoryFileScanner.scan();
 	}
 
 }

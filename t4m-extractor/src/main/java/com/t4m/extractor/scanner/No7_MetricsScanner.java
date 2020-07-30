@@ -1,5 +1,6 @@
 package com.t4m.extractor.scanner;
 
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
@@ -40,8 +41,10 @@ public class No7_MetricsScanner {
 	}
 
 	public static void main(String[] args) {
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/JSimulationProject";
-		ProjectInfo projectInfo = new ProjectInfo(rootPath);
+		// String rootPath = "/Users/liao/myProjects/IdeaProjects/JSimulationProject";
+		String rootPath = "/Users/liao/myProjects/IdeaProjects/t4m";
+		ProjectInfo projectInfo = new ProjectInfo(rootPath, GlobalProperties.DEFAULT_EXCLUDED_PATH,
+		                                          GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanMetricData();
 		System.out.println();

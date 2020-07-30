@@ -1,8 +1,9 @@
 package com.t4m.serializer;
 
+
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.util.PropertyUtil;
 import com.t4m.extractor.util.TimeUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +21,7 @@ class T4MProjectInfoSerializerTest {
 	@BeforeAll
 	public static void initProjectInfo() {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
-		projectInfo = new ProjectInfo(path);
+		projectInfo = new ProjectInfo(path, GlobalProperties.DEFAULT_EXCLUDED_PATH,GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanASTParser();
 	}
@@ -30,8 +31,8 @@ class T4MProjectInfoSerializerTest {
 	void serialization() {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		String dbFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
-		String dbPath = PropertyUtil.getProperty("ROOT_DB_PATH");
-		String currentProjectName = PropertyUtil.getProperty("CURRENT_PROJECT_NAME");
+		String dbPath = GlobalProperties.DB_ROOT_PATH;
+		String currentProjectName = GlobalProperties.CURRENT_PROJECT_IDENTIFIER;
 		serializer.serializeTo(projectInfo, dbFileName);
 		File file = new File(dbPath + File.separator + currentProjectName + File.separator + dbFileName);
 		assertTrue(file.exists());

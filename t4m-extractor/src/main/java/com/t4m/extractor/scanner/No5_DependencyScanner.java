@@ -139,13 +139,4 @@ public class No5_DependencyScanner {
 		//TODO 处理：如果root路径下没有文件夹
 	}
 
-	public static void main(String[] args) {
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
-		ProjectInfo projectInfo = new ProjectInfo(rootPath);
-		List<File> rawJavaFileList = new ArrayList<>();
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanDependency();
-
-	}
-
 }

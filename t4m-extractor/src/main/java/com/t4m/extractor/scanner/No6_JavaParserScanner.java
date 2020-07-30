@@ -6,8 +6,10 @@ import com.github.javaparser.ast.visitor.VoidVisitor;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.model.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
+import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,21 +75,22 @@ public class No6_JavaParserScanner {
 		// ReflectionTypeSolver用于解析Java核心类
 		typeSolverList.add(new ReflectionTypeSolver());
 		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
-			//JavaParserTypeSolver要求是是根包所在文件夹位置
+			//JavaParserTypeSolver要求是根包所在文件夹位置
 			typeSolverList.add(new JavaParserTypeSolver(new File(moduleInfo.getSourcePath())));
+		}
+		String dependencyPath = GlobalProperties.getDependencyPath(projectInfo.getProjectDirName());
+		if (!"".equals(dependencyPath)){
+			String[] jars = dependencyPath.split("[;:]");
+			for (String jarPath : jars) {
+				try {
+					typeSolverList.add(new JarTypeSolver(jarPath));
+				} catch (IOException e) {
+					LOGGER.error("Error when adding jar path to initial JavaParser. [{}]", jarPath, e);
+				}
+			}
 		}
 		TypeSolver typeSolver = new CombinedTypeSolver(typeSolverList.toArray(new TypeSolver[0]));
 		JavaSymbolSolver symbolSolver = new JavaSymbolSolver(typeSolver);
 		StaticJavaParser.getConfiguration().setSymbolResolver(symbolSolver);
-	}
-
-	public static void main(String[] args) {
-		// String rootPath = "/Users/liao/myProjects/IdeaProjects/jdepend";
-		// String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/JSimulationProject";
-		ProjectInfo projectInfo = new ProjectInfo(rootPath);
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanJavaParser();
-		System.out.println();
 	}
 }

@@ -1,7 +1,6 @@
 package com.t4m.web.controller;
 
 import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.MethodInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
@@ -11,7 +10,7 @@ import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
 import com.t4m.web.service.ProjectService;
-import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.dao.ProjectRecordDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -47,13 +46,13 @@ public class CouplingController {
 
 	@GetMapping("")
 	public String slocMetric(Model model) {
-		List<ProjectInfo> projectInfoList = ProjectRecord.getProjectInfoList();
+		List<ProjectInfo> projectInfoList = ProjectRecordDao.getProjectInfoList();
 		// 基本信息
 		model.addAttribute("projectList", projectInfoList);
 		// 用于timeline chart
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
 		LinkedHashMap<String, List<List<Object>>> packageInstabilityAbstractnessGraphDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			List<List<Object>> rows = new ArrayList<>();
 			for (PackageInfo packageInfo : projectInfo.getPackageList()) {
@@ -72,7 +71,7 @@ public class CouplingController {
 		model.addAttribute("packageInstabilityAbstractnessGraphDataset", packageInstabilityAbstractnessGraphDataset);
 
 		List<Object[]> classCouplingBetweenObjectsDataset = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
 				Object[] row =
@@ -84,7 +83,7 @@ public class CouplingController {
 		model.addAttribute("classCouplingBetweenObjectsDataset", classCouplingBetweenObjectsDataset);
 
 		List<Object[]> classMessagePassingCouplingDataset = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
 				Object[] row =
@@ -103,7 +102,7 @@ public class CouplingController {
 	public List<Map<String, Object>> selectPackageRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		for (PackageInfo packageInfo : projectInfo.getPackageList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", packageInfo.getFullyQualifiedName());
@@ -127,7 +126,7 @@ public class CouplingController {
 		List<Object[]> dataset = new ArrayList<>();
 		dataset.add(new String[]{"time", "Afferent Coupling", "Efferent Coupling", "Instability", "Abstractness",
 		                         "Distance from Main Sequence"});
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), qualifiedName);
 			Object[] tempRow = new Object[6];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
@@ -152,7 +151,7 @@ public class CouplingController {
 			@RequestParam(name = "pkgQualifiedName") String pkgQualifiedName,
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), pkgQualifiedName);
 		if (packageInfo == null) {
 			LOGGER.info("No such package in this record.");
@@ -184,7 +183,7 @@ public class CouplingController {
 		List<Object[]> dataset = new ArrayList<>();
 		dataset.add(new String[]{"time", "Coupling Between Objects", "Afferent Coupling", "Efferent Coupling",
 		                         "Instability", "Message Passing Coupling"});
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
 			Object[] tempRow = new Object[6];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());

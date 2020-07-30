@@ -17,7 +17,8 @@
 	<!-- Argon CSS -->
 	<link rel="stylesheet" th:href="@{/assets/css/argon.css?v=1.2.0}" type="text/css">
 	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-table/bootstrap-table.min.css}">
-	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.css}">
+	<link rel="stylesheet"
+	      th:href="@{/assets/vendor/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.css}">
 	<link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-table/group-by-v2/bootstrap-table-group-by.min.css}">
 	<script th:src="@{/assets/vendor/echart/dist/echarts.js}"></script>
 	<script th:src="@{/assets/js/vue.js}"></script>
@@ -51,6 +52,7 @@
 		/*	padding: 3px 8px;*/
 		/*	height: auto;*/
 		/*}*/
+		
 		/*bootstrap-table toolbar增加左右margin*/
 		.bootstrap-table .fixed-table-toolbar {
 			margin-left: 20px;
@@ -68,13 +70,28 @@
 			color: black;
 		}
 		
-		.dropdown-arrow-color{
+		.dropdown-arrow-color {
 			color: #525f7f;
 		}
 		
 		.table-hover > tbody > tr:hover > td,
 		.table-hover > tbody > tr:hover > th {
 			background-color: #f5f5f5;
+		}
+		
+		/*!*可滚动模态框，添加x轴滚动*!*/
+		/*#chart_data_model .modal-dialog-centered.modal-dialog-scrollable {*/
+		/*	overflow-wrap: normal;*/
+		/*}*/
+		
+		.btn:disabled {
+			transform: none;
+			box-shadow: none;
+			cursor: default;
+		}
+		
+		.active .text-muted {
+			color: #b4c5d8 !important;
 		}
 	
 	</style>
@@ -103,14 +120,13 @@
 					<li class="nav-item">
 						<button id="scan_current_project_btn" type="button"
 						        class="col-auto btn btn-block btn-outline-primary text-uppercase"
-						        onclick="scanCurrentProject(this)">
+						        onclick="showScanModal('scan')">
 							<span class="btn-inner--icon"><i class="fas fa-search-plus"></i></span>
 							<span class="btn-inner--text">Scan</span>
 						</button>
 						<div class="btn-group btn-block" role="group" aria-label="New project">
 							<button id="new_project_btn" type="button" class="col-auto btn btn-outline-default text-uppercase"
-							        data-toggle="modal"
-							        data-target="#model_to_create_new_project">
+							        onclick="showScanModal('create')">
 								<span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
 								<span class="btn-inner--text">New</span>
 							</button>
@@ -125,23 +141,46 @@
 				</ul>
 				
 				<!-- Modal to create new project -->
-				<div class="modal fade" id="model_to_create_new_project" tabindex="-1" role="dialog"
-				     aria-labelledby="model_to_create_new_project_label" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal fade" id="modal_to_scan_project" tabindex="-1" role="dialog"
+				     aria-labelledby="modal_to_scan_project_label" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="model_to_create_new_project_label">Scan New Project</h5>
+								<h5 class="modal-title" id="modal_to_scan_project_label" v-html="title"></h5>
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
 							<div class="modal-body">
-								<input id="new_project_path" class="form-control" type="text"
-								       placeholder="Please enter your project absolute root path">
+								<form>
+									<div class="form-group" v-html="projectNameHTML"></div>
+									<div class="form-group">
+										<label for="excluded_path">Excluded path</label>
+										<textarea class="form-control" id="excluded_path" rows="2" th:text="${excludedPath}"></textarea>
+										<small class="form-text text-muted">
+											The path that should not be included in scanning."
+										</small>
+										<small class="form-text text-muted">
+											It should start with the system file separator, and separated by ";"
+										</small>
+									</div>
+									<div class="form-group">
+										<label for="dependency_path">Dependency path</label>
+										<textarea class="form-control" id="dependency_path" rows="2"
+										          th:text="${dependencyPath}"></textarea>
+										<small class="form-text text-muted">
+											The external .jar file path of the project.
+										</small>
+										<small class="form-text text-muted">
+											The external class can not be resolved if lacking the dependency path, leading some extends of
+											inaccuracy of the metrics .
+										</small>
+									</div>
+								</form>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary" onclick="scanNewProject()">Scan</button>
+								<button type="button" class="btn btn-primary" onclick="scanProject(this)">Scan</button>
 							</div>
 						</div>
 					</div>
@@ -161,9 +200,9 @@
 							<div id="model_content_of_switching_project" class="modal-body">
 								<div class="list-group list-group-flush">
 									<a href="javascript:void(0);" class="list-group-item py-2 list-group-item-action"
-									   v-for="projectName in projectList" v-bind:class="projectName === currentProject?'active':''"
-									   v-on:click="switchProject(projectName)">
-										{{projectName}}
+									   v-for="item of projectArray"
+									   v-bind:class="item[0] === currentProject?'active':''"
+									   v-on:click="switchProject(item[0])" v-html="item[1]">
 									</a>
 								</div>
 							</div>
@@ -174,7 +213,6 @@
 						</div>
 					</div>
 				</div>
-				
 				
 				<!-- Divider -->
 				<hr class="my-3">
@@ -304,59 +342,113 @@
 	<script th:src="@{/assets/vendor/bootstrap-table/group-by-v2/bootstrap-table-group-by.min.js}"></script>
 	<script th:inline="javascript">
       var blank_page_trigger = [[${isBlank}]];
-      if (blank_page_trigger) {
-          $("#new_project_btn").trigger("click");
-      }
+      let currentProjectPath = [[${currentProjectPath}]];
 
-      function scanCurrentProject(obj) {
-          $(obj).attr("disabled", "");
-          $(obj).html("SCANNING...");
-          let i = 0;
-          let scanningCounter = setInterval(function () {
-              $(obj).html("SCANNING..." + (++i));
-          }, 1000);
-          $.get("/operation/scan", function (data) {
-              clearInterval(scanningCounter);
-              if (data === "success") {
-                  window.location.reload();
-              }
-          })
-      }
-
-      function scanNewProject() {
-          let projectPath = $('#new_project_path').val()
-          $.get("/operation/new?path=" + projectPath, function (data) {
-              if (data === "success") {
-                  window.location.reload();
-              }
-          })
-      }
-
-      $('#model_to_switch_project').on('show.bs.modal', function (e) {
-          $.get("/operation/search", function (data) {
-              console.log(data['currentProject']);
-              vm_for_switch_project_model.projectList = data['projectList'];
-              vm_for_switch_project_model.currentProject = data['currentProject'];
-          })
+      $(function () {
+          if (blank_page_trigger) {
+              $("#new_project_btn").trigger("click");
+              $('#scan_current_project_btn').attr("disabled", "");
+          }
       })
+
+      let scan_vm = new Vue({
+          el: '#modal_to_scan_project',
+          data: {
+              title: '',
+              projectNameHTML: '',
+          }
+      })
+
+      let scanType;
+
+      function showScanModal(flag) {
+          scanType = flag;
+          if (flag === "create") {
+              let html = '<label for="project_path">Project path</label>\n' +
+                  '<input type="text" class="form-control" id="project_path" ' +
+                  'placeholder="Please enter your project absolute root path." required>\n' +
+                  '<div class="invalid-feedback">Please enter a project path.</div>'
+              scan_vm.projectNameHTML = html;
+              scan_vm.title = 'Scan New Project';
+              $('#modal_to_scan_project').modal('show');
+          } else if (flag === "scan") {
+              let html = '<label for="project_path">Project path </label>\n' +
+                  '<input type="text" class="form-control" id="project_path" value="' + currentProjectPath + '" disabled>';
+              scan_vm.projectNameHTML = html;
+              scan_vm.title = 'Scan: ' + formatProjectIdentifier([[${currentProjectIdentifier}]]);
+              $('#modal_to_scan_project').modal('show');
+          }
+      }
+
+      function scanProject(obj) {
+          let projectPath = $('#project_path').val()
+          let excludedPath = $('#excluded_path').text()
+          let dependencyPath = $('#dependency_path').text()
+          if (projectPath === "") {
+              $('#project_path').addClass("is-invalid")
+              return null;
+          } else {
+              $('#project_path').removeClass("is-invalid")
+              $(obj).attr("disabled", "");
+              $(obj).html('Scanning...');
+              let i = 0;
+              let scanningCounter = setInterval(function () {
+                  $(obj).html("SCANNING..." + (++i));
+              }, 1000);
+              if (scanType === "create") {
+                  $.get("/operation/new?projectPath=" + projectPath
+                      + "&excludedPath=" + excludedPath + "&dependencyPath=" + dependencyPath, function (data) {
+                      clearInterval(scanningCounter);
+                      if (data === "success") {
+                          window.location.reload();
+                      }
+                  })
+              } else if (scanType === "scan") {
+                  $.get("/operation/scan?excludedPath=" + excludedPath + "&dependencyPath=" + dependencyPath, function (data) {
+                      clearInterval(scanningCounter);
+                      if (data === "success") {
+                          window.location.reload();
+                      }
+                  })
+              }
+          }
+      }
 
       var vm_for_switch_project_model = new Vue({
           el: '#model_content_of_switching_project',
           data: {
-              projectList: [],
+              projectArray: new Map(),
               currentProject: '',
           },
           methods: {
-              switchProject: function (targetProjectName) {
-                  console.log(targetProjectName)
-                  $.get("/operation/switch/" + targetProjectName, function (data) {
+              switchProject: function (targetProjectIdentifier) {
+                  identifierArray = targetProjectIdentifier.split("#")
+                  $.get("/operation/switch?projectName=" + identifierArray[0] + "&projectId=" + identifierArray[1], function (data) {
                       if (data === "success") {
-                          window.location.href = "/dashboard/basic";
+                          window.location.reload();
                       }
                   })
               },
           }
       })
+
+      $('#model_to_switch_project').on('show.bs.modal', function (e) {
+          $.get("/operation/search", function (data) {
+              vm_for_switch_project_model.currentProject = data['currentProject'];
+              let projectArray = [];
+              for (identifier of data['projectList']) {
+                  projectArray.push([identifier, formatProjectIdentifier(identifier)])
+              }
+              console.log(projectArray)
+              vm_for_switch_project_model.projectArray = projectArray;
+          })
+      })
+
+      //将t4m#123456拆分，并添加样式
+      function formatProjectIdentifier(projectIdentifier) {
+          let names = projectIdentifier.split("#");
+          return names[0] + '<span class="text-muted">&nbsp;#' + names[1] + '</span>';
+      }
 	
 	</script>
 </imports>

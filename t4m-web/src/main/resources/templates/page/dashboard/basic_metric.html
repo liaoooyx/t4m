@@ -38,7 +38,9 @@
 							<li class="breadcrumb-item active" aria-current="page">Basic</li>
 						</ol>
 					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto" th:text="${currentProjectName}"></h6>
+					<h6 class="h2 text-white d-inline-block mb-0 col-auto" th:text="${currentProjectIdentifier.split('#')[0]}">
+						<span class="text-muted" th:text="${currentProjectIdentifier.split('#')[1]}"></span>
+					</h6>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">

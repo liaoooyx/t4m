@@ -1,7 +1,5 @@
 package com.t4m.extractor.entity;
 
-import com.t4m.extractor.metric.SLOCMetric;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -74,7 +72,7 @@ public class ClassInfo implements Serializable {
 	private String avgCyclomaticComplexity;
 	private int weightedMethodsCount;    // sum of all methods complexity
 	// cohesion
-	private int lackOfCohesionInMethods4;
+	private int lackOfCohesionOfMethods4;
 	private String tightClassCohesion;
 	private String looseClassCohesion;
 
@@ -417,12 +415,12 @@ public class ClassInfo implements Serializable {
 		this.weightedMethodsCount = weightedMethodsCount;
 	}
 
-	public int getLackOfCohesionInMethods4() {
-		return lackOfCohesionInMethods4;
+	public int getLackOfCohesionOfMethods4() {
+		return lackOfCohesionOfMethods4;
 	}
 
-	public void setLackOfCohesionInMethods4(int lackOfCohesionInMethods4) {
-		this.lackOfCohesionInMethods4 = lackOfCohesionInMethods4;
+	public void setLackOfCohesionOfMethods4(int lackOfCohesionOfMethods4) {
+		this.lackOfCohesionOfMethods4 = lackOfCohesionOfMethods4;
 	}
 
 	public String getTightClassCohesion() {
@@ -469,7 +467,8 @@ public class ClassInfo implements Serializable {
 		ENUM("enum"),
 		ANNOTATION("annotation"),
 		ABSTRACT_CLASS("abstract"),
-		INTERFACE("interface");
+		INTERFACE("interface"),
+		NONE("package-info");
 
 		String str;
 

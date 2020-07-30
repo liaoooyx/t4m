@@ -38,6 +38,9 @@ public class CouplingMetric {
 		int numOfAllClass = packageInfo.getAllClassList().size();
 		int numOfAbstraction = 0; // interface or abstract
 		for (ClassInfo classInfo : packageInfo.getAllClassList()) {
+			if (classInfo.getClassModifier() == null){
+				System.out.println();
+			}
 			switch (classInfo.getClassModifier()) {
 				case INTERFACE:
 				case ABSTRACT_CLASS:

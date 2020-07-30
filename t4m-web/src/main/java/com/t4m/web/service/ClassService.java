@@ -5,7 +5,7 @@ import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
-import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.dao.ProjectRecordDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class ClassService {
 	 * 构造绑定到前端页面的数据。List的每条数据都是一个包，每个模块的信息以键值对方式存储在Map中。
 	 */
 	public List<Map<String, Object>> getClassMapList(int index) {
-		ProjectInfo[] projectInfos = ProjectRecord.getTwoProjectInfoRecordByIndex(index);
+		ProjectInfo[] projectInfos = ProjectRecordDao.getTwoProjectInfoRecordByIndex(index);
 		ProjectInfo current = projectInfos[0];
 		ProjectInfo previous = projectInfos[1];
 
@@ -128,7 +128,7 @@ public class ClassService {
 		                         "Comment Lines", "% of Comment Lines (Source File)", "Logic Code Lines (JavaParser)",
 		                         "Physical Code Lines (JavaParser)", "Comment Lines (JavaParser)",
 		                         "% of Comment Lines (JavaParser)"});
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(), className);
 			String[] tempRow = new String[9];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());

@@ -1,5 +1,6 @@
 package com.t4m.extractor.scanner;
 
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
@@ -21,7 +22,7 @@ class AfterScanAndExtract {
 	@BeforeAll
 	public static void initProjectInfo() {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
-		projectInfo = new ProjectInfo(path);
+		projectInfo = new ProjectInfo(path, GlobalProperties.DEFAULT_EXCLUDED_PATH,GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.extract();
 	}

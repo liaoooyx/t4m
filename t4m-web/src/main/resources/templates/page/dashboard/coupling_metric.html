@@ -120,8 +120,9 @@
 										<span>{{pointValue}}</span><br>
 									</div>
 									<hr class="my-3">
-									<div class="mb-2" v-for="pointDescription in pointDescriptionList">
+									<div v-for="pointDescription in pointDescriptionList">
 										<div v-html="pointDescription"></div>
+										<hr class="my-1">
 									</div>
 								</div>
 								<div class="modal-footer">
@@ -452,11 +453,10 @@
 							</button>
 						</div>
 						<div class="modal-body">
-							<div id="complexity_row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							</div>
+							<div id="complexity_row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						</div>
 					</div>
 				</div>

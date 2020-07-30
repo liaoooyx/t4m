@@ -8,7 +8,6 @@ import com.t4m.extractor.scanner.astparser.No2_MethodAndFieldInfoVisitor;
 import com.t4m.extractor.scanner.astparser.No3_MethodDetailVisitor;
 import com.t4m.extractor.scanner.astparser.NoX_SLOCVisitor;
 import com.t4m.extractor.util.FileUtil;
-import com.t4m.extractor.util.PropertyUtil;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
@@ -27,8 +26,6 @@ import java.util.Map;
 public class No6_ASTParserScanner {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(No6_ASTParserScanner.class);
-
-	private static final String TEMP_COMPILE_OUTPUT_PATH = PropertyUtil.getProperty("TEMP_COMPILE_OUTPUT_PATH");
 
 	private ProjectInfo projectInfo;
 
@@ -103,18 +100,5 @@ public class No6_ASTParserScanner {
 			System.out.println("problem message:" + problem.getMessage());
 		}
 		return compilationUnit;
-	}
-
-	public static void main(String[] args) {
-		// String rootPath = "/Users/liao/myProjects/IdeaProjects/jdepend";
-		// String rootPath = "/Users/liao/myProjects/IdeaProjects/sonarqube";
-		String rootPath = "/Users/liao/myProjects/IdeaProjects/JSimulationProject";
-		ProjectInfo projectInfo = new ProjectInfo(rootPath);
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanDependency();
-		No6_ASTParserScanner aspScanner = new No6_ASTParserScanner(projectInfo);
-		aspScanner.scan();
-
-		System.out.println();
 	}
 }

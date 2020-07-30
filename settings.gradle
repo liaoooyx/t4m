@@ -1,3 +1,6 @@
 rootProject.name = 't4m'
 include 't4m-extractor'
 include 't4m-web'
+include 't4m-conf'
+include 't4m-serializer'
+

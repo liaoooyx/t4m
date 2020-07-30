@@ -1,17 +1,15 @@
 package com.t4m.web.controller;
 
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.util.EntityUtil;
-import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
 import com.t4m.web.service.ProjectService;
-import com.t4m.web.util.GlobalVariable;
-import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.dao.ProjectRecordDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -44,11 +42,11 @@ public class BasicController {
 
 	@GetMapping("")
 	public String overview(Model model) {
-		ProjectInfo[] projectInfos = ProjectRecord.getTwoProjectInfoRecordByIndex(-1);
+		ProjectInfo[] projectInfos = ProjectRecordDao.getTwoProjectInfoRecordByIndex(-1);
 		// 基本信息
 		model.addAttribute("currentProjectInfo", projectInfos[0]);
 		model.addAttribute("preProjectInfo", projectInfos[1]);
-		model.addAttribute("currentProjectName", GlobalVariable.CURRENT_PROJECT_NAME);
+		model.addAttribute("currentProjectIdentifier", GlobalProperties.CURRENT_PROJECT_IDENTIFIER);
 		// 用于趋势图
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
 		model.addAttribute("moduleRecords", projectService.getNumOfModuleRecords());
@@ -75,7 +73,7 @@ public class BasicController {
 	public List<Map<String, Object>> selectModuleRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", moduleInfo.getRelativePath());
@@ -91,7 +89,7 @@ public class BasicController {
 	public List<Map<String, Object>> selectPackageRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		for (PackageInfo packageInfo : projectInfo.getPackageList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", packageInfo.getFullyQualifiedName());
@@ -108,7 +106,7 @@ public class BasicController {
 	public List<Map<String, Object>> selectClassRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", classInfo.getShortName());

@@ -35,10 +35,10 @@
 						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
 							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
 							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Coupling</li>
+							<li class="breadcrumb-item active" aria-current="page">Inheritance</li>
 						</ol>
 					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Coupling</h6>
+					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Inheritance Tree</h6>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -102,8 +102,9 @@
 										<span>{{pointValue}}</span><br>
 									</div>
 									<hr class="my-3">
-									<div class="mb-2" v-for="pointDescription in pointDescriptionList">
+									<div v-for="pointDescription in pointDescriptionList">
 										<div v-html="pointDescription"></div>
+										<hr class="my-1">
 									</div>
 								</div>
 								<div class="modal-footer">
@@ -291,11 +292,10 @@
 							</button>
 						</div>
 						<div class="modal-body">
-							<div id="row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							</div>
+							<div id="row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						</div>
 					</div>
 				</div>

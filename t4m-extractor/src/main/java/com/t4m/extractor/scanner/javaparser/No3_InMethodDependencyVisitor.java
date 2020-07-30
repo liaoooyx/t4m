@@ -175,7 +175,8 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			Set<MethodInfo> localMethodInfoList, Set<FieldInfo> fieldInfoSet) {
 
 		// RFC的所有方法全限定签名
-		Map<String, Integer> rfcMethodQualifiedSignatureMap = currentClassInfo.getOutClassMethodCallQualifiedSignatureMap();
+		Map<String, Integer> rfcMethodQualifiedSignatureMap =
+				currentClassInfo.getOutClassMethodCallQualifiedSignatureMap();
 
 		//扫描子节点
 		scanChildNode(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList, fieldInfoSet,
@@ -264,6 +265,11 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			//RFC：无法定位该方法，添加默认计数
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+		} catch (Exception e) {
+			exceptionList.add("When resolving MethodCallExpr: " + e.toString());
+			// LOGGER.error("Unexpected error occurred when resolving MethodCallExpr: {}", e.toString(), e);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
+			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
 		}
 	}
 
@@ -287,6 +293,11 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			//RFC：无法定位该方法，添加默认计数
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+		} catch (Exception e) {
+			exceptionList.add("When resolving MethodReferenceExpr: " + e.toString());
+			// LOGGER.error("Unexpected error occurred when resolving MethodReferenceExpr: {}", e.toString(), e);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
+			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
 		}
 	}
 
@@ -306,6 +317,11 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			// System.out.println("\t" + " -- " + e.getMessage());
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+		} catch (Exception e) {
+			exceptionList.add("When resolving ObjectCreationExpr: " + e.toString());
+			// LOGGER.error("Unexpected error occurred when resolving ObjectCreationExpr: {}", e.toString(), e);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
+			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
 		}
 	}
 
@@ -323,6 +339,12 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ExplicitConstructorInvocationStmt: " + e.toString());
 			// System.out.println("\t" + " -- " + e.getMessage());
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
+			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+		} catch (Exception e) {
+			exceptionList.add("When resolving ExplicitConstructorInvocationStmt: " + e.toString());
+			// LOGGER.error("Unexpected error occurred when resolving ExplicitConstructorInvocationStmt: {}", e.toString(),
+			//              e);
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
 		}
@@ -355,6 +377,9 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving FieldAccessExpr: " + e.toString());
 			// System.out.println("\t" + " -- " + e.getMessage());
+		} catch (Exception e) {
+			exceptionList.add("When resolving FieldAccessExpr: " + e.toString());
+			// LOGGER.error("Unexpected error occurred when resolving FieldAccessExpr: {}", e.toString(), e);
 		}
 	}
 
@@ -385,6 +410,9 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving NameExpr: " + e.toString());
 			// System.out.println("\t" + " -- " + e.getMessage());
+		} catch (Exception e) {
+			exceptionList.add("When resolving NameExpr: " + e.toString());
+			// LOGGER.error("Unexpected error occurred when resolving NameExpr: {}", e.toString(), e);
 		}
 	}
 
@@ -401,6 +429,9 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ClassOrInterfaceType: " + e.toString());
 			// System.out.println("\t" + " -- " + e.getMessage());
+		} catch (Exception e) {
+			exceptionList.add("When resolving ClassOrInterfaceType: " + e.toString());
+			// LOGGER.error("Unexpected error occurred when resolving ClassOrInterfaceType: {}", e.toString(), e);
 		}
 	}
 
@@ -470,33 +501,5 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			});
 		}
 	}
-
-	// private void commonOperationForMethodLikeCall(
-	// 		Node n, ClassInfo currentClassInfo, Set<String> dependencySet, List<MethodInfo> localMethodInfoList,
-	// 		Map<String, Integer> rfcMethodQualifiedSignatureMap) {
-	// 	// RFC：唯一定位方法：方法全限定路径+参数
-	// 	ResolvedMethodLikeDeclaration methodLikeDeclaration = ((ResolvedMethodLikeDeclaration) n);
-	// 	AssociableToAST associableToAST = ((AssociableToAST) n);
-	// 	String methodQualifiedSignature = methodLikeDeclaration.getQualifiedSignature();
-	// 	RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, methodQualifiedSignature);
-	//
-	// 	// 耦合：找到定义该构造器的位置（类）
-	// 	String declaringClassName = methodLikeDeclaration.declaringType().getQualifiedName();
-	// 	dependencySet.add(declaringClassName);
-	//
-	// 	// 内聚：本地构造器调用
-	// 	// 比如this()，或普通构造对象
-	// 	// 有时候类没有重写任何构造器（找不到对应的构造器），此时isPresent将不会执行内部的代码
-	// 	if (declaringClassName.equals(currentClassInfo.getFullyQualifiedName())) {
-	// 		associableToAST.toAst().ifPresent(declaration -> {
-	// 			String methodQualifiedName = currentClassInfo.getFullyQualifiedName() + "." +
-	// 					((NodeWithSimpleName) declaration).getNameAsString();
-	// 			Range range = (Range) ((NodeWithRange) declaration).getRange().orElse(null);
-	// 			MethodInfo methodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(
-	// 					currentClassInfo.getMethodInfoList(), methodQualifiedName, range);
-	// 			EntityUtil.safeAddEntityToList(methodInfo, localMethodInfoList);
-	// 		});
-	// 	}
-	// }
 
 }

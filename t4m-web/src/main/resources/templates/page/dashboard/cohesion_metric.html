@@ -35,10 +35,10 @@
 						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
 							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
 							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Coupling</li>
+							<li class="breadcrumb-item active" aria-current="page">Cohesion</li>
 						</ol>
 					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Coupling</h6>
+					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Cohesion</h6>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -74,662 +74,490 @@
 		<!--图表-->
 		<div class="row">
 			<!-- chart -->
-			<!--			<div class="col-xl-12">-->
-			<!--				<div class="card">-->
-			<!--					<div class="card-header bg-transparent">-->
-			<!--						<div class="row align-items-center">-->
-			<!--							<div class="col">-->
-			<!--								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>-->
-			<!--								<h5 class="h3 mb-0">Timeline of coupling metrics</h5>-->
-			<!--							</div>-->
-			<!--							<div class="col">-->
-			<!--								<ul class="nav nav-pills justify-content-end">-->
-			<!--									<li class="nav-item mr-2 mr-md-0">-->
-			<!--										<a href="javascript:void(0);" class="nav-link py-2 px-3 active"-->
-			<!--										   data-toggle="tab"-->
-			<!--										   onclick="showTimelineChartForClass()">-->
-			<!--											<span class="d-none d-md-block">Class Level</span>-->
-			<!--											<span class="d-md-none">C</span>-->
-			<!--										</a>-->
-			<!--									</li>-->
-			<!--									<li class="nav-item">-->
-			<!--										<a id='sloc_timeline_chart' href="javascript:void(0);" class="nav-link py-2 px-3"-->
-			<!--										   data-toggle="tab" onclick="showTimelineChartForMethod()">-->
-			<!--											<span class="d-none d-md-block">Method Level</span>-->
-			<!--											<span class="d-md-none">F</span>-->
-			<!--										</a>-->
-			<!--									</li>-->
-			<!--								</ul>-->
-			<!--							</div>-->
-			<!--						</div>-->
-			<!--					</div>-->
-			<!--					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:680px;"></div>-->
-			<!--					<script type="text/javascript" th:inline="javascript">-->
-			<!--              let timeRecords = /*[[${timeRecords}]]*/;-->
-			<!--              let weightedMethodsCountDataset = /*[[${weightedMethodsCountDataset}]]*/;-->
-			<!--              let maxComplexityOfClassDataset = /*[[${maxComplexityOfClassDataset}]]*/;-->
-			<!--              let avgComplexityOfClassDataset = /*[[${avgComplexityOfClassDataset}]]*/;-->
-			<!--              let responseForClassDataset = /*[[${responseForClassDataset}]]*/;-->
-			<!--              let methodComplexityDataset = /*[[${methodComplexityDataset}]]*/;-->
-			<!--              let methodNumDataset = /*[[${methodNumDataset}]]*/;-->
-			
-			<!--              // let cyclomaticComplexityForMethodDataset = /*[[${cyclomaticComplexityForMethodDataset}]]*/;-->
-			
-			<!--              function showTimelineChartForClass() {-->
-			<!--                  let option = {-->
-			<!--                      baseOption: {-->
-			<!--                          timeline: {-->
-			<!--                              axisType: 'category', //轴的类型，value是数值轴；category是类目轴；-->
-			<!--                              // orient: 'horizontal',//摆放方式；vertical/horizontal-->
-			<!--                              loop: true,-->
-			<!--                              // autoPlay: true,-->
-			<!--                              currentIndex: timeRecords.length - 1,-->
-			<!--                              playInterval: 1000,-->
-			<!--                              symbol: 'circle',//timeline标记的图形: circle,rect,roundRect,triangle,diamond,pin,arrow,none;可以通过‘image://url"设置为图片-->
-			<!--                              controlStyle: {//控制按钮的样式；包括播放/前进/后退按钮-->
-			<!--                                  showNextBtn: true,//是否显示播放按钮；-->
-			<!--                                  showPrevBtn: true,//是否显示后退按钮；-->
-			<!--                                  showPlayBtn: true,//是否显示播放按钮-->
-			<!--                              },-->
-			<!--                              data: timeRecords,-->
-			<!--                              label: {-->
-			<!--                                  formatter: function (s) {-->
-			<!--                                      var date = new Date(s);-->
-			<!--                                      return date.getMonth() + "-" + date.getDate();-->
-			<!--                                  }-->
-			<!--                              }-->
-			<!--                          },-->
-			<!--                          legend: {},-->
-			<!--                          yAxis: [-->
-			<!--                              {-->
-			<!--                                  gridIndex: 0,-->
-			<!--                                  name: 'Weighted Method Count',-->
-			<!--                                  nameLocation: 'center',-->
-			<!--                                  nameRotate: 90,-->
-			<!--                                  nameGap: 30-->
-			<!--                              },-->
-			<!--                              {-->
-			<!--                                  gridIndex: 1,-->
-			<!--                                  name: 'Max Complexity of Class',-->
-			<!--                                  nameLocation: 'center',-->
-			<!--                                  nameRotate: 90,-->
-			<!--                                  nameGap: 30-->
-			<!--                              },-->
-			<!--                              {-->
-			<!--                                  gridIndex: 2,-->
-			<!--                                  name: 'Avg Complexity of Class',-->
-			<!--                                  nameLocation: 'center',-->
-			<!--                                  nameRotate: 90,-->
-			<!--                                  nameGap: 30-->
-			<!--                              },-->
-			<!--                              {-->
-			<!--                                  gridIndex: 3,-->
-			<!--                                  name: 'Response for class',-->
-			<!--                                  nameLocation: 'center',-->
-			<!--                                  nameRotate: 90,-->
-			<!--                                  nameGap: 30-->
-			<!--                              }-->
-			<!--                          ],-->
-			<!--                          xAxis: [-->
-			<!--                              {gridIndex: 0, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},-->
-			<!--                              {gridIndex: 1, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},-->
-			<!--                              {gridIndex: 2},-->
-			<!--                              {gridIndex: 3},-->
-			<!--                          ],-->
-			<!--                          tooltip: {-->
-			<!--                              // 显示额外信息-->
-			<!--                              padding: 10,-->
-			<!--                              borderWidth: 1,-->
-			<!--                              formatter: function (params) {-->
-			<!--                                  if (params.componentType === "timeline") {-->
-			<!--                                      return params.name;-->
-			<!--                                  } else if (params[0].componentType === "series") {-->
-			<!--                                      let text = '';-->
-			<!--                                      let yLabelName = ''-->
-			<!--                                      let triggerLabel = false;-->
-			<!--                                      params.forEach(row => {-->
-			<!--                                          yLabelName = row.seriesName;-->
-			<!--                                          if (pointedData[0] === row.data[0] && pointedData[1] === row.data[1]) {-->
-			<!--                                              triggerLabel = true;-->
-			<!--                                              let value = row.value;-->
-			<!--                                              text +=-->
-			<!--                                                  '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'-->
-			<!--                                                  + 'Class: ' + value[2] + '<br>'-->
-			<!--                                                  + '<span style="font: 12px">'-->
-			<!--                                                  + 'of Module: ' + value[3] + '</span>' + '<br>'-->
-			<!--                                                  + '</div>';-->
-			<!--                                          }-->
-			<!--                                      });-->
-			<!--                                      if (triggerLabel) {-->
-			<!--                                          text += 'Number of Methods : ' + pointedData[0] + '<br>' +-->
-			<!--                                              yLabelName + ': ' + pointedData[1] + '<br>'-->
-			<!--                                      }-->
-			<!--                                      return text;-->
-			<!--                                  }-->
-			<!--                              },-->
-			<!--                              // 重叠问题-->
-			<!--                              show: true,-->
-			<!--                              trigger: 'axis',-->
-			<!--                              confine: true,-->
-			<!--                              axisPointer: {-->
-			<!--                                  type: 'cross',-->
-			<!--                                  snap: false,-->
-			<!--                                  axis: 'x', // y轴选项-->
-			<!--                                  label: {-->
-			<!--                                      // show: false,-->
-			<!--                                      color: '#fff',-->
-			<!--                                      backgroundColor: 'rgba(0, 0, 0, .55)'-->
-			<!--                                  }-->
-			<!--                              },-->
-			<!--                          },-->
-			<!--                          grid: [-->
-			<!--                              {x: '7%', y: '5%', width: '40%', height: '38%'},-->
-			<!--                              {x2: '5%', y: '5%', width: '40%', height: '38%'},-->
-			<!--                              {x: '7%', y2: '11%', width: '40%', height: '38%'},-->
-			<!--                              {x2: '5%', y2: '11%', width: '40%', height: '38%'}-->
-			<!--                          ],-->
-			<!--                      },-->
-			<!--                      options: initOptions()-->
-			<!--                  };-->
-			<!--                  document.getElementById("chart").style.height = "680px";-->
-			<!--                  complexityTimelineChart.clear();-->
-			<!--                  complexityTimelineChart.resize();-->
-			<!--                  complexityTimelineChart.setOption(option);-->
-			<!--              }-->
-			
-			<!--              function initOptions() {-->
-			<!--                  let options = [];-->
-			<!--                  for (let i = 0; i < timeRecords.length; i++) {-->
-			<!--                      options[i] = {-->
-			<!--                          series: [-->
-			<!--                              {-->
-			<!--                                  name: 'Weighted Methods Count',-->
-			<!--                                  type: 'scatter',-->
-			<!--                                  xAxisIndex: 0,-->
-			<!--                                  yAxisIndex: 0,-->
-			<!--                                  data: weightedMethodsCountDataset[timeRecords[i]],-->
-			<!--                                  emphasis: {-->
-			<!--                                      label: {-->
-			<!--                                          show: true,-->
-			<!--                                          formatter: function (params) {-->
-			<!--                                              return params.data[2];-->
-			<!--                                          },-->
-			<!--                                          color: '#000000',-->
-			<!--                                          position: 'top',-->
-			<!--                                          fontWeight: 'normal',-->
-			<!--                                      },-->
-			<!--                                  },-->
-			<!--                              },-->
-			<!--                              {-->
-			<!--                                  name: 'Max Complexity of Class',-->
-			<!--                                  type: 'scatter',-->
-			<!--                                  xAxisIndex: 1,-->
-			<!--                                  yAxisIndex: 1,-->
-			<!--                                  data: maxComplexityOfClassDataset[timeRecords[i]],-->
-			<!--                                  emphasis: {-->
-			<!--                                      label: {-->
-			<!--                                          show: true,-->
-			<!--                                          formatter: function (params) {-->
-			<!--                                              return params.data[2];-->
-			<!--                                          },-->
-			<!--                                          color: '#000000',-->
-			<!--                                          position: 'top',-->
-			<!--                                          fontWeight: 'normal',-->
-			<!--                                      },-->
-			<!--                                  },-->
-			<!--                              },-->
-			<!--                              {-->
-			<!--                                  name: 'Avg Complexity of Class',-->
-			<!--                                  type: 'scatter',-->
-			<!--                                  xAxisIndex: 2,-->
-			<!--                                  yAxisIndex: 2,-->
-			<!--                                  data: avgComplexityOfClassDataset[timeRecords[i]],-->
-			<!--                                  emphasis: {-->
-			<!--                                      label: {-->
-			<!--                                          show: true,-->
-			<!--                                          formatter: function (params) {-->
-			<!--                                              return params.data[2];-->
-			<!--                                          },-->
-			<!--                                          color: '#000000',-->
-			<!--                                          position: 'top',-->
-			<!--                                          fontWeight: 'normal',-->
-			<!--                                      },-->
-			<!--                                  },-->
-			<!--                              },-->
-			<!--                              {-->
-			<!--                                  name: 'Response for Class',-->
-			<!--                                  type: 'scatter',-->
-			<!--                                  xAxisIndex: 3,-->
-			<!--                                  yAxisIndex: 3,-->
-			<!--                                  data: responseForClassDataset[timeRecords[i]],-->
-			<!--                                  emphasis: {-->
-			<!--                                      label: {-->
-			<!--                                          show: true,-->
-			<!--                                          formatter: function (params) {-->
-			<!--                                              return params.data[2];-->
-			<!--                                          },-->
-			<!--                                          color: '#000000',-->
-			<!--                                          position: 'top',-->
-			<!--                                          fontWeight: 'normal',-->
-			<!--                                      },-->
-			<!--                                  },-->
-			<!--                              }-->
-			<!--                          ]-->
-			<!--                      }-->
-			<!--                  }-->
-			<!--                  return options;-->
-			<!--              }-->
-			
-			<!--              function showTimelineChartForMethod() {-->
-			<!--                  let option = {-->
-			<!--                      grid: {-->
-			<!--                          bottom: '100'-->
-			<!--                      },-->
-			<!--                      legend: {},-->
-			<!--                      xAxis: {-->
-			<!--                          name: "Time",-->
-			<!--                          type: 'category',-->
-			<!--                          splitLine: {-->
-			<!--                              show: true,-->
-			<!--                              lineStyle: {-->
-			<!--                                  type: 'solid'-->
-			<!--                              }-->
-			<!--                          },-->
-			<!--                          splitArea: {-->
-			<!--                              interval: 0,-->
-			<!--                          }-->
-			<!--                      },-->
-			<!--                      yAxis: [{-->
-			<!--                          name: "Cyclomatic of Methods",-->
-			<!--                          type: 'value',-->
-			<!--                          nameLocation: 'center',-->
-			<!--                          nameRotate: 90,-->
-			<!--                          nameGap: 30-->
-			<!--                      }, {-->
-			<!--                          name: "Number of All Methods in the Project",-->
-			<!--                          type: 'value',-->
-			<!--                          nameLocation: 'center',-->
-			<!--                          nameRotate: 270,-->
-			<!--                          nameGap: 30-->
-			<!--                      }],-->
-			<!--                      series: [{-->
-			<!--                          name: 'Cyclomatic Complexity of Method',-->
-			<!--                          type: 'scatter',-->
-			<!--                          yAxisIndex: 0,-->
-			<!--                          data: methodComplexityDataset,-->
-			<!--                          emphasis: {-->
-			<!--                              label: {-->
-			<!--                                  show: true,-->
-			<!--                                  formatter: function (params) {-->
-			<!--                                      return params.data[2];-->
-			<!--                                  },-->
-			<!--                                  color: '#000000',-->
-			<!--                                  position: 'top',-->
-			<!--                                  fontWeight: 'normal',-->
-			<!--                              },-->
-			<!--                          },-->
-			<!--                      }, {-->
-			<!--                          name: 'Number of All Methods',-->
-			<!--                          type: 'bar',-->
-			<!--                          yAxisIndex: 1,-->
-			<!--                          data: methodNumDataset,-->
-			<!--                          itemStyle: {-->
-			<!--                              color: 'rgba(229,229,229,0.8)',-->
-			<!--                          },-->
-			<!--		                      label:{-->
-			<!--                              show:true,-->
-			<!--                              position: 'top',-->
-			<!--				                      distance: 20,-->
-			<!--                              formatter: '{@[1]}',-->
-			<!--                              color: '#000000',-->
-			<!--		                      }-->
-			<!--                      }],-->
-			<!--                      dataZoom: [-->
-			<!--                          {-->
-			<!--                              type: 'slider',-->
-			<!--                              xAxisIndex: 0,-->
-			<!--                              start: 20,-->
-			<!--                              end: 100-->
-			<!--                          },-->
-			<!--                          {-->
-			<!--                              type: 'inside',-->
-			<!--                              xAxisIndex: 0,-->
-			<!--                              start: 20,-->
-			<!--                              end: 100-->
-			<!--                          },-->
-			<!--                          {-->
-			<!--                              type: 'slider',-->
-			<!--                              yAxisIndex: 0,-->
-			<!--                              left: 20,-->
-			<!--                              start: 0,-->
-			<!--                              end: 100-->
-			<!--                          },-->
-			<!--                          {-->
-			<!--                              type: 'slider',-->
-			<!--                              yAxisIndex: 1,-->
-			<!--                              right: 20,-->
-			<!--                              start: 0,-->
-			<!--                              end: 100-->
-			<!--                          }-->
-			<!--                      ],-->
-			<!--                      tooltip: {-->
-			<!--                          // 显示额外信息-->
-			<!--                          padding: 10,-->
-			<!--                          borderWidth: 1,-->
-			<!--                          formatter: function (params) {-->
-			<!--                                  let text = '';-->
-			<!--                                  let triggerLabel = false;-->
-			<!--                                  params.forEach(row => {-->
-			<!--                                      if (row.componentSubType === "scatter" && pointedData[0] === row.data[0] &&-->
-			<!--                                          pointedData[1] === row.data[1]) {-->
-			<!--                                          triggerLabel = true;-->
-			<!--                                          let value = row.value;-->
-			<!--                                          text +=-->
-			<!--                                              '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'-->
-			<!--                                              + 'Method: ' + value[2] + '<br>'-->
-			<!--                                              + '<span style="font: 12px">'-->
-			<!--                                              + 'Declaration: ' + value[3] + '</span>' + '<br>'-->
-			<!--                                              + '</div>';-->
-			<!--                                      }-->
-			<!--                                  });-->
-			<!--                                  if (triggerLabel) {-->
-			<!--                                      text += 'Cyclomatic Complexity of Method : ' + pointedData[1] + '<br>'-->
-			<!--                                  }-->
-			<!--                                  return text;-->
-			<!--                          },-->
-			<!--                          // 重叠问题-->
-			<!--                          show: true,-->
-			<!--                          enterable: true,-->
-			<!--                          trigger: 'axis',-->
-			<!--                          confine: true,-->
-			<!--                          axisPointer: {-->
-			<!--                              type: 'cross',-->
-			<!--                              snap: false,-->
-			<!--                              axis: 'x', // y轴选项-->
-			<!--                              label: {-->
-			<!--                                  // show: false,-->
-			<!--                                  color: '#fff',-->
-			<!--                                  backgroundColor: 'rgba(0, 0, 0, .55)'-->
-			<!--                              }-->
-			<!--                          },-->
-			<!--                      },-->
-			<!--                  };-->
-			<!--                  document.getElementById("chart").style.height = "550px";-->
-			<!--                  complexityTimelineChart.clear();-->
-			<!--                  complexityTimelineChart.resize();-->
-			<!--                  complexityTimelineChart.setOption(option);-->
-			<!--              }-->
-			
-			<!--              // 基于准备好的dom，初始化echarts实例-->
-			<!--              let complexityTimelineChart = echarts.init(document.getElementById('chart'));-->
-			
-			<!--              let pointedData = [];-->
-			<!--              complexityTimelineChart.on('mouseover', function (params) {-->
-			<!--                  pointedData = params.data;-->
-			<!--              })-->
-			<!--              complexityTimelineChart.on('mouseout', function () {-->
-			<!--                  pointedData = [];-->
-			<!--              })-->
-			<!--					-->
-			<!--					-->
-			<!--					</script>-->
-			<!--				-->
-			<!--				</div>-->
-			<!--			</div>-->
-		</div>
-		<!--表格-->
-		<div class="row">
-			<!-- 选择记录时间 -->
 			<div class="col-xl-12">
-				<div class="card-header border-0">
-					<div class="row align-items-center">
-						<div class="col-auto">
-							<h6 class="text-uppercase text-muted ls-1 mb0">Project Information</h6>
-							
-							<!-- dropdown -->
-							<div class="nav-item dropdown">
-								<a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-								   aria-expanded="false">
-											<span class="h3 mb-0 mr-2" id="current_record_time"
-											      th:text="${#dates.format(currentProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}"></span>
-									<i class="fas fa-caret-down"></i>
-								</a>
-								<div class="dropdown-menu">
-									<a th:class="${timeRecordStat.index} eq ${timeRecords.size()-1} ? 'dropdown-item active' : 'dropdown-item'"
-									   href="javascript:void(0);"
-									   th:each="timeRecord,timeRecordStat : ${timeRecords}"
-									   th:onclick="selectRecordTime(this,[[${timeRecordStat.index}]])">
-										<span th:text="${timeRecord}"></span>
-									</a>
+				<div class="card">
+					<div class="card-header bg-transparent">
+						<div class="row align-items-center">
+							<div class="col">
+								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
+								<h5 class="h3 mb-0">Timeline of cohesion metrics</h5>
+							</div>
+						</div>
+					</div>
+					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:550px;"></div>
+					<div class="modal fade" id="chart_data_model" tabindex="-1" role="dialog"
+					     aria-labelledby="row_model_label" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">{{title}}</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body pt-0">
+									<hr class="my-3">
+									<div v-for="pointValue in pointValueList">
+										<span>{{pointValue}}</span><br>
+									</div>
+									<hr class="my-3">
+									<div v-for="pointDescription in pointDescriptionList">
+										<div v-html="pointDescription"></div>
+										<hr class="my-1">
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 								</div>
 							</div>
-						
+						</div>
+					</div>
+					
+					<script type="text/javascript" th:inline="javascript">
+              let timeRecords = /*[[${timeRecords}]]*/;
+              let classCohesionDataset = /*[[${classCohesionDataset}]]*/;
+
+              function showTimelineChartForClass(type) {
+                  let options = optionsFormatter(classCohesionDataset);
+                  let option = {
+                      options: options,
+                      baseOption: {
+                          timeline: {
+                              axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
+                              playInterval: 1000, symbol: 'circle', data: timeRecords,
+                              controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
+                              label: {
+                                  formatter: function (s) {
+                                      var date = new Date(s);
+                                      return date.getMonth() + "-" + date.getDate();
+                                  }
+                              }
+                          },
+                          legend: {
+                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class','package-info'],
+                              selected: {'package-info': false},
+                          },
+                          xAxis: {name: 'Tight Class Cohesion', type: 'value',},
+                          yAxis: {name: 'Loose Class Cohesion', type: 'value',},
+                          tooltip: {
+                              padding: 10, borderWidth: 1,
+                              show: true, enterable: true, trigger: 'item', confine: true,
+                              formatter: function (params) {
+                                  if (params.componentType === "timeline") {
+                                      return params.name;
+                                  } else {
+                                      let value = params.data
+                                      return '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                          + 'Class: ' + value[3] + '<br>'
+                                          + '<span style="font: 12px">'
+                                          + 'Of Module: ' + value[4] + '</span>' + '<br>'
+                                          + '</div>'
+                                          + '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
+                                          + 'Tight Class Cohesion: ' + value[0] + '<br>'
+                                          + 'Loose Class Cohesion: ' + value[1] + '<br>'
+                                          + 'Lack of Cohesion in Methods: ' + value[2] + '<br>'
+                                          + '</div>'
+                                          + 'Click the point to see all relevant records.'
+                                  }
+                              }
+                          },
+                          grid: {right: 150,}, color: ['#c23531'],
+                          visualMap: [
+                              {
+                                  type: 'continuous', left: 'right', top: 'middle', calculable: true, precision: 0.1,
+                                  text: ['Lack of Cohesion of Methods'], textGap: 30, dimension: 2, max: 10,
+                                  inRange: {symbolSize: [10, 30]}, controller: {inRange: {color: ['#c23531']},}
+                              },
+                          ],
+                      }
+                  };
+                  timelineChart.setOption(option);
+              }
+
+              function optionsFormatter(dataset) {
+                  let options = [];
+                  for (let i = 0; i < timeRecords.length; i++) {
+                      options[i] = {
+                          series: [{
+                              name: 'Interface', type: 'scatter',
+                              data: dataset[timeRecords[i]]['Interface'],
+                              itemStyle: {color: '#69bae5',},
+                              emphasis: {
+                                  label: {
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                  },
+                              },
+                          }, {
+                              name: 'Abstract Class', type: 'scatter',
+                              data: dataset[timeRecords[i]]['Abstract Class'],
+                              itemStyle: {color: '#54ba3d',},
+                              emphasis: {
+                                  label: {
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                  },
+                              },
+                          }, {
+                              name: 'Class', type: 'scatter',
+                              data: dataset[timeRecords[i]]['Class'],
+                              itemStyle: {color: '#c23531',},
+                              emphasis: {
+                                  label: {
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                  },
+                              },
+                          }, {
+                              name: 'Enum', type: 'scatter',
+                              data: dataset[timeRecords[i]]['Enum'],
+                              itemStyle: {color: '#e7ad70',},
+                              emphasis: {
+                                  label: {
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                  },
+                              },
+                          }, {
+                              name: 'Annotation', type: 'scatter',
+                              data: dataset[timeRecords[i]]['Annotation'],
+                              itemStyle: {color: '#e770e1',},
+                              emphasis: {
+                                  label: {
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                  },
+                              },
+                          }, {
+                              name: 'package-info', type: 'scatter',
+                              data: dataset[timeRecords[i]]['package-info'],
+                              itemStyle: {color: '#171717',},
+                              emphasis: {
+                                  label: {
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
+                                  },
+                              },
+                          }]
+                      }
+                  }
+                  return options;
+              }
+
+              // 基于准备好的dom，初始化echarts实例
+              let timelineChart = echarts.init(document.getElementById('chart'));
+
+              // 用于显示timeline chart的重叠数据
+              let chart_data_vm = new Vue({
+                  el: '#chart_data_model',
+                  data: {
+                      title: '',
+                      pointValueList: [],
+                      pointDescriptionList: [],
+                  }
+              })
+              let currentTimelineIndex = timeRecords.length - 1;
+              timelineChart.on('timelinechanged', function (params) {
+                  currentTimelineIndex = params.currentIndex
+              });
+              timelineChart.on('click', function (param) {
+                  chart_data_vm.title = timeRecords[currentTimelineIndex];
+
+                  let pointValueList = [];
+                  pointValueList.push("Tight Class Cohesion: " + param.value[0]);
+                  pointValueList.push("Loose Class Cohesion: " + param.value[1]);
+                  pointValueList.push("Lack of Cohesion of Methods: " + param.value[2]);
+                  chart_data_vm.pointValueList = pointValueList;
+
+                  let x = param.value[0];
+                  let y = param.value[1];
+                  let pointDescriptionList = [];
+                  for (let key in classCohesionDataset) {
+                      if (key === timeRecords[currentTimelineIndex]) {
+                          for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation']) {
+                              for (let row of classCohesionDataset[key][key2]) {
+                                  if (row[0] === x && row[1] === y) {
+                                      let text = '<span style="font: 12px">'
+                                          + key2 + ': ' + row[3] + '</span>' + '<br>'
+                                          + '<span style="font: 12px">'
+                                          + 'Of module: ' + row[4] + '</span>' + '<br>';
+                                      pointDescriptionList.push(text);
+                                  }
+                              }
+                          }
+                      }
+                  }
+                  chart_data_vm.pointDescriptionList = pointDescriptionList;
+                  $('#chart_data_model').modal('show');
+              });
+					
+					
+					</script>
+				</div>
+				<!--表格-->
+				<div class="row">
+					<!-- 选择记录时间 -->
+					<div class="col-xl-12">
+						<div class="card-header border-0">
+							<div class="row align-items-center">
+								<div class="col-auto">
+									<h6 class="text-uppercase text-muted ls-1 mb0">Project Information</h6>
+									
+									<!-- dropdown -->
+									<div class="nav-item dropdown">
+										<a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+										   aria-expanded="false">
+											<span class="h3 mb-0 mr-2" id="current_record_time"
+											      th:text="${#dates.format(currentProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+											<i class="fas fa-caret-down"></i>
+										</a>
+										<div class="dropdown-menu">
+											<a th:class="${timeRecordStat.index} eq ${timeRecords.size()-1} ? 'dropdown-item active' : 'dropdown-item'"
+											   href="javascript:void(0);"
+											   th:each="timeRecord,timeRecordStat : ${timeRecords}"
+											   th:onclick="selectRecordTime(this,[[${timeRecordStat.index}]])">
+												<span th:text="${timeRecord}"></span>
+											</a>
+										</div>
+									</div>
+								
+								</div>
+							
+							</div>
+						</div>
+					</div>
+					<!--表格-->
+					<div class="col-xl-12">
+						<div class="card">
+							<div class="table-responsive">
+								<div id="toolbar">
+									<div class="form-inline" role="form">
+										<a id="previous-btn" class="btn btn-outline-primary btn-sm invisible"
+										   href="javascript:void(0);"
+										   onclick="showClassCohesion()">
+											< previous</a>
+									</div>
+								</div>
+								<table id="table"></table>
+							</div>
+						</div>
+					</div>
+					<!-- Modal -->
+					<div class="modal fade" id="row_model" tabindex="-1" role="dialog"
+					     aria-labelledby="row_model_label" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="row_model_label">
+										<span class="h3 text-uppercase text-muted mr-2">{{ recordType }}</span>
+										<span class="h3">{{ recordName }}</span>
+									</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<div id="row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;"></div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
 						</div>
 					
 					</div>
+				
 				</div>
+				<!-- Footer -->
+				<footer th:replace="fragments/common :: footer"></footer>
 			</div>
-			<!--表格-->
-			<div class="col-xl-12">
-				<div class="card">
-					<div class="table-responsive">
-						<div id="toolbar">
-							<div class="form-inline" role="form">
-								<a id="previous-btn" class="btn btn-outline-primary btn-sm invisible"
-								   href="javascript:void(0);"
-								   onclick="showClassCohesion()">
-									< previous</a>
-							</div>
-						</div>
-						<table id="table"></table>
-					</div>
-				</div>
-			</div>
-			<!-- Modal -->
-			<div class="modal fade" id="row_model" tabindex="-1" role="dialog"
-			     aria-labelledby="row_model_label" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="row_model_label">
-								<span class="h3 text-uppercase text-muted mr-2">{{ recordType }}</span>
-								<span class="h3">{{ recordName }}</span>
-							</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<div id="row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			
-			</div>
-		
 		</div>
-		<!-- Footer -->
-		<footer th:replace="fragments/common :: footer"></footer>
-	</div>
-</div>
-<script th:replace="fragments/common :: footer_imports"></script>
-<script>
-    $(function () {
-        // 首次渲染图表
-        // showTimelineChartForClass();
-        // 首次渲染表格
-        showClassCohesion();
-    })
-
-    let $table = $('#table')
-    let projectRecordIndex = -1;
-
-    // 选择记录
-    function selectRecordTime(obj, index) {
-        projectRecordIndex = index;
-        let newTime = $(obj).text()
-        $('#current_record_time').text(newTime)
-        $(obj).siblings().removeClass("active")
-        $(obj).addClass("active");
-        showClassCohesion();
-    }
-
-    //表格：类级别的度量数据
-    function showClassCohesion() {
-        let columns = [{
-            field: 'chart', title: ''
-        }, {
-            field: 'name', title: 'Class Name', sortable: true
-        }, {
-            field: 'lackOfCohesionInMethods4', title: 'Lack of Cohesion in Methods (LOCM4)', sortable: true
-        }, {
-            field: 'tightClassCohesion', title: 'Tight Class Cohesion', sortable: true
-        }, {
-            field: 'looseClassCohesion', title: 'Loose Class Cohesion', sortable: true
-        }, {
-            field: 'type', title: 'Class Type', sortable: true
-        }, {
-            field: 'declaration', title: 'Class Location', sortable: true
-        }, {
-            field: 'package', title: 'of Which Package', sortable: true
-        }, {
-            field: 'module', title: 'of Which Module', sortable: true
-        }];
-        $.get("/dashboard/cohesion/table/class?projectRecordIndex=" + projectRecordIndex).done(function (data) {
-            let dataset = data;
-            //给每行前面加上趋势图按钮（弹出模态框）
-            for (i = 0; i < dataset.length; i++) {
-                dataset[i].chart =
-                    '<a class="table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
-                    + 'data-target="#row_model" onclick="showTableChartForClass(\'' +
-                    dataset[i].qualifiedName + '\')">'
-                    + '<i class="fas fa-chart-bar"></i></a>'
-            }
-            buildTable($table, dataset, columns, 2, 0)
-            $("#previous-btn").addClass("invisible");
-        });
-    }
-
-    // 重新渲染表格
-    function buildTable($el, dataset, columns, fixedNumber, fixedRightNumber) {
-        $el.bootstrapTable('destroy').bootstrapTable({
-            height: 500,
-            columns: columns,
-            data: dataset,
-            toolbar: '#toolbar',
-            search: true,
-            showColumns: true,
-            fixedColumns: true,
-            fixedNumber: fixedNumber,
-            fixedRightNumber: fixedRightNumber,
-            // buttons: "",
-            // buttonsPrefix: "",
-            // buttonsClass: "btn btn-sm btn-outline-primary",
-            showColumnsToggleAll: true,
-            detailViewByClick: true,
-            iconSize: "sm",
-            showFullscreen: true,
+		<script th:replace="fragments/common :: footer_imports"></script>
+		<script>
+        $(function () {
+            // 首次渲染图表
+            showTimelineChartForClass();
+            // 首次渲染表格
+            showClassCohesion();
         })
-    }
 
-    // 用于修改模块框title
-    let inheritance_table_chart_title_vm = new Vue({
-        el: '#row_model_label',
-        data: {
-            recordType: '',
-            recordName: '',
+        let $table = $('#table')
+        let projectRecordIndex = -1;
+
+        // 选择记录
+        function selectRecordTime(obj, index) {
+            projectRecordIndex = index;
+            let newTime = $(obj).text()
+            $('#current_record_time').text(newTime)
+            $(obj).siblings().removeClass("active")
+            $(obj).addClass("active");
+            showClassCohesion();
         }
-    })
 
-    // 指定图表的配置项和数据
-    let tableChartOptForClass = {
-        grid: {
-            bottom: '100'
-        },
-        // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
-        xAxis: {
-            type: 'category'
-        },
-        yAxis: [
-            {
-                name: "Lack of Cohesion in Methods (LCOM4)",
-                type: 'value', nameLocation: 'center',
-                nameRotate: 90, nameGap: 30, interval: 1,
+        //表格：类级别的度量数据
+        function showClassCohesion() {
+            let columns = [{
+                field: 'chart', title: ''
             }, {
-                name: "Tight / Loose Cohesion",
-                type: 'value', nameLocation: 'center',
-                nameRotate: 270, nameGap: 35, max: 1, min: 0,
-            }
-        ],
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                snap: true, type: "line",
-            }
-        },
-        dataZoom: [
-            {
-                type: 'slider', xAxisIndex: 0, start: 20, end: 100
-            },
-            {
-                type: 'inside', xAxisIndex: 0, start: 20, end: 100
-            },
-            {
-                type: 'slider', yAxisIndex: 0, left: 20, start: 0, end: 100
-            },
-            {
-                type: 'slider', yAxisIndex: 1, right: 20, start: 0, end: 100
-            }
-        ],
-    };
-    let inheritanceTableChart = echarts.init(document.getElementById('row_chart'));
-
-
-    function showTableChartForClass(qualifiedName) {
-        inheritance_table_chart_title_vm.recordName = qualifiedName;
-        inheritance_table_chart_title_vm.recordType = "Class";
-        // 异步加载数据
-        inheritanceTableChart.clear();
-        inheritanceTableChart.setOption(tableChartOptForClass);
-        $.get("/dashboard/cohesion/table/chart/class?qualifiedName=" + qualifiedName).done(function (data) {
-            // 填入数据
-            inheritanceTableChart.setOption({
-                legend: {
-                    data: ["Lack of Cohesion in Methods (LOCM4)", "Tight Class Cohesion", "Loose Class Cohesion"]
-                },
-                dataset: {
-                    // 提供一份数据。
-                    source: data
-                },
-                series: [
-                    {
-                        type: 'line', name: 'Lack of Cohesion in Methods (LOCM4)', yAxisIndex: 0,
-                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
-                    },
-                    {
-                        type: 'line', name: 'Tight Class Cohesion', yAxisIndex: 1,
-                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
-                    },
-                    {
-                        type: 'line', name: 'Loose Class Cohesion', yAxisIndex: 1,
-                        lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
-                    },
-                ],
+                field: 'name', title: 'Class Name', sortable: true
+            }, {
+                field: 'lackOfCohesionInMethods4', title: 'Lack of Cohesion in Methods (LOCM4)', sortable: true
+            }, {
+                field: 'tightClassCohesion', title: 'Tight Class Cohesion', sortable: true
+            }, {
+                field: 'looseClassCohesion', title: 'Loose Class Cohesion', sortable: true
+            }, {
+                field: 'type', title: 'Class Type', sortable: true
+            }, {
+                field: 'declaration', title: 'Class Location', sortable: true
+            }, {
+                field: 'package', title: 'of Which Package', sortable: true
+            }, {
+                field: 'module', title: 'of Which Module', sortable: true
+            }];
+            $.get("/dashboard/cohesion/table/class?projectRecordIndex=" + projectRecordIndex).done(function (data) {
+                let dataset = data;
+                //给每行前面加上趋势图按钮（弹出模态框）
+                for (i = 0; i < dataset.length; i++) {
+                    dataset[i].chart =
+                        '<a class="table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
+                        + 'data-target="#row_model" onclick="showTableChartForClass(\'' +
+                        dataset[i].qualifiedName + '\')">'
+                        + '<i class="fas fa-chart-bar"></i></a>'
+                }
+                buildTable($table, dataset, columns, 2, 0)
+                $("#previous-btn").addClass("invisible");
             });
-        });
-    }
+        }
 
-    // 让echarts在模态框打开后重新渲染
-    $('#row_model').on('shown.bs.modal', function () {
-        inheritanceTableChart.resize()
-    })
+        // 重新渲染表格
+        function buildTable($el, dataset, columns, fixedNumber, fixedRightNumber) {
+            $el.bootstrapTable('destroy').bootstrapTable({
+                height: 500,
+                columns: columns,
+                data: dataset,
+                toolbar: '#toolbar',
+                search: true,
+                showColumns: true,
+                fixedColumns: true,
+                fixedNumber: fixedNumber,
+                fixedRightNumber: fixedRightNumber,
+                // buttons: "",
+                // buttonsPrefix: "",
+                // buttonsClass: "btn btn-sm btn-outline-primary",
+                showColumnsToggleAll: true,
+                detailViewByClick: true,
+                iconSize: "sm",
+                showFullscreen: true,
+            })
+        }
+
+        // 用于修改模块框title
+        let inheritance_table_chart_title_vm = new Vue({
+            el: '#row_model_label',
+            data: {
+                recordType: '',
+                recordName: '',
+            }
+        })
+
+        // 指定图表的配置项和数据
+        let tableChartOptForClass = {
+            grid: {
+                bottom: '100'
+            },
+            // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: [
+                {
+                    name: "Lack of Cohesion in Methods (LCOM4)",
+                    type: 'value', nameLocation: 'center',
+                    nameRotate: 90, nameGap: 30, interval: 1,
+                }, {
+                    name: "Tight / Loose Cohesion",
+                    type: 'value', nameLocation: 'center',
+                    nameRotate: 270, nameGap: 35, max: 1, min: 0,
+                }
+            ],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    snap: true, type: "line",
+                }
+            },
+            dataZoom: [
+                {
+                    type: 'slider', xAxisIndex: 0, start: 20, end: 100
+                },
+                {
+                    type: 'inside', xAxisIndex: 0, start: 20, end: 100
+                },
+                {
+                    type: 'slider', yAxisIndex: 0, left: 20, start: 0, end: 100
+                },
+                {
+                    type: 'slider', yAxisIndex: 1, right: 20, start: 0, end: 100
+                }
+            ],
+        };
+        let inheritanceTableChart = echarts.init(document.getElementById('row_chart'));
 
 
-</script>
+        function showTableChartForClass(qualifiedName) {
+            inheritance_table_chart_title_vm.recordName = qualifiedName;
+            inheritance_table_chart_title_vm.recordType = "Class";
+            // 异步加载数据
+            inheritanceTableChart.clear();
+            inheritanceTableChart.setOption(tableChartOptForClass);
+            $.get("/dashboard/cohesion/table/chart/class?qualifiedName=" + qualifiedName).done(function (data) {
+                // 填入数据
+                inheritanceTableChart.setOption({
+                    legend: {
+                        data: ["Lack of Cohesion in Methods (LOCM4)", "Tight Class Cohesion", "Loose Class Cohesion"]
+                    },
+                    dataset: {
+                        // 提供一份数据。
+                        source: data
+                    },
+                    series: [
+                        {
+                            type: 'line', name: 'Lack of Cohesion in Methods (LOCM4)', yAxisIndex: 0,
+                            lineStyle: {width: 3}, emphasis: {label: {show: true}},
+                        },
+                        {
+                            type: 'line', name: 'Tight Class Cohesion', yAxisIndex: 1,
+                            lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                        },
+                        {
+                            type: 'line', name: 'Loose Class Cohesion', yAxisIndex: 1,
+                            lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
+                        },
+                    ],
+                });
+            });
+        }
+
+        // 让echarts在模态框打开后重新渲染
+        $('#row_model').on('shown.bs.modal', function () {
+            inheritanceTableChart.resize()
+        })
+		
+		
+		</script>
 
 </body>
 

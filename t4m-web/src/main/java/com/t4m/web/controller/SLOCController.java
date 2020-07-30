@@ -10,8 +10,7 @@ import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
 import com.t4m.web.service.ProjectService;
-import com.t4m.web.util.GlobalVariable;
-import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.dao.ProjectRecordDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -44,7 +43,7 @@ public class SLOCController {
 
 	@GetMapping("")
 	public String slocMetric(Model model) {
-		List<ProjectInfo> projectInfoList = ProjectRecord.getProjectInfoList();
+		List<ProjectInfo> projectInfoList = ProjectRecordDao.getProjectInfoList();
 		// 基本信息
 		model.addAttribute("projectList", projectInfoList);
 		// 用于timeline chart
@@ -71,7 +70,7 @@ public class SLOCController {
 			model.addAttribute("dataList", moduleService.getSLOCRecordByModuleName(name, projectRecordIndex));
 		} else if ("package".equals(type)) { // 获取指定包的类和直接子包
 			ProjectInfo projectInfo = Objects.requireNonNull(
-					ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex))[0];
+					ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex))[0];
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), name);
 			if (packageInfo.hasPreviousPackage()) {
 				preName = packageInfo.getPreviousPackage().getFullyQualifiedName();
@@ -93,7 +92,7 @@ public class SLOCController {
 	public List<Map<String, Object>> selectModuleRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", moduleInfo.getRelativePath());
@@ -118,7 +117,7 @@ public class SLOCController {
 			@RequestParam(name = "moduleRelativePath") String moduleRelativePath,
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		ModuleInfo moduleInfo = EntityUtil.getModuleByRelativeName(projectInfo.getModuleList(), moduleRelativePath);
 		if (moduleInfo == null){
 			LOGGER.info("No such module in this record.");
@@ -151,7 +150,7 @@ public class SLOCController {
 			@RequestParam(name = "packageQualifiedName") String packageQualifiedName,
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), packageQualifiedName);
 		if (packageInfo == null){
 			LOGGER.info("No such package in this record.");

@@ -4,7 +4,7 @@ import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
-import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.dao.ProjectRecordDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class ProjectService {
 	 */
 	public List<String> getTimeRecords() {
 		List<String> timeRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			timeRecords.add(TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate()));
 		}
 		return timeRecords;
@@ -38,7 +38,7 @@ public class ProjectService {
 	 */
 	public List<Integer> getNumOfModuleRecords() {
 		List<Integer> numOfModuleRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			numOfModuleRecords.add(projectInfo.getModuleList().size());
 		}
 		return numOfModuleRecords;
@@ -49,7 +49,7 @@ public class ProjectService {
 	 */
 	public List<Integer> getNumOfPackageRecords() {
 		List<Integer> numOfPackageRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			numOfPackageRecords.add(projectInfo.getPackageList().size());
 		}
 		return numOfPackageRecords;
@@ -60,7 +60,7 @@ public class ProjectService {
 	 */
 	public List<Integer> getNumOfJavaFileRecords() {
 		List<Integer> numOfClassRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			numOfClassRecords.add(projectInfo.getClassList().size());
 		}
 		return numOfClassRecords;
@@ -71,7 +71,7 @@ public class ProjectService {
 	 */
 	public List<Integer> getNumOfClassRecords() {
 		List<Integer> numOfClassRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			numOfClassRecords.add(projectInfo.getClassList().size() + projectInfo.getExtraClassList().size());
 		}
 		return numOfClassRecords;
@@ -82,7 +82,7 @@ public class ProjectService {
 	 */
 	public List<Integer> getNumOfAllClassRecords() {
 		List<Integer> numOfClassAndInnerClassRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			numOfClassAndInnerClassRecords.add(projectInfo.getAllClassList().size());
 		}
 		return numOfClassAndInnerClassRecords;
@@ -97,7 +97,7 @@ public class ProjectService {
 	 */
 	public Map<String, Map<String, List<Object>>> getDataSetOfSLOC(int flag) {
 		LinkedHashMap<String, Map<String, List<Object>>> timeline = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			Map<String, List<Object>> series = new HashMap<>();
 			series.put("Interface", new ArrayList<>());
@@ -105,6 +105,7 @@ public class ProjectService {
 			series.put("Class", new ArrayList<>());
 			series.put("Enum", new ArrayList<>());
 			series.put("Annotation", new ArrayList<>());
+			series.put("package-info", new ArrayList<>());
 			if (flag == FLAG_ALL_CLASS) {
 				addDataRow(series, projectInfo.getAllClassList(), flag);
 			} else if (flag == FLAG_MAIN_PUBLIC_CLASS) {
@@ -116,9 +117,7 @@ public class ProjectService {
 	}
 
 	private void addDataRow(Map<String, List<Object>> series, List<ClassInfo> classInfoList, int flag) {
-		int i = 0;
 		for (ClassInfo classInfo : classInfoList) {
-			System.out.println(i++);
 			List<Object> rows = null;
 			// 注意package-info.java的getClassModifier()可能为null
 			ClassInfo.ClassModifier classModifier = classInfo.getClassModifier();
@@ -136,11 +135,13 @@ public class ProjectService {
 					case INTERFACE:
 						rows = series.get("Interface");
 						break;
-					default:
+					case CLASS:
 						rows = series.get("Class");
+						break;
+					case NONE:
+						rows = series.get("package-info");
+						break;
 				}
-			} else if ("package-info".equals(classInfo.getShortName())) {
-				rows = series.get("Class");
 			} else {
 				LOGGER.debug("Should not go into this statement, please use debug and check the program again.");
 				throw new RuntimeException(

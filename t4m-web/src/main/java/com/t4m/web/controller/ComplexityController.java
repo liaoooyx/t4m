@@ -2,13 +2,12 @@ package com.t4m.web.controller;
 
 import com.t4m.extractor.entity.*;
 import com.t4m.extractor.util.EntityUtil;
-import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
 import com.t4m.web.service.ProjectService;
-import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.dao.ProjectRecordDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -44,13 +43,13 @@ public class ComplexityController {
 
 	@GetMapping("")
 	public String slocMetric(Model model) {
-		List<ProjectInfo> projectInfoList = ProjectRecord.getProjectInfoList();
+		List<ProjectInfo> projectInfoList = ProjectRecordDao.getProjectInfoList();
 		// 基本信息
 		model.addAttribute("projectList", projectInfoList);
 		// 用于timeline chart
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
 		LinkedHashMap<String, List<List<Object>>> weightedMethodsCountDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			List<List<Object>> rows = new ArrayList<>();
 			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
@@ -66,7 +65,7 @@ public class ComplexityController {
 		model.addAttribute("weightedMethodsCountDataset", weightedMethodsCountDataset);
 
 		LinkedHashMap<String, List<List<Object>>> maxComplexityOfClassDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			List<List<Object>> rows = new ArrayList<>();
 			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
@@ -82,7 +81,7 @@ public class ComplexityController {
 		model.addAttribute("maxComplexityOfClassDataset", maxComplexityOfClassDataset);
 
 		LinkedHashMap<String, List<List<Object>>> avgComplexityOfClassDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			List<List<Object>> rows = new ArrayList<>();
 			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
@@ -98,7 +97,7 @@ public class ComplexityController {
 		model.addAttribute("avgComplexityOfClassDataset", avgComplexityOfClassDataset);
 
 		LinkedHashMap<String, List<List<Object>>> responseForClassDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			List<List<Object>> rows = new ArrayList<>();
 			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
@@ -115,7 +114,7 @@ public class ComplexityController {
 
 
 		List<Object[]> methodComplexityDataset = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			for (MethodInfo methodInfo : projectInfo.getMethodList()) {
 				Object[] row =
@@ -127,7 +126,7 @@ public class ComplexityController {
 		model.addAttribute("methodComplexityDataset", methodComplexityDataset);
 
 		List<Object[]> methodNumDataset = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			Object[] row = new Object[]{time, projectInfo.getMethodList().size()};
 			methodNumDataset.add(row);
@@ -143,7 +142,7 @@ public class ComplexityController {
 			@RequestParam(name = "classQualifiedName") String classQualifiedName,
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), classQualifiedName);
 		if (classInfo == null){
 			LOGGER.info("No such class in this record.");
@@ -167,7 +166,7 @@ public class ComplexityController {
 	public List<Map<String, Object>> selectClassRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", classInfo.getShortName());
@@ -194,7 +193,7 @@ public class ComplexityController {
 		List<Object[]> dataset = new ArrayList<>();
 		dataset.add(new String[]{"time", "Number of Method", "Weighted Method Count", "Max Complexity of Class",
 		                         "Avg Complexity of Class", "Response for Class"});
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
 			Object[] tempRow = new Object[6];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());

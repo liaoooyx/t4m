@@ -27,6 +27,9 @@ public class ProjectInfo implements Serializable {
 
 	private DirHierarchyNode rootDirHierarchyNode;
 
+	private String excludedPath;
+	private String dependencyPath;
+
 	private List<ModuleInfo> moduleList = new ArrayList<>();
 	private List<PackageInfo> packageList = new ArrayList<>();
 
@@ -35,16 +38,13 @@ public class ProjectInfo implements Serializable {
 	private List<ClassInfo> extraClassList = new ArrayList<>();
 	private List<MethodInfo> methodList = new ArrayList<>();
 
-	public ProjectInfo(String absolutePath) {
-		this(new Date(), absolutePath);
+	public ProjectInfo(String absolutePath,String excludedPath, String dependencyPath) {
+		this.createDate = new Date();
+		this.absolutePath = absolutePath;
 		String[] paths = absolutePath.split(File.separator);
 		this.projectDirName = paths[paths.length - 1];
-
-	}
-
-	public ProjectInfo(Date createDate, String absolutePath) {
-		this.createDate = createDate;
-		this.absolutePath = absolutePath;
+		this.excludedPath = excludedPath;
+		this.dependencyPath = dependencyPath;
 	}
 
 	@Override
@@ -89,6 +89,22 @@ public class ProjectInfo implements Serializable {
 
 	public void setProjectDirName(String projectDirName) {
 		this.projectDirName = projectDirName;
+	}
+
+	public String getExcludedPath() {
+		return excludedPath;
+	}
+
+	public void setExcludedPath(String excludedPath) {
+		this.excludedPath = excludedPath;
+	}
+
+	public String getDependencyPath() {
+		return dependencyPath;
+	}
+
+	public void setDependencyPath(String dependencyPath) {
+		this.dependencyPath = dependencyPath;
 	}
 
 	public DirHierarchyNode getRootDirHierarchyNode() {

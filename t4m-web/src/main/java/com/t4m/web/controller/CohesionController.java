@@ -1,8 +1,6 @@
 package com.t4m.web.controller;
 
 import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.MethodInfo;
-import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.TimeUtil;
@@ -10,7 +8,7 @@ import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
 import com.t4m.web.service.ProjectService;
-import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.dao.ProjectRecordDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -46,95 +44,63 @@ public class CohesionController {
 
 	@GetMapping("")
 	public String slocMetric(Model model) {
-		List<ProjectInfo> projectInfoList = ProjectRecord.getProjectInfoList();
+		List<ProjectInfo> projectInfoList = ProjectRecordDao.getProjectInfoList();
 		// 基本信息
 		model.addAttribute("projectList", projectInfoList);
 		// 用于timeline chart
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
-		LinkedHashMap<String, List<List<Object>>> weightedMethodsCountDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+
+		LinkedHashMap<String, Map<String, List<Object>>> classCohesionDataset = new LinkedHashMap<>();
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			List<List<Object>> rows = new ArrayList<>();
+			Map<String, List<Object>> series = new HashMap<>();
+			series.put("Interface", new ArrayList<>());
+			series.put("Abstract Class", new ArrayList<>());
+			series.put("Class", new ArrayList<>());
+			series.put("Enum", new ArrayList<>());
+			series.put("Annotation", new ArrayList<>());
+			series.put("package-info", new ArrayList<>());
 			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+				List<Object> rows = null;
+				// 注意package-info.java的getClassModifier()可能为null
+				ClassInfo.ClassModifier classModifier = classInfo.getClassModifier();
+				if (classModifier != null) {
+					switch (classInfo.getClassModifier()) {
+						case ENUM:
+							rows = series.get("Enum");
+							break;
+						case ANNOTATION:
+							rows = series.get("Annotation");
+							break;
+						case ABSTRACT_CLASS:
+							rows = series.get("Abstract Class");
+							break;
+						case INTERFACE:
+							rows = series.get("Interface");
+							break;
+						case CLASS:
+							rows = series.get("Class");
+							break;
+						case NONE:
+							rows = series.get("package-info");
+							break;
+					}
+				} else {
+					LOGGER.debug("Should not go into this statement, please use debug and check the program again.");
+					throw new RuntimeException(
+							"Should not go into this statement, please use debug and check the program again.");
+				}
 				List<Object> cols = new ArrayList<>();
-				cols.add(classInfo.getNumberOfMethods()); // code line
-				cols.add(classInfo.getWeightedMethodsCount()); // code line
+				cols.add(classInfo.getTightClassCohesion());
+				cols.add(classInfo.getLooseClassCohesion());
+				cols.add(classInfo.getLackOfCohesionOfMethods4());
 				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
 				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
 				rows.add(cols);
 			}
-			weightedMethodsCountDataset.put(time, rows);
+			classCohesionDataset.put(time, series);
 		}
-		model.addAttribute("weightedMethodsCountDataset", weightedMethodsCountDataset);
-
-		LinkedHashMap<String, List<List<Object>>> maxComplexityOfClassDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			List<List<Object>> rows = new ArrayList<>();
-			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-				List<Object> cols = new ArrayList<>();
-				cols.add(classInfo.getNumberOfMethods()); // code line
-				cols.add(classInfo.getMaxCyclomaticComplexity()); // code line
-				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-				rows.add(cols);
-			}
-			maxComplexityOfClassDataset.put(time, rows);
-		}
-		model.addAttribute("maxComplexityOfClassDataset", maxComplexityOfClassDataset);
-
-		LinkedHashMap<String, List<List<Object>>> avgComplexityOfClassDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			List<List<Object>> rows = new ArrayList<>();
-			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-				List<Object> cols = new ArrayList<>();
-				cols.add(classInfo.getNumberOfMethods());
-				cols.add(classInfo.getAvgCyclomaticComplexity());
-				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-				rows.add(cols);
-			}
-			avgComplexityOfClassDataset.put(time, rows);
-		}
-		model.addAttribute("avgComplexityOfClassDataset", avgComplexityOfClassDataset);
-
-		LinkedHashMap<String, List<List<Object>>> responseForClassDataset = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			List<List<Object>> rows = new ArrayList<>();
-			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-				List<Object> cols = new ArrayList<>();
-				cols.add(classInfo.getNumberOfMethods());
-				cols.add(classInfo.getResponseForClass());
-				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-				rows.add(cols);
-			}
-			responseForClassDataset.put(time, rows);
-		}
-		model.addAttribute("responseForClassDataset", responseForClassDataset);
-
-
-		List<Object[]> methodComplexityDataset = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			for (MethodInfo methodInfo : projectInfo.getMethodList()) {
-				Object[] row =
-						new Object[]{time, methodInfo.getCyclomaticComplexity(), methodInfo.getFullyQualifiedName(),
-						             methodInfo.getMethodDeclarationString()};
-				methodComplexityDataset.add(row);
-			}
-		}
-		model.addAttribute("methodComplexityDataset", methodComplexityDataset);
-
-		List<Object[]> methodNumDataset = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			Object[] row = new Object[]{time, projectInfo.getMethodList().size()};
-			methodNumDataset.add(row);
-		}
-		model.addAttribute("methodNumDataset", methodNumDataset);
+		model.addAttribute("classCohesionDataset", classCohesionDataset);
 
 		return "page/dashboard/cohesion_metric";
 	}
@@ -145,7 +111,7 @@ public class CohesionController {
 	public List<Map<String, Object>> selectClassRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", classInfo.getShortName());
@@ -153,7 +119,7 @@ public class CohesionController {
 			row.put("declaration", classInfo.getClassDeclaration().toString());
 			row.put("package", classInfo.getPackageFullyQualifiedName());
 			row.put("module", classInfo.getPackageInfo().getModuleInfo().getShortName());
-			row.put("lackOfCohesionInMethods4", classInfo.getLackOfCohesionInMethods4());
+			row.put("lackOfCohesionInMethods4", classInfo.getLackOfCohesionOfMethods4());
 			row.put("tightClassCohesion", classInfo.getTightClassCohesion());
 			row.put("looseClassCohesion", classInfo.getLooseClassCohesion());
 			row.put("qualifiedName", classInfo.getFullyQualifiedName());
@@ -169,13 +135,13 @@ public class CohesionController {
 		List<Object[]> dataset = new ArrayList<>();
 		dataset.add(
 				new String[]{"time", "Lack of Cohesion in Methods 4", "Tight Class Cohesion", "Loose Class Cohesion"});
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
 			Object[] tempRow = new Object[4];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
 			Arrays.fill(tempRow, 1, 3, null);
 			if (classInfo != null) { //类可能还未创建或已经删除
-				tempRow[1] = classInfo.getLackOfCohesionInMethods4();
+				tempRow[1] = classInfo.getLackOfCohesionOfMethods4();
 				tempRow[2] = classInfo.getTightClassCohesion();
 				tempRow[3] = classInfo.getLooseClassCohesion();
 			}

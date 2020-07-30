@@ -4,7 +4,6 @@ import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
-import com.t4m.extractor.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +16,6 @@ import java.util.List;
 public class No4_ModuleScanner {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(No4_ModuleScanner.class);
-
-	private static final String TEMP_COMPILE_OUTPUT_PATH = PropertyUtil.getProperty("TEMP_COMPILE_OUTPUT_PATH");
 
 	private ProjectInfo projectInfo;
 

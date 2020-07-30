@@ -1,0 +1,6 @@
+dependencies {
+    implementation project(":t4m-conf")
+    implementation project(":t4m-extractor")
+}
+
+jar.enabled = true

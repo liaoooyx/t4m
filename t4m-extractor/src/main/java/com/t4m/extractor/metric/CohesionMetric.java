@@ -61,7 +61,7 @@ public class CohesionMetric {
 		int numberOfPossibleConnections = numberOfMethods * (numberOfMethods - 1) / 2;
 		String tcc = MathUtil.divide(numberOfDirectConnections, numberOfPossibleConnections);
 		String lcc = MathUtil.divide(numberOfAllConnections, numberOfPossibleConnections);
-		classInfo.setLackOfCohesionInMethods4(locm);
+		classInfo.setLackOfCohesionOfMethods4(locm);
 		classInfo.setTightClassCohesion(tcc);
 		classInfo.setLooseClassCohesion(lcc);
 		if (classInfo.getShortName().equals("CohesionClass")) {

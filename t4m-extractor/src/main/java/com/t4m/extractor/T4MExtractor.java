@@ -17,10 +17,6 @@ public class T4MExtractor {
 		this.projectInfo = projectInfo;
 	}
 
-	public T4MExtractor(String projectPath) {
-		this.projectInfo = new ProjectInfo(projectPath);
-	}
-
 	public ProjectInfo getProjectInfo() {
 		return projectInfo;
 	}

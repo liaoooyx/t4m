@@ -13,14 +13,16 @@ configurations {
 
 dependencies {
 
+    implementation project(":t4m-conf")
     implementation project(":t4m-extractor")
+    implementation project(":t4m-serializer")
 
     implementation 'org.springframework.boot:spring-boot-starter:2.3.1.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.3.1.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.3.1.RELEASE'
 
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.3.1.RELEASE') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

@@ -6,7 +6,7 @@ import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
-import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.dao.ProjectRecordDao;
 import com.t4m.web.util.SLOCUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class PackageService {
 	 * 构造绑定到前端页面的数据。List的每条数据都是一个包，每个模块的信息以键值对方式存储在Map中。
 	 */
 	public List<Map<String, Object>> getPackageMapList(int index) {
-		ProjectInfo[] projectInfos = ProjectRecord.getTwoProjectInfoRecordByIndex(index);
+		ProjectInfo[] projectInfos = ProjectRecordDao.getTwoProjectInfoRecordByIndex(index);
 		ProjectInfo current = projectInfos[0];
 		ProjectInfo previous = projectInfos[1];
 
@@ -83,7 +83,7 @@ public class PackageService {
 	 * 用于dashboard-sloc的列表数据。根据包名，获取其下的类的SLOC，以及子包的SLOC
 	 */
 	public List<Map<String, Object>> getSLOCRecordByPackageName(String packageName, int index) {
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(index)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(index)[0];
 		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), packageName);
 		List<Map<String, Object>> rows = new ArrayList<>();
 		// 子包的SLOC（直接类，和下一层的子包）
@@ -113,7 +113,7 @@ public class PackageService {
 		                         "Comment Lines", "% of Comment Lines (Source File)", "Logic Code Lines (JavaParser)",
 		                         "Physical Code Lines (JavaParser)", "Comment Lines (JavaParser)",
 		                         "% of Comment Lines (JavaParser)"});
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), pkgName);
 			String[] tempRow = new String[9];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());

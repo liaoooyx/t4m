@@ -6,7 +6,7 @@ import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
 import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
-import com.t4m.web.util.ProjectRecord;
+import com.t4m.web.dao.ProjectRecordDao;
 import com.t4m.web.util.SLOCUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class ModuleService {
 	 * 构造绑定到前端页面的数据。List的每条数据都是一个模块，每个模块的信息以键值对方式存储在Map中。
 	 */
 	public List<Map<String, Object>> getModuleMapList(int index) {
-		ProjectInfo[] projectInfos = ProjectRecord.getTwoProjectInfoRecordByIndex(index);
+		ProjectInfo[] projectInfos = ProjectRecordDao.getTwoProjectInfoRecordByIndex(index);
 		ProjectInfo current = projectInfos[0];
 		ProjectInfo previous = projectInfos[1];
 
@@ -88,7 +88,7 @@ public class ModuleService {
 	 * 用于dashboard-sloc的列表数据，获取所有模块的SLOC信息
 	 */
 	public List<Map<String, Object>> getAllModulesSLOC(int index) {
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(index)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(index)[0];
 		List<Map<String, Object>> rows = new ArrayList<>();
 		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
 			Map<String, Object> cols = SLOCUtil.initSLOCRowRecordForFrontPage(moduleInfo.getRelativePath(), "module",
@@ -102,7 +102,7 @@ public class ModuleService {
 	 * 用于dashboard-sloc的列表数据。根据模块名，获取其下的第一层包的SLOC
 	 */
 	public List<Map<String, Object>> getSLOCRecordByModuleName(String moduleName, int index) {
-		ProjectInfo projectInfo = ProjectRecord.getTwoProjectInfoRecordByIndex(index)[0];
+		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(index)[0];
 		ModuleInfo moduleInfo = EntityUtil.getModuleByRelativeName(projectInfo.getModuleList(), moduleName);
 		List<Map<String, Object>> rows = new ArrayList<>();
 		for (PackageInfo packageInfo : moduleInfo.getPackageList()) {
@@ -124,7 +124,7 @@ public class ModuleService {
 		                         "Comment Lines", "% of Comment Lines (Source File)", "Logic Code Lines (JavaParser)",
 		                         "Physical Code Lines (JavaParser)", "Comment Lines (JavaParser)",
 		                         "% of Comment Lines (JavaParser)"});
-		for (ProjectInfo projectInfo : ProjectRecord.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			ModuleInfo moduleInfo = EntityUtil.getModuleByRelativeName(projectInfo.getModuleList(), moduleName);
 			String[] tempRow = new String[9];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());

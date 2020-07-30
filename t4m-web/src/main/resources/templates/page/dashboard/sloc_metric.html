@@ -120,8 +120,9 @@
 										<span>{{pointValue}}</span><br>
 									</div>
 									<hr class="my-3">
-									<div class="mb-2" v-for="pointDescription in pointDescriptionList">
+									<div v-for="pointDescription in pointDescriptionList">
 										<div v-html="pointDescription"></div>
+										<hr class="my-1">
 									</div>
 								</div>
 								<div class="modal-footer">
@@ -152,7 +153,19 @@
                   let dataMax = getMax(currentDataset);
                   let options = optionsFormatter(currentDataset);
                   let option = {
+                      options: options,
                       baseOption: {
+                          grid: {right: 150,}, color: ['#c23531'],
+                          legend: {
+                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class','package-info'],
+                              selected: {'package-info': false},
+                          },
+                          xAxis: {
+                              name: 'Physical Code Lines', type: 'value', max: Math.ceil(dataMax[0] / 5) * 5
+                          },
+                          yAxis: {
+                              name: 'Comment Lines', type: 'value', max: Math.ceil(dataMax[1] / 5) * 5
+                          },
                           timeline: {
                               axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
                               playInterval: 1000, symbol: 'circle', data: timeRecords,
@@ -163,15 +176,6 @@
                                       return date.getMonth() + "-" + date.getDate();
                                   }
                               }
-                          },
-                          legend: {
-                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class'],
-                          },
-                          xAxis: {
-                              name: 'Physical Code Lines', type: 'value', max: Math.ceil(dataMax[0] / 5) * 5
-                          },
-                          yAxis: {
-                              name: 'Comment Lines', type: 'value', max: Math.ceil(dataMax[1] / 5) * 5
                           },
                           tooltip: {
                               padding: 10, borderWidth: 1,
@@ -196,7 +200,6 @@
 
                               }
                           },
-                          grid: {right: 150,}, color: ['#c23531'],
                           visualMap: [
                               {
                                   type: 'continuous', left: 'right', top: 'middle', calculable: true, precision: 0.1,
@@ -205,8 +208,6 @@
                               },
                           ],
                       },
-                      options: options
-
                   };
                   timelineChart.setOption(option);
               }
@@ -216,7 +217,7 @@
                   let yMax = 0;
                   let d2Max = 0;
                   for (let key in dataset) {
-                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation']) {
+                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation','package-info']) {
                           for (let cols of dataset[key][key2]) {
                               xMax = Number(cols[0]) > xMax ? Number(cols[0]) : xMax;
                               yMax = Number(cols[1]) > yMax ? Number(cols[1]) : yMax;
@@ -232,93 +233,75 @@
                   for (let i = 0; i < timeRecords.length; i++) {
                       options[i] = {
                           series: [{
-                              name: 'Interface',
+                              name: 'Interface', type: 'scatter',
                               data: dataset[timeRecords[i]]['Interface'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#69bae5',
-                              },
+                              itemStyle: {color: '#69bae5',},
                               emphasis: {
                                   label: {
-                                      show: true,
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
                                       formatter: function (params) {
                                           return params.data[3];
                                       },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
                                   },
                               },
                           }, {
-                              name: 'Abstract Class',
+                              name: 'Abstract Class', type: 'scatter',
                               data: dataset[timeRecords[i]]['Abstract Class'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#54ba3d',
-                              },
+                              itemStyle: {color: '#54ba3d',},
                               emphasis: {
                                   label: {
-                                      show: true,
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
                                       formatter: function (params) {
                                           return params.data[3];
                                       },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
                                   },
                               },
                           }, {
-                              name: 'Class',
+                              name: 'Class', type: 'scatter',
                               data: dataset[timeRecords[i]]['Class'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#c23531',
-                              },
+                              itemStyle: {color: '#c23531',},
                               emphasis: {
                                   label: {
-                                      show: true,
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
                                       formatter: function (params) {
                                           return params.data[3];
                                       },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
                                   },
                               },
                           }, {
-                              name: 'Enum',
+                              name: 'Enum', type: 'scatter',
                               data: dataset[timeRecords[i]]['Enum'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#e7ad70',
-                              },
+                              itemStyle: {color: '#e7ad70',},
                               emphasis: {
                                   label: {
-                                      show: true,
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
                                       formatter: function (params) {
                                           return params.data[3];
                                       },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
                                   },
                               },
                           }, {
-                              name: 'Annotation',
+                              name: 'Annotation', type: 'scatter',
                               data: dataset[timeRecords[i]]['Annotation'],
-                              type: 'scatter',
-                              itemStyle: {
-                                  color: '#e770e1',
-                              },
+                              itemStyle: {color: '#e770e1',},
                               emphasis: {
                                   label: {
-                                      show: true,
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
                                       formatter: function (params) {
                                           return params.data[3];
                                       },
-                                      color: '#000000',
-                                      position: 'top',
-                                      fontWeight: 'normal',
+                                  },
+                              },
+                          }, {
+                              name: 'package-info', type: 'scatter',
+                              data: dataset[timeRecords[i]]['package-info'],
+                              itemStyle: {color: '#171717',},
+                              emphasis: {
+                                  label: {
+                                      show: true, color: '#000000', position: 'top', fontWeight: 'normal',
+                                      formatter: function (params) {
+                                          return params.data[3];
+                                      },
                                   },
                               },
                           }]
@@ -361,9 +344,9 @@
                               for (let row of currentDataset[key][key2]) {
                                   if (row[0] === x && row[1] === y) {
                                       let text = '<span style="font: 12px">'
-                                          + 'Class: ' + row[3] + '</span>' + '<br>'
+                                          + key2 + ': ' + row[3] + '</span>' + '<br>'
                                           + '<span style="font: 12px">'
-                                          + 'of Module: ' + row[4] + '</span>' + '<br>';
+                                          + 'Of module: ' + row[4] + '</span>' + '<br>';
                                       pointDescriptionList.push(text);
                                   }
                               }
@@ -443,11 +426,10 @@
 							</button>
 						</div>
 						<div class="modal-body">
-							<div id="row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							</div>
+							<div id="row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						</div>
 					</div>
 				</div>
