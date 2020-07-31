@@ -79,8 +79,8 @@ public class No6_JavaParserScanner {
 			typeSolverList.add(new JavaParserTypeSolver(new File(moduleInfo.getSourcePath())));
 		}
 		String dependencyPath = GlobalProperties.getDependencyPath(projectInfo.getProjectDirName());
-		if (!"".equals(dependencyPath)){
-			String[] jars = dependencyPath.split("[;:]");
+		if (!"".equals(dependencyPath)) {
+			String[] jars = dependencyPath.split(File.pathSeparator);
 			for (String jarPath : jars) {
 				try {
 					typeSolverList.add(new JarTypeSolver(jarPath));

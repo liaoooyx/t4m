@@ -1,5 +1,3 @@
-
-
 allprojects {
     version '1.0-SNAPSHOT'
     group 'org.t4m'
@@ -7,6 +5,70 @@ allprojects {
     task cleanBuildDir(type: Delete) {
         delete "${projectDir}/build"
         delete "${projectDir}/out"
+    }
+
+    task findJar {
+        doLast {
+            Set<String> depsSet = new HashSet<>()
+            configurations.each { conf ->
+                if (conf.isCanBeResolved()) {
+                    conf.getResolvedConfiguration().getResolvedArtifacts().each { artifact ->
+                        def jarPath = artifact.getFile().getAbsolutePath()
+                        if (jarPath != null && "" != jarPath) {
+                            depsSet.add(jarPath)
+                        }
+                    }
+                }
+            }
+            String depsString = depsSet.stream().map { e -> e.concat(File.pathSeparator) }
+                    .reduce { a, b -> a.concat(b) }.orElse("")
+            new File(project.project.name + ".deps") << depsString
+        }
+    }
+
+}
+
+task findDeps {
+    project.allprojects.each { module ->
+        tasks.create("findDeps_${module.name}", {
+            doLast {
+                Set<String> depsSet = new HashSet<>()
+                module.configurations.each { conf ->
+                    if (conf.isCanBeResolved()) {
+                        conf.getResolvedConfiguration().getResolvedArtifacts().each { artifact ->
+                            def jarPath = artifact.getFile().getAbsolutePath()
+                            if (jarPath != null && "" != jarPath) {
+                                depsSet.add(jarPath)
+                            }
+                        }
+                    }
+                }
+                String depsString = depsSet.stream().map { e -> e.concat(File.pathSeparator) }
+                        .reduce { a, b -> a.concat(b) }.orElse("")
+                new File(module.name + ".deps") << depsString
+            }
+        })
+        findDeps.dependsOn("findDeps_${module.name}")
+    }
+    doLast {
+        def depsFileName = "all.deps"
+        if (file(depsFileName).exists()) {
+            file(depsFileName).delete()
+        }
+        Set<String> depsSet = new HashSet<>()
+        project.allprojects.each { module ->
+            def moduleName = module.name
+            if (file(moduleName + ".deps").exists()) {
+                file(moduleName + ".deps").eachLine { line ->
+                    line.split(File.pathSeparator).each { jarPath -> depsSet.add(jarPath) }
+                }
+                file(moduleName + ".deps").delete()
+            }
+        }
+        String depsString = depsSet.stream().map { e -> e.concat(File.pathSeparator) }
+                .reduce { a, b -> a.concat(b) }.orElse("")
+        new File(depsFileName) << depsString
+        println depsString
     }
 }
 
@@ -55,5 +117,4 @@ subprojects {
         compile 'ch.qos.logback:logback-classic:1.2.3'
 
     }
-
 }

@@ -53,11 +53,12 @@ public class Test {
 		// 	compilationUnit.accept(new Test.T4MVisitor());
 		// 	System.out.println();
 		// });
-		int a = 10;
-		int b = 3;
-		System.out.println(new DecimalFormat("0.00").format((float) a / b));
 		// Arrays.stream(currentLine.split("/\\*")).forEach(System.out::println);
 		// System.out.println(currentLine.replaceAll("/\\*.*?\\*/",""));
+		String string = "asd:asd:";
+		System.out.println(string.split(":").length);
+		Arrays.stream(string.split(":")).forEach(System.out::println);
+		System.out.println("end");
 	}
 
 

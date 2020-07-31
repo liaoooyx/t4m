@@ -17,11 +17,9 @@ public class GlobalProperties {
 	public static final String EXCLUDED_PATH_KEY = "EXCLUDED_PATH";
 	public static final String DEPENDENCY_PATH_KEY = "DEPENDENCY_PATH";
 	public static final String CURRENT_PROJECT_IDENTIFIER_KEY = "CURRENT_PROJECT_IDENTIFIER";
-	public static final String PROPERTIES_FILE_SUFFIX = ".properties";
 
 	public static final String T4M_ROOT_PATH = System.getenv("T4M_HOME");
 	public static final String CONF_ROOT_PATH = T4M_ROOT_PATH + File.separator + "conf";
-	public static final String PROJECT_INDEPENDENT_ROOT_PATH = CONF_ROOT_PATH + File.separator + "projects";
 
 	public static final String MAIN_PROPERTIES_FILE_NAME = "t4m.properties";
 	public static final String WEB_PROPERTIES_FILE_NAME = "web.properties";
@@ -41,45 +39,12 @@ public class GlobalProperties {
 		T4mPropertiesUtil webProperties = new T4mPropertiesUtil(CONF_ROOT_PATH + File.separator +
 				                                                        WEB_PROPERTIES_FILE_NAME);
 		CURRENT_PROJECT_IDENTIFIER = webProperties.getProperty(CURRENT_PROJECT_IDENTIFIER_KEY);
-		updateProjectPropertiesMap();
 	}
 
 	public static void updateCurrentProjectPointer(String currentProjectName) {
 		T4mPropertiesUtil webProperties = new T4mPropertiesUtil(CONF_ROOT_PATH + File.separator + WEB_PROPERTIES_FILE_NAME);
 		webProperties.setProperty(CURRENT_PROJECT_IDENTIFIER_KEY, currentProjectName);
 		CURRENT_PROJECT_IDENTIFIER = currentProjectName;
-	}
-
-	// public static void newProjectAndProperties(
-	// 		String projectName, ProjectIndependentProperties projectIndependentProperties) {
-	// 	if (projectPropertiesMap.containsKey(projectName)) {
-	// 		//	说明配置文件存在，直接找到该文件进行修改
-	//
-	// 		projectIndependentProperties.storeToFile();
-	// 	} else {
-	// 		//	文件不存在，创建新的配置文件
-	// 		if (FileUtil.checkAndMakeDirectory(PROJECT_INDEPENDENT_ROOT_PATH)) {
-	// 			File projectPropertiesDir = new File(PROJECT_INDEPENDENT_ROOT_PATH);
-	//
-	// 		} else {
-	//
-	// 		}
-	// 	}
-	//
-	// }
-
-	private static void updateProjectPropertiesMap() {
-		if (FileUtil.checkAndMakeDirectory(PROJECT_INDEPENDENT_ROOT_PATH)) {
-			File projectPropertiesDir = new File(PROJECT_INDEPENDENT_ROOT_PATH);
-			File[] files = projectPropertiesDir.listFiles();
-			for (File file : files) {
-				T4mPropertiesUtil projectProperties = new T4mPropertiesUtil(file.getAbsolutePath());
-				String projectName = projectProperties.getProperty(ProjectIndependentProperties.PROJECT_NAME_KEY);
-				projectPropertiesMap.put(projectName, new ProjectIndependentProperties(projectProperties));
-			}
-		} else {
-			LOGGER.info("There is no file in {}", GlobalProperties.DB_ROOT_PATH);
-		}
 	}
 
 	/**
