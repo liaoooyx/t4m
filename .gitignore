@@ -58,3 +58,6 @@ logs/
 
 # Persistence
 db/
+
+#dependencies file
+all.deps
