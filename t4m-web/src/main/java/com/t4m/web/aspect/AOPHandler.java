@@ -27,8 +27,8 @@ public class AOPHandler {
 		Model model = (Model) proceedingJoinPoint.getArgs()[0];
 		if (projectInfos == null) {
 			model.addAttribute("isBlank", true);
-			model.addAttribute("excludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
-			model.addAttribute("dependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
+			model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
+			model.addAttribute("defaultDependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 			return "page/dashboard/blank_page";
 		} else {
 			ProjectRecordDao.checkCurrentProjectIdentifier();

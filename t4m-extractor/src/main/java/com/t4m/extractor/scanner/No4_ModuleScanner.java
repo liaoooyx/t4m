@@ -62,6 +62,7 @@ public class No4_ModuleScanner {
 			}
 			packageInfo.setModuleInfo(moduleInfo);
 		});
+		//如果需要重置project的classList，packageList，则在这里进行
 		return projectInfo.getModuleList();
 	}
 

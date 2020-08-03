@@ -185,26 +185,11 @@ public class ModuleInfo implements Serializable {
 	 * 优先返回mainPackageList，然后是otherPackageList，最后是testPackageList
 	 */
 	public List<PackageInfo> getPackageList() {
-		if (hasMainPackageList()) {
-			return mainPackageList;
-		} else if (hasOtherPackageList()) {
-			return otherPackageList;
-		} else {
-			return testPackageList;
-		}
-	}
-
-	/**
-	 * 返回root package所在的文件夹路径，比如/.../src/main/java
-	 */
-	public String getSourcePath() {
-		if (mainScopePath != null) {
-			return mainScopePath;
-		} else if (otherScopePath != null) {
-			return otherScopePath;
-		} else {
-			return testScopePath;
-		}
+		List<PackageInfo> all = new ArrayList<>();
+		all.addAll(mainPackageList);
+		all.addAll(testPackageList);
+		all.addAll(otherPackageList);
+		return all;
 	}
 
 }

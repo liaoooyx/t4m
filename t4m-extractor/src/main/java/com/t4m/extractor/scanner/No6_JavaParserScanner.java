@@ -76,7 +76,15 @@ public class No6_JavaParserScanner {
 		typeSolverList.add(new ReflectionTypeSolver());
 		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
 			//JavaParserTypeSolver要求是根包所在文件夹位置
-			typeSolverList.add(new JavaParserTypeSolver(new File(moduleInfo.getSourcePath())));
+			if (moduleInfo.getMainScopePath()!=null){
+				typeSolverList.add(new JavaParserTypeSolver(new File(moduleInfo.getMainScopePath())));
+			}
+			if (moduleInfo.getTestScopePath()!=null){
+				typeSolverList.add(new JavaParserTypeSolver(new File(moduleInfo.getTestScopePath())));
+			}
+			if (moduleInfo.getOtherScopePath()!=null){
+				typeSolverList.add(new JavaParserTypeSolver(new File(moduleInfo.getOtherScopePath())));
+			}
 		}
 		String dependencyPath = GlobalProperties.getDependencyPath(projectInfo.getProjectDirName());
 		if (!"".equals(dependencyPath)) {
