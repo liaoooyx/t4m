@@ -1,0 +1,271 @@
+<!--
+=========================================================
+* Argon Dashboard - v1.2.0
+=========================================================
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+
+
+* Copyright  Creative Tim (http://www.creative-tim.com)
+* Coded by www.creative-tim.com
+
+
+
+=========================================================
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: head_and_imports"></head>
+
+<body>
+<!-- Sidenav -->
+<nav th:replace="fragments/common :: sidnav(6)"></nav>
+
+<!-- Main content -->
+<div class="main-content" id="panel">
+	
+	<!-- Header -->
+	<div class="header bg-primary pb-6">
+		<div class="container-fluid">
+			<!-- Header container -->
+			<div class="container-fluid d-flex align-items-center">
+				<div class="row">
+					<div class="col-lg-7 col-md-10 my-5">
+						<h1 class="display-2 text-white">Welcome to T4M</h1>
+						<p class="text-white text-justify">
+							T4m is a static code analysis tool for java, designing to be a complement of other similar tools in
+							this domain like SonarQube, Checkstyle, FindBugs, etc.
+							<a class="text-yellow text-link"
+							   href="https://en.wikipedia.org/wiki/List_of_tools_for_static_code_analysis">
+								Click here to see the list of other tools.</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Page content -->
+	<div class="container-fluid mt--6">
+		<div class="row">
+			<div class="col-xl-4">
+				<div class="card">
+					<div class="card-body p4 col-12">
+						<h2 class="mb-3">Goals</h2>
+						<p class="text-justify">
+							T4M is aiming to display the trend of software architectural metrics in an interactive and visualized
+							way:</p>
+						<ul>
+							<li><p>To help developers better understand the composition of their project and review the
+							       evolution of their project structure during developing.</p></li>
+							<li><p>To help developers monitor whether the software is developing as expected, and locating the
+							       deviating components.</p></li>
+							<li><p>Make it easier to find out possible high-risk packages
+							       and classes that are violating the design principles.</p></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-8">
+				<div class="card">
+					<div class="card-body p4 col-12">
+						<h2 class="mb-3">Features</h2>
+						<p class="text-justify mb-3">
+							T4M currently focus on visualized software metrics (eg. complexity, coupling, cohesion and inheritance
+							metrics) rather than detect the software defects (eg. rule-based detection for code defects, bugs and
+							code smells). When analysis the project, T4M arrange the project on four levels according to the
+							hierarchy, namely
+							<span class="badge badge-primary badge-pill">module</span>,
+							<span class="badge badge-primary badge-pill">package</span>,
+							<span class="badge badge-primary badge-pill">class</span>,
+							<span class="badge badge-primary badge-pill">method</span>.
+							Different software metrics have different applicable levels.</p>
+						<p class="text-justify mb-3">
+							Remember, the first goal of T4M is showing the changing trends of the metrics.</p>
+						<p class="text-justify mb-3">
+							T4M uses both charts and tables to show these metrics. In each metric page, it comes with a chart
+							showing the overall distribution of the metrics data. You can get a quick view of what your project looks
+							like under these metrics and locate the outliers. We will choose the most suitable chart for different
+							types of metrics to fulfil our first goal. Below the chart is an interactive table, which lists all
+							metrics data hierarchically. For example, you
+							can easily jump into a package to see the metric of every class within. Besides, for every data row, we
+							may also provide a chart to show the changing trends of these metrics.</p>
+						<p class="text-justify">
+							Supported metrics are listed in the below card.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xl-12">
+				<div class="card">
+					<div class="card-body p4 col-12">
+						<h2 class="mb-3">Supported software metrics</h2>
+						<p class="text-justify mb-3">
+							The metrics that T4M supports are selected from
+							<a class="text-link" href="https://maisqual.squoring.com/wiki/index.php/Category:Metrics">
+								Maisqual</a>,
+							<a class="text-link" href="http://www.arisa.se/compendium/node88.html">
+								ARiSA</a>, including:
+						</p>
+						<p class="text-justify bm-2">Complexity:</p>
+						<ul>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Source Line of Code</span>
+									<span class="badge badge-primary badge-pill">module</span>
+									<span class="badge badge-primary badge-pill">package</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Percentage of Comments</span>
+									<span class="badge badge-primary badge-pill">module</span>
+									<span class="badge badge-primary badge-pill">package</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Response for Class</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Cyclomatic Complexity</span>
+									<span class="badge badge-primary badge-pill">method</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Weighted Methods Count</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Average Complexity of Class</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Maximum Complexity of Class</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+						</ul>
+						<p class="text-justify bm-2">Coupling:</p>
+						<ul>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Afferent Coupling</span>
+									<span class="badge badge-primary badge-pill">package</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Efferent Coupling</span>
+									<span class="badge badge-primary badge-pill">package</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Instability</span>
+									<span class="badge badge-primary badge-pill">package</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Abstractness</span>
+									<span class="badge badge-primary badge-pill">package</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Distance from Main Sequence</span>
+									<span class="badge badge-primary badge-pill">package</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Coupling Between Objects</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Message Passing Coupling</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+						</ul>
+						<p class="text-justify bm-2">Inheritance:</p>
+						<ul>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Deep of Inheritance Tree</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Number of Children</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+						</ul>
+						<p class="text-justify bm-2">Cohesion:</p>
+						<ul>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Lack of Cohesion in Methods</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Tight Class Cohesion</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Loose Class Cohesion</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xl-12">
+				<div class="card">
+					<div class="card-body p4 col-12">
+						<h2 class="mb-3">PS.</h2>
+						<p class="text-justify">
+							T4M is was born from my MSc project within two months development thus it is immature. If you have any
+							issue, please put it to the
+							<a class="text-link" href="https://github.com/liaoooyx/t4m/issues">github</a>,
+							I will try my best to solve it. Bear me.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Footer -->
+		<footer th:replace="fragments/common :: footer"></footer>
+	</div>
+
+</div>
+<script th:replace="fragments/common :: footer_imports"></script>
+</body>
+
+</html>

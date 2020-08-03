@@ -31,10 +31,13 @@ public class AOPHandler {
 			model.addAttribute("dependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 			return "page/dashboard/blank_page";
 		} else {
+			ProjectRecordDao.checkCurrentProjectIdentifier();
 			model.addAttribute("currentProjectIdentifier", GlobalProperties.CURRENT_PROJECT_IDENTIFIER);
 			model.addAttribute("currentProjectPath", projectInfos[0].getAbsolutePath());
-			model.addAttribute("excludedPath", projectInfos[0].getExcludedPath());
-			model.addAttribute("dependencyPath", projectInfos[0].getDependencyPath());
+			model.addAttribute("projectExcludedPath", projectInfos[0].getExcludedPath());
+			model.addAttribute("projectDependencyPath", projectInfos[0].getDependencyPath());
+			model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
+			model.addAttribute("defaultDependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 			return proceedingJoinPoint.proceed();
 		}
 	}

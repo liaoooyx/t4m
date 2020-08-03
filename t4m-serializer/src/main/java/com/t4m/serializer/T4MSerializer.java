@@ -15,4 +15,6 @@ public interface T4MSerializer {
 
 	public List<ProjectInfo> deserializeAll();
 
+	public void delete(String projectIdentifier);
+
 }

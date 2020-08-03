@@ -57,17 +57,6 @@ public class BasicController {
 		return "page/dashboard/basic_metric";
 	}
 
-	@GetMapping("/select/{projectRecordIndex}")
-	public String selectProjectRecordByIndex(
-			Model model, @PathVariable(name = "projectRecordIndex") int projectRecordIndex) {
-		// 用于表格
-		model.addAttribute("moduleMapList", moduleService.getModuleMapList(projectRecordIndex));
-		model.addAttribute("packageMapList", packageService.getPackageMapList(projectRecordIndex));
-		// TODO 关于SLOC的参数选择有问题。外部类的参数包括内部类，且ast格式的commentline只有docline，不包括"//"。需要更周全的选择
-		model.addAttribute("classMapList", classService.getClassMapList(projectRecordIndex));
-		return "fragments/dashboard/project_list_template";
-	}
-
 	@GetMapping("/table/module")
 	@ResponseBody
 	public List<Map<String, Object>> selectModuleRecord(

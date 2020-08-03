@@ -25,7 +25,7 @@ public class OperationController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationController.class);
 
-	@GetMapping("/new")
+	@PostMapping("/new")
 	public String createNewProject(
 			@RequestParam(name = "projectPath") String projectPath,
 			@RequestParam(name = "excludedPath") String excludedPath,
@@ -36,8 +36,8 @@ public class OperationController {
 		// 更新全局项目指针
 		GlobalProperties.updateCurrentProjectPointer(projectIdentifier);
 		// 创建一条新的项目纪录
-		ProjectInfo projectInfo = new ProjectInfo(new File(projectPath).getAbsolutePath(), excludedPath,
-		                                          dependencyPath);
+		ProjectInfo projectInfo = new ProjectInfo(new File(projectPath).getAbsolutePath(), excludedPath.strip(),
+		                                          dependencyPath.strip());
 		// 扫描项目
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.extract();
@@ -45,12 +45,12 @@ public class OperationController {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		String recordFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
 		serializer.serializeTo(projectInfo, recordFileName);
-		// 更新ProjectRecord
+		// 更新本模块的 ProjectRecord
 		ProjectRecordDao.updateProjectInfoRecord();
 		return "success";
 	}
 
-	@GetMapping("/scan")
+	@PostMapping("/scan")
 	public String scanProject(
 			@RequestParam(name = "excludedPath") String excludedPath,
 			@RequestParam(name = "dependencyPath", defaultValue = "") String dependencyPath) {
@@ -58,7 +58,8 @@ public class OperationController {
 
 		ProjectInfo oldProjectInfo = projectInfoList.get(ProjectRecordDao.getProjectInfoList().size() - 1);
 		// 创建一条新的项目纪录
-		ProjectInfo projectInfo = new ProjectInfo(oldProjectInfo.getAbsolutePath(), excludedPath, dependencyPath);
+		ProjectInfo projectInfo = new ProjectInfo(oldProjectInfo.getAbsolutePath(), excludedPath.strip(),
+		                                          dependencyPath.strip());
 		// 扫描项目
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.extract();
@@ -84,7 +85,18 @@ public class OperationController {
 			@RequestParam(name = "projectName") String projectName,
 			@RequestParam(name = "projectId") String projectId) {
 		// 更新全局项目指针和项目记录
-		GlobalProperties.updateCurrentProjectPointer(projectName+"#"+projectId);
+		GlobalProperties.updateCurrentProjectPointer(projectName + "#" + projectId);
+		ProjectRecordDao.updateProjectInfoRecord();
+		return "success";
+	}
+
+	@GetMapping("/delete")
+	public String deleteProject(
+			@RequestParam(name = "projectName") String projectName,
+			@RequestParam(name = "projectId") String projectId) {
+		T4MSerializer serializer = new T4MProjectInfoSerializer();
+		serializer.delete(projectName + "#" + projectId);
+		// 更新全局项目指针和项目记录
 		ProjectRecordDao.updateProjectInfoRecord();
 		return "success";
 	}

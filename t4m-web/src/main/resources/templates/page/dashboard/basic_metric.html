@@ -69,6 +69,7 @@
 	<!-- Header -->
 	<div class="header bg-primary pb-6">
 		<div class="container-fluid">
+			<!-- Header container -->
 			<div class="header-body">
 				<!-- Card stats -->
 				<div class="row pt-3">
@@ -171,7 +172,6 @@
 			</div>
 		</div>
 	</div>
-	
 	
 	<!-- Page content -->
 	<div class="container-fluid mt--6">
@@ -343,6 +343,7 @@
 		<!-- Footer -->
 		<footer th:replace="fragments/common :: footer"></footer>
 	</div>
+	
 </div>
 <script th:replace="fragments/common :: footer_imports"></script>
 <script>
@@ -380,7 +381,7 @@
             field: 'classNum', title: 'Java Files / Classes', sortable: true
         }];
         $.get("/dashboard/basic/table/module?projectRecordIndex=" + projectRecordIndex).done(function (data) {
-            buildTable($('#table1'), data, columns, 1, 0, 300)
+            buildTable($('#table1'), data, columns, 1, 0, 310)
             $("#previous-btn").addClass("invisible");
         });
     }
@@ -388,7 +389,7 @@
     //表格：类级别的度量数据
     function showPackageBasic() {
         let columns = [{
-            field: 'name', title: 'Module Name', sortable: true
+            field: 'name', title: 'Package Name', sortable: true
         }, {
             field: 'javaFileNum', title: 'Packages', sortable: true
         }, {

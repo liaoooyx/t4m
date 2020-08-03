@@ -1,0 +1,218 @@
+<!--
+=========================================================
+* Argon Dashboard - v1.2.0
+=========================================================
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+
+
+* Copyright  Creative Tim (http://www.creative-tim.com)
+* Coded by www.creative-tim.com
+
+
+
+=========================================================
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/common :: head_and_imports"></head>
+
+<body>
+<!-- Sidenav -->
+<nav th:replace="fragments/common :: sidnav(7)"></nav>
+
+<!-- Main content -->
+<div class="main-content" id="panel">
+	
+	<!-- Header -->
+	<div class="header bg-primary pb-6">
+		<div class="container-fluid">
+			<!-- Header container -->
+			<div class="container-fluid d-flex align-items-center">
+				<div class="row">
+					<div class="col-12 my-5">
+						<h1 class="display-2 text-white">How to use</h1>
+						<p class="text-white text-justify mb-3">
+							We will take few minutes to get you familiar with how to use T4M.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Page content -->
+	<div class="container-fluid mt--6">
+		<div class="row">
+			<div class="col-xl-12">
+				<div class="card">
+					<div class="card-body p4 col-12">
+						<h2 class="mb-3">A quick start</h2>
+						<ul>
+							<li>
+								<p class="text-justify mb-3">
+									Click the
+									<span class="badge badge-primary badge-pill">NEW</span>
+									button on the left navigation bar. It will pop-up an input window.
+								</p>
+							</li>
+							<li>
+								<p class="text-justify mb-0">
+									Enter your project absolute path in the first input box, leaving others as default.</p>
+								<p class="text-justify mb-3 text-muted">
+									(To get the absolute path, you can open the system terminal, <code>cd</code> to your project root
+									path, and then <code>pwd</code>.)</p>
+							</li>
+							<li>
+								<p class="text-justify mb-3">
+									Click the <span class="badge badge-primary badge-pill text-nocase">Scan</span> button in this window.
+								</p>
+							</li>
+						</ul>
+						<p class="text-justify mb-3">The page will reload automatically after finishing scanning.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xl-12">
+				<div class="card">
+					<div class="card-body p4 col-12">
+						<h2 class="mb-3">Advanced operation</h2>
+						<p class="text-justify mb-3">
+							The operation <span class="badge badge-primary badge-pill">NEW</span> will scan your project as a new one.
+							The operation <span class="badge badge-primary badge-pill">SCAN</span> will scan and add a record to
+							your current project. Both of them will pop-up an input window, including three input boxes:
+						</p>
+						<ul>
+							<li class="mb-1">
+								<p class="text-justify mb-3">
+									<span class="text-bold">Project path</span> requires the project absolute path, such as
+									<code>/Users/your/project/path</code> for Linux or Mac, or
+									<code>D:\your\project\path</code> for Windows.
+								</p>
+							</li>
+							<li class="mb-1">
+								<p class="text-justify mb-3">
+									<span class="text-bold">Excluded path</span>
+									are the path fragments that should not be included in the scanning process. When scanning the
+									project, any java file of which path contains these excluded paths will be ignored.
+									<span class="text-bold">For most of the situation, you can just leave it as default.</span>
+								</p>
+								<p class="text-justify mb-3">
+									Multiple path fragment should be separated by <code>;</code>. And we recommend each of the path
+									fragment start with the system file separator: <code>/</code> for Linux and Mac, <code>\</code> for
+									windows.
+								</p>
+								<p class="text-justify mb-3">
+									Here's an example: if you use the default excluded path
+									<code>/build;/out;/output;/src/main/resource;/src/test/resource</code>, then
+									<code>.../src/main/resource/.../foo.java</code> will be ignored.
+									Be careful that <code>.../src/main/java/com/foo/build/foo.java</code> will also be ignored,
+									because the package <code>com.foo.build</code> is resolved as directories as well.
+							</li>
+							<li class="mb-1">
+								<p class="text-justify mb-3">
+									<span class="text-bold">Dependency path</span>
+									is indicating the absolute paths of your project dependencies (Jar file) except for JRE.
+									It is essential to help us correctly resolve the reference type in your code, which is supported by
+									JavaParser.
+									<span class="text-bold">
+										If your project does not have dependencies, just leave it blank. If your project has dependencies,
+										it would be better to provide it.</span>
+									But whether you provide it or not, T4M will work for you anyway.
+									(Complexity and Inheritance will not be affected, but Coupling and Cohesion may not be accurate
+									enough).
+								</p>
+								<p class="text-justify mb-3">
+									Multiple paths should be separated by your system path separator: <code>:</code> for Linux or Mac,
+									<code>;</code> for Windows.
+								</p>
+								<p class="text-justify mb-3">
+									If your project is built on <code>Maven</code> or <code>Gradle</code>, we provide an easier way for
+									you to get your project dependencies:
+								</p>
+								<ul>
+									<li>
+										<p class="text-justify mb-3">
+											For Maven project, run <code>mvn dependency:build-classpath</code> or
+											<code>mvn dependency:build-classpath -Dmdep.outputFile=deps.txt</code>
+										</p>
+									</li>
+									<li>
+										<p class="text-justify mb-3">
+											For Gradle project, paste the code below to outside the build script blocks of your root
+											<code>build.gradle</code> file.
+											And run <code>gradle -q findDependencyClasspath</code> or
+											<code>gradle -q findDependencyClasspath > deps.txt</code>
+										</p>
+										<pre><code class="plaintext" id="gradle-code"></code></pre>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Footer -->
+		<footer th:replace="fragments/common :: footer"></footer>
+	</div>
+
+</div>
+<script th:replace="fragments/common :: footer_imports"></script>
+<script>
+    let gradleCode =
+        "// Some Gradle build script blocks \n" +
+        "buildscript {...} \n" +
+        "allprojects {...} \n" +
+        "subprojects {...} \n" +
+        "// Paste the code below to your root build.gradle\n" +
+        "task findDependencyClasspath {\n" +
+        "    project.allprojects.each { module ->\n" +
+        "        tasks.create(\"findDependencyClasspath_${module.name}\", {\n" +
+        "            doLast {\n" +
+        "                Set<String> depsSet = new HashSet<>()\n" +
+        "                module.configurations.each { conf ->\n" +
+        "                    if (conf.isCanBeResolved()) {\n" +
+        "                        conf.getResolvedConfiguration().getResolvedArtifacts().each { artifact ->\n" +
+        "                            def jarPath = artifact.getFile().getAbsolutePath()\n" +
+        "                            if (jarPath != null && \"\" != jarPath) {\n" +
+        "                                depsSet.add(jarPath)\n" +
+        "                            }\n" +
+        "                        }\n" +
+        "                    }\n" +
+        "                }\n" +
+        "                String depsString = depsSet.stream().map { e -> e.concat(File.pathSeparator) }\n" +
+        "                        .reduce { a, b -> a.concat(b) }.orElse(\"\")\n" +
+        "                new File(module.name + \".deps\") << depsString\n" +
+        "            }\n" +
+        "        })\n" +
+        "        findDependencyClasspath.dependsOn(\"findDependencyClasspath_${module.name}\")\n" +
+        "    }\n" +
+        "    doLast {\n" +
+        "        Set<String> depsSet = new HashSet<>()\n" +
+        "        project.allprojects.each { module ->\n" +
+        "            def moduleName = module.name\n" +
+        "            if (file(moduleName + \".deps\").exists()) {\n" +
+        "                file(moduleName + \".deps\").eachLine { line ->\n" +
+        "                    line.split(File.pathSeparator).each { jarPath -> depsSet.add(jarPath) }\n" +
+        "                }\n" +
+        "                file(moduleName + \".deps\").delete()\n" +
+        "            }\n" +
+        "        }\n" +
+        "        String depsString = depsSet.stream().map { e -> e.concat(File.pathSeparator) }\n" +
+        "                .reduce { a, b -> a.concat(b) }.orElse(\"\")\n" +
+        "        depsString = depsString.substring(0,depsString.length()-1)\n" +
+        "        println depsString\n" +
+        "    }\n" +
+        "}"
+    $(function () {
+        $('#gradle-code').text(gradleCode)
+        hljs.initHighlightingOnLoad();
+    })
+</script>
+</body>
+</html>

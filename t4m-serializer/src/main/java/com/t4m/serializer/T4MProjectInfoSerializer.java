@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -77,4 +78,15 @@ public class T4MProjectInfoSerializer implements T4MSerializer {
 		return projectInfoList;
 	}
 
+	@Override
+	public void delete(String targeetProjectIdentifier) {
+		File targetProjectDir = new File(GlobalProperties.DB_ROOT_PATH + File.separator + targeetProjectIdentifier);
+		if (targetProjectDir.exists()) {
+			File[] files = targetProjectDir.listFiles();
+			if (files != null && files.length > 0) {
+				Arrays.stream(files).forEach(File::delete);
+			}
+			targetProjectDir.delete();
+		}
+	}
 }

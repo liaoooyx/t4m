@@ -29,6 +29,16 @@ public class ProjectRecordDao {
 		return projectInfoList;
 	}
 
+	/**
+	 * 检测当前项目指针所指向的路径是否存在，如果不存在则清空该指针
+	 */
+	public static void checkCurrentProjectIdentifier() {
+		File file = new File(
+				GlobalProperties.DB_ROOT_PATH + File.separator + GlobalProperties.CURRENT_PROJECT_IDENTIFIER);
+		if (!file.exists()) {
+			GlobalProperties.updateCurrentProjectPointer("");
+		}
+	}
 
 	public static List<ProjectInfo> getProjectInfoList() {
 		if (projectInfoList == null) {
@@ -66,20 +76,20 @@ public class ProjectRecordDao {
 		List<String> projectDirList = new ArrayList<>();
 		String dbPath = GlobalProperties.DB_ROOT_PATH;
 		File rootDir = new File(dbPath);
-		if (rootDir.exists()){
-			if (rootDir.listFiles()!=null){
+		if (rootDir.exists()) {
+			if (rootDir.listFiles() != null) {
 				for (File file : rootDir.listFiles()) {
 					if (file.isDirectory()) {
 						projectDirList.add(file.getName());
 					}
 				}
 				return projectDirList;
-			}else {
-				LOGGER.error("There is no project record dir in DB Directory: [{}].",dbPath);
+			} else {
+				LOGGER.error("There is no project record dir in DB Directory: [{}].", dbPath);
 				return null;
 			}
-		}else {
-			LOGGER.error("The DB Directory: [{}] does not exist.",dbPath);
+		} else {
+			LOGGER.error("The DB Directory: [{}] does not exist.", dbPath);
 			return null;
 		}
 	}
