@@ -98,23 +98,32 @@
 									<span class="text-bold">Excluded path</span>
 									are the path fragments that should not be included in the scanning process. When scanning the
 									project, any java file of which path contains these excluded paths will be ignored.
-									<span class="text-bold">For most of the situation, you can just leave it as default.</span>
-								</p>
-								<!--								<p class="text-justify mb-3">-->
-								<!--									We assume the packages' qualified name are unique, therefore, if there is conflict package-->
-								<!--									qualified name in your project, it might cause unexpected glitch. Please excluded it.-->
-								<!--								</p>-->
-								<p class="text-justify mb-3">
-									Multiple path fragment should be separated by <code>;</code>. And we recommend each of the path
-									fragment start with the system file separator: <code>/</code> for Linux and Mac, <code>\</code> for
-									windows.
-								</p>
-								<p class="text-justify mb-3">
-									Here's an example: if you use the default excluded path
-									<code>/build;/out;/output;/src/main/resource;/src/test/resource</code>, then
-									<code>.../src/main/resource/.../foo.java</code> will be ignored.
+									For example, using the default excluded path
+									<code>/build;/out;/output;/src/main/resource;/src/test</code>, then
+									<code>.../src/test/.../FooTest.java</code> will be ignored.
 									Be careful that <code>.../src/main/java/com/foo/build/foo.java</code> will also be ignored,
-									because the package <code>com.foo.build</code> is resolved as directories as well.
+									as the package <code>com.foo.build</code> is resolved as directories and matchs the excluded path
+									<code>/build</code>.
+								</p>
+								<p class="text-justify mb-3">
+									<span class="text-bold">Usage: </span>
+									Multiple excluded path fragments should be separated by <code>;</code>.
+									And we recommend each of the path fragment start with the system file separator:
+									<code>/</code> for Linux and Mac, <code>\</code> for Windows.
+								</p>
+								<p class="text-justify mb-3">
+									<span class="text-bold">
+										For most of the situation, you can just leave it as default. But if there are conflicted package
+									fully-qualified names in your project. Please add it to the excluded path.
+									</span>
+									We assume the packages' qualified name are unique, thus the conflicted package name might cause
+									unexpected glitch.
+									The default excluded path is <code>/build;/out;/output;/src/main/resource;/src/test</code>. You
+									may notice that the test classes are excluded by default. The reason is that those test classes are
+									counterproductive when qualified your project by metrics. What's more, the test packages sometimes
+									produce the same fully-qualified name as the main packages.
+								</p>
+								
 							</li>
 							<li class="mb-1">
 								<p class="text-justify mb-3">
@@ -130,6 +139,7 @@
 									enough).
 								</p>
 								<p class="text-justify mb-3">
+									<span class="text-bold">Usage: </span>
 									Multiple paths should be separated by your system path separator: <code>:</code> for Linux or Mac,
 									<code>;</code> for Windows.
 								</p>
