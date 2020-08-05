@@ -29,16 +29,47 @@
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				
-				<!-- Path nav -->
-				<div class="row col-auto align-items-center ">
-					<nav aria-label="breadcrumb col-auto" class="d-none d-md-inline-block ml-md-4">
-						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
-							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Inheritance</li>
-						</ol>
-					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Inheritance Tree</h6>
+				<!-- Header -->
+				<div class="header bg-primary">
+					<div class="container-fluid">
+						<!-- Header container -->
+						<div class="container-fluid d-flex align-items-center">
+							<div class="row">
+								<div class="col-lg-10 col-md-10 mt-5 mb-3">
+									<h1 class="display-2 text-white">Inheritance</h1>
+									<p class="text-white text-justify mb-3">
+										There are two metrics relevant to inheritance include:
+									</p>
+									<p class="text-justify text-white mb-1 ml-4">
+										<span class="text-bold">Depth of Inheritance Tree</span><span>, </span>
+										which is the maximum number of classes that a path goes through from a specific class to the root
+										class in the inheritance tree. Recall that every java class extends from the Object class,
+										therefore the minimum value is 1.
+									</p>
+									<p class="text-white text-justify mb-3 ml-4">
+										Detailed descriptions and influences:
+										<a class="text-yellow text-link"
+										   href="https://maisqual.squoring.com/wiki/index.php/Depth_in_Inheritance_Tree">
+											Maisqual - Depth in Inheritance Tree</a>,
+										<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node101.html">
+											ARiSA - Depth of Inheritance Tree</a>.
+									</p>
+									<p class="text-justify text-white mb-1 ml-4">
+										<span class="text-bold">Number Of Children</span><span>, </span>
+										which is counting the number of the immediate subclasses of a class.
+									</p>
+									<p class="text-white text-justify mb-3 ml-4">
+										Detailed descriptions and influences:
+										<a class="text-yellow text-link"
+										   href="https://maisqual.squoring.com/wiki/index.php/Number_of_Children">
+											Maisqual -  Number Of Children</a>,
+										<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node102.html">
+											ARiSA - Number Of Children</a>.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -85,7 +116,7 @@
 						</div>
 					</div>
 					
-					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:680px;"></div>
+					<div id="chart" class="card-body pb-4 px-4 pt-0 col-12" style="height:680px;"></div>
 					<div class="modal fade" id="chart_data_model" tabindex="-1" role="dialog"
 					     aria-labelledby="row_model_label" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -159,8 +190,8 @@
                           },
                       }],
                       dataZoom: [
-                          {type: 'slider', xAxisIndex: 0, start: 20, end: 100},
-                          {type: 'inside', xAxisIndex: 0, start: 20, end: 100},
+                          {type: 'slider', xAxisIndex: 0, start: 0, end: 100},
+                          {type: 'inside', xAxisIndex: 0, start: 0, end: 100},
                           {type: 'slider', yAxisIndex: 0, left: 20, start: 0, end: 100},
                           {type: 'slider', yAxisIndex: 1, right: 20, start: 0, end: 100},
                       ],
@@ -414,13 +445,13 @@
             {
                 type: 'slider',
                 xAxisIndex: 0,
-                start: 20,
+                start: 0,
                 end: 100
             },
             {
                 type: 'inside',
                 xAxisIndex: 0,
-                start: 20,
+                start: 0,
                 end: 100
             },
             {

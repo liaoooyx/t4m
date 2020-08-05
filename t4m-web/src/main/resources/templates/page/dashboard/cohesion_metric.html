@@ -29,16 +29,68 @@
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				
-				<!-- Path nav -->
-				<div class="row col-auto align-items-center ">
-					<nav aria-label="breadcrumb col-auto" class="d-none d-md-inline-block ml-md-4">
-						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
-							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Cohesion</li>
-						</ol>
-					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Cohesion</h6>
+				<!-- Header -->
+				<div class="header bg-primary">
+					<div class="container-fluid">
+						<!-- Header container -->
+						<div class="container-fluid d-flex align-items-center">
+							<div class="row">
+								<div class="col-lg-10 col-md-10 mt-5 mb-3">
+									<h1 class="display-2 text-white">Complexity Metrics set</h1>
+									<p class="text-white text-justify mb-3">
+										There are three metrics relevant to inheritance include Lack of Cohesion in Methods (Hitz &
+										Montazeri), Tight and Loose Class Cohesion.
+									</p>
+									<p class="text-justify text-white mb-1 ml-4">
+										<span class="text-bold">Lack of Cohesion in Methods (Hitz & Montazeri)</span><span>, </span>
+										which is so-called LCOM4, is counting the number of distinct components within a class. A component
+										is a set of related methods that both access the same field or have any direct or indirect
+										invocation between them. There are lots of definitions of whether include the private classes or
+										whether include the class variables. Currently, T4M uses all methods and variables to compute this
+										metric.
+									</p>
+									<p class="text-white text-justify mb-3 ml-4">
+										Detailed descriptions and influences:
+										<a class="text-yellow text-link"
+										   href="https://maisqual.squoring.com/wiki/index.php/Lack_of_Cohesion_in_Methods">
+											Maisqual - Lack of Cohesion in Methods</a>,
+										<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node116.html">
+											ARiSA - Lack of Cohesion in Methods</a>,
+										<a class="text-yellow text-link"
+										   href="https://www.aivosto.com/project/help/pm-oo-cohesion.html">
+											Aivosto - Cohesion metrics</a>,
+										<a class="text-yellow text-link"
+										   href="https://objectscriptquality.com/docs/metrics/lack-cohesion-methods-lcom4">
+											objectscriptquality.com - Lack of Cohesion in Methods (LCOM4)</a>,
+										<a class="text-yellow text-link"
+										   href="http://www.tusharma.in/technical/revisiting-lcom/">
+											tusharma.in - Revisiting LCOM</a>.
+									</p>
+									
+									<div class="collapse" id="collapse_description">
+										<p class="text-justify text-white mb-1 ml-4">
+											<span class="text-bold">Tight Class Cohesion & Loose Class Cohesion</span><span>, </span>
+											which are the ratio of the connected method pairs to all possible method pairs. For TCC
+											the connected method pairs are only direct connections. For LCC it contains both direct and
+											indirect connections. A direct connection means that both methods access the same field or they
+											access the same field through the invocation tree. An indirect connection means that they do not
+											have a direct connection but being contained within the same component as mentioned in LCOM4.
+										</p>
+										<p class="text-white text-justify mb-3 ml-4">
+											Detailed descriptions and influences:
+											<a class="text-yellow text-link"
+											   href="https://www.aivosto.com/project/help/pm-oo-cohesion.html">
+												Aivosto - Cohesion metrics</a>.
+										</p>
+									</div>
+									<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
+									   role="button" aria-expanded="false" aria-controls="collapse_description">
+										<i class="fas fa-sort"></i> Expand / Collapse
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -134,11 +186,14 @@
                               }
                           },
                           legend: {
-                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class','package-info'],
+                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class', 'package-info'],
                               selected: {'package-info': false},
                           },
-                          xAxis: {name: 'Tight Class Cohesion', type: 'value',},
-                          yAxis: {name: 'Loose Class Cohesion', type: 'value',},
+                          xAxis: {name: 'Tight Class Cohesion', type: 'value', nameLocation: 'center', nameGap: 28},
+                          yAxis: {
+                              name: 'Loose Class Cohesion', type: 'value',
+                              nameLocation: 'center', nameRotate: 90, nameGap: 30
+                          },
                           tooltip: {
                               padding: 10, borderWidth: 1,
                               show: true, enterable: true, trigger: 'item', confine: true,
@@ -161,12 +216,12 @@
                                   }
                               }
                           },
-                          grid: {right: 150,}, color: ['#c23531'],
+                          grid: {bottom: 100}, color: ['#c23531'],
                           visualMap: [
                               {
                                   type: 'continuous', left: 'right', top: 'middle', calculable: true, precision: 0.1,
-                                  text: ['Lack of Cohesion of Methods'], textGap: 30, dimension: 2, max: 10,
-                                  inRange: {symbolSize: [10, 30]}, controller: {inRange: {color: ['#c23531']},}
+                                  text: ['Lack of Cohesion\nin Methods'], textGap: 30, dimension: 2, max: 10,
+                                  inRange: {symbolSize: [10, 30]}, controller: {inRange: {color: ['#c23531']},},
                               },
                           ],
                       }
@@ -501,10 +556,10 @@
             },
             dataZoom: [
                 {
-                    type: 'slider', xAxisIndex: 0, start: 20, end: 100
+                    type: 'slider', xAxisIndex: 0, start: 0, end: 100
                 },
                 {
-                    type: 'inside', xAxisIndex: 0, start: 20, end: 100
+                    type: 'inside', xAxisIndex: 0, start: 0, end: 100
                 },
                 {
                     type: 'slider', yAxisIndex: 0, left: 20, start: 0, end: 100

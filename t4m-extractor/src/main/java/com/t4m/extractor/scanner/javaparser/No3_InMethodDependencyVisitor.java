@@ -145,9 +145,12 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		Set<MethodInfo> localMethodInfoSet = currentMethodInfo.getLocalMethodAccessSet();
 		// LOCM4: 涉及的本地字段调用
 		Set<FieldInfo> fieldInfoSet = currentMethodInfo.getFieldAccessSet();
+		// RFC的所有方法全限定签名：只包括方法内的调用
+		Map<String, Integer> rfcMethodQualifiedSignatureMap =
+				currentClassInfo.getOutClassMethodCallQualifiedSignatureMap();
 
 		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet,
-		                                 fieldInfoSet);
+		                                 fieldInfoSet, rfcMethodQualifiedSignatureMap);
 	}
 
 	/**
@@ -162,9 +165,11 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		Set<MethodInfo> localMethodInfoSet = new HashSet<>();
 		// LOCM4: 涉及的本地字段调用
 		Set<FieldInfo> fieldInfoSet = new HashSet<>();
+		// RFC的所有方法全限定签名: 不包括字段和初始化块
+		Map<String, Integer> rfcMethodQualifiedSignatureMap = new HashMap<>();
 
 		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet,
-		                                 fieldInfoSet);
+		                                 fieldInfoSet, rfcMethodQualifiedSignatureMap);
 	}
 
 	/**
@@ -172,11 +177,8 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 */
 	private void commonOperationToResolveMetaInfo(
 			Node body, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
-			Set<MethodInfo> localMethodInfoList, Set<FieldInfo> fieldInfoSet) {
-
-		// RFC的所有方法全限定签名
-		Map<String, Integer> rfcMethodQualifiedSignatureMap =
-				currentClassInfo.getOutClassMethodCallQualifiedSignatureMap();
+			Set<MethodInfo> localMethodInfoList, Set<FieldInfo> fieldInfoSet,
+			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 
 		//扫描子节点
 		scanChildNode(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList, fieldInfoSet,

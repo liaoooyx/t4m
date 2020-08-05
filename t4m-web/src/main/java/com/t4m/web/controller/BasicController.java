@@ -82,8 +82,7 @@ public class BasicController {
 		for (PackageInfo packageInfo : projectInfo.getPackageList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", packageInfo.getFullyQualifiedName());
-			row.put("javaFileNum", packageInfo.getNumberOfJavaFile());
-			row.put("classNum", packageInfo.getNumberOfAllClass());
+			row.put("classNum", packageInfo.getNumberOfJavaFile() + " / "+ packageInfo.getNumberOfAllClass());
 			row.put("module",packageInfo.getModuleInfo().getShortName());
 			rows.add(row);
 		}

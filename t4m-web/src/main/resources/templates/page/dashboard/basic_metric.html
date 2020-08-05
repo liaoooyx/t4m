@@ -29,18 +29,29 @@
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				
-				<!-- Path nav -->
-				<div class="row col-auto align-items-center ">
-					<nav aria-label="breadcrumb col-auto" class="d-none d-md-inline-block ml-md-4">
-						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
-							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Basic</li>
-						</ol>
-					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto" th:text="${currentProjectIdentifier.split('#')[0]}">
-						<span class="text-muted" th:text="${currentProjectIdentifier.split('#')[1]}"></span>
-					</h6>
+				<!-- Header -->
+				<div class="header bg-primary">
+					<div class="container-fluid">
+						<!-- Header container -->
+						<div class="container-fluid d-flex align-items-center">
+							<div class="row">
+								<div class="col-lg-7 col-md-10 mt-5">
+									<h1 class="display-2 text-white">Basic information</h1>
+									<p class="text-white text-justify mb-3">
+										Here is the basic information of your project
+										<span th:text="${currentProjectIdentifier.split('#')[0]}"></span>,
+										including the number of modules, packages, classes, methods and fields. There are two
+										statistical methods for classes: class file and declared class.
+										The class file represents the .java files in your project.
+										The declared class is classified as a public outer class, a package-private outer class or a
+										<a class="text-yellow text-link"
+										   href="https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"> nested class</a>,
+										with six types: class, enum, abstract class, interface, annotation, and package-info file.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -139,7 +150,8 @@
 								<!-- Current Info -->
 								<div class="row">
 									<div class="col">
-										<h5 class="card-title text-uppercase text-muted mb-0">Number Of Class Files / (All Classes)</h5>
+										<h5 class="card-title text-uppercase text-muted mb-0">Number Of Class Files / (Declared
+										                                                      Classes)</h5>
 										<span class="h2 font-weight-bold mb-0"
 										      th:text="${currentProjectInfo.getClassList().size()} +' / ('+ ${currentProjectInfo.getAllClassList().size()} +')'"></span>
 									</div>
@@ -250,13 +262,13 @@
                       {
                           type: 'slider',
                           xAxisIndex: 0,
-                          start: 20,
+                          start: 0,
                           end: 100
                       },
                       {
                           type: 'inside',
                           xAxisIndex: 0,
-                          start: 20,
+                          start: 0,
                           end: 100
                       },
                       {
@@ -343,7 +355,7 @@
 		<!-- Footer -->
 		<footer th:replace="fragments/common :: footer"></footer>
 	</div>
-	
+
 </div>
 <script th:replace="fragments/common :: footer_imports"></script>
 <script>
@@ -378,7 +390,7 @@
         }, {
             field: 'packageNum', title: 'Packages', sortable: true
         }, {
-            field: 'classNum', title: 'Java Files / Classes', sortable: true
+            field: 'classNum', title: 'Java Files / Declared Classes', sortable: true
         }];
         $.get("/dashboard/basic/table/module?projectRecordIndex=" + projectRecordIndex).done(function (data) {
             buildTable($('#table1'), data, columns, 1, 0, 310)
@@ -391,9 +403,7 @@
         let columns = [{
             field: 'name', title: 'Package Name', sortable: true
         }, {
-            field: 'javaFileNum', title: 'Packages', sortable: true
-        }, {
-            field: 'classNum', title: 'Java Files / Classes', sortable: true
+            field: 'classNum', title: 'Java Files / Declared Classes', sortable: true
         }, {
             field: 'module', title: 'of Which Module', sortable: true
         }];

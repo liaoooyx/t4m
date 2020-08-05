@@ -29,16 +29,101 @@
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				
-				<!-- Path nav -->
-				<div class="row col-auto align-items-center ">
-					<nav aria-label="breadcrumb col-auto" class="d-none d-md-inline-block ml-md-4">
-						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
-							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Coupling</li>
-						</ol>
-					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Coupling</h6>
+				<!-- Header -->
+				<div class="header bg-primary">
+					<div class="container-fluid">
+						<!-- Header container -->
+						<div class="container-fluid d-flex align-items-center">
+							<div class="row">
+								<div class="col-lg-10 col-md-10 mt-5 mb-3">
+									<h1 class="display-2 text-white">Complexity Metrics set</h1>
+									<p class="text-white text-justify mb-3">
+										This page is showing the metrics relevant to the coupling, including:
+									</p>
+									<p class="text-justify text-white mb-1 ml-4">
+										<span class="text-bold">Afferent Coupling</span><span>, </span>
+										which is the number of other components that invoke a specific component. A
+										component could be a package or class.
+									</p>
+									<p class="text-white text-justify mb-3 ml-4">
+										Detailed descriptions and influences:
+										<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node104.html">
+											ARiSA - Afferent Coupling</a>,
+										<a class="text-yellow text-link"
+										   href="https://kariera.future-processing.pl/blog/object-oriented-metrics-by-robert-martin/">
+											Artur Ogonowski - Object-oriented metrics by Robert Martin</a>.
+									</p>
+									<p class="text-justify text-white mb-1 ml-4">
+										<span class="text-bold">Efferent Coupling</span><span>, </span>
+										which, on the contrary, is the number of other components to which a specific
+										component invoke. A component could be a package or class.
+									</p>
+									<p class="text-white text-justify mb-3 ml-4">
+										Detailed descriptions and influences:
+										<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node108.html">
+											ARiSA - Efferent Coupling</a>,
+										<a class="text-yellow text-link"
+										   href="https://kariera.future-processing.pl/blog/object-oriented-metrics-by-robert-martin/">
+											Artur Ogonowski - Object-oriented metrics by Robert Martin</a>.
+									</p>
+									<div class="collapse" id="collapse_description">
+										<p class="text-justify text-white mb-1 ml-4">
+											<span class="text-bold">Instability</span><span>, </span>
+											which is the ratio of Efferent Coupling to the sum of Afferent Coupling and Efferent Coupling.
+										</p>
+										<p class="text-white text-justify mb-3 ml-4">
+											Detailed descriptions and influences:
+											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node111.html">
+												ARiSA - Instability</a>,
+											<a class="text-yellow text-link"
+											   href="https://kariera.future-processing.pl/blog/object-oriented-metrics-by-robert-martin/">
+												Artur Ogonowski - Object-oriented metrics by Robert Martin</a>.
+										</p>
+										<p class="text-justify text-white mb-3 ml-4">
+											<span class="text-bold">Abstractness</span><span>, </span>
+											which is one of the measurements for the packages. It is the ratio of abstract class
+											and interfaces to all of the classes.
+										</p>
+										<p class="text-justify text-white mb-3 ml-4">
+											<span class="text-bold">Distance from Main Sequence</span><span>, </span>
+											which is computed by the following formulation: D = Instability +
+											Abstractness -1. We expect the mean and variance of D to be close to zero.
+										</p>
+										<p class="text-justify text-white mb-1 ml-4">
+											<span class="text-bold">Coupling Between Objects</span><span>, </span>
+											which is happened when a method declared in one class invokes a method
+											or instance variable defined in another class. It will occur in the following situations: method
+											invokes, method reference, inheritance, implementation, parameter reference, return type,
+											exception. T4M considers the constructors as methods.
+										</p>
+										<p class="text-white text-justify mb-3 ml-4">
+											Detailed descriptions and influences:
+											<a class="text-yellow text-link"
+											   href="https://maisqual.squoring.com/wiki/index.php/Coupling_Between_Objects">
+												Maisqual - Coupling Between Objects</a>,
+											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node105.html">
+												ARiSA - Coupling Between Objects</a>.
+										</p>
+										<p class="text-justify text-white mb-1 ml-4">
+											<span class="text-bold">Message Passing Coupling</span><span>, </span>
+											which is the number of other classes' methods invoked by the local
+											methods of a class. We take all of the legal method invocations into account, including
+											in the initial blocks, fields declaration, methods, constructors.
+										</p>
+										<p class="text-white text-justify mb-3 ml-4">
+											Detailed descriptions and influences:
+											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node113.html">
+												ARiSA - Message Passing Coupling</a>.
+										</p>
+									</div>
+									<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
+									   role="button" aria-expanded="false" aria-controls="collapse_description">
+										<i class="fas fa-sort"></i> Expand / Collapse
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -103,7 +188,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:500px;"></div>
+					<div id="chart" class="card-body pb-4 px-4 pt-0 col-12" style="height:500px;"></div>
 					<div class="modal fade" id="chart_data_model" tabindex="-1" role="dialog"
 					     aria-labelledby="row_model_label" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -286,8 +371,8 @@
                           },
                       }],
                       dataZoom: [
-                          {type: 'slider', xAxisIndex: 0, start: 20, end: 100},
-                          {type: 'inside', xAxisIndex: 0, start: 20, end: 100},
+                          {type: 'slider', xAxisIndex: 0, start: 0, end: 100},
+                          {type: 'inside', xAxisIndex: 0, start: 0, end: 100},
                           {type: 'slider', yAxisIndex: 0, left: 20, start: 0, end: 100},
                           {type: 'slider', yAxisIndex: 1, right: 20, start: 0, end: 100},
                       ],
@@ -327,15 +412,15 @@
                   currentTimelineIndex = params.currentIndex
               });
               timelineChart.on('click', function (param) {
-                  if (currentChartLevel === 'package'){
+                  if (currentChartLevel === 'package') {
                       chart_data_vm.title = timeRecords[currentTimelineIndex];
-                      
+
                       let pointValueList = [];
                       pointValueList.push("Instability: " + param.value[0]);
                       pointValueList.push("Abstractness: " + param.value[1]);
                       pointValueList.push("Distance from Main Sequence: " + param.value[2]);
                       chart_data_vm.pointValueList = pointValueList;
-                      
+
                       let x = param.value[0];
                       let y = param.value[1];
                       let pointDescriptionList = [];
@@ -353,13 +438,13 @@
                           }
                       }
                       chart_data_vm.pointDescriptionList = pointDescriptionList;
-                  }else{
+                  } else {
                       chart_data_vm.title = param.value[0];
-                      
+
                       let pointValueList = [];
                       pointValueList.push(param.seriesName + ": " + param.value[1]);
                       chart_data_vm.pointValueList = pointValueList;
-                      
+
                       let targetDataset;
                       if (param.seriesName === "Coupling Between Objects") {
                           targetDataset = classCouplingBetweenObjectsDataset;
@@ -380,7 +465,7 @@
                       });
                       chart_data_vm.pointDescriptionList = pointDescriptionList;
                   }
-                  
+
                   $('#chart_data_model').modal('show');
               });
 					
@@ -453,7 +538,7 @@
 							</button>
 						</div>
 						<div class="modal-body">
-							<div id="complexity_row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;"></div>
+							<div id="complexity_row_chart" class="card-body pb-4 px-4 pt-0 col-12" style="height:450px;"></div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -647,13 +732,13 @@
             {
                 type: 'slider',
                 xAxisIndex: 0,
-                start: 20,
+                start: 0,
                 end: 100
             },
             {
                 type: 'inside',
                 xAxisIndex: 0,
-                start: 20,
+                start: 0,
                 end: 100
             },
             {

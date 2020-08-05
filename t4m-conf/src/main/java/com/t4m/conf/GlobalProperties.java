@@ -28,7 +28,6 @@ public class GlobalProperties {
 	public static final String DEFAULT_EXCLUDED_PATH;
 	public static final String DEFAULT_DEPENDENCY_PATH;
 	public static String CURRENT_PROJECT_IDENTIFIER;
-	public static Map<String, ProjectIndependentProperties> projectPropertiesMap = new HashMap<>();
 
 	static {
 		T4mPropertiesUtil t4mProperties = new T4mPropertiesUtil(
@@ -47,70 +46,6 @@ public class GlobalProperties {
 		CURRENT_PROJECT_IDENTIFIER = currentProjectName;
 	}
 
-	/**
-	 * 返回此项目的排除扫描的路径，如果没有则返回默认值
-	 */
-	public static String getExcludedPath(String projectName) {
-		if (!projectPropertiesMap.containsKey(projectName)) {
-			return DEFAULT_EXCLUDED_PATH;
-		} else {
-			String excludedPath = projectPropertiesMap.get(projectName).excludedPath;
-			return excludedPath == null ? DEFAULT_EXCLUDED_PATH : excludedPath;
-		}
-	}
-
-	/**
-	 * 返回此项目的外部jar包依赖的路径，如果没有则返回默认值
-	 */
-	public static String getDependencyPath(String projectName) {
-		if (!projectPropertiesMap.containsKey(projectName)) {
-			return DEFAULT_DEPENDENCY_PATH;
-		} else {
-			String dependencyPath = projectPropertiesMap.get(projectName).dependencyPath;
-			return dependencyPath == null ? DEFAULT_DEPENDENCY_PATH : dependencyPath;
-		}
-	}
-
-	/**
-	 * 扫描的目标项目的配置信息
-	 */
-	static class ProjectIndependentProperties {
-		public static final String PROJECT_NAME_KEY = "PROJECT_NAME";
-		public static final String PROJECT_EXCLUDED_PATH_KEY = "EXCLUDED_PATH";
-		public static final String PROJECT_DEPENDENCY_PATH_KEY = "DEPENDENCY_PATH";
-
-		public final String projectName;
-		public final String excludedPath;
-		public final String dependencyPath;
-
-		public ProjectIndependentProperties(String projectName, String excludedPath, String dependencyPath) {
-			this.projectName = projectName;
-			this.excludedPath = excludedPath;
-			this.dependencyPath = dependencyPath;
-		}
-
-		public ProjectIndependentProperties(T4mPropertiesUtil projectProperties) {
-			this.projectName = projectProperties.getProperty(ProjectIndependentProperties.PROJECT_NAME_KEY);
-			this.excludedPath = projectProperties.getProperty(ProjectIndependentProperties.PROJECT_EXCLUDED_PATH_KEY);
-			this.dependencyPath = projectProperties.getProperty(
-					ProjectIndependentProperties.PROJECT_DEPENDENCY_PATH_KEY);
-		}
-
-		// void storeToFile() {
-		// 	String projectPropertiesFilePath =
-		// 			PROJECT_INDEPENDENT_ROOT_PATH + File.separator + projectName + PROPERTIES_FILE_SUFFIX;
-		// 	T4mPropertiesUtil propertiesUtil = new T4mPropertiesUtil(projectPropertiesFilePath);
-		// 	if (projectName != null) {
-		// 		propertiesUtil.setProperty(PROJECT_NAME_KEY, projectName);
-		// 	}
-		// 	if (excludedPath != null) {
-		// 		propertiesUtil.setProperty(PROJECT_EXCLUDED_PATH_KEY, excludedPath);
-		// 	}
-		// 	if (dependencyPath != null) {
-		// 		propertiesUtil.setProperty(PROJECT_DEPENDENCY_PATH_KEY, dependencyPath);
-		// 	}
-		// }
-	}
 
 	public static void main(String[] args) {
 		T4mPropertiesUtil t4mProperties = new T4mPropertiesUtil(

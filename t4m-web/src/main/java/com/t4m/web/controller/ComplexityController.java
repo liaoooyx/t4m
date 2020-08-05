@@ -174,6 +174,7 @@ public class ComplexityController {
 			row.put("declaration", classInfo.getClassDeclaration().toString());
 			row.put("package", classInfo.getPackageFullyQualifiedName());
 			row.put("module", classInfo.getPackageInfo().getModuleInfo().getShortName());
+			row.put("numOfFields", classInfo.getNumberOfFields());
 			row.put("numOfMethod", classInfo.getNumberOfMethods());
 			row.put("weightedMethodsCount", classInfo.getWeightedMethodsCount());
 			row.put("maxComplexity", classInfo.getMaxCyclomaticComplexity());

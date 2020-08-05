@@ -53,40 +53,6 @@ public class SLOCController {
 		return "page/dashboard/sloc_metric";
 	}
 
-	@GetMapping("/table")
-	public String selectRecord(
-			@RequestParam(name = "name", defaultValue = "") String name,
-			@RequestParam(name = "type", defaultValue = "") String type,
-			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex, Model model) {
-		//用于"返回上级"的操作
-		boolean isRoot = false;
-		String preName = "";
-		String preType = "";
-		if ("".equals(type) || "".equals(name)) { // 获取所有模块信息
-			isRoot = true; // root没有"返回上级"选项
-			model.addAttribute("dataList", moduleService.getAllModulesSLOC(projectRecordIndex));
-		} else if ("module".equals(type)) { // 获取指定模块下的第一层包和类
-			// "返回上级"后，直接回到所有模块SLOC的展示
-			model.addAttribute("dataList", moduleService.getSLOCRecordByModuleName(name, projectRecordIndex));
-		} else if ("package".equals(type)) { // 获取指定包的类和直接子包
-			ProjectInfo projectInfo = Objects.requireNonNull(
-					ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex))[0];
-			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), name);
-			if (packageInfo.hasPreviousPackage()) {
-				preName = packageInfo.getPreviousPackage().getFullyQualifiedName();
-				preType = "package";
-			} else {
-				preName = packageInfo.getModuleInfo().getRelativePath();
-				preType = "module";
-			}
-			model.addAttribute("dataList", packageService.getSLOCRecordByPackageName(name, projectRecordIndex));
-		}
-		model.addAttribute("previousName", preName);
-		model.addAttribute("previousType", preType);
-		model.addAttribute("isRoot", isRoot);
-		return "fragments/dashboard/sloc_list_template";
-	}
-
 	@GetMapping("/table/module")
 	@ResponseBody
 	public List<Map<String, Object>> selectModuleRecord(
@@ -96,16 +62,16 @@ public class SLOCController {
 		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", moduleInfo.getRelativePath());
-			row.put("level","module");
+			row.put("level", "module");
 			int[] slocArray = moduleInfo.getSlocArray();
 			row.put("logicCodeLinesSF", slocArray[0]);
 			row.put("physicalCodeLinesSF", slocArray[1]);
 			row.put("CommentLinesSF", slocArray[2]);
-			row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1]));
+			row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1] + slocArray[2]));
 			row.put("logicCodeLinesJP", slocArray[3]);
 			row.put("physicalCodeLinesJP", slocArray[4]);
 			row.put("CommentLinesJP", slocArray[5]);
-			row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4]));
+			row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4] + slocArray[5]));
 			rows.add(row);
 		}
 		return rows;
@@ -119,25 +85,25 @@ public class SLOCController {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
 		ModuleInfo moduleInfo = EntityUtil.getModuleByRelativeName(projectInfo.getModuleList(), moduleRelativePath);
-		if (moduleInfo == null){
+		if (moduleInfo == null) {
 			LOGGER.info("No such module in this record.");
 			return rows;
 		}
 		for (PackageInfo packageInfo : moduleInfo.getPackageList()) {
-			if (!packageInfo.hasPreviousPackage()){
+			if (!packageInfo.hasPreviousPackage()) {
 				Map<String, Object> row = new LinkedHashMap<>();
 				row.put("name", packageInfo.getFullyQualifiedName());
-				row.put("module",moduleInfo.getRelativePath());
-				row.put("level","package");
+				row.put("module", moduleInfo.getRelativePath());
+				row.put("level", "package");
 				int[] slocArray = packageInfo.getSlocArrayForCurrentAndSubPkg();
 				row.put("logicCodeLinesSF", slocArray[0]);
 				row.put("physicalCodeLinesSF", slocArray[1]);
 				row.put("CommentLinesSF", slocArray[2]);
-				row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1]));
+				row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1] + slocArray[2]));
 				row.put("logicCodeLinesJP", slocArray[3]);
 				row.put("physicalCodeLinesJP", slocArray[4]);
 				row.put("CommentLinesJP", slocArray[5]);
-				row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4]));
+				row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4] + slocArray[5]));
 				rows.add(row);
 			}
 		}
@@ -151,61 +117,64 @@ public class SLOCController {
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		List<Map<String, Object>> rows = new ArrayList<>();
 		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
-		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(), packageQualifiedName);
-		if (packageInfo == null){
+		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(),
+		                                                               packageQualifiedName);
+		if (packageInfo == null) {
 			LOGGER.info("No such package in this record.");
 			return rows;
 		}
 		int[] slocArray;
 		for (PackageInfo subPkgInfo : packageInfo.getSubPackageList()) {
-				Map<String, Object> row = new LinkedHashMap<>();
-				row.put("name", subPkgInfo.getFullyQualifiedName());
-				row.put("module",subPkgInfo.getModuleInfo().getRelativePath());
-				row.put("level","package");
-				slocArray = subPkgInfo.getSlocArrayForCurrentAndSubPkg();
-				row.put("logicCodeLinesSF", slocArray[0]);
-				row.put("physicalCodeLinesSF", slocArray[1]);
-				row.put("CommentLinesSF", slocArray[2]);
-				row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1]));
-				row.put("logicCodeLinesJP", slocArray[3]);
-				row.put("physicalCodeLinesJP", slocArray[4]);
-				row.put("CommentLinesJP", slocArray[5]);
-				row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4]));
-				rows.add(row);
+			Map<String, Object> row = new LinkedHashMap<>();
+			row.put("name", subPkgInfo.getFullyQualifiedName());
+			row.put("module", subPkgInfo.getModuleInfo().getRelativePath());
+			row.put("level", "package");
+			slocArray = subPkgInfo.getSlocArrayForCurrentAndSubPkg();
+			row.put("logicCodeLinesSF", slocArray[0]);
+			row.put("physicalCodeLinesSF", slocArray[1]);
+			row.put("CommentLinesSF", slocArray[2]);
+			row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1] + slocArray[2]));
+			row.put("logicCodeLinesJP", slocArray[3]);
+			row.put("physicalCodeLinesJP", slocArray[4]);
+			row.put("CommentLinesJP", slocArray[5]);
+			row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4] + slocArray[5]));
+			rows.add(row);
 		}
 		Map<String, Object> row1 = new LinkedHashMap<>();
 		row1.put("name", packageInfo.getFullyQualifiedName());
-		row1.put("module",packageInfo.getModuleInfo().getRelativePath());
-		row1.put("level","current package");
+		row1.put("module", packageInfo.getModuleInfo().getRelativePath());
+		row1.put("level", "current package");
 		slocArray = packageInfo.getSlocArrayForCurrentPkg();
 		row1.put("logicCodeLinesSF", slocArray[0]);
 		row1.put("physicalCodeLinesSF", slocArray[1]);
 		row1.put("CommentLinesSF", slocArray[2]);
-		row1.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1]));
+		row1.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1] + slocArray[2]));
 		row1.put("logicCodeLinesJP", slocArray[3]);
 		row1.put("physicalCodeLinesJP", slocArray[4]);
 		row1.put("CommentLinesJP", slocArray[5]);
-		row1.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4]));
+		row1.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4] + slocArray[5]));
 		rows.add(row1);
-		for (ClassInfo classInfo: packageInfo.getClassList()){
+		for (ClassInfo classInfo : packageInfo.getClassList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", classInfo.getShortName());
-			row.put("module",classInfo.getPackageInfo().getModuleInfo().getRelativePath());
-			row.put("qualifiedName",classInfo.getFullyQualifiedName());
-			row.put("level","class");
+			row.put("module", classInfo.getPackageInfo().getModuleInfo().getRelativePath());
+			row.put("qualifiedName", classInfo.getFullyQualifiedName());
+			row.put("level", "class");
 			slocArray = classInfo.getSlocArray();
 			row.put("logicCodeLinesSF", slocArray[0]);
 			row.put("physicalCodeLinesSF", slocArray[1]);
 			row.put("CommentLinesSF", slocArray[2]);
-			row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1]));
+			row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[1] + slocArray[2]));
 			row.put("logicCodeLinesJP", slocArray[3]);
 			row.put("physicalCodeLinesJP", slocArray[4]);
 			row.put("CommentLinesJP", slocArray[5]);
-			row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4]));
+			row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], slocArray[4] + slocArray[5]));
 			rows.add(row);
 		}
 		return rows;
 	}
+
+	//TODO 应该再加一个展示方法的
 
 	@GetMapping("/table/chart")
 	@ResponseBody

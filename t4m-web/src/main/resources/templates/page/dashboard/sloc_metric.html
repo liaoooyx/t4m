@@ -29,16 +29,56 @@
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				
-				<!-- Path nav -->
-				<div class="row col-auto align-items-center ">
-					<nav aria-label="breadcrumb col-auto" class="d-none d-md-inline-block ml-md-4">
-						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
-							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-							<li class="breadcrumb-item active" aria-current="page">SLOC</li>
-						</ol>
-					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Source Line of Code</h6>
+				<!-- Header -->
+				<div class="header bg-primary">
+					<div class="container-fluid">
+						<!-- Header container -->
+						<div class="container-fluid d-flex align-items-center">
+							<div class="row">
+								<div class="col-lg-10 col-md-10 mt-5 mb-3">
+									<h1 class="display-2 text-white">Lines of Code</h1>
+									<p class="text-white text-justify mb-3">
+										LOC is a metrics to calculate the lines of you project. Currently, T4M only count the number of
+										lines of java source code. T4M provides two statistical methods for counting the LOC, which is
+										based on the source file or based on declared class.
+									</p>
+									<p class="text-white text-justify mb-3">
+										For the methods based on the source file, the java file will be the minimum unit that T4M analysis.
+										Each line will be counted without any formatting.
+									</p>
+									<div class="collapse" id="collapse_description">
+										<p class="text-white text-justify mb-3">
+											For the method based on declared class, the minimum unit that T4M analysis is a finer grain than
+											java file. Recall that a java file can declare one public outer class, multiple package-private
+											classes and multiple nested classes. The class will be formatted by
+											<a class="text-yellow text-link" href="http://javaparser.org/">JavaParser</a> before being
+											analysed, which split the code statement and the comment into different lines. Besides, the import
+											and package statement will be excluded.
+										</p>
+										<p class="text-white text-justify mb-3">
+											T4M has four measurements for LOC, including the Physical Line of Code (lines that are not empty or
+											not comment-only), the Logical Line of Code (lines that are not empty, not comment-only or not
+											symbol-only) and the Comment Line (lines that contain comments) and the Percentage of Comment Line
+											(the ratio of comment lines to non-empty lines). Empty lines are excluded.
+										</p>
+										<p class="text-white text-justify mb-3">
+											Detailed definitions and influences of LOC/SLOC:
+											<a class="text-yellow text-link" href="https://maisqual.squoring.com/wiki/index.php/Source_Lines_of_Code">
+												Maisqual - Source Lines of Code</a>,
+											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node91.html">
+												ARiSA - Lines of Code</a>,
+											<a class="text-yellow text-link" href="https://en.wikipedia.org/wiki/Source_lines_of_code">
+												Wiki - Source lines of code</a>.
+										</p>
+									</div>
+									<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
+									   role="button" aria-expanded="false" aria-controls="collapse_description">
+										<i class="fas fa-sort"></i> Expand / Collapse
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -79,7 +119,7 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-								<h5 class="h3 mb-0">Timeline of the class SLOC</h5>
+								<h5 class="h3 mb-0">Timeline of the class LOC</h5>
 							</div>
 							<div class="col">
 								<ul class="nav nav-pills justify-content-end">
@@ -103,7 +143,7 @@
 						</div>
 					</div>
 					
-					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:550px;"></div>
+					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:650px;"></div>
 					<div class="modal fade" id="chart_data_model" tabindex="-1" role="dialog"
 					     aria-labelledby="row_model_label" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -155,16 +195,18 @@
                   let option = {
                       options: options,
                       baseOption: {
-                          grid: {right: 150,}, color: ['#c23531'],
+                          grid: {bottom: 100,right: 150}, color: ['#c23531'],
                           legend: {
-                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class','package-info'],
+                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class', 'package-info'],
                               selected: {'package-info': false},
                           },
                           xAxis: {
-                              name: 'Physical Code Lines', type: 'value', max: Math.ceil(dataMax[0] / 5) * 5
+                              name: 'Physical Code Lines', type: 'value', max: Math.ceil(dataMax[0] / 5) * 5,
+                              nameLocation: 'center', nameGap: 28
                           },
                           yAxis: {
-                              name: 'Comment Lines', type: 'value', max: Math.ceil(dataMax[1] / 5) * 5
+                              name: 'Comment Lines', type: 'value', max: Math.ceil(dataMax[1] / 5) * 5,
+                              nameLocation: 'center', nameRotate: 90, nameGap: 30
                           },
                           timeline: {
                               axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
@@ -203,7 +245,7 @@
                           visualMap: [
                               {
                                   type: 'continuous', left: 'right', top: 'middle', calculable: true, precision: 0.1,
-                                  text: ['% of comment lines'], textGap: 30, dimension: 2, max: 200,
+                                  text: ['% of comment lines'], textGap: 30, dimension: 2, max: 100,
                                   inRange: {symbolSize: [10, 30]}, controller: {inRange: {color: ['#c23531']},}
                               },
                           ],
@@ -217,7 +259,7 @@
                   let yMax = 0;
                   let d2Max = 0;
                   for (let key in dataset) {
-                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation','package-info']) {
+                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation', 'package-info']) {
                           for (let cols of dataset[key][key2]) {
                               xMax = Number(cols[0]) > xMax ? Number(cols[0]) : xMax;
                               yMax = Number(cols[1]) > yMax ? Number(cols[1]) : yMax;
@@ -426,7 +468,7 @@
 							</button>
 						</div>
 						<div class="modal-body">
-							<div id="row_chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;"></div>
+							<div id="row_chart" class="card-body pb-4 px-4 pl-0 pt-0 col-12" style="height:450px;"></div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

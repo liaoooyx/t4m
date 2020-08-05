@@ -161,7 +161,7 @@ public class ProjectService {
 			}
 			cols.add(codeLine); // code line
 			cols.add(commentLine); // comment line
-			String percentage = MathUtil.percentage(commentLine, codeLine);
+			String percentage = MathUtil.percentage(commentLine, codeLine + commentLine);
 			cols.add(percentage);
 			cols.add(classInfo.getFullyQualifiedName()); // class qualified name
 			cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module

@@ -8,98 +8,20 @@
 	<title>T4M</title>
 	<!-- Fonts -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-	
 	<link rel="stylesheet" th:href="@{/assets/plugins/fontawesome/css/all.min.css}" type="text/css">
 	<!-- Argon CSS -->
 	<link rel="stylesheet" th:href="@{/assets/plugins/argon/argon.min.css}" type="text/css">
 	
 	<link rel="stylesheet" th:href="@{/assets/plugins/highlight/default.css}">
 	<link rel="stylesheet" th:href="@{/assets/plugins/bootstrap-table/bootstrap-table.min.css}">
-	<link rel="stylesheet" th:href="@{/assets/plugins/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.css}">
+	<link rel="stylesheet"
+	      th:href="@{/assets/plugins/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.css}">
 	<link rel="stylesheet" th:href="@{/assets/plugins/bootstrap-table/group-by-v2/bootstrap-table-group-by.min.css}">
+	
+	<link rel="stylesheet" th:href="@{/assets/css/common.css}">
+	
 	<script th:src="@{/assets/plugins/echart/echarts.min.js}"></script>
 	<script th:src="@{/assets/plugins/vue/vue.js}"></script>
-	<style>
-		
-		/*bootstrap-table toolbar增加左右margin*/
-		.bootstrap-table .fixed-table-toolbar {
-			margin-left: 20px;
-			margin-right: 20px;
-		}
-		
-		/*custom bootstrap .dropdown-menu for max height*/
-		.dropdown-menu {
-			max-height: 20rem;
-			overflow: auto;
-		}
-		
-		.table-chart-icon {
-			font-size: 1rem;
-			color: black;
-		}
-		
-		.dropdown-arrow-color {
-			color: #525f7f;
-		}
-		
-		.table-hover > tbody > tr:hover > td,
-		.table-hover > tbody > tr:hover > th {
-			background-color: #f5f5f5;
-		}
-		
-		.btn:disabled {
-			transform: none;
-			box-shadow: none;
-			cursor: default;
-		}
-		
-		.active .text-muted {
-			color: #c6d4e4 !important;
-		}
-		
-		.text-link {
-			text-decoration: underline;
-		}
-		
-		.text-link:hover {
-			text-decoration: underline;
-		}
-		
-		.text-bold {
-			font-weight: bold;
-		}
-		
-		.text-yellow {
-			color: #eac700 !important;
-		}
-		
-		a.text-yellow:hover,
-		a.text-yellow:focus {
-			color: #ffd600 !important;
-		}
-		
-		p {
-			font-weight: 500;
-		}
-		
-		code {
-			padding: .2em .4em;
-			margin: 0;
-			font-size: 85%;
-			background-color: rgba(27, 31, 35, .05);
-			border-radius: 6px;
-		}
-		
-		.text-nocase {
-			text-transform: none;
-		}
-		.nav-link i {
-			position: relative;
-			text-align: center;
-			padding-right: 10px;
-		}
-	
-</style>
 </head>
 <body>
 <nav th:fragment="sidnav(selectedElementID)"
@@ -237,7 +159,7 @@
 					<li class="nav-item">
 						<a class="nav-link" th:classappend="${selectedElementID==1}?'active':''" href="/dashboard/sloc">
 							<i class="fas fa-stream"></i>
-							<span class="nav-link-text">SLOC</span>
+							<span class="nav-link-text">Lines of Code</span>
 						</a>
 					</li>
 				</ul>
@@ -348,6 +270,9 @@
 	<script th:src="@{/assets/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
 	<script th:src="@{/assets/plugins/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.js}"></script>
 	<script th:src="@{/assets/plugins/bootstrap-table/group-by-v2/bootstrap-table-group-by.min.js}"></script>
+	<!--common.js-->
+	<script th:src="@{/assets/js/common.js}"></script>
+	
 	<script th:inline="javascript">
       var blank_page_trigger = [[${isBlank}]];
       let currentProjectPath = [[${currentProjectPath}]];

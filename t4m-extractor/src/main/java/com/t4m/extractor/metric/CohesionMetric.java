@@ -27,12 +27,15 @@ public class CohesionMetric {
 		Set<MethodPair> nacMethodPairSet = new HashSet<>(); // NDC：直接和间接连接的（访问同一个字段）方法对
 
 		for (FieldInfo fieldInfo : classInfo.getFieldInfoList()) {
+			//TODO 如果需要调整变量是否为static 或 final，在这里加上判断
+
 			// 以字段为起始，向上搜索被依赖关系，储存进list中，得到 direct connections set
 			for (MethodInfo afferentMethod : fieldInfo.getBeingAccessedDirectlyByLocalMethodSet()) {
 				initMethodPassingAccessToField(fieldInfo, afferentMethod, new ArrayList<>());
 			}
 		}
 		for (FieldInfo fieldInfo : classInfo.getFieldInfoList()) {
+			//TODO 如果需要调整变量是否为static 或 final，在这里加上判断
 
 			// 以字段为起始，找到相关方法指向的字段，加入到同一个scope中，递归找到所有相关方法。再将继续下一个不在域中的字段
 			if (!isFieldExistInAnyScope(fieldInfo, isolatedScopeFieldsList)) {

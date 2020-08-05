@@ -29,16 +29,87 @@
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				
-				<!-- Path nav -->
-				<div class="row col-auto align-items-center ">
-					<nav aria-label="breadcrumb col-auto" class="d-none d-md-inline-block ml-md-4">
-						<ol class="breadcrumb breadcrumb-links breadcrumb-dark py-2 mb-0">
-							<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-							<li class="breadcrumb-item"><a href="#">Dashboards</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Complexity</li>
-						</ol>
-					</nav>
-					<h6 class="h2 text-white d-inline-block mb-0 col-auto">Cyclomatic Complexity & Response For Class</h6>
+				<!-- Header -->
+				<div class="header bg-primary">
+					<div class="container-fluid">
+						<!-- Header container -->
+						<div class="container-fluid d-flex align-items-center">
+							<div class="row">
+								<div class="col-lg-10 col-md-10 mt-5 mb-3">
+									<h1 class="display-2 text-white">Complexity Metrics set</h1>
+									<p class="text-white text-justify mb-3">
+										This page is showing the metrics relevant to the complexity, including:
+									</p>
+									<p class="text-justify text-white mb-3 ml-4">
+										<span class="text-bold">Number of Attributes</span>, which indicate the number of fields of a class.
+									</p>
+									<p class="text-justify text-white mb-3 ml-4">
+										<span class="text-bold">Number of Local Methods</span><span>, </span>
+										which count the methods that declared directly within the class.
+									</p>
+									<div class="collapse" id="collapse_description">
+										<p class="text-justify text-white mb-1 ml-4">
+											<span class="text-bold">Cyclomatic Complexity</span><span>, </span>
+											which is derived from McCabe. T4M calculate this metric by enhancing
+											McConnell's approach. We add 1 complexity if we meet the following syntax:
+											<code>if</code>, <code>while</code>, <code>for</code>, <code>&&</code>, <code>||</code>
+											<code>case or default of switch statement</code>, <code>catch of try statement</code>,
+											and <code>ternary conditional expression ? :</code>.
+										</p>
+										<p class="text-white text-justify mb-3 ml-4">
+											Detailed descriptions and influences:
+											<a class="text-yellow text-link"
+											   href="https://maisqual.squoring.com/wiki/index.php/Cyclomatic_Complexity">
+												Maisqual - Cyclomatic Complexity</a>,
+											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node96.html">
+												ARiSA - McCabe Cyclomatic Complexity</a>.
+										</p>
+										<p class="text-justify text-white mb-1 ml-4">
+											<span class="text-bold">Weighted Method Count</span><span>, </span>
+											which is the sum of complexity of all local methods in a class.
+										</p>
+										<p class="text-white text-justify mb-3 ml-4">
+											Detailed descriptions and influences:
+											<a class="text-yellow text-link"
+											   href="https://maisqual.squoring.com/wiki/index.php/Weighted_Methods_per_Class">
+												Maisqual - Weighted Methods per Class</a>,
+											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node97.html">
+												ARiSA - Weighted Method Count</a>.
+										</p>
+										<p class="text-justify text-white mb-3 ml-4">
+											<span class="text-bold">Max Complexity of Class</span><span>, </span>
+											which is the maximum complexity of all local methods in a class.
+										</p>
+										<p class="text-justify text-white mb-3 ml-4">
+											<span class="text-bold">Avg Complexity of Class</span><span>, </span>
+											which is the average complexity of all local methods in a class.
+										</p>
+										<p class="text-justify text-white mb-1 ml-4">
+											<span class="text-bold">Response For a Class</span><span>, </span>
+											which is the number of methods which can respond to the message of a specific class.
+											It is computed by counting a) the number of all methods including the inheritance methods but
+											excluding the overwritten methods; b) the number of methods that are invoked by above methods.
+										</p>
+										<p class="text-white text-justify mb-3 ml-4">
+											Detailed descriptions and influences:
+											<a class="text-yellow text-link"
+											   href="https://maisqual.squoring.com/wiki/index.php/Response_For_a_Class">
+												Maisqual - Response For a class</a>,
+											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node98.html">
+												ARiSA - Response For a class</a>,
+											<a class="text-yellow text-link"
+											   href="https://www.oreilly.com/library/view/sonar-code-quality/9781849517867/ch09s04.html">
+												Code Quality Testing Essentials - The Response for Class metric</a>.
+										</p>
+									</div>
+									<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
+									   role="button" aria-expanded="false" aria-controls="collapse_description">
+										<i class="fas fa-sort"></i> Expand / Collapse
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -103,7 +174,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:680px;"></div>
+					<div id="chart" class="card-body pb-4 px-4 pt-0 col-12" style="height:680px;"></div>
 					<div class="modal fade" id="chart_data_model" tabindex="-1" role="dialog"
 					     aria-labelledby="row_model_label" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -342,8 +413,8 @@
                           }
                       }],
                       dataZoom: [
-                          {type: 'slider', xAxisIndex: 0, start: 20, end: 100},
-                          {type: 'inside', xAxisIndex: 0, start: 20, end: 100},
+                          {type: 'slider', xAxisIndex: 0, start: 0, end: 100},
+                          {type: 'inside', xAxisIndex: 0, start: 0, end: 100},
                           {type: 'slider', yAxisIndex: 0, left: 20, start: 0, end: 100},
                           {type: 'slider', yAxisIndex: 1, right: 20, start: 0, end: 100}
                       ],
@@ -576,7 +647,9 @@
                     value + '</a>';
             },
         }, {
-            field: 'numOfMethod', title: 'Number of Method', sortable: true
+            field: 'numOfFields', title: 'Number of Attributes', sortable: true
+        }, {
+            field: 'numOfMethod', title: 'Number of Methods', sortable: true
         }, {
             field: 'weightedMethodsCount', title: 'Weighted Method Count', sortable: true
         }, {
@@ -584,7 +657,7 @@
         }, {
             field: 'avgComplexity', title: 'Avg Complexity of Class', sortable: true
         }, {
-            field: 'responseForClass', title: 'Response for Class', sortable: true
+            field: 'responseForClass', title: 'Response For a Class', sortable: true
         }, {
             field: 'type', title: 'Class Type', sortable: true
         }, {
@@ -683,13 +756,13 @@
             {
                 type: 'slider',
                 xAxisIndex: 0,
-                start: 20,
+                start: 0,
                 end: 100
             },
             {
                 type: 'inside',
                 xAxisIndex: 0,
-                start: 20,
+                start: 0,
                 end: 100
             },
             {

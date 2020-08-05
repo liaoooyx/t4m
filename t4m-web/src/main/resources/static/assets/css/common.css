@@ -1,0 +1,88 @@
+/*bootstrap-table toolbar增加左右margin*/
+.bootstrap-table .fixed-table-toolbar {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+/*custom bootstrap .dropdown-menu for max height*/
+.dropdown-menu {
+    max-height: 20rem;
+    overflow: auto;
+}
+
+.table-chart-icon {
+    font-size: 1rem;
+    color: black;
+}
+
+.dropdown-arrow-color {
+    color: #525f7f;
+}
+
+.table-hover > tbody > tr:hover > td,
+.table-hover > tbody > tr:hover > th {
+    background-color: #f5f5f5;
+}
+
+.btn:disabled {
+    transform: none;
+    box-shadow: none;
+    cursor: default;
+}
+
+.active .text-muted {
+    color: #c6d4e4 !important;
+}
+
+.text-link,
+.text-link i{
+    text-decoration: underline;
+}
+
+
+.text-link:hover {
+    text-decoration: underline;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.text-yellow {
+    color: #eac700 !important;
+}
+
+a.text-yellow:hover,
+a.text-yellow:focus {
+    color: #ffd900 !important;
+}
+
+p {
+    font-weight: 500;
+}
+
+code {
+    padding: .2em .4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(27, 31, 35, .05);
+    border-radius: 6px;
+}
+
+.text-white code {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #c10000;
+}
+
+.text-nocase {
+    text-transform: none;
+}
+
+ul li a.nav-link i {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    padding-right: 10px;
+}
