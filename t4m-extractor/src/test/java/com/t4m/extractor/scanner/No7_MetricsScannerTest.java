@@ -22,7 +22,7 @@ class No7_MetricsScannerTest {
 	@BeforeAll
 	public static void initProjectInfo() {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
-		projectInfo = new ProjectInfo(path, GlobalProperties.DEFAULT_EXCLUDED_PATH, GlobalProperties.DEFAULT_DEPENDENCY_PATH);
+		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanMetricData();
 	}
@@ -51,7 +51,7 @@ class No7_MetricsScannerTest {
 		}, () -> {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 			                                                         "com.simulation.core.foo.ComplexClassA");
-			assertEquals(29, classInfo.getResponseForClass());
+			assertEquals(28, classInfo.getResponseForClass());
 		});
 	}
 

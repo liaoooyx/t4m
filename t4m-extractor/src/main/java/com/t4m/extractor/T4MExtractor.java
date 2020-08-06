@@ -1,5 +1,6 @@
 package com.t4m.extractor;
 
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.scanner.*;
 
@@ -76,5 +77,13 @@ public class T4MExtractor {
 	public ProjectInfo extract() {
 		scanMetricData();
 		return projectInfo;
+	}
+
+	public static void main(String[] args) {
+		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
+		ProjectInfo projectInfo = new ProjectInfo(path, GlobalProperties.DEFAULT_EXCLUDED_PATH, GlobalProperties.DEFAULT_DEPENDENCY_PATH);
+		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
+		t4MExtractor.scanDirectory();
+		System.out.println();
 	}
 }

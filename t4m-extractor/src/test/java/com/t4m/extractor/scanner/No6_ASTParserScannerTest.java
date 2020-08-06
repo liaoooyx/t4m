@@ -27,7 +27,7 @@ class No6_ASTParserScannerTest {
 	@BeforeAll
 	public static void initProjectInfo() {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
-		projectInfo = new ProjectInfo(path, GlobalProperties.DEFAULT_EXCLUDED_PATH, GlobalProperties.DEFAULT_DEPENDENCY_PATH);
+		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
 		t4MExtractor.scanASTParser();
 	}

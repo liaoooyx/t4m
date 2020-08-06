@@ -27,6 +27,7 @@ public class No4_ModuleScanner {
 	 * 根据列表中的{@code PackageInfo}创建模块信息
 	 */
 	public List<ModuleInfo> scan() {
+		LOGGER.info("Extracting the information of module level.");
 		projectInfo.getPackageList().forEach(packageInfo -> {
 			String pkgFullName = packageInfo.getFullyQualifiedName();
 			String pkgPath = packageInfo.getAbsolutePath();

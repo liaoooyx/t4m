@@ -40,9 +40,13 @@ public class No6_JavaParserScanner {
 	}
 
 	public void scan() {
+		LOGGER.info("Using JavaParser to resolve the static code.");
 		initParser();
+		LOGGER.info("Creating entities for the missing package-private outer classes and nested classes.");
 		scanVisitor(No1_ClassInfoVisitor.class);
+		LOGGER.info("Adding the missing information of classes. Constructing entities for methods and fields.");
 		scanVisitor(No2_DeclarationVisitor.class);
+		LOGGER.info("Resolving dependencies for all entities.");
 		scanVisitor(No3_InMethodDependencyVisitor.class);
 	}
 

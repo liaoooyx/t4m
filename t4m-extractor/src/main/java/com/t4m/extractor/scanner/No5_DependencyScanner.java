@@ -6,6 +6,8 @@ import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import java.util.Objects;
  */
 public class No5_DependencyScanner {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(No5_DependencyScanner.class);
+
 	private ProjectInfo projectInfo;
 
 	public No5_DependencyScanner(ProjectInfo projectInfo) {
@@ -25,6 +29,7 @@ public class No5_DependencyScanner {
 	}
 
 	public void scan() {
+		LOGGER.info("Resolving the dependencies between modules and packages.");
 		DirHierarchyNode rootNode = new DirHierarchyNode(new File(projectInfo.getAbsolutePath()).getName(),
 		                                                 projectInfo.getAbsolutePath());
 		createModuleDependency(rootNode, projectInfo);

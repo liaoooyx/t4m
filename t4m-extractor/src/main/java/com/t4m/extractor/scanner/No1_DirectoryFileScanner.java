@@ -30,6 +30,9 @@ public class No1_DirectoryFileScanner {
 	 * 扫描项目中所有的java文件，并返回{@code rawJavaFileList}
 	 */
 	public List<File> scan() {
+		LOGGER.info(
+				"************************************* Start scanning the project **************************************");
+		LOGGER.info("Scanning all .java file from [{}]", projectInfo.getAbsolutePath());
 		File root = new File(projectInfo.getAbsolutePath());
 		getAllJavaFiles(root, rawJavaFileList);
 		return rawJavaFileList;

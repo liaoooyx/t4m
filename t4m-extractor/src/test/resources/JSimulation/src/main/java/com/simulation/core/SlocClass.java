@@ -1,8 +1,8 @@
-package com.simulation.submodule;
+package com.simulation.core;
 /**
  * javaDoc comment
  */
-public class SimpleClassA {
+public class SlocClass {
 	public static void main(String[] args) {///*comment*/.method();/*comment*/
 		//line comment
 		System.out.println();//line comment

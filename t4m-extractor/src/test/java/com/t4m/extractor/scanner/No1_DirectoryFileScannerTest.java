@@ -18,7 +18,7 @@ class No1_DirectoryFileScannerTest {
 	@BeforeAll
 	public static void initProjectInfo() {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
-		projectInfo = new ProjectInfo(path, GlobalProperties.DEFAULT_EXCLUDED_PATH, GlobalProperties.DEFAULT_DEPENDENCY_PATH);
+		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 	}
 
 	@Test

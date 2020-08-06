@@ -1,4 +1,4 @@
 package com.simulation.core.bar;
 
-public interface SimpleInterfaceB {
+public interface SimpleInterfaceB extends SimpleInterfaceA{
 }

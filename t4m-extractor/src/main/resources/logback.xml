@@ -5,7 +5,7 @@
     <!--appender定义日志输出的规范，name为对象名，class为引用的对象-->
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%msg%n</pattern>
+            <pattern>[T4M] %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -13,7 +13,7 @@
         <file>${LOG_PATH}/debug.log</file>
         <encoder>
             <pattern>
-                %date{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%logger:%line] [thread:%thread] %n %msg%n
+                %date{yyyy-MM-dd HH:mm:ss} [%level] [%logger:%line] [thread:%thread] %n %msg%n
             </pattern>
         </encoder>
 
@@ -39,7 +39,7 @@
         <file>${LOG_PATH}/info.log</file>
         <encoder>
             <pattern>
-                %date{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%logger:%line] [thread:%thread] %n %msg%n
+                %date{yyyy-MM-dd HH:mm:ss} [%level] [%logger:%line] [thread:%thread] %n %msg%n
             </pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
@@ -63,7 +63,7 @@
         <file>${LOG_PATH}/error.log</file>
         <encoder>
             <pattern>
-                %date{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%logger:%line] [thread:%thread] %n %msg%n
+                %date{yyyy-MM-dd HH:mm:ss} [%level] [%logger:%line] [thread:%thread] %n %msg%n
             </pattern>
         </encoder>
 
@@ -77,7 +77,7 @@
             <maxFileSize>5MB</maxFileSize>
         </triggeringPolicy>
 
-        <!-- 过滤器，可以过滤掉不符合条件的日志，INFO及以上的日志被处理，其它的拒绝 -->
+        <!-- 过滤器，可以过滤掉不符合条件的日志，ERROR及以上的日志被处理，其它的拒绝 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>

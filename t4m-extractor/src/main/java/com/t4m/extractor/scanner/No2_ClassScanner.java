@@ -29,8 +29,8 @@ public class No2_ClassScanner {
 	 * 对于列表中的每个File对象，从中读取信息，并转化为{@code ClassInfo}对象. <br> 包括{@code absolutePath}, {@code packageFullyQualifiedName}.
 	 */
 	public void scan(List<File> rawJavaFileList) {
+		LOGGER.info("Extracting the basic information from .java files. Extracting the basic information of class level.");
 		rawJavaFileList.forEach(javaFile -> {
-
 			try {
 				String line;
 				String pkgFullyQualifiedName = PackageInfo.EMPTY_IDENTIFIER;
