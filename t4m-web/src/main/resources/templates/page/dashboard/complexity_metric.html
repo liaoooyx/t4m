@@ -151,7 +151,9 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-								<h5 class="h3 mb-0">Timeline of complexity metrics</h5>
+								<h5 class="h3 mb-0" id="timeline_chart_title">
+									{{ title }}
+								</h5>
 							</div>
 							<div class="col">
 								<ul class="nav nav-pills justify-content-end">
@@ -174,7 +176,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="chart" class="card-body pb-4 px-4 pt-0 col-12" style="height:680px;"></div>
+					<div id="chart" class="card-body pb-4 px-4 pt-0 col-12" style="height:750px;"></div>
 					<div class="modal fade" id="chart_data_model" tabindex="-1" role="dialog"
 					     aria-labelledby="row_model_label" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -213,52 +215,66 @@
               let methodNumDataset = /*[[${methodNumDataset}]]*/;
               let currentChartLevel = 'class';
 
+              let vm_for_timeline_chart_title = new Vue({
+                  el: '#timeline_chart_title',
+                  data: {
+                      title: "The distribution of the classes on the number of its methods and four different metrics."
+                  }
+              })
+
               function showTimelineChartForClass() {
+                  vm_for_timeline_chart_title.title = "The distribution of the classes on the number of its methods and four different metrics."
                   currentChartLevel = 'class';
                   let option = {
                       options: initOptions(),
                       baseOption: {
                           legend: {},
                           grid: [
-                              {x: '7%', y: '5%', width: '40%', height: '38%'},
-                              {x2: '5%', y: '5%', width: '40%', height: '38%'},
-                              {x: '7%', y2: '11%', width: '40%', height: '38%'},
-                              {x2: '5%', y2: '11%', width: '40%', height: '38%'}
+                              {x: '7%', y: '5%', width: '40%', height: '35%', top: 50},
+                              {x2: '5%', y: '5%', width: '40%', height: '35%', top: 50},
+                              {x: '7%', y2: '11%', width: '40%', height: '35%', bottom: 100},
+                              {x2: '5%', y2: '11%', width: '40%', height: '35%', bottom: 100}
                           ],
                           xAxis: [
-                              {gridIndex: 0, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},
-                              {gridIndex: 1, name: 'Num of Methods', nameLocation: 'center', nameGap: 28},
-                              {gridIndex: 2},
-                              {gridIndex: 3},
+                              {
+                                  gridIndex: 0, name: 'Number of methods in a class',
+                                  nameLocation: 'center', nameGap: 25
+                              },
+                              {
+                                  gridIndex: 1, name: 'Number of methods in a class',
+                                  nameLocation: 'center', nameGap: 25
+                              },
+                              {
+                                  gridIndex: 2, name: 'Number of methods in a class',
+                                  nameLocation: 'center', nameGap: 25
+                              },
+                              {
+                                  gridIndex: 3, name: 'Number of methods in a class',
+                                  nameLocation: 'center', nameGap: 25
+                              },
                           ],
                           yAxis: [
                               {
-                                  gridIndex: 0, name: 'Avg Complexity of Class',
+                                  gridIndex: 0, name: 'Average Complexity of Class',
                                   nameLocation: 'center', nameRotate: 90, nameGap: 30
                               },
                               {
-                                  gridIndex: 1, name: 'Response for class',
+                                  gridIndex: 1, name: 'Response for a Class',
                                   nameLocation: 'center', nameRotate: 90, nameGap: 30
                               },
                               {
-                                  gridIndex: 2, name: 'Weighted Method Count',
+                                  gridIndex: 2, name: 'Weighted Methods Count',
                                   nameLocation: 'center', nameRotate: 90, nameGap: 30
                               },
                               {
-                                  gridIndex: 3, name: 'Max Complexity of Class',
+                                  gridIndex: 3, name: 'Maximum Complexity of Class',
                                   nameLocation: 'center', nameRotate: 90, nameGap: 30
                               },
                           ],
                           timeline: {
                               axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
-                              playInterval: 1000, symbol: 'circle', data: timeRecords,
+                              playInterval: 1000, symbol: 'circle', data: timeRecords, animation: false,
                               controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
-                              label: {
-                                  formatter: function (s) {
-                                      var date = new Date(s);
-                                      return date.getMonth() + "-" + date.getDate();
-                                  }
-                              }
                           },
                           tooltip: {
                               padding: 10, borderWidth: 1,
@@ -278,7 +294,7 @@
                                           + 'Number of Methods : ' + value[0] + '<br>'
                                           + yLabelName + ': ' + value[1] + '<br>'
                                           + '</div>'
-                                          + 'Click the point to see all relevant records.';
+                                          + 'Click the point to see all overlapped data.';
                                   }
                               }
                           },
@@ -296,10 +312,8 @@
                       options[i] = {
                           series: [
                               {
-                                  name: 'Avg Complexity of Class',
-                                  type: 'scatter',
-                                  xAxisIndex: 0,
-                                  yAxisIndex: 0,
+                                  name: 'Classes regarding the Average Complexity metric', animation: false,
+                                  type: 'scatter', xAxisIndex: 0, yAxisIndex: 0,
                                   data: avgComplexityOfClassDataset[timeRecords[i]],
                                   emphasis: {
                                       label: {
@@ -314,10 +328,8 @@
                                   },
                               },
                               {
-                                  name: 'Response for Class',
-                                  type: 'scatter',
-                                  xAxisIndex: 1,
-                                  yAxisIndex: 1,
+                                  name: 'Classes regarding the Response For a Class metric', animation: false,
+                                  type: 'scatter', xAxisIndex: 1, yAxisIndex: 1,
                                   data: responseForClassDataset[timeRecords[i]],
                                   emphasis: {
                                       label: {
@@ -332,10 +344,8 @@
                                   },
                               },
                               {
-                                  name: 'Weighted Methods Count',
-                                  type: 'scatter',
-                                  xAxisIndex: 2,
-                                  yAxisIndex: 2,
+                                  name: 'Classes regarding the Weighted Methods Count metric', animation: false,
+                                  type: 'scatter', xAxisIndex: 2, yAxisIndex: 2,
                                   data: weightedMethodsCountDataset[timeRecords[i]],
                                   emphasis: {
                                       label: {
@@ -350,10 +360,8 @@
                                   },
                               },
                               {
-                                  name: 'Max Complexity of Class',
-                                  type: 'scatter',
-                                  xAxisIndex: 3,
-                                  yAxisIndex: 3,
+                                  name: 'Classes regarding the Maximum Complexity metric', animation: false,
+                                  type: 'scatter', xAxisIndex: 3, yAxisIndex: 3,
                                   data: maxComplexityOfClassDataset[timeRecords[i]],
                                   emphasis: {
                                       label: {
@@ -374,6 +382,8 @@
               }
 
               function showTimelineChartForMethod() {
+                  vm_for_timeline_chart_title.title =
+                      "The trends of the total number of methods in your project, and the trends of Cyclomatic Complexity values for these methods.";
                   currentChartLevel = 'method'
                   let option = {
                       grid: {
@@ -382,17 +392,17 @@
                       legend: {},
                       xAxis: {
                           name: "Time", type: 'category', splitArea: {interval: 0},
-                          splitLine: {show: true, lineStyle: {type: 'solid'}},
+                          splitLine: {show: true, lineStyle: {type: 'solid'}}, nameLocation: 'center', nameGap: 28
                       },
                       yAxis: [{
-                          name: "Cyclomatic of Methods", type: 'value',
+                          name: "The Cyclomatic Complexity of methods", type: 'value',
                           nameLocation: 'center', nameRotate: 90, nameGap: 30
                       }, {
-                          name: "Number of All Methods in the Project", type: 'value',
-                          nameLocation: 'center', nameRotate: 270, nameGap: 30
+                          name: "Number of all methods in the project", type: 'value',
+                          nameLocation: 'center', nameRotate: 270, nameGap: 35
                       }],
                       series: [{
-                          name: 'Cyclomatic Complexity of Method',
+                          name: 'The method/methods with the specific Cyclomatic Complexity value',
                           type: 'scatter', yAxisIndex: 0, data: methodComplexityDataset,
                           emphasis: {
                               label: {
@@ -403,7 +413,8 @@
                               },
                           },
                       }, {
-                          name: 'Number of All Methods', type: 'bar', yAxisIndex: 1, data: methodNumDataset,
+                          name: 'Number of All Methods', type: 'bar', yAxisIndex: 1, data:
+                          methodNumDataset,
                           itemStyle: {color: 'rgba(229,229,229,0.8)',},
                           label: {
                               show: true, position: 'top', distance: 20, formatter: '{@[1]}', color: '#000000',
@@ -427,7 +438,7 @@
                                       + 'Method: ' + value[2] + '<br>' + 'Declaration: ' + value[3] + '<br>'
                                       + params.seriesName + ": " + value[1]
                                       + '</div>'
-                                      + 'Click the point to see all relevant records.';
+                                      + 'Click the point to see all overlapped data.';
                               }
                           },
                       },

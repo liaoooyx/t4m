@@ -86,3 +86,8 @@ ul li a.nav-link i {
     text-align: center;
     padding-right: 10px;
 }
+.custom-label{
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+}

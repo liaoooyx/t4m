@@ -111,7 +111,9 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-								<h5 class="h3 mb-0">Timeline of inheritance metrics</h5>
+								<h5 class="h3 mb-0">
+									The trends of the Deep of Inheritance Tree and the Number of Children for all classes.
+								</h5>
 							</div>
 						</div>
 					</div>
@@ -167,7 +169,7 @@
                           nameRotate: 90, nameGap: 30
                       }],
                       series: [{
-                          name: 'Deep of Inheritance Tree', type: 'scatter', yAxisIndex: 0,
+                          name: 'Classes regarding the Deep of Inheritance Tree', type: 'scatter', yAxisIndex: 0,
                           data: deepOfInheritanceTreeDataset, symbolOffset: [-10, 0],
                           emphasis: {
                               label: {
@@ -178,7 +180,7 @@
                               },
                           },
                       }, {
-                          name: 'Number of Children', type: 'scatter', yAxisIndex: 1,
+                          name: 'Class regarding the Number of Children', type: 'scatter', yAxisIndex: 1,
                           data: numberOfChildrenDataset, symbolOffset: [10, 0],
                           emphasis: {
                               label: {
@@ -204,7 +206,7 @@
                                   + 'Class: ' + value[2] + '<br>' + 'of Module: ' + value[3] + '<br>'
                                   + params.seriesName + ": " + value[1] + '<br>'
                                   + '</div>'
-                                  + 'Click the point to see all relevant records.';
+                                  + 'Click the point to see all overlapped data.';
                           }
                       },
                   };

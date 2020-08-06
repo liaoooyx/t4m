@@ -165,7 +165,9 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-								<h5 class="h3 mb-0">Timeline of coupling metrics</h5>
+								<h5 class="h3 mb-0" id="timeline_chart_title">
+									{{ title }}
+								</h5>
 							</div>
 							<div class="col">
 								<ul class="nav nav-pills justify-content-end">
@@ -224,7 +226,14 @@
               let classMessagePassingCouplingDataset = /*[[${classMessagePassingCouplingDataset}]]*/;
               let currentChartLevel = 'package';
 
+              let vm_for_timeline_chart_title = new Vue({
+                  el: '#timeline_chart_title',
+                  data: {
+                      title: "Instability/Abstractness graph."
+                  }
+              })
               function showTimelineChartForPackage() {
+                  vm_for_timeline_chart_title.title = "Instability/Abstractness graph."
                   currentChartLevel = 'package';
                   document.getElementById("chart").style.height = "500px";
                   let chartHeight = document.getElementById("chart").offsetHeight;
@@ -240,14 +249,8 @@
                           yAxis: {name: 'Abstractness', max: 1, interval: 1},
                           timeline: {
                               axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
-                              playInterval: 1000, symbol: 'circle', data: timeRecords,
+                              playInterval: 1000, symbol: 'circle', data: timeRecords, animation: false,
                               controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
-                              label: {
-                                  formatter: function (s) {
-                                      var date = new Date(s);
-                                      return date.getMonth() + "-" + date.getDate();
-                                  }
-                              }
                           },
                           tooltip: {
                               padding: 10, borderWidth: 1,
@@ -268,7 +271,7 @@
                                           + 'Abstractness: ' + value[1] + '<br>'
                                           + 'Distance from Main Sequence: ' + value[2] + '<br>'
                                           + '</div>'
-                                          + 'Click the point to see all relevant records.';
+                                          + 'Click the point to see all overlapped data.';
                                   }
                               }
                           },
@@ -286,7 +289,7 @@
                           series: [
                               {
                                   name: 'Package (Instability, Abstractness)',
-                                  type: 'scatter',
+                                  type: 'scatter', animation: false,
                                   data: packageInstabilityAbstractnessGraphDataset[timeRecords[i]],
                                   emphasis: {
                                       label: {
@@ -331,6 +334,8 @@
               }
 
               function showTimelineChartForClass() {
+                  vm_for_timeline_chart_title.title =
+		                  "The trends of the Coupling Between Objects and Message Passing Coupling for all classes."
                   currentChartLevel = 'class';
                   let option = {
                       legend: {},
@@ -345,10 +350,10 @@
                           nameRotate: 90, nameGap: 30
                       }, {
                           name: "Message Passing Coupling", type: 'value', nameLocation: 'center',
-                          nameRotate: 90, nameGap: 30
+                          nameRotate: 270, nameGap: 30
                       }],
                       series: [{
-                          name: 'Coupling Between Objects', type: 'scatter', yAxisIndex: 0,
+                          name: 'Classes regarding the Coupling Between Objects', type: 'scatter', yAxisIndex: 0,
                           data: classCouplingBetweenObjectsDataset, symbolOffset: [-10, 0],
                           emphasis: {
                               label: {
@@ -359,7 +364,7 @@
                               },
                           },
                       }, {
-                          name: 'Message Passing Coupling', type: 'scatter', yAxisIndex: 1,
+                          name: 'Classes regarding the Message Passing Coupling', type: 'scatter', yAxisIndex: 1,
                           data: classMessagePassingCouplingDataset, symbolOffset: [10, 0],
                           emphasis: {
                               label: {
@@ -385,7 +390,7 @@
                                   + 'Class: ' + value[2] + '<br>' + 'of Module: ' + value[3] + '<br>'
                                   + params.seriesName + ": " + value[1]
                                   + '</div>'
-                                  + 'Click the point to see all relevant records.';
+                                  + 'Click the point to see all overlapped data.';
                           }
                       },
                   };

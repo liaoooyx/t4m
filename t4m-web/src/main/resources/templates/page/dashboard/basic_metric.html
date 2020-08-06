@@ -39,9 +39,9 @@
 									<h1 class="display-2 text-white">Basic information</h1>
 									<p class="text-white text-justify mb-3">
 										Here is the basic information of your project
-										<span th:text="${currentProjectIdentifier.split('#')[0]}"></span>,
+										<code th:text="${currentProjectIdentifier.split('#')[0]}"></code>,
 										including the number of modules, packages, classes, methods and fields. There are two
-										statistical methods for classes: class file and declared class.
+										statistical measurements for classes: class file and declared class.
 										The class file represents the .java files in your project.
 										The declared class is classified as a public outer class, a package-private outer class or a
 										<a class="text-yellow text-link"
@@ -195,7 +195,7 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<h6 class="text-muted text-uppercase ls-1 mb-1">basic</h6>
-								<h5 class="h3 mb-0">Trends for Number of Module, Package and Class</h5>
+								<h5 class="h3 mb-0">Trends in the number of modules, packages, and classes</h5>
 							</div>
 							<div class="col">
 								<ul class="nav nav-pills justify-content-end">
@@ -216,7 +216,7 @@
 							</div>
 						</div>
 					</div>
-					<div id="chart" class="card-body pb-4 pr-4 pl-0 pt-0 col-12" style="height:450px;">
+					<div id="chart" class="card-body pb-4 px-5 pt-0 col-12" style="height:500px;">
 					</div>
 					<script type="text/javascript" th:inline="javascript">
               // 指定图表的配置项和数据
@@ -225,11 +225,11 @@
                       // 提供一份数据。
                       source: [
                           ['level'].concat(/*[[${timeRecords}]]*/),
-                          ['Module Number'].concat(/*[[${moduleRecords}]]*/),
-                          ['Package Number'].concat(/*[[${packageRecords}]]*/),
-                          ['Java File Number'].concat(/*[[${javaFileRecords}]]*/),
-                          ['Outer Class Number'].concat(/*[[${classRecords}]]*/),
-                          ['All Classes Number (append all nested classes)'].concat(/*[[${allClassRecords}]]*/),
+                          ['Number of Modules'].concat(/*[[${moduleRecords}]]*/),
+                          ['Number of Packages'].concat(/*[[${packageRecords}]]*/),
+                          ['Number of Java Files'].concat(/*[[${javaFileRecords}]]*/),
+                          ['Number of Outer Classes'].concat(/*[[${classRecords}]]*/),
+                          ['Number of Outer and Nested classes'].concat(/*[[${allClassRecords}]]*/),
                       ]
                   },
                   // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。

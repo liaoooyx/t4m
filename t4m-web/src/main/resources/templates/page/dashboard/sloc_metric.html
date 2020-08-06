@@ -56,14 +56,16 @@
 											and package statement will be excluded.
 										</p>
 										<p class="text-white text-justify mb-3">
-											T4M has four measurements for LOC, including the Physical Line of Code (lines that are not empty or
+											T4M has four measurements for LOC, including the Physical Line of Code (lines that are not empty
+											or
 											not comment-only), the Logical Line of Code (lines that are not empty, not comment-only or not
 											symbol-only) and the Comment Line (lines that contain comments) and the Percentage of Comment Line
 											(the ratio of comment lines to non-empty lines). Empty lines are excluded.
 										</p>
 										<p class="text-white text-justify mb-3">
 											Detailed definitions and influences of LOC/SLOC:
-											<a class="text-yellow text-link" href="https://maisqual.squoring.com/wiki/index.php/Source_Lines_of_Code">
+											<a class="text-yellow text-link"
+											   href="https://maisqual.squoring.com/wiki/index.php/Source_Lines_of_Code">
 												Maisqual - Source Lines of Code</a>,
 											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node91.html">
 												ARiSA - Lines of Code</a>,
@@ -119,7 +121,10 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-								<h5 class="h3 mb-0">Timeline of the class LOC</h5>
+								<h5 class="h3 mb-0">
+									The distribution of classes on the number of physical code lines and number of comment lines,
+									and the evolution during developing.
+								</h5>
 							</div>
 							<div class="col">
 								<ul class="nav nav-pills justify-content-end">
@@ -182,20 +187,20 @@
                   let label;
                   if (type === 'allClass') {
                       currentDataset = datasetAllClass;
-                      label = ['Class', '', 'Physical Code Lines',
-                          'Comment Lines', '% of comment lines']
+                      label = ['Class', '', 'Number of physical code lines',
+                          'Number of comment lines', '% of comment lines']
                   } else if (type === 'file') {
                       currentDataset = datasetMainClass;
                       label = ['Source File', '.java',
-                          'Physical Code Lines',
-                          'Comment Lines', '% of comment lines']
+                          'Number of physical code lines',
+                          'Number of comment lines', '% of comment lines']
                   }
                   let dataMax = getMax(currentDataset);
                   let options = optionsFormatter(currentDataset);
                   let option = {
                       options: options,
                       baseOption: {
-                          grid: {bottom: 100,right: 150}, color: ['#c23531'],
+                          grid: {bottom: 100, right: 150}, color: ['#c23531'],
                           legend: {
                               data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class', 'package-info'],
                               selected: {'package-info': false},
@@ -212,12 +217,7 @@
                               axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
                               playInterval: 1000, symbol: 'circle', data: timeRecords,
                               controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
-                              label: {
-                                  formatter: function (s) {
-                                      var date = new Date(s);
-                                      return date.getMonth() + "-" + date.getDate();
-                                  }
-                              }
+                              checkpointStyle: {animation: false},
                           },
                           tooltip: {
                               padding: 10, borderWidth: 1,
@@ -237,7 +237,7 @@
                                           + label[3] + ': ' + value[1] + '<br>'
                                           + label[4] + ': ' + value[2] + '%<br>'
                                           + '</div>'
-                                          + 'Click the point to see all relevant records.'
+                                          + 'Click the point to see all overlapped data.'
                                   }
 
                               }
@@ -246,7 +246,10 @@
                               {
                                   type: 'continuous', left: 'right', top: 'middle', calculable: true, precision: 0.1,
                                   text: ['% of comment lines'], textGap: 30, dimension: 2, max: 100,
-                                  inRange: {symbolSize: [10, 30]}, controller: {inRange: {color: ['#c23531']},}
+                                  inRange: {symbolSize: [10, 30]}, controller: {inRange: {color: ['#c23531']},},
+                                  formatter: function (value) {
+                                      return value + "%"; // 范围标签显示内容。
+                                  }
                               },
                           ],
                       },
@@ -275,7 +278,7 @@
                   for (let i = 0; i < timeRecords.length; i++) {
                       options[i] = {
                           series: [{
-                              name: 'Interface', type: 'scatter',
+                              name: 'Interface', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Interface'],
                               itemStyle: {color: '#69bae5',},
                               emphasis: {
@@ -287,7 +290,7 @@
                                   },
                               },
                           }, {
-                              name: 'Abstract Class', type: 'scatter',
+                              name: 'Abstract Class', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Abstract Class'],
                               itemStyle: {color: '#54ba3d',},
                               emphasis: {
@@ -299,7 +302,7 @@
                                   },
                               },
                           }, {
-                              name: 'Class', type: 'scatter',
+                              name: 'Class', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Class'],
                               itemStyle: {color: '#c23531',},
                               emphasis: {
@@ -311,7 +314,7 @@
                                   },
                               },
                           }, {
-                              name: 'Enum', type: 'scatter',
+                              name: 'Enum', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Enum'],
                               itemStyle: {color: '#e7ad70',},
                               emphasis: {
@@ -323,7 +326,7 @@
                                   },
                               },
                           }, {
-                              name: 'Annotation', type: 'scatter',
+                              name: 'Annotation', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Annotation'],
                               itemStyle: {color: '#e770e1',},
                               emphasis: {
@@ -335,7 +338,7 @@
                                   },
                               },
                           }, {
-                              name: 'package-info', type: 'scatter',
+                              name: 'package-info', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['package-info'],
                               itemStyle: {color: '#171717',},
                               emphasis: {
@@ -368,7 +371,7 @@
               timelineChart.on('timelinechanged', function (params) {
                   currentTimelineIndex = params.currentIndex
               });
-              timelineChart.on('click', function (param) {
+              timelineChart.on('click', 'series.scatter', function (param) {
                   chart_data_vm.title = timeRecords[currentTimelineIndex];
 
                   let pointValueList = [];

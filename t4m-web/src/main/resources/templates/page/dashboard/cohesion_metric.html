@@ -132,7 +132,10 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
-								<h5 class="h3 mb-0">Timeline of cohesion metrics</h5>
+								<h5 class="h3 mb-0">
+									The distribution of classes on the Tight Class Cohesion and the Loose Class Cohesion, and the
+									evolution during developing.
+								</h5>
 							</div>
 						</div>
 					</div>
@@ -178,18 +181,13 @@
                               axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
                               playInterval: 1000, symbol: 'circle', data: timeRecords,
                               controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
-                              label: {
-                                  formatter: function (s) {
-                                      var date = new Date(s);
-                                      return date.getMonth() + "-" + date.getDate();
-                                  }
-                              }
+                              checkpointStyle: {animation: false},
                           },
                           legend: {
                               data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class', 'package-info'],
                               selected: {'package-info': false},
                           },
-                          xAxis: {name: 'Tight Class Cohesion', type: 'value', nameLocation: 'center', nameGap: 28},
+                          xAxis: {name: 'Tight Class Cohesion', type: 'value', nameLocation: 'center', nameGap: 22},
                           yAxis: {
                               name: 'Loose Class Cohesion', type: 'value',
                               nameLocation: 'center', nameRotate: 90, nameGap: 30
@@ -212,7 +210,7 @@
                                           + 'Loose Class Cohesion: ' + value[1] + '<br>'
                                           + 'Lack of Cohesion in Methods: ' + value[2] + '<br>'
                                           + '</div>'
-                                          + 'Click the point to see all relevant records.'
+                                          + 'Click the point to see all overlapped data.'
                                   }
                               }
                           },
@@ -234,7 +232,7 @@
                   for (let i = 0; i < timeRecords.length; i++) {
                       options[i] = {
                           series: [{
-                              name: 'Interface', type: 'scatter',
+                              name: 'Interface', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Interface'],
                               itemStyle: {color: '#69bae5',},
                               emphasis: {
@@ -246,7 +244,7 @@
                                   },
                               },
                           }, {
-                              name: 'Abstract Class', type: 'scatter',
+                              name: 'Abstract Class', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Abstract Class'],
                               itemStyle: {color: '#54ba3d',},
                               emphasis: {
@@ -258,7 +256,7 @@
                                   },
                               },
                           }, {
-                              name: 'Class', type: 'scatter',
+                              name: 'Class', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Class'],
                               itemStyle: {color: '#c23531',},
                               emphasis: {
@@ -270,7 +268,7 @@
                                   },
                               },
                           }, {
-                              name: 'Enum', type: 'scatter',
+                              name: 'Enum', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Enum'],
                               itemStyle: {color: '#e7ad70',},
                               emphasis: {
@@ -282,7 +280,7 @@
                                   },
                               },
                           }, {
-                              name: 'Annotation', type: 'scatter',
+                              name: 'Annotation', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['Annotation'],
                               itemStyle: {color: '#e770e1',},
                               emphasis: {
@@ -294,7 +292,7 @@
                                   },
                               },
                           }, {
-                              name: 'package-info', type: 'scatter',
+                              name: 'package-info', type: 'scatter', animation: false,
                               data: dataset[timeRecords[i]]['package-info'],
                               itemStyle: {color: '#171717',},
                               emphasis: {
@@ -327,7 +325,7 @@
               timelineChart.on('timelinechanged', function (params) {
                   currentTimelineIndex = params.currentIndex
               });
-              timelineChart.on('click', function (param) {
+              timelineChart.on('click','series.scatter', function (param) {
                   chart_data_vm.title = timeRecords[currentTimelineIndex];
 
                   let pointValueList = [];

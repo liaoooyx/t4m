@@ -38,8 +38,12 @@ public class ProjectInfo implements Serializable {
 	private List<ClassInfo> extraClassList = new ArrayList<>();
 	private List<MethodInfo> methodList = new ArrayList<>();
 
-	public ProjectInfo(String absolutePath,String excludedPath, String dependencyPath) {
-		this.createDate = new Date();
+	public ProjectInfo(String absolutePath, String excludedPath, String dependencyPath) {
+		this(absolutePath, excludedPath, dependencyPath, new Date());
+	}
+
+	public ProjectInfo(String absolutePath, String excludedPath, String dependencyPath, Date createDate) {
+		this.createDate = createDate;
 		this.absolutePath = absolutePath;
 		String[] paths = absolutePath.split(File.separator);
 		this.projectDirName = paths[paths.length - 1];

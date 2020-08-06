@@ -6,18 +6,14 @@
 	<meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
 	<meta name="author" content="Creative Tim">
 	<title>T4M</title>
-	<!-- Fonts -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
 	<link rel="stylesheet" th:href="@{/assets/plugins/fontawesome/css/all.min.css}" type="text/css">
-	<!-- Argon CSS -->
 	<link rel="stylesheet" th:href="@{/assets/plugins/argon/argon.min.css}" type="text/css">
-	
 	<link rel="stylesheet" th:href="@{/assets/plugins/highlight/default.css}">
 	<link rel="stylesheet" th:href="@{/assets/plugins/bootstrap-table/bootstrap-table.min.css}">
 	<link rel="stylesheet"
 	      th:href="@{/assets/plugins/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.css}">
 	<link rel="stylesheet" th:href="@{/assets/plugins/bootstrap-table/group-by-v2/bootstrap-table-group-by.min.css}">
-	
 	<link rel="stylesheet" th:href="@{/assets/css/common.css}">
 	
 	<script th:src="@{/assets/plugins/echart/echarts.min.js}"></script>
@@ -59,7 +55,7 @@
 							</button>
 							<button id="switch_project_btn" type="button" class="col-auto btn btn-outline-default text-uppercase"
 							        data-toggle="modal"
-							        data-target="#model_to_switch_project">
+							        data-target="#modal_to_switch_project">
 								<span class="btn-inner--icon"><i class="fas fa-exchange-alt"></i></span>
 								<span class="btn-inner--text">Switch</span>
 							</button>
@@ -70,7 +66,7 @@
 				<!-- Modal to create new project -->
 				<div class="modal fade" id="modal_to_scan_project" tabindex="-1" role="dialog"
 				     aria-labelledby="modal_to_scan_project_label" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+					<div class="modal-dialog modal-dialog-scrollable" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="modal_to_scan_project_label" v-html="title"></h5>
@@ -81,6 +77,21 @@
 							<div class="modal-body">
 								<form>
 									<div class="form-group" v-html="projectNameHTML"></div>
+									<div class="form-group">
+										<div class="custom-control pl-0">
+											<label class="custom-label">Enable custom recording time</label>
+											<label class="custom-toggle">
+												<input type="checkbox" id="enable_project_create_time" value="off">
+												<span class="custom-toggle-slider rounded-circle"></span>
+											</label>
+										</div>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+											</div>
+											<input class="form-control" type="text" id="project_create_time" disabled>
+										</div>
+									</div>
 									<div class="form-group">
 										<label for="excluded_path">Excluded path</label>
 										<textarea class="form-control" id="excluded_path" rows="2">{{modalFlag==='scan'?projectExcludedPath:defaultExcludedPath}}</textarea>
@@ -113,12 +124,12 @@
 				</div>
 				
 				<!-- Modal to switch and delete project -->
-				<div class="modal fade" id="model_to_switch_project" tabindex="-1" role="dialog"
-				     aria-labelledby="model_to_switch_project_label" aria-hidden="true">
+				<div class="modal fade" id="modal_to_switch_project" tabindex="-1" role="dialog"
+				     aria-labelledby="modal_to_switch_project_label" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="model_to_switch_project_label">Switch project</h5>
+								<h5 class="modal-title" id="modal_to_switch_project_label">Switch project</h5>
 								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
@@ -262,14 +273,16 @@
 	<script th:src="@{/assets/plugins/jquery/jquery-scrollLock.min.js}"></script>
 	<script th:src="@{/assets/plugins/bootstrap/bootstrap.bundle.min.js}"></script>
 	<script th:src="@{/assets/plugins/cookie/js.cookie.js}"></script>
-	<!-- Argon JS -->
-	<script th:src="@{/assets/plugins/argon/argon.min.js}"></script>
+	<!--laydate-->
+	<script th:src="@{/assets/plugins/laydate/laydate.js}"></script>
 	<!--highlight-->
 	<script th:src="@{/assets/plugins/highlight/highlight.pack.js}"></script>
 	<!-- Bootstrap-table -->
 	<script th:src="@{/assets/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
 	<script th:src="@{/assets/plugins/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.js}"></script>
 	<script th:src="@{/assets/plugins/bootstrap-table/group-by-v2/bootstrap-table-group-by.min.js}"></script>
+	<!-- Argon JS -->
+	<script th:src="@{/assets/plugins/argon/argon.min.js}"></script>
 	<!--common.js-->
 	<script th:src="@{/assets/js/common.js}"></script>
 	
@@ -278,6 +291,10 @@
       let currentProjectPath = [[${currentProjectPath}]];
 
       $(function () {
+          laydate.render({
+              elem: '#project_create_time',
+              lang: 'en', type: 'datetime', theme: '#5e72e4',
+          });
           if (blank_page_trigger) {
               $("#new_project_btn").trigger("click");
               $('#scan_current_project_btn').attr("disabled", "");
@@ -323,8 +340,18 @@
           }
       }
 
+      $('#modal_to_scan_project').on('shown.bs.modal', function (e) {
+          $('#modal_to_scan_project').modal('handleUpdate'); //避免无法滚动
+      })
+
+      $('#enable_project_create_time').click(function () {
+          let enable_custom_time = document.getElementById("enable_project_create_time").checked
+          document.getElementById("project_create_time").disabled = !enable_custom_time;
+      })
+
       function scanProject(obj) {
           let projectPath = $('#project_path').val()
+          let projectCreatTime = $('#project_create_time').val();
           let excludedPath = $('#excluded_path').val()
           let dependencyPath = $('#dependency_path').val()
           if (projectPath === "") {
@@ -340,11 +367,15 @@
               }, 1000);
               $.post("/operation/" + scanType, {
                   projectPath: projectPath,
+                  projectCreatTime: projectCreatTime,
                   excludedPath: excludedPath,
                   dependencyPath: dependencyPath
               }, function (data) {
                   clearInterval(scanningCounter);
                   if (data === "success") {
+                      window.location.reload();
+                  } else {
+                      alert(data);
                       window.location.reload();
                   }
               })
@@ -359,7 +390,7 @@
           },
       })
 
-      $('#model_to_switch_project').on('show.bs.modal', function (e) {
+      $('#modal_to_switch_project').on('show.bs.modal', function (e) {
           $.get("/operation/search", function (data) {
               vm_for_switch_project_model.currentProject = data['currentProject'];
               let projectArray = [];
@@ -367,8 +398,10 @@
                   projectArray.push([identifier, formatProjectIdentifier(identifier, data['currentProject'])])
               }
               vm_for_switch_project_model.projectArray = projectArray;
+              $('#modal_to_switch_project').modal('handleUpdate'); //避免无法滚动
           })
       })
+
 
       //将t4m#123456拆分，并添加样式
       function formatProjectIdentifier(projectIdentifier, currentProjectIdentifier) {
