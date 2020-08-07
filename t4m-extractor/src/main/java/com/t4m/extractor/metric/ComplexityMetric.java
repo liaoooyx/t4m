@@ -7,10 +7,6 @@ import com.github.javaparser.ast.stmt.*;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.util.MathUtil;
 
-import java.text.DecimalFormat;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Created by Yuxiang Liao on 2020-07-16 18:39.
  */

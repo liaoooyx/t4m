@@ -1,6 +1,5 @@
 package com.t4m.extractor.metric;
 
-import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 

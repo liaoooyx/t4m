@@ -1,18 +1,14 @@
 package com.simulation.core.foo;
 // haha
+
+import com.simulation.core.CoreClass;
+import com.simulation.core.bar.*;
+
 import java.util.ArrayList;
-import java.util.HashMap; // haha
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import com.simulation.core.CoreClass;
-import com.simulation.core.bar.SimpleAbstractClass;
-import com.simulation.core.bar.SimpleClassA;
-import com.simulation.core.bar.SimpleClassB;
-import com.simulation.core.bar.SimpleClassC;
-import com.simulation.core.bar.SimpleInterfaceA;
-import com.simulation.core.bar.SimpleInterfaceB;
 
 /**
  * Created by Yuxiang Liao on 2020-06-21 15:26.

@@ -1,7 +1,6 @@
 package com.simulation.core.foo;
 
 import com.simulation.core.bar.SimpleClassB;
-import com.simulation.core.bar.SimpleClassC;
 
 /**
  * Created by Yuxiang Liao on 2020-06-21 16:34.

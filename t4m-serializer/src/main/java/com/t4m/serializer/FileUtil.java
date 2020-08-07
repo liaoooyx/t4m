@@ -3,7 +3,7 @@ package com.t4m.serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
 
 /**
  * Created by Yuxiang Liao on 2020-06-17 06:01.

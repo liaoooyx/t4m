@@ -1,8 +1,8 @@
 package com.simulation.core.foo;
 
-import java.util.LinkedList;
-
 import com.simulation.core.bar.SimpleClassC;
+
+import java.util.LinkedList;
 
 /**
  * Created by Yuxiang Liao on 2020-06-21 19:46.

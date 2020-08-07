@@ -1,5 +1,6 @@
 package com.t4m.serializer;
 
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.entity.ProjectInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-import com.t4m.conf.GlobalProperties;
 
 /**
  * Created by Yuxiang Liao on 2020-06-25 00:09.

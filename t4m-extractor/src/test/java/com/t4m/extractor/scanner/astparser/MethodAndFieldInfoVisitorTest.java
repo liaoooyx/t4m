@@ -2,7 +2,10 @@ package com.t4m.extractor.scanner.astparser;
 
 import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.T4MExtractor;
-import com.t4m.extractor.entity.*;
+import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.FieldInfo;
+import com.t4m.extractor.entity.MethodInfo;
+import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -13,7 +16,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Disabled
 @Deprecated

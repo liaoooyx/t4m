@@ -5,8 +5,6 @@ import com.github.javaparser.ast.body.TypeDeclaration;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 
-import java.util.List;
-
 /**
  * Created by Yuxiang Liao on 2020-07-12 01:40.
  */

@@ -1,6 +1,5 @@
 package com.t4m.extractor.scanner;
 
-import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.entity.ProjectInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

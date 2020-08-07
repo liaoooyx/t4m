@@ -1,7 +1,8 @@
 package com.t4m.web.util;
 
-import java.util.LinkedHashMap;
 import com.t4m.extractor.util.MathUtil;
+
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**

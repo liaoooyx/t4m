@@ -9,8 +9,6 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSol
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JarTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
-import com.t4m.conf.GlobalProperties;
-import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.ProjectInfo;
@@ -31,7 +29,7 @@ import java.util.List;
  * Created by Yuxiang Liao on 2020-07-11 11:00.
  */
 public class No6_JavaParserScanner {
-	public static final Logger LOGGER = LoggerFactory.getLogger(No6_ASTParserScanner.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(No6_JavaParserScanner.class);
 
 	private final ProjectInfo projectInfo;
 

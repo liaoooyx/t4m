@@ -1,7 +1,10 @@
 plugins {
     id 'org.springframework.boot' version '2.3.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'java'
+}
+
+bootJar {
+    mainClassName = 'com.t4m.web.T4mWebApplication'
 }
 
 configurations {
@@ -12,7 +15,6 @@ configurations {
 }
 
 dependencies {
-
     implementation project(":t4m-conf")
     implementation project(":t4m-extractor")
     implementation project(":t4m-serializer")
@@ -22,8 +24,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.3.1.RELEASE'
 
-//    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.3.1.RELEASE') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -32,6 +32,3 @@ dependencies {
 
 }
 
-//bootRun{
-//    sourceResources sourceSets.main
-//}
