@@ -12,7 +12,7 @@ git clone https://github.com/liaoooyx/t4m.git
 
 The executable jar file is in `t4m/run/`. 
 
-##How to run
+## How to run
 
 1. You need to the add the absolute root path of `t4m` to your System Variable
 
