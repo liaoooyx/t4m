@@ -1,4 +1,4 @@
-package com.t4m.web.controller;
+package com.t4m.web.controller.dashboard;
 
 import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.T4MExtractor;

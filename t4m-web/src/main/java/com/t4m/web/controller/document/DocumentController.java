@@ -1,4 +1,4 @@
-package com.t4m.web.controller;
+package com.t4m.web.controller.document;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

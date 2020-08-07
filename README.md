@@ -1,6 +1,8 @@
 # t4m project
 
-T4M (Trends for Metrics) is a static code analysis tool to visualize the architectural metrics and trends for Java project. It doesn't detect defects of code (semantic level) which based on build-in rules, instead it extract the structural information of the project (pacakge, class, method, etc.). It devotes to help developers and managers to better understand the current structure of their products, to monitor whether the project is developing as expected, locating the deviations, as well as finding possible high-risk modules that are defective. 
+T4M (Trends for Metrics) is a static code analysis tool to visualize the architectural metrics and trends for Java project, designing to be a complement of other similar tools in this domain like SonarQube, JDepend, etc.
+
+It devotes to help developers to better understand the structure of their projects, to review whether the architecture of their project is evolving as expected and locate the deviations, as well as finding possible high-risk components that could be defective. 
 
 ## How to install
 
@@ -10,11 +12,11 @@ Download the source code to your computer or using:
 git clone https://github.com/liaoooyx/t4m.git
 ```
 
-The executable jar file is in `t4m/run/`. 
+The executable jar file is placed in the `t4m/run/` directory. 
 
 ## How to run
 
-1. You need to the add the absolute root path of `t4m` to your System Variable
+1. Before run the service, you need to the add the absolute root path of `t4m` root directory to your System Variable.
 
    - For Linux or Mac user: 
 
@@ -24,7 +26,9 @@ The executable jar file is in `t4m/run/`.
      export T4M_HOME=/absolute/path/to/t4m
      ```
 
-     Remember to run the command: `source .bash_profile`.
+     Rememer to replace the root path of `t4m`.  You can get the absolute path by `cd` to the `t4m` root directory, and then execute command  `pwd`.
+
+     Remember to run the command: `source .bash_profile` in order to load the variable to your OS.
 
    - For Windows user: 
 
@@ -32,15 +36,21 @@ The executable jar file is in `t4m/run/`.
 
      ![windows-systeem-variable](doc/imgs/windows-systeem-variable.png)
 
-2. Go to the `t4m` root path. Run the following command:
+2. Go to the `t4m` root dir. Run the following command:
 
    ```
-   java -jar /run/t4m-web-1.0-SNAPSHOT.jar
+   java -jar run/t4m-web-1.0-SNAPSHOT.jar
    ```
 
 ## How to use
 
-After you run the `t4m-web` Jar file. It will start a web service. You can open `http://localhost:8087/` in your browser and follow the instructions.
+After you run the `t4m-web` Jar file. It will start a web service. You can open
+
+```
+http://localhost:8087/
+```
+
+ in your browser and follow the instructions.
 
 ## How to stop
 
@@ -55,5 +65,3 @@ You may want to modified the source code and rebuild the project. We provide a g
 ```
 
 It will build the the executable jar file to `[t4mRootDir]/run/` 
-
-

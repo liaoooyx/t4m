@@ -287,7 +287,8 @@
 	<script th:src="@{/assets/js/common.js}"></script>
 	
 	<script th:inline="javascript">
-      var blank_page_trigger = [[${isBlank}]];
+      var triggerNewModal = [[${triggerNew}]];
+      var disableScan = [[${disableScan}]];
       let currentProjectPath = [[${currentProjectPath}]];
 
       $(function () {
@@ -295,12 +296,10 @@
               elem: '#project_create_time',
               lang: 'en', type: 'datetime', theme: '#5e72e4',
           });
-          if (blank_page_trigger) {
+          if (triggerNewModal) {
               $("#new_project_btn").trigger("click");
-              $('#scan_current_project_btn').attr("disabled", "");
           }
-          let currentPointer = [[${currentProjectIdentifier}]];
-          if (false) {
+          if (disableScan) {
               $('#scan_current_project_btn').attr("disabled", "");
           }
       })
@@ -346,6 +345,7 @@
 
       $('#enable_project_create_time').click(function () {
           let enable_custom_time = document.getElementById("enable_project_create_time").checked
+          document.getElementById("project_create_time").value="";
           document.getElementById("project_create_time").disabled = !enable_custom_time;
       })
 

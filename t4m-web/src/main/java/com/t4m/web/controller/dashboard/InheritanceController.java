@@ -1,4 +1,4 @@
-package com.t4m.web.controller;
+package com.t4m.web.controller.dashboard;
 
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ProjectInfo;
@@ -25,10 +25,10 @@ import java.util.*;
  * Created by Yuxiang Liao on 2020-07-21 23:23.
  */
 @Controller
-@RequestMapping("/dashboard/cohesion")
-public class CohesionController {
+@RequestMapping("/dashboard/inheritance")
+public class InheritanceController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CohesionController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(InheritanceController.class);
 
 	@Resource(name = "ProjectService")
 	private ProjectService projectService;
@@ -50,59 +50,31 @@ public class CohesionController {
 		// 用于timeline chart
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
 
-		LinkedHashMap<String, Map<String, List<Object>>> classCohesionDataset = new LinkedHashMap<>();
+		List<Object[]> deepOfInheritanceTreeDataset = new ArrayList<>();
 		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			Map<String, List<Object>> series = new HashMap<>();
-			series.put("Interface", new ArrayList<>());
-			series.put("Abstract Class", new ArrayList<>());
-			series.put("Class", new ArrayList<>());
-			series.put("Enum", new ArrayList<>());
-			series.put("Annotation", new ArrayList<>());
-			series.put("package-info", new ArrayList<>());
 			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-				List<Object> rows = null;
-				// 注意package-info.java的getClassModifier()可能为null
-				ClassInfo.ClassModifier classModifier = classInfo.getClassModifier();
-				if (classModifier != null) {
-					switch (classInfo.getClassModifier()) {
-						case ENUM:
-							rows = series.get("Enum");
-							break;
-						case ANNOTATION:
-							rows = series.get("Annotation");
-							break;
-						case ABSTRACT_CLASS:
-							rows = series.get("Abstract Class");
-							break;
-						case INTERFACE:
-							rows = series.get("Interface");
-							break;
-						case CLASS:
-							rows = series.get("Class");
-							break;
-						case NONE:
-							rows = series.get("package-info");
-							break;
-					}
-				} else {
-					LOGGER.debug("Should not go into this statement, please use debug and check the program again.");
-					throw new RuntimeException(
-							"Should not go into this statement, please use debug and check the program again.");
-				}
-				List<Object> cols = new ArrayList<>();
-				cols.add(classInfo.getTightClassCohesion());
-				cols.add(classInfo.getLooseClassCohesion());
-				cols.add(classInfo.getLackOfCohesionOfMethods4());
-				cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-				cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-				rows.add(cols);
+				Object[] row =
+						new Object[]{time, classInfo.getDeepOfInheritanceTree(), classInfo.getFullyQualifiedName(),
+						             classInfo.getPackageInfo().getModuleInfo().getRelativePath()};
+				deepOfInheritanceTreeDataset.add(row);
 			}
-			classCohesionDataset.put(time, series);
 		}
-		model.addAttribute("classCohesionDataset", classCohesionDataset);
+		model.addAttribute("deepOfInheritanceTreeDataset", deepOfInheritanceTreeDataset);
 
-		return "page/dashboard/cohesion_metric";
+		List<Object[]> numberOfChildrenDataset = new ArrayList<>();
+		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
+			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
+			for (ClassInfo classInfo : projectInfo.getAllClassList()) {
+				Object[] row =
+						new Object[]{time, classInfo.getNumberOfChildren(), classInfo.getFullyQualifiedName(),
+						             classInfo.getPackageInfo().getModuleInfo().getRelativePath()};
+				numberOfChildrenDataset.add(row);
+			}
+		}
+		model.addAttribute("numberOfChildrenDataset", numberOfChildrenDataset);
+
+		return "page/dashboard/inheritance_metric";
 	}
 
 
@@ -119,9 +91,8 @@ public class CohesionController {
 			row.put("declaration", classInfo.getClassDeclaration().toString());
 			row.put("package", classInfo.getPackageFullyQualifiedName());
 			row.put("module", classInfo.getPackageInfo().getModuleInfo().getShortName());
-			row.put("lackOfCohesionInMethods4", classInfo.getLackOfCohesionOfMethods4());
-			row.put("tightClassCohesion", classInfo.getTightClassCohesion());
-			row.put("looseClassCohesion", classInfo.getLooseClassCohesion());
+			row.put("deepOfInheritanceTree", classInfo.getDeepOfInheritanceTree());
+			row.put("numberOfChildren", classInfo.getNumberOfChildren());
 			row.put("qualifiedName", classInfo.getFullyQualifiedName());
 			rows.add(row);
 		}
@@ -131,19 +102,18 @@ public class CohesionController {
 	@GetMapping("/table/chart/class")
 	@ResponseBody
 	public List<Object[]> selectTableChartRecordForClass(@RequestParam(name = "qualifiedName") String qualifiedName) {
+
 		//	第一行是系列名，从第二行开始，每一行是一条记录的数据，其中第一列是时间
 		List<Object[]> dataset = new ArrayList<>();
-		dataset.add(
-				new String[]{"time", "Lack of Cohesion in Methods 4", "Tight Class Cohesion", "Loose Class Cohesion"});
+		dataset.add(new String[]{"time", "Deep of Inheritance Tree", "Number of Children"});
 		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
-			Object[] tempRow = new Object[4];
+			Object[] tempRow = new Object[3];
 			tempRow[0] = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			Arrays.fill(tempRow, 1, 3, null);
+			Arrays.fill(tempRow, 1, 2, null);
 			if (classInfo != null) { //类可能还未创建或已经删除
-				tempRow[1] = classInfo.getLackOfCohesionOfMethods4();
-				tempRow[2] = classInfo.getTightClassCohesion();
-				tempRow[3] = classInfo.getLooseClassCohesion();
+				tempRow[1] = classInfo.getDeepOfInheritanceTree();
+				tempRow[2] = classInfo.getNumberOfChildren();
 			}
 			dataset.add(tempRow);
 		}
