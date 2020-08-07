@@ -59,9 +59,14 @@ task buildT4M(type: Copy) {
     dependsOn 't4m-web:build'
     File runDir = new File("${project.rootDir}/run")
     if (runDir.exists()) {
-        runDir.listFiles().each {file->file.delete()}
+        runDir.listFiles().each { file -> file.delete() }
         runDir.delete()
     }
+    File webProp = new File("${project.rootDir}/conf/web.properties")
+    if (webProp.exists()) {
+        webProp.delete()
+    }
+    new File("${project.rootDir}/conf/web.properties") << "CURRENT_PROJECT_IDENTIFIER="
     from 't4m-web/build/libs'
     into 'run/'
 }
