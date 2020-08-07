@@ -48,7 +48,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error("Cannot resolve current class declaration. It may be declared within a method.");
+			LOGGER.debug("Cannot resolve current class declaration. It may be declared within a method.\n{}", n);
 			return;
 		}
 		if (n.isInterface()) {
@@ -75,7 +75,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error("Cannot resolve current enum declaration. It may be declared within a method.");
+			LOGGER.debug("Cannot resolve current enum declaration. It may be declared within a method.\n", n);
 			return;
 		}
 		currentClassInfo.setClassModifier(ClassInfo.ClassModifier.ENUM);
@@ -100,7 +100,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error("Cannot resolve current annotation declaration. It may be declared within a method.");
+			LOGGER.debug("Cannot resolve current annotation declaration. It may be declared within a method.\n{}", n);
 			return;
 		}
 		currentClassInfo.setClassModifier(ClassInfo.ClassModifier.ANNOTATION);
@@ -117,7 +117,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error("Cannot resolve current field declaration. It may be declared within a method.");
+			LOGGER.debug("Cannot resolve current field declaration. It may be declared within a method.\n{}", n);
 			return;
 		}
 		boolean isStatic = false;
@@ -168,7 +168,9 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	public void visit(ConstructorDeclaration n, Void arg) {
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error("Cannot resolve current method declaration. It may be declared in the class within a method.");
+			LOGGER.debug(
+					"Cannot resolve current method declaration. It may be declared in the class within a method.\n{}",
+					n);
 			return;
 		}
 		//构造MethodInfo
@@ -197,7 +199,9 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	public void visit(MethodDeclaration n, Void arg) {
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error("Cannot resolve current method declaration. It may be declared in the class within a method.");
+			LOGGER.debug(
+					"Cannot resolve current method declaration. It may be declared in the class within a method.\n{}",
+					n);
 			return;
 		}
 		//构造MethodInfo
@@ -303,11 +307,11 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 			try {
 				ClassInfo extendedClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
 				                                                             extendedType.resolve().getQualifiedName());
-				if (extendedClass == null){
+				if (extendedClass == null) {
 					ClassInfo unknownClassInfo = new ClassInfo(extendedType.getNameAsString(), "");
 					EntityUtil.safeAddEntityToList(unknownClassInfo, currentClassInfo.getExtendsClassList());
 					EntityUtil.safeAddEntityToList(currentClassInfo, unknownClassInfo.getImmediateSubClassList());
-				}else {
+				} else {
 					EntityUtil.safeAddEntityToList(extendedClass, currentClassInfo.getExtendsClassList());
 					EntityUtil.safeAddEntityToList(currentClassInfo, extendedClass.getImmediateSubClassList());
 				}
@@ -334,7 +338,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 			} catch (UnsolvedSymbolException e) {
 				// 如果不是项目本身的类，则直接忽略，不需要添加进列表中
 			} catch (UnsupportedOperationException e) {
-				LOGGER.error("Error occurred when resolving [{}].", node, e.toString());
+				LOGGER.debug("Error occurred when resolving [{}]. {}", node, e.toString(), e);
 			}
 		}
 		for (Node n : node.getChildNodes()) {

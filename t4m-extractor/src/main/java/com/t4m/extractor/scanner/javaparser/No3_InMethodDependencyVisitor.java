@@ -49,7 +49,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	public void visit(FieldDeclaration n, Void arg) {
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error("Cannot resolve current block declaration.");
+			LOGGER.debug("Cannot resolve current field declaration.\n{}", n);
 			return;
 		}
 		// 解析方法内部产生的依赖关系，内聚力
@@ -61,7 +61,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		// 由于删除了方法声明和构造器声明中的super.visit(n, arg)，所以这里只会出现方法块的初始化
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error("Cannot resolve current block declaration.");
+			LOGGER.debug("Cannot resolve current block declaration.\n{}", n);
 			return;
 		}
 		// 解析方法内部产生的依赖关系，内聚力
@@ -72,7 +72,7 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	public void visit(ConstructorDeclaration n, Void arg) {
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error(
+			LOGGER.debug(
 					"Cannot resolve current constructor declaration. It may be declared in the class within a method.");
 			return;
 		}
@@ -80,8 +80,9 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 				currentClassInfo.getMethodInfoList(),
 				currentClassInfo.getFullyQualifiedName() + "." + n.getNameAsString(), n.getRange().orElse(null));
 		if (currentMethodInfo == null) {
-			LOGGER.error("需要检查代码：Cannot resolve current constructor declaration to MethodInfo: [{}] in [{}].",
-			             n.getDeclarationAsString(), currentClassInfo.getFullyQualifiedName());
+			LOGGER.error(
+					"Need to check the code：Cannot resolve current constructor declaration to MethodInfo: [{}] in [{}].",
+					n.getDeclarationAsString(), currentClassInfo.getFullyQualifiedName());
 			return;
 		}
 		BlockStmt body = n.getBody();
@@ -106,15 +107,16 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	public void visit(MethodDeclaration n, Void arg) {
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.error("Cannot resolve current method declaration. It may be declared in the class within a method.");
+			LOGGER.debug("Cannot resolve current method declaration. It may be declared in the class within a method.");
 			return;
 		}
 		MethodInfo currentMethodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(
 				currentClassInfo.getMethodInfoList(),
 				currentClassInfo.getFullyQualifiedName() + "." + n.getNameAsString(), n.getRange().orElse(null));
 		if (currentMethodInfo == null) {
-			LOGGER.error("需要检查代码：Cannot resolve current method declaration to MethodInfo: [{}] in [{}].",
-			             n.getDeclarationAsString(), currentClassInfo.getFullyQualifiedName());
+			LOGGER.error(
+					"Need to check the code：Cannot resolve current method declaration to MethodInfo: [{}] in [{}].",
+					n.getDeclarationAsString(), currentClassInfo.getFullyQualifiedName());
 			return;
 		}
 		BlockStmt body = n.getBody().orElse(null);
@@ -265,15 +267,15 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			                      rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving MethodCallExpr: " + e.toString());
-			// System.out.println("\t" + " -- " + e.getMessage());
 			//RFC：无法定位该方法，添加默认计数
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			LOGGER.debug("Error occurred when resolving MethodCallExpr: {}", e.toString(), e);
 		} catch (Exception e) {
 			exceptionList.add("When resolving MethodCallExpr: " + e.toString());
-			// LOGGER.error("Unexpected error occurred when resolving MethodCallExpr: {}", e.toString(), e);
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			LOGGER.debug("Unexpected error occurred when resolving MethodCallExpr: {}", e.toString(), e);
 		}
 	}
 
@@ -293,15 +295,15 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			                      rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving MethodReferenceExpr: " + e.toString());
-			// System.out.println("\t" + " -- " + e.getMessage());
 			//RFC：无法定位该方法，添加默认计数
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			LOGGER.debug("Error occurred when resolving MethodReferenceExpr: {}", e.toString(), e);
 		} catch (Exception e) {
 			exceptionList.add("When resolving MethodReferenceExpr: " + e.toString());
-			// LOGGER.error("Unexpected error occurred when resolving MethodReferenceExpr: {}", e.toString(), e);
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			LOGGER.debug("Unexpected error occurred when resolving MethodReferenceExpr: {}", e.toString(), e);
 		}
 	}
 
@@ -318,14 +320,14 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			                rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ObjectCreationExpr: " + e.toString());
-			// System.out.println("\t" + " -- " + e.getMessage());
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			LOGGER.debug("Error occurred when resolving ObjectCreationExpr: {}", e.toString(), e);
 		} catch (Exception e) {
 			exceptionList.add("When resolving ObjectCreationExpr: " + e.toString());
-			// LOGGER.error("Unexpected error occurred when resolving ObjectCreationExpr: {}", e.toString(), e);
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			LOGGER.debug("Unexpected error occurred when resolving ObjectCreationExpr: {}", e.toString(), e);
 		}
 	}
 
@@ -342,15 +344,15 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			                rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ExplicitConstructorInvocationStmt: " + e.toString());
-			// System.out.println("\t" + " -- " + e.getMessage());
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			LOGGER.debug("Error occurred when resolving ExplicitConstructorInvocationStmt: {}", e.toString(), e);
 		} catch (Exception e) {
 			exceptionList.add("When resolving ExplicitConstructorInvocationStmt: " + e.toString());
-			// LOGGER.error("Unexpected error occurred when resolving ExplicitConstructorInvocationStmt: {}", e.toString(),
-			//              e);
 			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
 			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			LOGGER.debug("Unexpected error occurred when resolving ExplicitConstructorInvocationStmt: {}", e.toString(),
+			             e);
 		}
 	}
 
@@ -368,7 +370,6 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			if (resolvedType.isReferenceType()) {
 				// 这里会解析项目内的类。变量则获取声明类型
 				String declaredClassName = resolvedType.asReferenceType().getQualifiedName();
-				// System.out.println("\tFieldAccessExpr: " + declaredClassName);
 				dependencySet.add(declaredClassName);
 			}
 			// 字段访问，用于LOCM
@@ -380,10 +381,10 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving FieldAccessExpr: " + e.toString());
-			// System.out.println("\t" + " -- " + e.getMessage());
+			LOGGER.debug("Error occurred when resolving FieldAccessExpr: {}", e.toString(), e);
 		} catch (Exception e) {
 			exceptionList.add("When resolving FieldAccessExpr: " + e.toString());
-			// LOGGER.error("Unexpected error occurred when resolving FieldAccessExpr: {}", e.toString(), e);
+			LOGGER.debug("Unexpected error occurred when resolving FieldAccessExpr: {}", e.toString(), e);
 		}
 	}
 
@@ -413,10 +414,10 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			}
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving NameExpr: " + e.toString());
-			// System.out.println("\t" + " -- " + e.getMessage());
+			LOGGER.debug("Error occurred when resolving NameExpr: {}", e.toString(), e);
 		} catch (Exception e) {
 			exceptionList.add("When resolving NameExpr: " + e.toString());
-			// LOGGER.error("Unexpected error occurred when resolving NameExpr: {}", e.toString(), e);
+			LOGGER.debug("Unexpected error occurred when resolving NameExpr: {}", e.toString(), e);
 		}
 	}
 
@@ -432,10 +433,10 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			dependencySet.add(declaredClassName);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ClassOrInterfaceType: " + e.toString());
-			// System.out.println("\t" + " -- " + e.getMessage());
+			LOGGER.debug("Error occurred when resolving ClassOrInterfaceType: {}", e.toString(), e);
 		} catch (Exception e) {
 			exceptionList.add("When resolving ClassOrInterfaceType: " + e.toString());
-			// LOGGER.error("Unexpected error occurred when resolving ClassOrInterfaceType: {}", e.toString(), e);
+			LOGGER.debug("Unexpected error occurred when resolving ClassOrInterfaceType: {}", e.toString(), e);
 		}
 	}
 
@@ -464,14 +465,12 @@ public class No3_InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 				localMethodInfoList.add(methodInfo);
 			});
 		}
-		// System.out.println("\tMethodCallOrReference-declaring: " + declaringClassName);
 
 		// 耦合找到方法的返回值。链式方法调用中，中间调用的方法的返回值也算依赖
 		ResolvedType resolvedType = resolvedMethodDeclaration.getReturnType();
 		if (resolvedType.isReferenceType()) {
 			// 这里会解析项目内的类。获取返回类型
 			String returnClassName = resolvedType.asReferenceType().getQualifiedName();
-			// System.out.println("\tMethodCallOrReference-return: " + returnClassName);
 			dependencySet.add(returnClassName);
 		}
 	}

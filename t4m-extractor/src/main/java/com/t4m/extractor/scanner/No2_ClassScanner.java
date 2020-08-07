@@ -28,7 +28,8 @@ public class No2_ClassScanner {
 	 * 对于列表中的每个File对象，从中读取信息，并转化为{@code ClassInfo}对象. <br> 包括{@code absolutePath}, {@code packageFullyQualifiedName}.
 	 */
 	public void scan(List<File> rawJavaFileList) {
-		LOGGER.info("Extracting the basic information from .java files. Extracting the basic information of class level.");
+		LOGGER.info(
+				"Extracting the basic information from .java files. Extracting the basic information of class level.");
 		rawJavaFileList.forEach(javaFile -> {
 			try {
 				String line;
@@ -55,14 +56,13 @@ public class No2_ClassScanner {
 				classInfo.setClassDeclaration(ClassInfo.ClassDeclaration.PUBLIC_OUTER_CLASS);
 				classInfo.setFullyQualifiedName(pkgFullyQualifiedName + "." + classShortName);
 				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
-				if ("package-info".equals(classShortName)){
+				if ("package-info".equals(classShortName)) {
 					classInfo.setClassModifier(ClassInfo.ClassModifier.NONE);
 				}
-
 			} catch (FileNotFoundException e) {
-				LOGGER.error("No such file to be converted to ClassInfo object.%n[{}]", e.toString(), e);
+				LOGGER.debug("No such file to be converted to ClassInfo object.%n[{}]", e.toString(), e);
 			} catch (IOException e) {
-				LOGGER.error("Error happened when finding package path. [{}]", e.toString(), e);
+				LOGGER.debug("Error happened when finding package path. [{}]", e.toString(), e);
 			}
 		});
 	}

@@ -57,16 +57,13 @@ public class No6_JavaParserScanner {
 				                                               .newInstance(classInfo, projectInfo);
 				methodNameVisitor.visit(cu, null);
 			} catch (FileNotFoundException e) {
-				LOGGER.error("找不到文件", e);
+				LOGGER.debug("Cannot find {}. Stop the scanning now. {}", classInfo.getAbsolutePath(), e.toString());
 				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
-				LOGGER.error("无法实例化Visitor", e);
+				LOGGER.error("Cannot initial Visitor [{}]. Stop the scanning now. {}", visitorClass, e.toString());
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
+			} catch (Exception e) {
+				LOGGER.error("Unexpected error happen. Stop the scanning now.", e);
 				e.printStackTrace();
 			}
 		}
