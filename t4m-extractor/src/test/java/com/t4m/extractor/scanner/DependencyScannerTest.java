@@ -24,9 +24,8 @@ class DependencyScannerTest {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor();
-		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner(), new ClassScanner(),
-		                                   new PackageScanner(), new ModuleScanner(),
-		                                   new DependencyScanner()).extract(projectInfo);
+		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner(), new ClassScanner(), new PackageScanner(),
+		                                   new ModuleScanner(), new DependencyScanner()).extract(projectInfo);
 
 	}
 
@@ -47,7 +46,7 @@ class DependencyScannerTest {
 		assertEquals("JSimulation", rootModule.getRelativePath());
 		ModuleInfo subModule1 = EntityUtil.getModuleByShortName(rootModule.getSubModuleList(), "submodule1");
 		assertNotNull(subModule1);
-		assertEquals("JSimulation/submodule1", subModule1.getRelativePath());
+		assertEquals("JSimulation" + File.separator + "submodule1", subModule1.getRelativePath());
 	}
 
 	@Test
