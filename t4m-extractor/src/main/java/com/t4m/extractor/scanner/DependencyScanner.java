@@ -39,7 +39,7 @@ public class DependencyScanner implements T4MScanner {
 			String moduleSuffixPath = moduleInfo.getAbsolutePath().replace(projectInfo.getAbsolutePath(), "")
 			                                    .replaceFirst(RegularExprUtil.compat("/"), "").strip();
 			String moduleRelativePath = projectInfo.getProjectDirName() + File.separator + moduleSuffixPath;
-			String[] temp = moduleRelativePath.split(File.separator);
+			String[] temp = moduleRelativePath.split(RegularExprUtil.compat(File.separator));
 			String moduleShortName = temp[temp.length - 1];
 			if (Objects.equals(rootNode.getName(), moduleShortName)) {
 				// 根模块 (可以不存在根模块)
@@ -52,7 +52,7 @@ public class DependencyScanner implements T4MScanner {
 			moduleInfo.setShortName(moduleShortName);
 			// 根据模块的相对路径，递归生成节点
 			if (!"".equals(moduleSuffixPath)) {
-				String[] fileNames = moduleRelativePath.split(File.separator);
+				String[] fileNames = moduleRelativePath.split(RegularExprUtil.compat(File.separator));
 				//排除根模块
 				String[] excludeRootDir = Arrays.copyOfRange(fileNames, 1, fileNames.length);
 				initDirectoryNodeLink(excludeRootDir, rootNode, moduleInfo);

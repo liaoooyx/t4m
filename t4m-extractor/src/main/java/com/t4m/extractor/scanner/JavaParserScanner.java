@@ -15,6 +15,7 @@ import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.scanner.javaparser.No1_ClassInfoVisitor;
 import com.t4m.extractor.scanner.javaparser.No2_DeclarationVisitor;
 import com.t4m.extractor.scanner.javaparser.No3_InMethodDependencyVisitor;
+import com.t4m.extractor.util.RegularExprUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +84,7 @@ public class JavaParserScanner implements T4MScanner {
 		}
 		String dependencyPath = projectInfo.getDependencyPath();
 		if (!"".equals(dependencyPath)) {
-			String[] jars = dependencyPath.split(File.pathSeparator);
+			String[] jars = dependencyPath.split(RegularExprUtil.compat(File.separator));
 			for (String jarPath : jars) {
 				try {
 					typeSolverList.add(new JarTypeSolver(jarPath));

@@ -1,5 +1,6 @@
 package com.t4m.extractor.entity;
 
+import com.t4m.extractor.util.RegularExprUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,7 @@ public class ProjectInfo implements Serializable {
 	public ProjectInfo(String absolutePath, String excludedPath, String dependencyPath, Date createDate) {
 		this.createDate = createDate;
 		this.absolutePath = absolutePath;
-		String[] paths = absolutePath.split(File.separator);
+		String[] paths = absolutePath.split(RegularExprUtil.compat(File.separator));
 		this.projectDirName = paths[paths.length - 1];
 		this.excludedPath = excludedPath;
 		this.dependencyPath = dependencyPath;
