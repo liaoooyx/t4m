@@ -16,7 +16,7 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class No7_MetricsScannerTest {
+class MetricsScannerTest {
 
 	static ProjectInfo projectInfo;
 
@@ -25,10 +25,10 @@ class No7_MetricsScannerTest {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor();
-		t4MExtractor.setCustomScannerChain(new No1_DirectoryFileScanner(), new No2_ClassScanner(),
-		                                   new No3_PackageScanner(), new No4_ModuleScanner(),
-		                                   new No5_DependencyScanner(), new No6_JavaParserScanner(),
-		                                   new No7_MetricsScanner()).extract(projectInfo);
+		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner(), new ClassScanner(),
+		                                   new PackageScanner(), new ModuleScanner(),
+		                                   new DependencyScanner(), new JavaParserScanner(),
+		                                   new MetricsScanner()).extract(projectInfo);
 	}
 
 	@Test

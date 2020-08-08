@@ -25,7 +25,15 @@ public class GlobalProperties {
 	public static final String DB_ROOT_PATH;
 	public static final String DEFAULT_EXCLUDED_PATH;
 	public static final String DEFAULT_DEPENDENCY_PATH;
-	public static String CURRENT_PROJECT_IDENTIFIER;
+	private static String currentProjectIdentifier;
+
+	public static String getCurrentProjectIdentifier() {
+		return currentProjectIdentifier;
+	}
+
+	public static void setCurrentProjectIdentifier(String currentProjectIdentifier) {
+		GlobalProperties.currentProjectIdentifier = currentProjectIdentifier;
+	}
 
 	static {
 		T4mPropertiesUtil t4mProperties = new T4mPropertiesUtil(
@@ -35,14 +43,14 @@ public class GlobalProperties {
 		DEFAULT_DEPENDENCY_PATH = t4mProperties.getProperty(DEPENDENCY_PATH_KEY);
 		T4mPropertiesUtil webProperties = new T4mPropertiesUtil(
 				CONF_ROOT_PATH + File.separator + WEB_PROPERTIES_FILE_NAME);
-		CURRENT_PROJECT_IDENTIFIER = webProperties.getProperty(CURRENT_PROJECT_IDENTIFIER_KEY);
+		currentProjectIdentifier = webProperties.getProperty(CURRENT_PROJECT_IDENTIFIER_KEY);
 	}
 
 	public static void updateCurrentProjectPointer(String currentProjectName) {
 		T4mPropertiesUtil webProperties = new T4mPropertiesUtil(
 				CONF_ROOT_PATH + File.separator + WEB_PROPERTIES_FILE_NAME);
 		webProperties.setProperty(CURRENT_PROJECT_IDENTIFIER_KEY, currentProjectName);
-		CURRENT_PROJECT_IDENTIFIER = currentProjectName;
+		currentProjectIdentifier = currentProjectName;
 	}
 
 

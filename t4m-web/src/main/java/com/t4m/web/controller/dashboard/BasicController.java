@@ -52,7 +52,7 @@ public class BasicController {
 		// 基本信息
 		model.addAttribute("currentProjectInfo", projectInfos[0]);
 		model.addAttribute("preProjectInfo", projectInfos[1]);
-		model.addAttribute("currentProjectIdentifier", GlobalProperties.CURRENT_PROJECT_IDENTIFIER);
+		model.addAttribute("currentProjectIdentifier", GlobalProperties.getCurrentProjectIdentifier());
 		// 用于趋势图
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
 		model.addAttribute("moduleRecords", projectService.getNumOfModuleRecords());
@@ -88,8 +88,8 @@ public class BasicController {
 		for (PackageInfo packageInfo : projectInfo.getPackageList()) {
 			Map<String, Object> row = new LinkedHashMap<>();
 			row.put("name", packageInfo.getFullyQualifiedName());
-			row.put("classNum", packageInfo.getNumberOfJavaFile() + " / "+ packageInfo.getNumberOfAllClass());
-			row.put("module",packageInfo.getModuleInfo().getShortName());
+			row.put("classNum", packageInfo.getNumberOfJavaFile() + " / " + packageInfo.getNumberOfAllClass());
+			row.put("module", packageInfo.getModuleInfo().getShortName());
 			rows.add(row);
 		}
 		return rows;
@@ -108,10 +108,10 @@ public class BasicController {
 			row.put("declaration", classInfo.getClassDeclaration().toString());
 			row.put("package", classInfo.getPackageFullyQualifiedName());
 			row.put("module", classInfo.getPackageInfo().getModuleInfo().getShortName());
-			row.put("fieldNum",classInfo.getNumberOfFields());
-			row.put("methodNum",classInfo.getNumberOfMethods());
-			row.put("enumConstantsNum",classInfo.getNumberOfEnumConstants());
-			row.put("annotationMembers",classInfo.getNumberOfAnnotationMembers());
+			row.put("fieldNum", classInfo.getNumberOfFields());
+			row.put("methodNum", classInfo.getNumberOfMethods());
+			row.put("enumConstantsNum", classInfo.getNumberOfEnumConstants());
+			row.put("annotationMembers", classInfo.getNumberOfAnnotationMembers());
 			row.put("qualifiedName", classInfo.getFullyQualifiedName());
 			rows.add(row);
 		}

@@ -11,7 +11,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class No2_ClassScannerTest {
+class ModuleScannerTest {
 
 	static ProjectInfo projectInfo;
 
@@ -20,12 +20,14 @@ class No2_ClassScannerTest {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor();
-		t4MExtractor.setCustomScannerChain(new No1_DirectoryFileScanner(), new No2_ClassScanner()).extract(projectInfo);
+		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner(), new ClassScanner(),
+		                                   new PackageScanner(), new ModuleScanner()).extract(projectInfo);
 	}
 
 	@Test
-	@DisplayName("获取项目路径下所有Java文件")
+	@DisplayName("测试模块数量")
 	void scan() {
-		assertEquals(21, projectInfo.getClassList().size());
+		assertEquals(2, projectInfo.getModuleList().size());
 	}
+
 }

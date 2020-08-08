@@ -27,15 +27,10 @@ import java.util.List;
 /**
  * Created by Yuxiang Liao on 2020-07-11 11:00.
  */
-public class No6_JavaParserScanner implements T4MScanner {
-	public static final Logger LOGGER = LoggerFactory.getLogger(No6_JavaParserScanner.class);
+public class JavaParserScanner implements T4MScanner {
+	public static final Logger LOGGER = LoggerFactory.getLogger(JavaParserScanner.class);
 
 	private ProjectInfo projectInfo;
-	//
-	// public No6_JavaParserScanner(ProjectInfo projectInfo) {
-	// 	this.projectInfo = projectInfo;
-	// }
-
 	@Override
 	public void scan(ProjectInfo projectInfo, ScannerChain scannerChain) {
 		this.projectInfo = projectInfo;
@@ -49,18 +44,6 @@ public class No6_JavaParserScanner implements T4MScanner {
 		scanVisitor(No3_InMethodDependencyVisitor.class);
 		scannerChain.scan(projectInfo);
 	}
-
-	// public void scan() {
-	// 	LOGGER.info("Using JavaParser to resolve the static code.");
-	// 	initParser();
-	// 	LOGGER.info("Creating entities for the missing package-private outer classes and nested classes.");
-	// 	scanVisitor(No1_ClassInfoVisitor.class);
-	// 	LOGGER.info("Adding the missing information of classes. Constructing entities for methods and fields.");
-	// 	scanVisitor(No2_DeclarationVisitor.class);
-	// 	LOGGER.info("Resolving dependencies for all entities.");
-	// 	scanVisitor(No3_InMethodDependencyVisitor.class);
-	// }
-
 
 	private void scanVisitor(Class<? extends VoidVisitor> visitorClass) {
 		for (ClassInfo classInfo : projectInfo.getClassList()) {
@@ -84,10 +67,10 @@ public class No6_JavaParserScanner implements T4MScanner {
 
 	public void initParser() {
 		List<TypeSolver> typeSolverList = new ArrayList<>();
-		// ReflectionTypeSolver用于解析Java核心类
+		// ReflectionTypeSolver is used to resolve java core like rt.jar
 		typeSolverList.add(new ReflectionTypeSolver());
 		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
-			//JavaParserTypeSolver要求是根包所在文件夹位置
+			//JavaParserTypeSolver requires the path of the directory that the root package is.
 			if (moduleInfo.getMainScopePath() != null) {
 				typeSolverList.add(new JavaParserTypeSolver(new File(moduleInfo.getMainScopePath())));
 			}

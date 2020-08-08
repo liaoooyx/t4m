@@ -81,13 +81,13 @@ public class T4MExtractor {
 	}
 
 	private void useDefaultScannerChain() {
-		scannerChain.addScanner(new No1_DirectoryFileScanner());
-		scannerChain.addScanner(new No2_ClassScanner());
-		scannerChain.addScanner(new No3_PackageScanner());
-		scannerChain.addScanner(new No4_ModuleScanner());
-		scannerChain.addScanner(new No5_DependencyScanner());
-		scannerChain.addScanner(new No6_JavaParserScanner());
-		scannerChain.addScanner(new No7_MetricsScanner());
+		scannerChain.addScanner(new DirectoryFileScanner());
+		scannerChain.addScanner(new ClassScanner());
+		scannerChain.addScanner(new PackageScanner());
+		scannerChain.addScanner(new ModuleScanner());
+		scannerChain.addScanner(new DependencyScanner());
+		scannerChain.addScanner(new JavaParserScanner());
+		scannerChain.addScanner(new MetricsScanner());
 	}
 
 	public T4MExtractor setCustomScannerChain(T4MScanner... t4MScanners) {

@@ -26,7 +26,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 补充基本信息，包括补全类信息，添加MethodInfo，FieldInfo Created by Yuxiang Liao on 2020-07-12 13:38.
+ * Set the rest info for the classInfo object.
+ * Create MethodInfo and FieldInfo entities.
+ *
+ * Created by Yuxiang Liao on 2020-07-12 13:38.
  */
 public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 
@@ -41,7 +44,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	}
 
 	/**
-	 * 补全类信息，包括类标识符：interface, abstract, class，还有继承、实现关系。
+	 * Set class modifier, inheritance relationship and relevant dependencies, and SLOC metadata.
 	 */
 	@Override
 	public void visit(ClassOrInterfaceDeclaration n, Void arg) {
@@ -58,17 +61,13 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		} else {
 			currentClassInfo.setClassModifier(ClassInfo.ClassModifier.CLASS);
 		}
-		// 添加继承关系，接口可以多继承
 		addExtendsRelationship(n, currentClassInfo);
-		// 添加实现关系
 		addImplementationRelationship(n, currentClassInfo);
-
-		// SLOC
 		countAstSLOCMetaAndAddToClassInfo(n, currentClassInfo);
 	}
 
 	/**
-	 * 补全类信息，包括类标识符：enum，以及numberOfEnumConstants
+	 * Set class modifier, inheritance relationship and relevant dependencies, and SLOC metadata.
 	 */
 	@Override
 	public void visit(EnumDeclaration n, Void arg) {
@@ -86,14 +85,12 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 			}
 		}
 		currentClassInfo.setNumberOfEnumConstants(numOfEnumConstant);
-		// 实现关系
 		addImplementationRelationship(n, currentClassInfo);
-		// SLOC
 		countAstSLOCMetaAndAddToClassInfo(n, currentClassInfo);
 	}
 
 	/**
-	 * 补全类信息，包括类标识符：annotation，以及numberOfAnnotationMembers。
+	 * Set class modifier, and SLOC metadata.
 	 */
 	@Override
 	public void visit(AnnotationDeclaration n, Void arg) {
@@ -105,12 +102,11 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		}
 		currentClassInfo.setClassModifier(ClassInfo.ClassModifier.ANNOTATION);
 		currentClassInfo.setNumberOfAnnotationMembers(n.getMembers().size());
-		// SLOC
 		countAstSLOCMetaAndAddToClassInfo(n, currentClassInfo);
 	}
 
 	/**
-	 * 构造FieldInfo，并补充ClassInfo中的numberOfFields
+	 * Construct FieldInfo entities, as well as resolving relevant dependencies.
 	 */
 	@Override
 	public void visit(FieldDeclaration n, Void arg) {
@@ -162,7 +158,8 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	}
 
 	/**
-	 * 构造器与方法声明几乎一样，除了构造器没有返回值，和必然有方法体。
+	 * Construct MethodInfo entity，as well as resolving relevant dependencies and the complexity metadata.
+	 * Recall that a constructor does not have return keyword but must be a method body.
 	 */
 	@Override
 	public void visit(ConstructorDeclaration n, Void arg) {
@@ -173,18 +170,17 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 					n);
 			return;
 		}
-		//构造MethodInfo
+		// Construct MethodInfo
 		MethodInfo methodInfo = new MethodInfo(n.getNameAsString());
 		methodInfo.setReturnTypeString("");
 		commonMethodInitOperation(n, methodInfo, currentClassInfo);
 
-		// 添加方法声明出现的依赖关系
 		EntityUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
 		EntityUtil.addDependency(currentClassInfo, methodInfo.getParamsTypeAsClassInfoList());
 		EntityUtil.addDependency(currentClassInfo, methodInfo.getThrownExceptionClassList());
 
 		BlockStmt body = n.getBody();
-		//	解析方法复杂度
+		//	Complexity metadata
 		if (body != null) {
 			int complexityCount = ComplexityMetric.resolveComplexity(body, 1);
 			methodInfo.setCyclomaticComplexity(complexityCount);
@@ -193,7 +189,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	}
 
 	/**
-	 * 构造MethodInfo，并补充ClassInfo中的numberOfMethods，以及添加依赖
+	 * Construct MethodInfo entity，as well as resolving relevant dependencies and the complexity metadata.
 	 */
 	@Override
 	public void visit(MethodDeclaration n, Void arg) {
@@ -204,20 +200,18 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 					n);
 			return;
 		}
-		//构造MethodInfo
 		MethodInfo methodInfo = new MethodInfo(n.getNameAsString());
 		methodInfo.setReturnTypeString(n.getTypeAsString());
 		fillRelevantClassToList(n.getType(), methodInfo.getReturnTypeAsClassInfoList());
 		commonMethodInitOperation(n, methodInfo, currentClassInfo);
 
-		// 添加方法声明出现的依赖关系
 		EntityUtil.addDependency(currentClassInfo, methodInfo.getReturnTypeAsClassInfoList());
 		EntityUtil.addDependency(currentClassInfo, methodInfo.getParamsTypeAsClassInfoList());
 		EntityUtil.addDependency(currentClassInfo, methodInfo.getThrownExceptionClassList());
 
 		BlockStmt body = n.getBody().orElse(null);
 
-		//	解析方法复杂度
+		// Complexity metadata
 		if (body != null) {
 			int complexityCount = ComplexityMetric.resolveComplexity(body, 1);
 			methodInfo.setCyclomaticComplexity(complexityCount);
@@ -230,10 +224,10 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 
 
 	/**
-	 * 计算并添加类级别的SLOC计数，AST后缀对应的3项。
-	 * 通常代码行会变少（因为stmt会合并成一行）
-	 * 而注释行可能变多（因为混合行的注释和代码会被差分为多行）
-	 * 注意，类外的注释语句可能被忽略（比如在类结束符的的后面的注释）（类的JavaDoc会被保留）
+	 * Calculate the SLOC in class (AST) level.
+	 * Normally, the number of code lines will decrease as the cross-lines stmt will be combined in one line,
+	 * while the number of comment lines will increase as the mixed comment lines will be separated to different lines.
+	 * Notice that the comment outside a class may be ignored (JavaDoc will be kept).
 	 */
 	private void countAstSLOCMetaAndAddToClassInfo(Node n, ClassInfo currentClassInfo) {
 		// LexicalPreservingPrinter.setup(n);
@@ -244,9 +238,6 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		slocCounter.setASTSLOCToCounterMap(currentClassInfo.getSlocCounterMap());
 	}
 
-	/**
-	 * 用于构造器和方法声明visitor中，创建MethodInfo的公共部分
-	 */
 	private void commonMethodInitOperation(CallableDeclaration n, MethodInfo methodInfo, ClassInfo currentClassInfo) {
 		methodInfo.setMethodDeclarationString(n.getDeclarationAsString());
 		methodInfo.setRangeLocator(n.getRange().orElse(null));
@@ -277,9 +268,6 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		currentClassInfo.setNumberOfMethods(currentClassInfo.getMethodInfoList().size());
 	}
 
-	/**
-	 * 添加实现关系
-	 */
 	private void addImplementationRelationship(NodeWithImplements n, ClassInfo currentClassInfo) {
 		// 实现关系
 		List<ClassOrInterfaceType> implementedTypes = n.getImplementedTypes();
@@ -297,9 +285,6 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		}
 	}
 
-	/**
-	 * 添加继承关系，接口可以多继承
-	 */
 	private void addExtendsRelationship(NodeWithExtends n, ClassInfo currentClassInfo) {
 		// 实现关系
 		List<ClassOrInterfaceType> extendedTypes = n.getExtendedTypes();
@@ -325,7 +310,7 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	}
 
 	/**
-	 * 找到该字段涉及到的所有全限定类名（只包括跟项目有关的类）
+	 * Find out the relevant ClassInfo objects that involved in this Node.
 	 */
 	private void fillRelevantClassToList(Node node, List<ClassInfo> typeAsClassInfoList) {
 		if (node instanceof Type && ((Type) node).isReferenceType()) {

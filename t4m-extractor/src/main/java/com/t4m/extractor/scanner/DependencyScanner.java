@@ -5,6 +5,7 @@ import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.util.EntityUtil;
+import com.t4m.extractor.util.RegularExprUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +16,11 @@ import java.util.Objects;
 /**
  * Created by Yuxiang Liao on 2020-06-16 01:18.
  */
-public class No5_DependencyScanner implements T4MScanner {
+public class DependencyScanner implements T4MScanner {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(No5_DependencyScanner.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DependencyScanner.class);
 
 	private ProjectInfo projectInfo;
-	//
-	// public No5_DependencyScanner(ProjectInfo projectInfo) {
-	// 	this.projectInfo = projectInfo;
-	// }
 
 	@Override
 	public void scan(ProjectInfo projectInfo, ScannerChain scannerChain) {
@@ -37,26 +34,10 @@ public class No5_DependencyScanner implements T4MScanner {
 		scannerChain.scan(projectInfo);
 	}
 
-	// public void scan() {
-	// 	LOGGER.info("Resolving the dependencies between modules and packages.");
-	// 	DirHierarchyNode rootNode = new DirHierarchyNode(new File(projectInfo.getAbsolutePath()).getName(),
-	// 	                                                 projectInfo.getAbsolutePath());
-	// 	createModuleDependency(rootNode, projectInfo);
-	// 	createPackageDependency(projectInfo);
-	// 	projectInfo.setRootDirHierarchyNode(rootNode);
-	// }
-
-	/**
-	 * 建立模块依赖关系
-	 */
 	private void createModuleDependency(DirHierarchyNode rootNode) {
-
-		// 建立模块层级关系
 		projectInfo.getModuleList().forEach(moduleInfo -> {
-
-			// 补充module信息
 			String moduleSuffixPath = moduleInfo.getAbsolutePath().replace(projectInfo.getAbsolutePath(), "")
-			                                    .replaceFirst(File.separator, "").strip();
+			                                    .replaceFirst(RegularExprUtil.compat("/"), "").strip();
 			String moduleRelativePath = projectInfo.getProjectDirName() + File.separator + moduleSuffixPath;
 			String[] temp = moduleRelativePath.split(File.separator);
 			String moduleShortName = temp[temp.length - 1];

@@ -114,7 +114,7 @@ public class OperationController {
 	public Map<String, Object> searchAllProject() {
 		Map<String, Object> data = new HashMap<>();
 		data.put("projectList", ProjectRecordDao.getAllProjectRecordsDirName());
-		data.put("currentProject", GlobalProperties.CURRENT_PROJECT_IDENTIFIER);
+		data.put("currentProject", GlobalProperties.getCurrentProjectIdentifier());
 		return data;
 	}
 

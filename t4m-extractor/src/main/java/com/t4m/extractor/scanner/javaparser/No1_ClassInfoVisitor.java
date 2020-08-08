@@ -33,12 +33,12 @@ public class No1_ClassInfoVisitor extends VoidVisitorAdapter<Void> {
 
 	private void createClassInfo(TypeDeclaration n) {
 		if (n.isNestedType()) {
-			// 需要先确定上一层的类是哪个
+			// Need to check which is the previous level
 			TypeDeclaration parentClassNode = (TypeDeclaration) n.findAncestor(TypeDeclaration.class).get();
 			ClassInfo parentClassInfo = EntityUtil.getClassByShortName(allShownClassInfoList,
 			                                                           parentClassNode.getName().getIdentifier());
-			// 创建新的ClassInfo作为内部类，并与外部类关联，并添加到projectInfo中
-			String innerClassName = n.getName().toString(); // InnerClass
+			// Create a new ClassInfo object for nested class, connecting to outer class, and added to projectInfo object.
+			String innerClassName = n.getName().toString();
 			ClassInfo innerClassInfo = EntityUtil.safeAddEntityToList(new ClassInfo(innerClassName, parentClassInfo),
 			                                                          parentClassInfo.getNestedClassList());
 			innerClassInfo.setClassDeclaration(ClassInfo.ClassDeclaration.NESTED_CLASS);
@@ -48,7 +48,7 @@ public class No1_ClassInfoVisitor extends VoidVisitorAdapter<Void> {
 			EntityUtil.safeAddEntityToList(innerClassInfo, innerClassInfo.getPackageInfo().getNestedClassList());
 			allShownClassInfoList.add(innerClassInfo);
 		} else {
-			//由于一个类文件可以创建多个类，因此还需要对这些其他类进行创建。
+			// For package private outer classes.
 			String shortName = n.getName().getIdentifier();
 			if (!shortName.equals(outerClassInfo.getShortName())) {
 				ClassInfo extraClassInfo = new ClassInfo(shortName, outerClassInfo.getAbsolutePath());

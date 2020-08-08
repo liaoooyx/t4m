@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -20,7 +22,7 @@ public class T4MProjectInfoSerializer implements T4MSerializer {
 
 	@Override
 	public void serializeTo(ProjectInfo targerObj, String outputFileName) {
-		String currentProjectIdentifier = GlobalProperties.CURRENT_PROJECT_IDENTIFIER;
+		String currentProjectIdentifier = GlobalProperties.getCurrentProjectIdentifier();
 		//创建一个ObjectOutputStream输出流
 		if (FileUtil.checkAndMakeDirectory(GlobalProperties.DB_ROOT_PATH + File.separator + currentProjectIdentifier)) {
 			String absDBFilePath =
@@ -39,7 +41,7 @@ public class T4MProjectInfoSerializer implements T4MSerializer {
 
 	@Override
 	public ProjectInfo deserializeFrom(String outputFileName) {
-		String currentProjectIdentifier = GlobalProperties.CURRENT_PROJECT_IDENTIFIER;
+		String currentProjectIdentifier = GlobalProperties.getCurrentProjectIdentifier();
 		//创建一个ObjectInputStream输入流
 		if (FileUtil.checkDirectory(GlobalProperties.DB_ROOT_PATH + File.separator + currentProjectIdentifier)) {
 			String absDBFilePath =
@@ -51,14 +53,14 @@ public class T4MProjectInfoSerializer implements T4MSerializer {
 				LOGGER.error("Error happen when deserializing object from [{}]", absDBFilePath, e);
 			}
 		} else {
-			LOGGER.error("Cannot find directory [{dbPath}] when deserializing the object from file {}", outputFileName);
+			LOGGER.debug("Cannot find directory [{dbPath}] when deserializing the object from file {}", outputFileName);
 		}
 		return null;
 	}
 
 	@Override
 	public List<ProjectInfo> deserializeAll() {
-		String currentProjectIdentifier = GlobalProperties.CURRENT_PROJECT_IDENTIFIER;
+		String currentProjectIdentifier = GlobalProperties.getCurrentProjectIdentifier();
 		File dbDir = new File(GlobalProperties.DB_ROOT_PATH + File.separator + currentProjectIdentifier);
 		List<ProjectInfo> projectInfoList = new ArrayList<>();
 		if (FileUtil.checkDirectory(dbDir)) {
@@ -71,21 +73,29 @@ public class T4MProjectInfoSerializer implements T4MSerializer {
 				}
 			}
 		} else {
-			LOGGER.info("There is no file in {}", GlobalProperties.DB_ROOT_PATH);
+			LOGGER.debug("There is no file in {}", GlobalProperties.DB_ROOT_PATH);
 		}
 		projectInfoList.sort(Comparator.comparing(ProjectInfo::getCreateDate));
 		return projectInfoList;
 	}
 
 	@Override
-	public void delete(String targeetProjectIdentifier) {
-		File targetProjectDir = new File(GlobalProperties.DB_ROOT_PATH + File.separator + targeetProjectIdentifier);
+	public void delete(String targetProjectIdentifier) {
+		File targetProjectDir = new File(GlobalProperties.DB_ROOT_PATH + File.separator + targetProjectIdentifier);
 		if (targetProjectDir.exists()) {
 			File[] files = targetProjectDir.listFiles();
 			if (files != null && files.length > 0) {
-				Arrays.stream(files).forEach(File::delete);
+				Arrays.stream(files).forEach(this::deleteFile);
 			}
-			targetProjectDir.delete();
+		}
+		deleteFile(targetProjectDir);
+	}
+
+	private void deleteFile(File file) {
+		try {
+			Files.deleteIfExists(Paths.get(file.getAbsolutePath()));
+		} catch (IOException e) {
+			LOGGER.debug("Failed to delete file [{}]", file.getAbsolutePath(), e);
 		}
 	}
 }

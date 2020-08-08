@@ -34,7 +34,7 @@ public class ProjectRecordDao {
 	 */
 	public static void checkCurrentProjectIdentifier() {
 		File file = new File(
-				GlobalProperties.DB_ROOT_PATH + File.separator + GlobalProperties.CURRENT_PROJECT_IDENTIFIER);
+				GlobalProperties.DB_ROOT_PATH + File.separator + GlobalProperties.getCurrentProjectIdentifier());
 		if (!file.exists()) {
 			GlobalProperties.updateCurrentProjectPointer("");
 		}

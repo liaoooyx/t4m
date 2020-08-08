@@ -33,7 +33,7 @@ public class AOPHandler {
 	public Object checkEmptyRecordList(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		ProjectInfo[] projectInfos = ProjectRecordDao.getTwoProjectInfoRecordByIndex(-1);
 		Model model = (Model) proceedingJoinPoint.getArgs()[0];
-		if (projectInfos == null || "".equals(GlobalProperties.CURRENT_PROJECT_IDENTIFIER)) {
+		if (projectInfos == null || "".equals(GlobalProperties.getCurrentProjectIdentifier())) {
 			model.addAttribute("disableScan", true);
 			model.addAttribute("triggerNew", true);
 			model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
@@ -41,7 +41,7 @@ public class AOPHandler {
 			return "page/dashboard/blank_page";
 		} else {
 			ProjectRecordDao.checkCurrentProjectIdentifier();
-			model.addAttribute("currentProjectIdentifier", GlobalProperties.CURRENT_PROJECT_IDENTIFIER);
+			model.addAttribute("currentProjectIdentifier", GlobalProperties.getCurrentProjectIdentifier());
 			model.addAttribute("currentProjectPath", projectInfos[0].getAbsolutePath());
 			model.addAttribute("projectExcludedPath", projectInfos[0].getExcludedPath());
 			model.addAttribute("projectDependencyPath", projectInfos[0].getDependencyPath());
@@ -55,14 +55,14 @@ public class AOPHandler {
 	public Object disableScanButton(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		ProjectInfo[] projectInfos = ProjectRecordDao.getTwoProjectInfoRecordByIndex(-1);
 		Model model = (Model) proceedingJoinPoint.getArgs()[0];
-		if (projectInfos == null || "".equals(GlobalProperties.CURRENT_PROJECT_IDENTIFIER)) {
+		if (projectInfos == null || "".equals(GlobalProperties.getCurrentProjectIdentifier())) {
 			model.addAttribute("disableScan", true);
 			model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
 			model.addAttribute("defaultDependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 			return proceedingJoinPoint.proceed();
 		} else {
 			ProjectRecordDao.checkCurrentProjectIdentifier();
-			model.addAttribute("currentProjectIdentifier", GlobalProperties.CURRENT_PROJECT_IDENTIFIER);
+			model.addAttribute("currentProjectIdentifier", GlobalProperties.getCurrentProjectIdentifier());
 			model.addAttribute("currentProjectPath", projectInfos[0].getAbsolutePath());
 			model.addAttribute("projectExcludedPath", projectInfos[0].getExcludedPath());
 			model.addAttribute("projectDependencyPath", projectInfos[0].getDependencyPath());
