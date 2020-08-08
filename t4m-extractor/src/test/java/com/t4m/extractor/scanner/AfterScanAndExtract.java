@@ -15,8 +15,8 @@ class AfterScanAndExtract {
 	public static void initProjectInfo() {
 		String path = new File("testProject/JSimulationProject").getAbsolutePath();
 		projectInfo = new ProjectInfo(path, GlobalProperties.DEFAULT_EXCLUDED_PATH,GlobalProperties.DEFAULT_DEPENDENCY_PATH);
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.extract();
+		T4MExtractor t4MExtractor = new T4MExtractor();
+		t4MExtractor.extract(projectInfo);
 	}
 
 

@@ -24,9 +24,9 @@ class No1_DirectoryFileScannerTest {
 	@Test
 	@DisplayName("获取项目路径下所有Java文件")
 	void scan() {
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanDirectory();
-		assertEquals(21, t4MExtractor.getRawJavaFileList().size());
+		T4MExtractor t4MExtractor = new T4MExtractor();
+		t4MExtractor.setCustomScannerChain(new No1_DirectoryFileScanner()).extract(projectInfo);
+		assertEquals(21, t4MExtractor.getScannerChain().getRawJavaFileList().size());
 	}
 
 }

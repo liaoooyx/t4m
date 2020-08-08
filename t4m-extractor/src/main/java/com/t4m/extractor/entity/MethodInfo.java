@@ -14,29 +14,30 @@ public class MethodInfo implements Serializable {
 	private static final long serialVersionUID = -8167843312218383438L;
 
 	private String shortName;
-	private String fullyQualifiedName; // fully-qualified class name: pkg.b.c.Class.method
+	private String fullyQualifiedName; // Fully-qualified class name: pkg.b.c.Class.method
 	private transient Range rangeLocator;
 	private String methodDeclarationString;
 
 	private ClassInfo classInfo;
 
-	private String returnTypeString = ""; // 空字符串表示无返回（即构造器）
+	private String returnTypeString = ""; // Empty string indicate no return type (eg. constructor)
 	private List<ClassInfo> returnTypeAsClassInfoList = new ArrayList<>();
 
-	private Map<String, String> paramsNameTypeMap = new LinkedHashMap<>(); // key为参数名，value为参数类型字符串
+	// Key is the name of param，Value is the type of param
+	private Map<String, String> paramsNameTypeMap = new LinkedHashMap<>();
 	private Map<String, List<ClassInfo>> paramsTypeAsClassInfoListMap = new LinkedHashMap<>();
-
-	private List<String> thrownExceptionStringList = new ArrayList<>(); // 异常类型字符串
+	// The type of exception
+	private List<String> thrownExceptionStringList = new ArrayList<>();
 	private List<ClassInfo> thrownExceptionClassList = new ArrayList<>();
 
 	private boolean abstractMethod = false;
 	private boolean staticMethod = false;
 	private AccessModifierEnum accessModifierEnum = AccessModifierEnum.DEFAULT;
 
-	// LOCM4度量
-	private Set<FieldInfo> fieldAccessSet = new HashSet<>(); // 该方法内涉及的本地字段访问
-	private Set<MethodInfo> localMethodAccessSet = new HashSet<>(); // 该方法内涉及的本地方法访问
-	private Set<MethodInfo> beingAccessedByLocalMethodSet = new HashSet<>(); // 被哪些本地方法访问
+	// LCOM4 metric
+	private Set<FieldInfo> fieldAccessSet = new HashSet<>(); // All local fields access in this method
+	private Set<MethodInfo> localMethodAccessSet = new HashSet<>(); // All local methods invocation in this method
+	private Set<MethodInfo> beingAccessedByLocalMethodSet = new HashSet<>(); // Invoked by which local methods
 
 	//if、while、for、&&、||、cases and default of switch, catches of try
 	private int cyclomaticComplexity;
@@ -214,7 +215,7 @@ public class MethodInfo implements Serializable {
 	}
 
 	/**
-	 * 将paramsTypeAsClassInfoListMap中每个val都是一个list，该方法将之合并为一个list
+	 * The values of paramsTypeAsClassInfoListMap are multiple lists, this method will flat them into one list.
 	 */
 	public List<ClassInfo> getParamsTypeAsClassInfoList() {
 		return paramsTypeAsClassInfoListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());

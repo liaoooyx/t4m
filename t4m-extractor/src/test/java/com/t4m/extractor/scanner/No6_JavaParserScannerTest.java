@@ -22,8 +22,11 @@ class No6_JavaParserScannerTest {
 	public static void initProjectInfo() {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanJavaParser();
+		T4MExtractor t4MExtractor = new T4MExtractor();
+		t4MExtractor.setCustomScannerChain(new No1_DirectoryFileScanner(), new No2_ClassScanner(),
+		                                   new No3_PackageScanner(), new No4_ModuleScanner(),
+		                                   new No5_DependencyScanner(), new No6_JavaParserScanner()).extract(
+				projectInfo);
 	}
 
 	@Test

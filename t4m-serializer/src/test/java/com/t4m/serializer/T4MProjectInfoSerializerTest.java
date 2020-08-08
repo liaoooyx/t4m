@@ -23,8 +23,8 @@ class T4MProjectInfoSerializerTest {
 	public static void initProjectInfo() {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path, GlobalProperties.DEFAULT_EXCLUDED_PATH,GlobalProperties.DEFAULT_DEPENDENCY_PATH);
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanASTParser();
+		T4MExtractor t4MExtractor = new T4MExtractor();
+		t4MExtractor.extract(projectInfo);
 	}
 
 	@Test
@@ -44,7 +44,7 @@ class T4MProjectInfoSerializerTest {
 
 	@Test
 	@DisplayName("反序列化所有历史记录，并排序")
-	void serializaeAll() {
+	void serializeAll() {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		List<ProjectInfo> projectInfoList = serializer.deserializeAll();
 		for (int i = 0; i < projectInfoList.size() - 1; i++) {
@@ -52,6 +52,7 @@ class T4MProjectInfoSerializerTest {
 			ProjectInfo next = projectInfoList.get(i + 1);
 			assertTrue(current.getCreateDate().getTime() < next.getCreateDate().getTime());
 		}
+
 	}
 
 }

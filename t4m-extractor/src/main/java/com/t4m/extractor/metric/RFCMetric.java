@@ -9,12 +9,12 @@ import java.util.Set;
 /**
  * Created by Yuxiang Liao on 2020-07-14 23:14.
  */
-public class RFCMetric {
+public class RFCMetric implements ClassLevelMetric{
 
 	public static final String UNSOLVED_METHOD_INVOCATION = "unsolved_method_invocation";
 
 	/**
-	 * countRFCMethodQualifiedSignatureMap中对应的方法methodQualifiedSignature计数+1
+	 * Add 1 for the relevant method within countRFCMethodQualifiedSignatureMap.
 	 */
 	public static void countRFCMethodQualifiedSignatureMap(
 			Map<String, Integer> rfcMethodQualifiedSignatureMap, String methodQualifiedSignature) {
@@ -27,9 +27,9 @@ public class RFCMetric {
 	}
 
 	/**
-	 * 递归遍历所有父类。将父类的所有本地方法集合合并到列表中
+	 * Recursively calculate all parent classes
 	 */
-	private static void accumulateRFCFromExtendsClass(ClassInfo classInfo, Set<String> rfcSet) {
+	private void accumulateRFCFromExtendsClass(ClassInfo classInfo, Set<String> rfcSet) {
 		for (ClassInfo extendsClass : classInfo.getExtendsClassList()) {
 			rfcSet.addAll(extendsClass.getLocalMethodCallQualifiedSignatureMap().keySet());
 			if (!extendsClass.getExtendsClassList().isEmpty()) {
@@ -39,28 +39,23 @@ public class RFCMetric {
 	}
 
 	/**
-	 * 将父类的所有本地方法集合和自身的调用方法集合合并。
-	 * 理想情况下（有Jar包路径进行AST分析），该集合以方法的全限定路径签名作为记录，因此能够确保重写的方法唯一
-	 * 以类为单位计算相关的response for class度量。需要递归遍历所有父类。
+	 * Merge all the local methods of the parent classes and its local methods.
+	 * Ideally (if JavaParaser can locate the path of dependencies to analyse),
+	 * the methods are classified by their fully qualified signature,
+	 * thus can be ensure that the overwritten method is unique.
 	 *
-	 * RFC：所有可以对一个类的消息做出响应的方法个数: 类中的所有方法集合，
-	 * 包括从父类继承的方法（但不包括重写的方法，因为方法签名应该唯一），和
-	 * 类中所有方法所调用的方法集合（所有方法，但不可重复）
+	 * Need to recursively calculate all parent classes
 	 */
-	private static Set<String> calculateAccumulatedRFCSet(ClassInfo targetClass) {
+	private Set<String> calculateAccumulatedRFCSet(ClassInfo targetClass) {
 		Set<String> accumulatedRfcSet = new HashSet<>(targetClass.getOutClassMethodCallQualifiedSignatureMap().keySet());
 		accumulatedRfcSet.addAll(targetClass.getLocalMethodCallQualifiedSignatureMap().keySet());
 		accumulateRFCFromExtendsClass(targetClass, accumulatedRfcSet);
 		return accumulatedRfcSet;
 	}
 
-	/**
-	 * 将父类的所有方法集合和自身的调用方法集合合并。
-	 */
-	public static void calculateRfc(ClassInfo targetClass) {
-		// todo 需要处理RFC不精确的情况
+	@Override
+	public void calculate(ClassInfo targetClass) {
 		Set<String> accumulatedRfcSet = calculateAccumulatedRFCSet(targetClass);
 		targetClass.setResponseForClass(accumulatedRfcSet.size());
 	}
-
 }

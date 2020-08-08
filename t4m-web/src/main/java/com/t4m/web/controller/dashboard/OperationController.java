@@ -56,8 +56,8 @@ public class OperationController {
 		                                          dependencyPath.strip(), createDate);
 		try {
 			// 扫描项目
-			T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-			t4MExtractor.extract();
+			T4MExtractor t4MExtractor = new T4MExtractor();
+			t4MExtractor.extract(projectInfo);
 			// 持久化该记录
 			T4MSerializer serializer = new T4MProjectInfoSerializer();
 			String recordFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
@@ -95,8 +95,8 @@ public class OperationController {
 		                                          dependencyPath.strip(), createDate);
 		try {
 			// 扫描项目
-			T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-			t4MExtractor.extract();
+			T4MExtractor t4MExtractor = new T4MExtractor();
+			t4MExtractor.extract(projectInfo);
 			// 持久化该记录
 			T4MSerializer serializer = new T4MProjectInfoSerializer();
 			String recordFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());

@@ -17,7 +17,7 @@ class SLOCMetricTest {
 		counterMap.put(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST, 0); // 不包括空白行，单独大括号和注释行
 		counterMap.put(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST, 0); // 包括这样的注释和代码混合的行
 		counterMap.put(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST, 0);  // 包括代码行、大括号，不包括单独的注释行
-		SLOCMetric slocMetric = new SLOCMetric();
+		SLOCMetric.SLOCCounter slocMetric = new SLOCMetric.SLOCCounter();
 		slocMetric.countSLOCByLine("counterMap.put(\"codeLines\", 0); // 不包括空白行，单独大括号和注释行");
 		slocMetric.setASTSLOCToCounterMap(counterMap);
 		assertAll(() -> assertEquals(1, counterMap.get(ClassInfo.SLOCType.LOGIC_CODE_LINES_FROM_AST)),

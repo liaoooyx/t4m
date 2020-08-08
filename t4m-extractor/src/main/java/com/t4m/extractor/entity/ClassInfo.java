@@ -10,38 +10,40 @@ public class ClassInfo implements Serializable {
 
 	private static final long serialVersionUID = 2417256803742933401L;
 
-	private String shortName; // 嵌套类的类名为 A.B
-	private String fullyQualifiedName; // fully-qualified class name
+	private String shortName; // The name of nested class will be outerClassName.nestedClassName
+	private String fullyQualifiedName; // the fully-qualified class name
 	private String absolutePath;
 
 	private PackageInfo packageInfo;
 	private String packageFullyQualifiedName;
 
-	private ClassModifier classModifier; // 如果该类的源文件为package-info.java，那么可能不存在类修饰符，因为该文件可以不存在类，只包含注释。
+	private ClassModifier classModifier;
 	private ClassDeclaration classDeclaration;
 
-	// 对于extraClass的innerClass来说，mainOuterClass与outerClass是不一致的。
-	private ClassInfo mainPublicClass; //唯一的公共外部类
-	private ClassInfo outerClass; //内部类的外部类
+	// For the nested class of package private outer class，the reference of mainOuterClass and outerClass are different.
+	private ClassInfo mainPublicClass; // the only public outer class of a java file.
+	private ClassInfo outerClass; // the previous outer class of a inner class.
 
-	// Metric Meta data
+	// ModuleLevelMetric Meta data
 	private Map<SLOCType, Integer> slocCounterMap = new EnumMap<>(SLOCType.class);
 	private List<ClassInfo> nestedClassList = new ArrayList<>();
 	private List<ClassInfo> extraClassList = new ArrayList<>();
 	private List<ClassInfo> extendsClassList = new ArrayList<>();
 	private List<ClassInfo> implementsClassList = new ArrayList<>();
 	private List<ClassInfo> immediateSubClassList = new ArrayList<>();
-	private List<MethodInfo> methodInfoList = new ArrayList<>();// 方法列表
-	private List<FieldInfo> fieldInfoList = new ArrayList<>();// 类的class-variable，包括静态变量，（当前实现包括常量）
-	private List<ClassInfo> activeDependencyAkaFanOutList = new ArrayList<>();//依赖（引用的类）
-	private List<ClassInfo> passiveDependencyAkaFanInList = new ArrayList<>();//被依赖（被其他类引用）
-	private Map<String, Integer> outClassMethodCallQualifiedSignatureMap = new HashMap<>(); // 调用的其他类的方法集合
-	private Map<String, Integer> localMethodCallQualifiedSignatureMap = new HashMap<>(); // 类的本身方法集合
+	private List<MethodInfo> methodInfoList = new ArrayList<>();
+	private List<FieldInfo> fieldInfoList = new ArrayList<>(); // including static and final keywords.
+	private List<ClassInfo> activeDependencyAkaFanOutList = new ArrayList<>();
+	private List<ClassInfo> passiveDependencyAkaFanInList = new ArrayList<>();
+	// A set of methods that belongs to other classes, and invoked by this class.
+	private Map<String, Integer> outClassMethodCallQualifiedSignatureMap = new HashMap<>();
+	// A set of methods that belongs to this class and invoked by within itself.
+	private Map<String, Integer> localMethodCallQualifiedSignatureMap = new HashMap<>();
 	private List<Integer> cyclomaticComplexityList = new ArrayList<>();
 	private List<String> unresolvedExceptionList = new ArrayList<>();
 
-	// Actual Metric Data
-	// basic
+	// Actual ModuleLevelMetric Data
+	// Basic
 	private int numberOfMethods;
 	private int numberOfFields;
 	private int numberOfEnumConstants;
@@ -51,8 +53,8 @@ public class ClassInfo implements Serializable {
 	private int afferentCoupling; // fanin
 	private int efferentCoupling; // fanout
 	private String instability; // fanout/fanin+out
-	private int messagePassingCoupling; // 类中的本地方法，调用其他类的方法的数量
-	//SLOC
+	private int messagePassingCoupling;
+	// SLOC
 	/*
 	0--SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE；
 	1--SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
@@ -62,16 +64,16 @@ public class ClassInfo implements Serializable {
 	5--SLOCType.COMMENT_LINES_FROM_AST
 	*/
 	private int[] slocArray = new int[6];
-	//Response for class
-	private int responseForClass;// 所有可以对一个类的消息做出响应的方法个数: 父类方法集合+本地方法集合+调用其他类的方法集合
+	// Response For a Class
+	private int responseForClass;
 	// Inheritance
-	private int deepOfInheritanceTree;//一个类的父类可以向上追溯的数量，也就是在继承树中，一个类到根类经过了多少次继承。
-	private int numberOfChildren;//一个类的直接子类的数量
-	//圈复杂度
+	private int deepOfInheritanceTree;
+	private int numberOfChildren;
+	// Cyclomatic Comlexity
 	private int maxCyclomaticComplexity;
 	private String avgCyclomaticComplexity;
-	private int weightedMethodsCount;    // sum of all methods complexity
-	// cohesion
+	private int weightedMethodsCount;
+	// Cohesion
 	private int lackOfCohesionOfMethods4;
 	private String tightClassCohesion;
 	private String looseClassCohesion;
@@ -448,17 +450,20 @@ public class ClassInfo implements Serializable {
 	}
 
 	/**
-	 * Source File以文件为单位，包括了package, import, nested class，non public class
-	 * AST以类为单位，不包括package和 import，对于注释和代码也会进行格式化
-	 * （比如注释会与代码行不会混合，注释行会被单独提取成行；一个stmt成一行）
+	 * Source File considers a java file as the minimum unit.
+	 * AST considers a ClassInfo object as the minimum unit，excluding the keywords: package and import，
+	 * and will format the source code (statements will be separated into different lines).
+	 * Logic code lines contains will exclude empty lines, symbol-only lines and comments lines.
+	 * Physical code lines will include symbol-only lines and logic code lines.
+	 * Comment lines will include the mixed lines, likes: code;//comment
 	 */
 	public Map<SLOCType, Integer> initSlocCounterMap() {
-		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, 0); // 不包括空白行，单独大括号和注释行
-		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE, 0); // 包括这样的注释和代码混合的行
-		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE, 0);  // 包括代码行、大括号，不包括单独的注释行
-		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_AST, 0); // 不包括空白行，单独大括号和注释行
-		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_AST, 0); //
-		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_AST, 0);  // 包括代码行、大括号，不包括单独的注释行
+		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, 0);
+		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE, 0);
+		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE, 0);
+		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_AST, 0);
+		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_AST, 0);
+		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_AST, 0);
 		return slocCounterMap;
 	}
 
@@ -492,9 +497,9 @@ public class ClassInfo implements Serializable {
 	}
 
 	public enum ClassDeclaration {
-		PUBLIC_OUTER_CLASS("public outer class"), // 唯一的public外部类，与java文件名一致
-		NON_PUBLIC_OUTER_CLASS("package private outer class"), // 非public的外部类
-		NESTED_CLASS("nested class"); // 嵌套类：包括static nested class和inner class
+		PUBLIC_OUTER_CLASS("public outer class"), // the only public outer class for a java file.
+		NON_PUBLIC_OUTER_CLASS("package private outer class"), // package private class
+		NESTED_CLASS("nested class"); // nested class, including static nested class and inner class
 
 		String str;
 

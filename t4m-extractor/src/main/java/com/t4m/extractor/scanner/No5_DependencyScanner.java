@@ -15,29 +15,41 @@ import java.util.Objects;
 /**
  * Created by Yuxiang Liao on 2020-06-16 01:18.
  */
-public class No5_DependencyScanner {
+public class No5_DependencyScanner implements T4MScanner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(No5_DependencyScanner.class);
 
 	private ProjectInfo projectInfo;
+	//
+	// public No5_DependencyScanner(ProjectInfo projectInfo) {
+	// 	this.projectInfo = projectInfo;
+	// }
 
-	public No5_DependencyScanner(ProjectInfo projectInfo) {
-		this.projectInfo = projectInfo;
-	}
-
-	public void scan() {
+	@Override
+	public void scan(ProjectInfo projectInfo, ScannerChain scannerChain) {
 		LOGGER.info("Resolving the dependencies between modules and packages.");
+		this.projectInfo = projectInfo;
 		DirHierarchyNode rootNode = new DirHierarchyNode(new File(projectInfo.getAbsolutePath()).getName(),
 		                                                 projectInfo.getAbsolutePath());
-		createModuleDependency(rootNode, projectInfo);
-		createPackageDependency(projectInfo);
+		createModuleDependency(rootNode);
+		createPackageDependency();
 		projectInfo.setRootDirHierarchyNode(rootNode);
+		scannerChain.scan(projectInfo);
 	}
+
+	// public void scan() {
+	// 	LOGGER.info("Resolving the dependencies between modules and packages.");
+	// 	DirHierarchyNode rootNode = new DirHierarchyNode(new File(projectInfo.getAbsolutePath()).getName(),
+	// 	                                                 projectInfo.getAbsolutePath());
+	// 	createModuleDependency(rootNode, projectInfo);
+	// 	createPackageDependency(projectInfo);
+	// 	projectInfo.setRootDirHierarchyNode(rootNode);
+	// }
 
 	/**
 	 * 建立模块依赖关系
 	 */
-	public static void createModuleDependency(DirHierarchyNode rootNode, ProjectInfo projectInfo) {
+	private void createModuleDependency(DirHierarchyNode rootNode) {
 
 		// 建立模块层级关系
 		projectInfo.getModuleList().forEach(moduleInfo -> {
@@ -48,11 +60,11 @@ public class No5_DependencyScanner {
 			String moduleRelativePath = projectInfo.getProjectDirName() + File.separator + moduleSuffixPath;
 			String[] temp = moduleRelativePath.split(File.separator);
 			String moduleShortName = temp[temp.length - 1];
-			if (Objects.equals(rootNode.getName(),moduleShortName)){
+			if (Objects.equals(rootNode.getName(), moduleShortName)) {
 				// 根模块 (可以不存在根模块)
 				rootNode.setModuleInfo(moduleInfo);
 				moduleInfo.setRelativePath(moduleShortName);
-			}else {
+			} else {
 				//子模块
 				moduleInfo.setRelativePath(moduleRelativePath);
 			}
@@ -71,11 +83,12 @@ public class No5_DependencyScanner {
 	/**
 	 * 根据路径，递归创建节点链表
 	 */
-	public static void initDirectoryNodeLink(String[] names, DirHierarchyNode previousNode, ModuleInfo moduleInfo) {
+	private void initDirectoryNodeLink(String[] names, DirHierarchyNode previousNode, ModuleInfo moduleInfo) {
 		if (names.length > 0) {
 			String name = names[0];
-			DirHierarchyNode currentNode = previousNode.safeAddNodeList(
-					new DirHierarchyNode(name, previousNode.getAbsolutePath() + File.separator + name));
+			DirHierarchyNode currentNode = EntityUtil.safeAddEntityToList(
+					new DirHierarchyNode(name, previousNode.getAbsolutePath() + File.separator + name),
+					previousNode.getNextNodeList());
 			// 当currentNode为新节点时，它的previousNode为空，需要赋值
 			if (currentNode.getPreviousNode() == null) {
 				currentNode.setPreviousNode(previousNode);
@@ -91,12 +104,12 @@ public class No5_DependencyScanner {
 	/**
 	 * 深度优先，递归遍历节点
 	 */
-	private static void recursiveModuleDependency(DirHierarchyNode currentNode, ModuleInfo previousModuleInfo) {
+	private void recursiveModuleDependency(DirHierarchyNode currentNode, ModuleInfo previousModuleInfo) {
 		if (currentNode.hasModuleInfo()) {
 			// 非根节点
 			if (previousModuleInfo != null) {
 				currentNode.getModuleInfo().setPreviousModuleInfo(previousModuleInfo);
-				EntityUtil.safeAddEntityToList(currentNode.getModuleInfo(),previousModuleInfo.getSubModuleList());
+				EntityUtil.safeAddEntityToList(currentNode.getModuleInfo(), previousModuleInfo.getSubModuleList());
 			}
 			// 根节点
 			if (currentNode.hasNextNode()) {
@@ -114,21 +127,22 @@ public class No5_DependencyScanner {
 	/**
 	 * 建立包依赖关系
 	 */
-	public static void createPackageDependency(ProjectInfo projectInfo) {
+	private void createPackageDependency() {
 		recursivePackageDependency(new File(projectInfo.getAbsolutePath()), null, projectInfo);
 	}
 
 	/**
 	 * 从项目根路径开始遍历，以深度优先的方式建立包依赖关系
 	 */
-	public static void recursivePackageDependency(File dir, PackageInfo previousPkg, ProjectInfo projectInfo) {
+	private void recursivePackageDependency(File dir, PackageInfo previousPkg, ProjectInfo projectInfo) {
 		if (dir.isDirectory()) {
 			//获取当前路径下的包
-			PackageInfo currentPkg = projectInfo.getPackageInfoByAbsolutePath(dir.getAbsolutePath());
+			PackageInfo currentPkg = EntityUtil.getPackageInfoByAbsolutePath(projectInfo.getPackageList(),
+			                                                                 dir.getAbsolutePath());
 			//判断当前路径是否有对应的包
 			if (currentPkg != null) {
 				if (previousPkg != null) {
-					EntityUtil.safeAddEntityToList(currentPkg,previousPkg.getSubPackageList());
+					EntityUtil.safeAddEntityToList(currentPkg, previousPkg.getSubPackageList());
 					currentPkg.setPreviousPackage(previousPkg);
 				}
 				// 更新父节点，搜索子路径下的其他文件夹

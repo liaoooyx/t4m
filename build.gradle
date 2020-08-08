@@ -1,4 +1,9 @@
+plugins {
+    id "org.sonarqube" version "2.7"
+}
+
 allprojects {
+
     version '1.0-SNAPSHOT'
     group 'com.t4m'
 
@@ -55,6 +60,7 @@ subprojects {
     }
 }
 
+
 task buildT4M(type: Copy) {
     dependsOn 't4m-web:build'
     File runDir = new File("${project.rootDir}/run")
@@ -109,7 +115,6 @@ task findDependencyClasspath {
         String depsString = depsSet.stream().map { e -> e.concat(File.pathSeparator) }
                 .reduce { a, b -> a.concat(b) }.orElse("")
         depsString = depsString.substring(0, depsString.length() - 1)
-//        new File(depsFileName) << depsString
         println depsString
     }
 }

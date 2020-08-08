@@ -27,14 +27,16 @@ public class T4mPropertiesUtil {
 	}
 
 	/**
-	 * 如果该属性不存在，则返回null，如果存在但没有值，则为空""
+	 * @return Null, if the property does not exist in the file; Empty string, if the property exists but no value.
 	 */
 	public String getProperty(String key) {
 		return properties.getProperty(key);
 	}
 
 	/**
-	 * 新建或覆盖原值
+	 * Create a new property or cover the property.
+	 * @param key the name of the property.
+	 * @param val the value of the property.
 	 */
 	public void setProperty(String key, String val) {
 		properties.setProperty(key, val);

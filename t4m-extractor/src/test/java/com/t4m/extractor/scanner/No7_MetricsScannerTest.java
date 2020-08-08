@@ -24,8 +24,11 @@ class No7_MetricsScannerTest {
 	public static void initProjectInfo() {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
-		T4MExtractor t4MExtractor = new T4MExtractor(projectInfo);
-		t4MExtractor.scanMetricData();
+		T4MExtractor t4MExtractor = new T4MExtractor();
+		t4MExtractor.setCustomScannerChain(new No1_DirectoryFileScanner(), new No2_ClassScanner(),
+		                                   new No3_PackageScanner(), new No4_ModuleScanner(),
+		                                   new No5_DependencyScanner(), new No6_JavaParserScanner(),
+		                                   new No7_MetricsScanner()).extract(projectInfo);
 	}
 
 	@Test
@@ -130,8 +133,8 @@ class No7_MetricsScannerTest {
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(),
 			                                                               "com.simulation.core");
 			int[] slocArray = packageInfo.getSlocArrayForCurrentPkg();
-			assertEquals(67, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
-			assertEquals(89, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+			assertEquals(65, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
+			assertEquals(87, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
 			assertEquals(39, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
 			assertEquals(61, slocArray[3]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
 			assertEquals(83, slocArray[4]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
@@ -140,9 +143,9 @@ class No7_MetricsScannerTest {
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(),
 			                                                               "com.simulation.core");
 			int[] slocArray = packageInfo.getSlocArrayForCurrentAndSubPkg();
-			assertEquals(238, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
-			assertEquals(314, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
-			assertEquals(95, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
+			assertEquals(230, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
+			assertEquals(306, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+			assertEquals(94, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
 			assertEquals(218, slocArray[3]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
 			assertEquals(311, slocArray[4]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
 			assertEquals(97, slocArray[5]); //SLOCType.COMMENT_LINES_FROM_AST
@@ -154,9 +157,9 @@ class No7_MetricsScannerTest {
 	void testModuleLevelSLOC() {
 		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		int[] slocArray = moduleInfo.getSlocArray();
-		assertEquals(238, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
-		assertEquals(314, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
-		assertEquals(95, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
+		assertEquals(230, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
+		assertEquals(306, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+		assertEquals(94, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
 		assertEquals(218, slocArray[3]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
 		assertEquals(311, slocArray[4]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
 		assertEquals(97, slocArray[5]); //SLOCType.COMMENT_LINES_FROM_AST

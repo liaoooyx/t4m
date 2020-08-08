@@ -239,9 +239,9 @@ public class No2_DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		// LexicalPreservingPrinter.setup(n);
 		// LexicalPreservingPrinter.print(n);
 		String[] sourceLines = n.toString().split(System.lineSeparator());
-		SLOCMetric slocMetric = new SLOCMetric();
-		Arrays.stream(sourceLines).forEach(slocMetric::countSLOCByLine);
-		slocMetric.setASTSLOCToCounterMap(currentClassInfo.getSlocCounterMap());
+		SLOCMetric.SLOCCounter slocCounter = new SLOCMetric.SLOCCounter();
+		Arrays.stream(sourceLines).forEach(slocCounter::countSLOCByLine);
+		slocCounter.setASTSLOCToCounterMap(currentClassInfo.getSlocCounterMap());
 	}
 
 	/**

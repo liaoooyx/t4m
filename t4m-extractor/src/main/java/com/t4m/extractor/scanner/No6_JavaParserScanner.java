@@ -21,23 +21,24 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Yuxiang Liao on 2020-07-11 11:00.
  */
-public class No6_JavaParserScanner {
+public class No6_JavaParserScanner implements T4MScanner {
 	public static final Logger LOGGER = LoggerFactory.getLogger(No6_JavaParserScanner.class);
 
-	private final ProjectInfo projectInfo;
+	private ProjectInfo projectInfo;
+	//
+	// public No6_JavaParserScanner(ProjectInfo projectInfo) {
+	// 	this.projectInfo = projectInfo;
+	// }
 
-	public No6_JavaParserScanner(ProjectInfo projectInfo) {
+	@Override
+	public void scan(ProjectInfo projectInfo, ScannerChain scannerChain) {
 		this.projectInfo = projectInfo;
-	}
-
-	public void scan() {
 		LOGGER.info("Using JavaParser to resolve the static code.");
 		initParser();
 		LOGGER.info("Creating entities for the missing package-private outer classes and nested classes.");
@@ -46,7 +47,19 @@ public class No6_JavaParserScanner {
 		scanVisitor(No2_DeclarationVisitor.class);
 		LOGGER.info("Resolving dependencies for all entities.");
 		scanVisitor(No3_InMethodDependencyVisitor.class);
+		scannerChain.scan(projectInfo);
 	}
+
+	// public void scan() {
+	// 	LOGGER.info("Using JavaParser to resolve the static code.");
+	// 	initParser();
+	// 	LOGGER.info("Creating entities for the missing package-private outer classes and nested classes.");
+	// 	scanVisitor(No1_ClassInfoVisitor.class);
+	// 	LOGGER.info("Adding the missing information of classes. Constructing entities for methods and fields.");
+	// 	scanVisitor(No2_DeclarationVisitor.class);
+	// 	LOGGER.info("Resolving dependencies for all entities.");
+	// 	scanVisitor(No3_InMethodDependencyVisitor.class);
+	// }
 
 
 	private void scanVisitor(Class<? extends VoidVisitor> visitorClass) {

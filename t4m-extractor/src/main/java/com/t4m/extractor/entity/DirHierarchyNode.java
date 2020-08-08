@@ -11,11 +11,11 @@ import java.util.Objects;
 public class DirHierarchyNode implements Serializable {
 
 	private static final long serialVersionUID = -3065831265679039732L;
-	
-	private String name; // 当前文件夹名字
+
+	private String name; // name of current dir
 	private String absolutePath;
-	private DirHierarchyNode previousNode; // 上一层文件夹名
-	private List<DirHierarchyNode> nextNodeList = new LinkedList<>(); // 下一层文件夹名
+	private DirHierarchyNode previousNode; // previous dir
+	private List<DirHierarchyNode> nextNodeList = new LinkedList<>(); // a list of next dirs
 
 	private ModuleInfo moduleInfo;
 
@@ -57,19 +57,6 @@ public class DirHierarchyNode implements Serializable {
 
 	public void setNextNodeList(List<DirHierarchyNode> nextNodeList) {
 		this.nextNodeList = nextNodeList;
-	}
-
-	/**
-	 * 避免添加重复元素，参数类需要重写{@code equals()}和{@code hashCode()}方法。 如果对象不存在列表中，则添加并返回该对象；如果对象已存在，则从列表中获取并返回该对象。
-	 */
-	public DirHierarchyNode safeAddNodeList(DirHierarchyNode dirHierarchyNode) {
-		int index;
-		if ((index = nextNodeList.indexOf(dirHierarchyNode)) == -1) {
-			this.nextNodeList.add(dirHierarchyNode);
-			return dirHierarchyNode;
-		} else {
-			return this.nextNodeList.get(index);
-		}
 	}
 
 	public String getAbsolutePath() {

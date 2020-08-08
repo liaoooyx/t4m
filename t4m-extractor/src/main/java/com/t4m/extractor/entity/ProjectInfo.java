@@ -1,6 +1,5 @@
 package com.t4m.extractor.entity;
 
-import com.t4m.extractor.util.EntityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -173,44 +172,5 @@ public class ProjectInfo implements Serializable {
 		all.addAll(nestedClassList);
 		all.addAll(extraClassList);
 		return all;
-	}
-
-	/**
-	 * 优先从当前模块中查找类，如果当前模块中没有，则从整个项目中查找（包括其他模块） 一般情况下，全限定类名是不重复的，直接从整个项目中发现即可； 但不排除包名和类名都重复的情况（比如多个版本），所以默认先从当前的包中查询。
-	 */
-	public ClassInfo getClassInfoByFullyQualifiedName(String fullyQualifiedClassName, ModuleInfo moduleInfo) {
-		List<ClassInfo> tempClassList = new ArrayList<>();
-		moduleInfo.getPackageList().forEach(pkg -> tempClassList.addAll(pkg.getClassList()));
-		ClassInfo targetClass = EntityUtil.getClassByQualifiedName(tempClassList, fullyQualifiedClassName);
-		if (targetClass != null) {
-			return targetClass;
-		} else {
-			return EntityUtil.getClassByQualifiedName(getAllClassList(), fullyQualifiedClassName);
-		}
-	}
-
-
-	/**
-	 * 优先从当前模块中查找包，如果当前模块中没有，则从整个项目中查找（包括其他模块）。 一般情况下，全限定包名是不重复的，因此只需要从整个项目中发现即可；但不排除包名重复的情况，所默认先从当前的模块中查询。
-	 */
-	public PackageInfo getPackageInfoByFullyQualifiedName(String fullyQualifiedPackageName, ModuleInfo moduleInfo) {
-		PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(moduleInfo.getPackageList(),
-		                                                               fullyQualifiedPackageName);
-		if (packageInfo != null) {
-			return packageInfo;
-		} else {
-			return EntityUtil.getPackageByQualifiedName(packageList, fullyQualifiedPackageName);
-		}
-	}
-
-	/**
-	 * 根据包绝对路径获取对象，返回获得的第一个对象，如果不存在则返回{@code null}.
-	 */
-	public PackageInfo getPackageInfoByAbsolutePath(String absolutePath) {
-		int i = this.packageList.indexOf(new PackageInfo(absolutePath));
-		if (i != -1)
-			return this.packageList.get(i);
-		else
-			return null;
 	}
 }

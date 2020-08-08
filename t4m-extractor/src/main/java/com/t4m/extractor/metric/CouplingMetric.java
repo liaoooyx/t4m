@@ -7,13 +7,10 @@ import com.t4m.extractor.util.MathUtil;
 /**
  * Created by Yuxiang Liao on 2020-07-17 04:45.
  */
-public class CouplingMetric {
+public class CouplingMetric implements ClassLevelMetric, PackageLevelMetric {
 
-	/**
-	 * 包括CouplingBetweenObjects, AfferentCoupling(Fanin), EfferentCoupling(Fanout),
-	 * Instability(Fanout/Fanin+out), MessagePassingCoupling (类中的本地方法，调用其他类的方法的数量)
-	 */
-	public static void calculateCoupling(ClassInfo classInfo) {
+	@Override
+	public void calculate(ClassInfo classInfo) {
 		int fanIn = classInfo.getPassiveDependencyAkaFanInList().size();
 		int fanOut = classInfo.getActiveDependencyAkaFanOutList().size();
 		classInfo.setCouplingBetweenObjects(fanIn + fanOut);
@@ -24,11 +21,8 @@ public class CouplingMetric {
 		classInfo.setMessagePassingCoupling(classInfo.getOutClassMethodCallQualifiedSignatureMap().keySet().size());
 	}
 
-	/**
-	 * 包括AfferentCoupling(Fanin), EfferentCoupling(Fanout),
-	 * Instability(Fanout/Fanin+out)
-	 */
-	public static void calculateCoupling(PackageInfo packageInfo) {
+	@Override
+	public void calculate(PackageInfo packageInfo) {
 		int fanIn = packageInfo.getPassiveDependencyAkaFanInList().size();
 		int fanOut = packageInfo.getActiveDependencyAkaFanOutList().size();
 		packageInfo.setAfferentCoupling(fanIn);

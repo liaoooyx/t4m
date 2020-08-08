@@ -13,20 +13,20 @@ public class PackageInfo implements Serializable {
 	private static final long serialVersionUID = 1661151854125377881L;
 	public static String EMPTY_IDENTIFIER = "(null)";
 
-	private String fullyQualifiedName; // = (null), if doesn't have package
+	private String fullyQualifiedName; // = (null), if cannot resolve package from the path of java file.
 	private String absolutePath;
 
 	private ModuleInfo moduleInfo;
 
 	private PackageInfo previousPackage;
 	private List<PackageInfo> subPackageList = new ArrayList<>();
-	private List<ClassInfo> classList = new ArrayList<>(); // 目前不包括内部类，只有外部类
+	private List<ClassInfo> classList = new ArrayList<>(); // contains only public outer class
 	private List<ClassInfo> nestedClassList = new ArrayList<>();
 	private List<ClassInfo> extraClassList = new ArrayList<>();
 
 	// metric meta data
-	private List<PackageInfo> activeDependencyAkaFanOutList = new ArrayList<>();//依赖
-	private List<PackageInfo> passiveDependencyAkaFanInList = new ArrayList<>();//被依赖
+	private List<PackageInfo> activeDependencyAkaFanOutList = new ArrayList<>();
+	private List<PackageInfo> passiveDependencyAkaFanInList = new ArrayList<>();
 
 	//basic
 	private int numberOfJavaFile;
@@ -38,14 +38,14 @@ public class PackageInfo implements Serializable {
 	// 3--SLOCType.LOGIC_CODE_LINES_FROM_AST；
 	// 4--SLOCType.PHYSICAL_CODE_LINES_FROM_AST；
 	// 5--SLOCType.COMMENT_LINES_FROM_AST
-	private int[] slocArrayForCurrentPkg; //自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC）
-	private int[] slocArrayForCurrentAndSubPkg; //自身直接持有的外部类的SLOC（外部类的SLOC以及包括了内部类的SLOC），以及子包的SLOC，
+	private int[] slocArrayForCurrentPkg; // the sum of SLOC of all children classes, excluding the subpackages.
+	private int[] slocArrayForCurrentAndSubPkg; // include the subpackages as well.
 
 	// Coupling
-	private int afferentCoupling; // fanin
-	private int efferentCoupling; // fanout
-	private String instability; // fanout/fanin+out
-	private String abstractness; //一个组件中抽象类和接口的数量与所有类的数量的比例
+	private int afferentCoupling;
+	private int efferentCoupling;
+	private String instability;
+	private String abstractness;
 
 	public PackageInfo(String absolutePath) {
 		this.absolutePath = absolutePath;

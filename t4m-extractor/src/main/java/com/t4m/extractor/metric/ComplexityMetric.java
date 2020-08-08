@@ -10,11 +10,11 @@ import com.t4m.extractor.util.MathUtil;
 /**
  * Created by Yuxiang Liao on 2020-07-16 18:39.
  */
-public class ComplexityMetric {
+public class ComplexityMetric implements ClassLevelMetric {
 
 	/**
-	 * 递归查询子节点，计算圈复杂度。
-	 * if, while, for, &&, ||, cases and default of switch, catches of try
+	 * Recursively calculate the cyclomatic complexity of a method.
+	 * Including stmt: if, while, for, &&, ||, ?:, cases and default of switch, catches of try.
 	 */
 	public static int resolveComplexity(Node n, int cyclomaticComplexityCount) {
 		for (Node childNode : n.getChildNodes()) {
@@ -49,10 +49,8 @@ public class ComplexityMetric {
 		return cyclomaticComplexityCount;
 	}
 
-	/**
-	 * 以类为单位，计算cyclomatic Complexity的相关度量
-	 */
-	public static void calculateComplexity(ClassInfo classInfo) {
+	@Override
+	public void calculate(ClassInfo classInfo) {
 		int sum = 0;
 		int max = 0;
 		for (int i : classInfo.getCyclomaticComplexityList()) {
@@ -64,5 +62,4 @@ public class ComplexityMetric {
 		String avg = MathUtil.divide(max, classInfo.getCyclomaticComplexityList().size());
 		classInfo.setAvgCyclomaticComplexity(avg);
 	}
-
 }

@@ -11,9 +11,8 @@ import java.util.Objects;
 public class ModuleInfo implements Serializable {
 
 	private static final long serialVersionUID = 4453849096224682890L;
-	//shortName和fullyQualifiedName都
 	private String shortName;
-	private String relativePath; // 从项目路径开始的相对路径
+	private String relativePath; // Path that start from the project root dir.
 	private String absolutePath;
 
 	private List<ModuleInfo> subModuleList = new ArrayList<>();
@@ -182,7 +181,7 @@ public class ModuleInfo implements Serializable {
 
 
 	/**
-	 * 优先返回mainPackageList，然后是otherPackageList，最后是testPackageList
+	 * @return All PackageInfo objects in {@code ModuleInfo}, testPackageList and otherPackageList.
 	 */
 	public List<PackageInfo> getPackageList() {
 		List<PackageInfo> all = new ArrayList<>();
