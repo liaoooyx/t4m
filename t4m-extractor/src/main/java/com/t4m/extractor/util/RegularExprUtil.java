@@ -1,6 +1,7 @@
 package com.t4m.extractor.util;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Created by Yuxiang Liao on 2020-08-08 07:21.
@@ -16,7 +17,7 @@ public class RegularExprUtil {
 		if ("/".equals(FILE_SEPARATOR)) {
 			return regExpr;
 		} else {
-			return regExpr.replace("/", "\\\\\\\\");
+			return regExpr.replace("/", "\\\\");
 		}
 	}
 }
