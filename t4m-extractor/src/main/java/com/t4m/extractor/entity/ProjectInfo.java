@@ -4,7 +4,6 @@ import com.t4m.extractor.util.RegularExprUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +44,7 @@ public class ProjectInfo implements Serializable {
 	public ProjectInfo(String absolutePath, String excludedPath, String dependencyPath, Date createDate) {
 		this.createDate = createDate;
 		this.absolutePath = absolutePath;
-		String[] paths = absolutePath.split(RegularExprUtil.compat(File.separator));
+		String[] paths = absolutePath.split(RegularExprUtil.compatibleWithWindows("/"));
 		this.projectDirName = paths[paths.length - 1];
 		this.excludedPath = excludedPath;
 		this.dependencyPath = dependencyPath;

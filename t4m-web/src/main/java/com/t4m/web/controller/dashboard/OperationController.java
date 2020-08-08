@@ -36,7 +36,7 @@ public class OperationController {
 			@RequestParam(name = "excludedPath") String excludedPath,
 			@RequestParam(name = "dependencyPath", defaultValue = "") String dependencyPath) {
 		// 更新t4m.properties中的当前项目名称
-		String[] paths = projectPath.split(RegularExprUtil.compat(File.separator));
+		String[] paths = projectPath.split(RegularExprUtil.compatibleWithWindows("/"));
 		String projectIdentifier = paths[paths.length - 1] + "#" + System.currentTimeMillis();
 		// 更新全局项目指针
 		GlobalProperties.updateCurrentProjectPointer(projectIdentifier);

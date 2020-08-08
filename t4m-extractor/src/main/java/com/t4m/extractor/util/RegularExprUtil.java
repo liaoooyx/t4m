@@ -12,8 +12,8 @@ public class RegularExprUtil {
 
 	private RegularExprUtil() {
 	}
-
-	public static String compat(String regExpr) {
+	
+	public static String compatibleWithWindows(String regExpr) {
 		if ("/".equals(FILE_SEPARATOR)) {
 			return regExpr;
 		} else {

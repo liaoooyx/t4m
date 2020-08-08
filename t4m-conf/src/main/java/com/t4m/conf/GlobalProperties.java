@@ -16,8 +16,8 @@ public class GlobalProperties {
 	public static final String DEPENDENCY_PATH_KEY = "DEPENDENCY_PATH";
 	public static final String CURRENT_PROJECT_IDENTIFIER_KEY = "CURRENT_PROJECT_IDENTIFIER";
 
-	public static final String T4M_ROOT_PATH = System.getenv("T4M_HOME");
-	public static final String CONF_ROOT_PATH = T4M_ROOT_PATH + File.separator + "conf";
+	public static final String T4M_ROOT_PATH;
+	public static final String CONF_ROOT_PATH;
 
 	public static final String MAIN_PROPERTIES_FILE_NAME = "t4m.properties";
 	public static final String WEB_PROPERTIES_FILE_NAME = "web.properties";
@@ -36,6 +36,11 @@ public class GlobalProperties {
 	}
 
 	static {
+		if (System.getenv("T4M_HOME") == null){
+			throw new SystemVariableNotFoundException("Cannot read the system variable T4M_HOME");
+		}
+		T4M_ROOT_PATH = System.getenv("T4M_HOME");
+		CONF_ROOT_PATH = T4M_ROOT_PATH + File.separator + "conf";
 		T4mPropertiesUtil t4mProperties = new T4mPropertiesUtil(
 				CONF_ROOT_PATH + File.separator + MAIN_PROPERTIES_FILE_NAME);
 		DB_ROOT_PATH = T4M_ROOT_PATH + File.separator + t4mProperties.getProperty(DB_PATH_KEY);

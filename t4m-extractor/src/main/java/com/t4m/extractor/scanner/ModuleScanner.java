@@ -25,7 +25,7 @@ public class ModuleScanner implements T4MScanner {
 			String pkgPath = packageInfo.getAbsolutePath();
 			String regExprOfPackage = "";
 			if (!PackageInfo.EMPTY_IDENTIFIER.equals(packageInfo.getFullyQualifiedName())) {
-				regExprOfPackage = RegularExprUtil.compat("/" + pkgFullName.replaceAll("\\.", "/") + "$");
+				regExprOfPackage = RegularExprUtil.compatibleWithWindows("/" + pkgFullName.replaceAll("\\.", "/") + "$");
 			}
 			String moduleAbsolutePathWithSuffix;
 			if (!"".equals(regExprOfPackage)) {
@@ -33,7 +33,7 @@ public class ModuleScanner implements T4MScanner {
 			} else {
 				moduleAbsolutePathWithSuffix = pkgPath.strip();
 			}
-			String regExprOfSuffix = RegularExprUtil.compat("/src(/main|/test)/java$");
+			String regExprOfSuffix = RegularExprUtil.compatibleWithWindows("/src(/main|/test)/java$");
 			String moduleAbsolutePath = moduleAbsolutePathWithSuffix.replaceAll(regExprOfSuffix, "");
 			ModuleInfo moduleInfo = EntityUtil.safeAddEntityToList(new ModuleInfo(moduleAbsolutePath),
 			                                                       projectInfo.getModuleList());

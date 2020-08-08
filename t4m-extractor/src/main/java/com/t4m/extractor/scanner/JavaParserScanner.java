@@ -84,7 +84,7 @@ public class JavaParserScanner implements T4MScanner {
 		}
 		String dependencyPath = projectInfo.getDependencyPath();
 		if (!"".equals(dependencyPath)) {
-			String[] jars = dependencyPath.split(RegularExprUtil.compat(File.separator));
+			String[] jars = dependencyPath.split(RegularExprUtil.compatibleWithWindows("/"));
 			for (String jarPath : jars) {
 				try {
 					typeSolverList.add(new JarTypeSolver(jarPath));
