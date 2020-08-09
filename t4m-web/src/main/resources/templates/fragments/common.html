@@ -366,7 +366,7 @@
               }, function (data) {
                   clearInterval(scanningCounter);
                   if (data === "success") {
-                      window.location.reload();
+                      window.location.href = '/dashboard/basic';
                   } else {
                       alert(data);
                       window.location.reload();
