@@ -204,7 +204,7 @@
                           grid: {bottom: 100, right: 150}, color: ['#c23531'],
                           legend: {
                               data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class',
-		                              'package/module-info'],
+                                  'package/module-info'],
                               selected: {'package/module-info': false},
                           },
                           xAxis: {
@@ -522,26 +522,26 @@
         let columns = [{
             field: 'chart', title: ''
         }, {
-            field: 'name', title: 'Class Name', sortable: true,
+            field: 'name', title: 'Module Name', sortable: true,
             formatter: function (value, row) {
                 return '<a href="javascript:void(0);" ' +
-                    'onclick="showPackageSloc(\'' + row.name + '\',true,true)">' +
+                    'onclick="showPackageSloc(\'' + row.name.replace(/\\/g, "\\\\") + '\',true,true)">' +
                     value + '</a>';
             },
         }, {
             field: 'level', title: 'Level', sortable: true
         }, {
-            field: 'logicCodeLinesSF', title: 'Logic Code Lines<br>(Source File)', sortable: true
+            field: 'logicCodeLinesSF', title: 'Logic Lines of Code<br>(Source File)', sortable: true
         }, {
-            field: 'physicalCodeLinesSF', title: 'Physical Code Lines<br>(Source File)', sortable: true
+            field: 'physicalCodeLinesSF', title: 'Physical Lines of Code<br>(Source File)', sortable: true
         }, {
             field: 'CommentLinesSF', title: 'Comment Lines<br>(Source File)', sortable: true
         }, {
             field: 'percentageOfCommentSF', title: '% of Comments<br>(Source File)', sortable: true
         }, {
-            field: 'logicCodeLinesJP', title: 'Logic Code Lines<br>(JavaParser)', sortable: true
+            field: 'logicCodeLinesJP', title: 'Logic Lines of Code<br>(JavaParser)', sortable: true
         }, {
-            field: 'physicalCodeLinesJP', title: 'Physical Code Lines<br>(JavaParser)', sortable: true
+            field: 'physicalCodeLinesJP', title: 'Physical Lines of Code<br>(JavaParser)', sortable: true
         }, {
             field: 'CommentLinesJP', title: 'Comment Lines<br>(JavaParser)', sortable: true
         }, {
@@ -554,7 +554,7 @@
                 dataset[i].chart =
                     '<a class="table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
                     + 'data-target="#row_model" onclick="showTableChart(\'' +
-                    dataset[i].name + '\',\'' + dataset[i].level + '\')">'
+                    dataset[i].name.replace(/\\/g, "\\\\") + '\',\'' + dataset[i].level + '\')">'
                     + '<i class="fas fa-chart-bar"></i></a>'
             }
             buildTable($table, dataset, columns, 2, 0)
@@ -583,24 +583,23 @@
                 } else {
                     return value;
                 }
-
             },
         }, {
             field: 'level', title: 'Level', sortable: true
         }, {
             field: 'module', title: 'of Which Module', sortable: true
         }, {
-            field: 'logicCodeLinesSF', title: 'Logic Code Lines<br>(Source File)', sortable: true
+            field: 'logicCodeLinesSF', title: 'Logic Lines of Code<br>(Source File)', sortable: true
         }, {
-            field: 'physicalCodeLinesSF', title: 'Physical Code Lines<br>(Source File)', sortable: true
+            field: 'physicalCodeLinesSF', title: 'Physical Lines of Code<br>(Source File)', sortable: true
         }, {
             field: 'CommentLinesSF', title: 'Comment Lines<br>(Source File)', sortable: true
         }, {
             field: 'percentageOfCommentSF', title: '% of Comments<br>(Source File)', sortable: true
         }, {
-            field: 'logicCodeLinesJP', title: 'Logic Code Lines<br>(JavaParser)', sortable: true
+            field: 'logicCodeLinesJP', title: 'Logic Lines of Code<br>(JavaParser)', sortable: true
         }, {
-            field: 'physicalCodeLinesJP', title: 'Physical Code Lines<br>(JavaParser)', sortable: true
+            field: 'physicalCodeLinesJP', title: 'Physical Lines of Code<br>(JavaParser)', sortable: true
         }, {
             field: 'CommentLinesJP', title: 'Comment Lines<br>(JavaParser)', sortable: true
         }, {
@@ -609,13 +608,14 @@
         let requestPath;
         if (isNameOfModule) {
             requestPath =
-                "/dashboard/sloc/table/package?moduleRelativePath=" + name +
-                "&projectRecordIndex=" + projectRecordIndex;
+                "/dashboard/sloc/table/package";
         } else {
-            requestPath = "/dashboard/sloc/table/subpackage?packageQualifiedName=" + name +
-                "&projectRecordIndex=" + projectRecordIndex;
+            requestPath = "/dashboard/sloc/table/subpackage";
         }
-        $.get(requestPath).done(function (data) {
+        $.post(requestPath, {
+            name: name,
+            projectRecordIndex: projectRecordIndex
+        }, function (data) {
             let dataset = data;
             //给每行前面加上趋势图按钮（弹出模态框）
             for (i = 0; i < dataset.length; i++) {
@@ -628,12 +628,12 @@
                 dataset[i].chart =
                     '<a class="table-chart-icon" href="javascript:void(0);" data-toggle="modal" '
                     + 'data-target="#row_model" onclick="showTableChart(\'' +
-                    param1 + '\',\'' + dataset[i].level + '\')">'
+                    param1.replace(/\\/g, "\\\\") + '\',\'' + dataset[i].level + '\')">'
                     + '<i class="fas fa-chart-bar"></i></a>'
             }
             buildTable($table, dataset, columns, 2, 0)
             $("#previous-btn").removeClass("invisible");
-        });
+        })
     }
 
     // 重新渲染表格
@@ -680,7 +680,7 @@
         },
         yAxis: [
             {
-                name: "Source Lines of Code",
+                name: "Physical Lines of Code",
                 type: 'value',
                 nameLocation: 'center',
                 nameRotate: 90,
@@ -748,20 +748,22 @@
         timelineChart2.clear();
         timelineChart2.setOption(option2);
         // 异步加载数据
-        $.get("/dashboard/sloc/table/chart?name=" + name + "&level=" + level).done(function (data) {
+        $.post("/dashboard/sloc/table/chart", {
+            name: name,
+            level: level
+        }, function (data) {
             // 填入数据
             timelineChart2.setOption({
                 dataset: {
-                    // 提供一份数据。
                     source: data
                 },
                 series: [
                     {
-                        type: 'line', name: 'Logic Code Lines (Source File)', yAxisIndex: 0,
+                        type: 'line', name: 'Logic Lines f Code (Source File)', yAxisIndex: 0,
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {
-                        type: 'line', name: 'Physical Code Lines (Source File)', yAxisIndex: 0,
+                        type: 'line', name: 'Physical Lines of Code (Source File)', yAxisIndex: 0,
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {
@@ -773,11 +775,11 @@
                         lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
                     },
                     {
-                        type: 'line', name: 'Logic Code Lines (JavaParser)', yAxisIndex: 0,
+                        type: 'line', name: 'Logic Lines of Code (JavaParser)', yAxisIndex: 0,
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {
-                        type: 'line', name: 'Physical Code Lines (JavaParser)', yAxisIndex: 0,
+                        type: 'line', name: 'Physical Lines of Code (JavaParser)', yAxisIndex: 0,
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {
@@ -790,7 +792,7 @@
                     },
                 ],
             });
-        });
+        })
     }
 
     // 让echarts在模态框打开后重新渲染

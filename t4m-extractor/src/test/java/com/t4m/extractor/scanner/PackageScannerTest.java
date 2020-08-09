@@ -26,7 +26,7 @@ class PackageScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试包数量")
+	@DisplayName("Tesing the number of package")
 	void scan() {
 		assertEquals(5, projectInfo.getPackageList().size());
 	}

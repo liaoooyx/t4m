@@ -32,7 +32,7 @@ class MetricsScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试类级别的CyclomaticComplexity")
+	@DisplayName("Testing CyclomaticComplexity in class level")
 	void testClassLevelCyclomaticComplexity() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.CyclomaticComplexityClass");
@@ -42,7 +42,7 @@ class MetricsScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试类级别的RFC")
+	@DisplayName("Testing the Response For a Class in class level")
 	void testClassLevelRFC() {
 		assertAll(() -> {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
@@ -60,7 +60,7 @@ class MetricsScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试类级别的Inheritance")
+	@DisplayName("Testing the Inheritance in class level")
 	void testClassLevelInheritance() {
 		assertAll(() -> {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
@@ -75,7 +75,7 @@ class MetricsScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试类级别的Coupling")
+	@DisplayName("Testing the Coupling in class level")
 	void testClassLevelCoupling() {
 		assertAll(() -> {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
@@ -87,7 +87,7 @@ class MetricsScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试类级别的Cohesion")
+	@DisplayName("Testing the Cohesion in class level")
 	void testClassLevelCohesion() {
 		assertAll(() -> {
 			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
@@ -100,7 +100,7 @@ class MetricsScannerTest {
 
 
 	@Test
-	@DisplayName("测试类级别的SLOC")
+	@DisplayName("Testing the Lines of Code in class level")
 	void testClassLevelSLOC() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.SlocClass");
@@ -114,7 +114,7 @@ class MetricsScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试类级别的Coupling")
+	@DisplayName("Testing the Coupling in package level")
 	void testPkgLevelCoupling() {
 		assertAll(() -> {
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(),
@@ -127,7 +127,7 @@ class MetricsScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试包级别的SLOC")
+	@DisplayName("Testing the Lines of Code in package level")
 	void testPkgLevelSLOC() {
 		assertAll(() -> {
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(),
@@ -153,7 +153,7 @@ class MetricsScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试模块级别的SLOC")
+	@DisplayName("Testing the Lines of Code in module level")
 	void testModuleLevelSLOC() {
 		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		int[] slocArray = moduleInfo.getSlocArray();
@@ -166,7 +166,7 @@ class MetricsScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试ModuleInfo下的类数量和内部类数量")
+	@DisplayName("Testing the number of classes and nested class in Module level")
 	void testNumberOfClassAndInnerClass() {
 		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		assertEquals(20, moduleInfo.getNumberOfJavaFile());

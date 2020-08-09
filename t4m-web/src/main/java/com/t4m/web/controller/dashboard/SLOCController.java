@@ -13,10 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -65,10 +62,10 @@ public class SLOCController {
 		return moduleService.getSLOCForTable(projectInfo);
 	}
 
-	@GetMapping("/table/package")
+	@PostMapping("/table/package")
 	@ResponseBody
 	public List<Map<String, Object>> selectPackageRecord(
-			@RequestParam(name = "moduleRelativePath") String moduleRelativePath,
+			@RequestParam(name = "name") String moduleRelativePath,
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		ProjectInfo projectInfo = projectService.getCurrentProjectInfoOfIndex(projectRecordIndex);
 		if (projectInfo == null) {
@@ -76,30 +73,30 @@ public class SLOCController {
 		}
 		ModuleInfo moduleInfo = moduleService.getModuleInfoByPath(projectInfo, moduleRelativePath);
 		if (moduleInfo == null) {
-			LOGGER.debug("No such module in this record.");
+			LOGGER.debug("No such module in this record. [{}]", moduleRelativePath);
 			return new ArrayList<>();
 		}
 		return packageService.getSLOCForTable(moduleInfo);
 	}
 
-	@GetMapping("/table/subpackage")
+	@PostMapping("/table/subpackage")
 	@ResponseBody
 	public List<Map<String, Object>> selectSubPackageRecord(
-			@RequestParam(name = "packageQualifiedName") String packageQualifiedName,
+			@RequestParam(name = "name") String packageQualifiedName,
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
 		ProjectInfo projectInfo = projectService.getCurrentProjectInfoOfIndex(projectRecordIndex);
 		if (projectInfo == null) {
 			return new ArrayList<>();
 		}
-		PackageInfo packageInfo = packageService.getPackageInfoByQualifiedName(projectInfo,packageQualifiedName);
+		PackageInfo packageInfo = packageService.getPackageInfoByQualifiedName(projectInfo, packageQualifiedName);
 		if (packageInfo == null) {
-			LOGGER.info("No such package in this record.");
+			LOGGER.info("No such package in this record. [{}]", packageQualifiedName);
 			return new ArrayList<>();
 		}
 		return packageService.getSLOCForTable(packageInfo);
 	}
 
-	@GetMapping("/table/chart")
+	@PostMapping("/table/chart")
 	@ResponseBody
 	public List<String[]> selectTableChartRecord(
 			@RequestParam(name = "name") String name, @RequestParam(name = "level") String level) {

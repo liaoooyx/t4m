@@ -25,7 +25,7 @@ class ModuleScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试模块数量")
+	@DisplayName("Testing the number of modules")
 	void scan() {
 		assertEquals(2, projectInfo.getModuleList().size());
 	}

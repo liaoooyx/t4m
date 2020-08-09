@@ -24,7 +24,7 @@ class ClassScannerTest {
 	}
 
 	@Test
-	@DisplayName("获取项目路径下所有Java文件")
+	@DisplayName("Getting all classes in the project")
 	void scan() {
 		assertEquals(21, projectInfo.getClassList().size());
 	}

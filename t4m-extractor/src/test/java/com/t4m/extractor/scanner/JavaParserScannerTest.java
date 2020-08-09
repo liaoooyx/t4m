@@ -23,14 +23,13 @@ class JavaParserScannerTest {
 		String path = new File("src/test/resources/JSimulation").getAbsolutePath();
 		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor();
-		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner(), new ClassScanner(),
-		                                   new PackageScanner(), new ModuleScanner(),
-		                                   new DependencyScanner(), new JavaParserScanner()).extract(
-				projectInfo);
+		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner(), new ClassScanner(), new PackageScanner(),
+		                                   new ModuleScanner(), new DependencyScanner(), new JavaParserScanner())
+		            .extract(projectInfo);
 	}
 
 	@Test
-	@DisplayName("测试ClassInfoVisitor是否初始化非公共类和嵌套类")
+	@DisplayName("Testing whether ClassInfoVisitor initializes package private outer classes and nested classes")
 	void testExtraClassAndNestedClass() {
 		assertAll(() -> assertEquals(21, projectInfo.getClassList().size()),
 		          () -> assertEquals(9, projectInfo.getNestedClassList().size()),
@@ -42,7 +41,7 @@ class JavaParserScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试DeclarationVisitor是否初始化MethodInfo和FieldInfo")
+	@DisplayName("Testing whether the DeclarationVisitor initializes MethodInfo and FieldInfo")
 	void testMethodAndFieldInfo() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.foo.ComplexClassA");
@@ -53,7 +52,7 @@ class JavaParserScannerTest {
 
 
 	@Test
-	@DisplayName("测试DeclarationVisitor是否添加依赖关系")
+	@DisplayName("Testing whether the DeclarationVisitor adds dependencies")
 	void testDependency() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.xoo.Java8Tester");
@@ -62,7 +61,7 @@ class JavaParserScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试DeclarationVisitor是否扫描出SLOC的元数据")
+	@DisplayName("Testing whether the DeclarationVisitor scans the metadata of SLOC")
 	void testSLOCMap() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.SlocClass");
@@ -77,7 +76,7 @@ class JavaParserScannerTest {
 
 
 	@Test
-	@DisplayName("测试DeclarationVisitor是扫描出方法复杂度的元数据")
+	@DisplayName("Testing whether the DeclarationVisitor scans the metadata of the method complexity")
 	void testCyclomaticComplexity() {
 		ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(),
 		                                                         "com.simulation.core.CyclomaticComplexityClass");

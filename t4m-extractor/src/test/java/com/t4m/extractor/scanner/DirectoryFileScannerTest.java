@@ -22,7 +22,7 @@ class DirectoryFileScannerTest {
 	}
 
 	@Test
-	@DisplayName("获取项目路径下所有Java文件")
+	@DisplayName("Getting all Java files in the project")
 	void scan() {
 		T4MExtractor t4MExtractor = new T4MExtractor();
 		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner()).extract(projectInfo);

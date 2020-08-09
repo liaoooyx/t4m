@@ -29,7 +29,7 @@ class T4MProjectInfoSerializerTest {
 	}
 
 	@Test
-	@DisplayName("Test serialization operation")
+	@DisplayName("Testing serialization operations")
 	void serialization() {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		String dbFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());

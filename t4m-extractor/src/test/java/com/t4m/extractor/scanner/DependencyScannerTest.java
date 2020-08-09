@@ -30,7 +30,7 @@ class DependencyScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试模块依赖关系")
+	@DisplayName("Tesing module dependencies")
 	void createModuleDependency() {
 		ModuleInfo moduleInfo1 = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		ModuleInfo subModule = EntityUtil.getModuleByShortName(moduleInfo1.getSubModuleList(), "submodule1");
@@ -40,7 +40,7 @@ class DependencyScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试模块信息完整性")
+	@DisplayName("Testing module information integrity")
 	void testModuleInfoIntegrity() {
 		ModuleInfo rootModule = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		assertEquals("JSimulation", rootModule.getRelativePath());
@@ -50,7 +50,7 @@ class DependencyScannerTest {
 	}
 
 	@Test
-	@DisplayName("测试包依赖关系")
+	@DisplayName("Testing package dependencies")
 	void createPackageDependency() {
 		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		PackageInfo rootPkg = EntityUtil.getPackageByQualifiedName(moduleInfo.getMainPackageList(),
