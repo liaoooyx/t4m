@@ -20,6 +20,7 @@ public class DirectoryFileScanner implements T4MScanner {
 	@Override
 	public void scan(ProjectInfo projectInfo, ScannerChain scannerChain) {
 		LOGGER.info("Scanning all .java file from [{}]", projectInfo.getAbsolutePath());
+		LOGGER.info("Files that contain the following paths will be excluded: [{}]", projectInfo.getExcludedPath());
 		List<File> rawJavaFileList = new ArrayList<>();
 		File root = new File(projectInfo.getAbsolutePath());
 		getAllJavaFiles(root, rawJavaFileList, projectInfo);
@@ -33,20 +34,15 @@ public class DirectoryFileScanner implements T4MScanner {
 	 */
 	private void getAllJavaFiles(File file, List<File> javaList, ProjectInfo projectInfo) {
 		if (file.isDirectory()) {
-			File[] fileArray = file.listFiles(new FileFilter() {
-				@Override
-				public boolean accept(File pathname) {
-					String[] exclusions = projectInfo.getExcludedPath().split(";");
-					for (String exclusion : exclusions) {
-						if (!"".equals(exclusion) && pathname.getAbsolutePath().contains(exclusion))
-							return false;
-					}
-					return true;
+			File[] fileArray = file.listFiles(pathname -> {
+				String[] exclusions = projectInfo.getExcludedPath().split(";");
+				for (String exclusion : exclusions) {
+					if (!"".equals(exclusion) && pathname.getAbsolutePath().contains(exclusion))
+						return false;
 				}
+				return true;
 			});
-			Arrays.stream(fileArray).forEach(f -> {
-				getAllJavaFiles(f, javaList, projectInfo);
-			});
+			Arrays.stream(fileArray).forEach(f -> getAllJavaFiles(f, javaList, projectInfo));
 		} else {
 			if (file.getName().endsWith(".java")) {
 				javaList.add(file);

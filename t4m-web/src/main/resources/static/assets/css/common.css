@@ -91,3 +91,7 @@ ul li a.nav-link i {
     margin-bottom: 0;
     vertical-align: top;
 }
+
+.custom-control-label::before{
+    border-color: #a2a2a2;
+}

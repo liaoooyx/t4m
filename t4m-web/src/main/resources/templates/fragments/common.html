@@ -63,93 +63,6 @@
 					</li>
 				</ul>
 				
-				<!-- Modal to create new project -->
-				<div class="modal fade" id="modal_to_scan_project" tabindex="-1" role="dialog"
-				     aria-labelledby="modal_to_scan_project_label" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-scrollable" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="modal_to_scan_project_label" v-html="title"></h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form>
-									<div class="form-group" v-html="projectNameHTML"></div>
-									<div class="form-group">
-										<div class="custom-control pl-0">
-											<label class="custom-label">Enable custom recording time</label>
-											<label class="custom-toggle">
-												<input type="checkbox" id="enable_project_create_time" value="off">
-												<span class="custom-toggle-slider rounded-circle"></span>
-											</label>
-										</div>
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-											</div>
-											<input class="form-control" type="text" id="project_create_time" disabled>
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="excluded_path">Excluded path</label>
-										<textarea class="form-control" id="excluded_path" rows="2">{{modalFlag==='scan'?projectExcludedPath:defaultExcludedPath}}</textarea>
-										<small class="form-text text-muted">
-											The path that should not be included in scanning."
-										</small>
-										<small class="form-text text-muted">
-											Each path should start with the system file separator, and separated by ";"
-										</small>
-									</div>
-									<div class="form-group">
-										<label for="dependency_path">Dependency path</label>
-										<textarea class="form-control" id="dependency_path" rows="2">{{modalFlag==='scan'?projectDependencyPath:defaultDependencyPath}}</textarea>
-										<small class="form-text text-muted">
-											The external .jar file path of the project.
-										</small>
-										<small class="form-text text-muted">
-											The external class can not be resolved if lacking the dependency path, leading some extends of
-											inaccuracy to the metrics.
-										</small>
-									</div>
-								</form>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary" onclick="scanProject(this)">Scan</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				<!-- Modal to switch and delete project -->
-				<div class="modal fade" id="modal_to_switch_project" tabindex="-1" role="dialog"
-				     aria-labelledby="modal_to_switch_project_label" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="modal_to_switch_project_label">Switch project</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div id="model_content_of_switching_project" class="modal-body">
-								<div class="list-group list-group-flush" id="project_list_for_switch">
-									<a href="javascript:void(0);" class="list-group-item py-2 list-group-item-action"
-									   v-for="identifier of projectArray" v-bind:class="identifier[0] === currentProject?'active':''"
-									   v-html="identifier[1]" data-toggle="list" v-bind:name="identifier[0]">
-									</a>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-outline-danger" onclick="deleteProject()">Delete</button>
-								<button type="button" class="btn btn-primary" onclick="switchProject()">Choose</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				
 				<!-- Divider -->
 				<hr class="my-3">
 				
@@ -235,29 +148,113 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- Modal to create new project -->
+	<div class="modal fade" id="modal_to_scan_project" tabindex="-1" role="dialog"
+	     aria-labelledby="modal_to_scan_project_label" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal_to_scan_project_label" v-html="title"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group" v-html="projectNameHTML"></div>
+						<div class="form-group">
+							<div class="custom-control justify-content-between mb-2 pl-0">
+								<label class="custom-label">Custom recording time</label>
+								<div class="custom-control custom-checkbox float-right">
+									<input type="checkbox" class="custom-control-input" id="enable_project_create_time">
+									<label class="custom-control-label" for="enable_project_create_time">Enable</label>
+								</div>
+							</div>
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+								</div>
+								<input class="form-control" type="text" id="project_create_time" disabled/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="excluded_path">Excluded path</label>
+							<textarea class="form-control" id="excluded_path" rows="2">{{modalFlag==='scan'?projectExcludedPath:defaultExcludedPath}}</textarea>
+							<small class="form-text text-muted">
+								The path that should not be included in scanning."
+							</small>
+							<small class="form-text text-muted">
+								Each path should start with the system file separator, and separated by ";"
+							</small>
+						</div>
+						<div class="form-group">
+							<label for="dependency_path">Dependency path</label>
+							<textarea class="form-control" id="dependency_path" rows="2">{{modalFlag==='scan'?projectDependencyPath:defaultDependencyPath}}</textarea>
+							<small class="form-text text-muted">
+								The external .jar file path of the project.
+							</small>
+							<small class="form-text text-muted">
+								The external class can not be resolved if lacking the dependency path, leading some extends of
+								inaccuracy to the metrics.
+							</small>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" onclick="scanProject(this)">Scan</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal to switch and delete project -->
+	<div class="modal fade" id="modal_to_switch_project" tabindex="-1" role="dialog"
+	     aria-labelledby="modal_to_switch_project_label" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modal_to_switch_project_label">Switch project</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div id="model_content_of_switching_project" class="modal-body">
+					<div class="list-group list-group-flush" id="project_list_for_switch">
+						<a href="javascript:void(0);" class="list-group-item py-2 list-group-item-action"
+						   v-for="identifier of projectArray" v-bind:class="identifier[0] === currentProject?'active':''"
+						   v-html="identifier[1]" data-toggle="list" v-bind:name="identifier[0]">
+						</a>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-danger" onclick="deleteProject()">Delete</button>
+					<button type="button" class="btn btn-primary" onclick="switchProject()">Choose</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 </nav>
 
 <footer th:fragment="footer" class="footer pt-0">
 	<div class="row align-items-center justify-content-lg-between">
 		<div class="col-lg-6">
 			<div class="copyright text-center  text-lg-left  text-muted">
-				&copy; 2020 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative
-				                                                                                                 Tim</a>
+				&copy; 2020 Yuxiang Liao
 			</div>
 		</div>
 		<div class="col-lg-6">
 			<ul class="nav nav-footer justify-content-center justify-content-lg-end">
 				<li class="nav-item">
-					<a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
+					<a href="https://github.com/liaoooyx/t4m" class="nav-link" target="_blank">Github</a>
 				</li>
 				<li class="nav-item">
-					<a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
+					<a href="https://liaoooyx.com/about/" class="nav-link" target="_blank">About Me</a>
 				</li>
 				<li class="nav-item">
-					<a href="http://blog.creative-tim.com" class="nav-link" target="_blank">Blog</a>
-				</li>
-				<li class="nav-item">
-					<a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link"
+					<a href="https://github.com/liaoooyx/t4m/LICENSE.md" class="nav-link"
 					   target="_blank">MIT License</a>
 				</li>
 			</ul>
@@ -323,7 +320,7 @@
           scanType = flag;
           scan_vm.modalFlag = flag
           if (flag === "new") {
-              let html = '<label for="project_path">Project path</label>\n' +
+              let html = '<label for="project_path">Project path <span class="text-red">*</span></label>\n' +
                   '<input type="text" class="form-control" id="project_path" ' +
                   'placeholder="Please enter your project absolute root path." required>\n' +
                   '<div class="invalid-feedback">Please enter a project path.</div>'
@@ -331,17 +328,13 @@
               scan_vm.title = 'Scan New Project';
               $('#modal_to_scan_project').modal('show');
           } else if (flag === "scan") {
-              let html = '<label for="project_path">Project path </label>\n' +
+              let html = '<label for="project_path">Project path <span class="text-red">*</span></label>\n' +
                   '<input type="text" class="form-control" id="project_path" value="' + currentProjectPath + '" disabled>';
               scan_vm.projectNameHTML = html;
               scan_vm.title = 'Scan: ' + formatProjectIdentifier([[${currentProjectIdentifier}]]);
               $('#modal_to_scan_project').modal('show');
           }
       }
-
-      $('#modal_to_scan_project').on('shown.bs.modal', function (e) {
-          $('#modal_to_scan_project').modal('handleUpdate'); //避免无法滚动
-      })
 
       $('#enable_project_create_time').click(function () {
           let enable_custom_time = document.getElementById("enable_project_create_time").checked
@@ -398,7 +391,6 @@
                   projectArray.push([identifier, formatProjectIdentifier(identifier, data['currentProject'])])
               }
               vm_for_switch_project_model.projectArray = projectArray;
-              $('#modal_to_switch_project').modal('handleUpdate'); //避免无法滚动
           })
       })
 

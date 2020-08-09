@@ -35,17 +35,26 @@ public class GlobalProperties {
 		GlobalProperties.currentProjectIdentifier = currentProjectIdentifier;
 	}
 
+	// windows /\: is illegal
+	// mac / legal, \ will be :, : is illegal
+
 	static {
-		if (System.getenv("T4M_HOME") == null){
+		if (System.getenv("T4M_HOME") == null) {
 			throw new SystemVariableNotFoundException("Cannot read the system variable T4M_HOME");
 		}
 		T4M_ROOT_PATH = System.getenv("T4M_HOME");
 		CONF_ROOT_PATH = T4M_ROOT_PATH + File.separator + "conf";
 		T4mPropertiesUtil t4mProperties = new T4mPropertiesUtil(
 				CONF_ROOT_PATH + File.separator + MAIN_PROPERTIES_FILE_NAME);
-		DB_ROOT_PATH = T4M_ROOT_PATH + File.separator + t4mProperties.getProperty(DB_PATH_KEY);
-		DEFAULT_EXCLUDED_PATH = t4mProperties.getProperty(EXCLUDED_PATH_KEY);
-		DEFAULT_DEPENDENCY_PATH = t4mProperties.getProperty(DEPENDENCY_PATH_KEY);
+		if ("/".equals(File.separator)) {
+			DB_ROOT_PATH = T4M_ROOT_PATH + File.separator + t4mProperties.getProperty(DB_PATH_KEY);
+			DEFAULT_EXCLUDED_PATH = t4mProperties.getProperty(EXCLUDED_PATH_KEY);
+			DEFAULT_DEPENDENCY_PATH = t4mProperties.getProperty(DEPENDENCY_PATH_KEY);
+		} else {
+			DB_ROOT_PATH = T4M_ROOT_PATH + File.separator + t4mProperties.getProperty(DB_PATH_KEY).replace("/", "\\");
+			DEFAULT_EXCLUDED_PATH = t4mProperties.getProperty(EXCLUDED_PATH_KEY).replace("/", "\\");
+			DEFAULT_DEPENDENCY_PATH = t4mProperties.getProperty(DEPENDENCY_PATH_KEY).replace("/", "\\");
+		}
 		T4mPropertiesUtil webProperties = new T4mPropertiesUtil(
 				CONF_ROOT_PATH + File.separator + WEB_PROPERTIES_FILE_NAME);
 		currentProjectIdentifier = webProperties.getProperty(CURRENT_PROJECT_IDENTIFIER_KEY);

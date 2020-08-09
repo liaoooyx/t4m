@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 
 	/**
-	 * @param model 用于aop切片
+	 * @param model for AOPHandler
 	 */
 	@RequestMapping("/")
 	public String home(Model model) {
-		return "page/document/introduction";
+		return "page/document/how_to_use";
 	}
 }

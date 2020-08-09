@@ -181,6 +181,7 @@
               let timeRecords = /*[[${timeRecords}]]*/;
               let datasetAllClass = /*[[${datasetAllClass}]]*/;
               let datasetMainClass = /*[[${datasetMainClass}]]*/;
+              let datasetKeyArray = ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation', 'info.java']
               let currentDataset;
 
               function changeDataSet(type) {
@@ -202,8 +203,9 @@
                       baseOption: {
                           grid: {bottom: 100, right: 150}, color: ['#c23531'],
                           legend: {
-                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class', 'package-info'],
-                              selected: {'package-info': false},
+                              data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class',
+		                              'package/module-info'],
+                              selected: {'package/module-info': false},
                           },
                           xAxis: {
                               name: 'Physical Code Lines', type: 'value', max: Math.ceil(dataMax[0] / 5) * 5,
@@ -262,7 +264,7 @@
                   let yMax = 0;
                   let d2Max = 0;
                   for (let key in dataset) {
-                      for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation', 'package-info']) {
+                      for (let key2 of datasetKeyArray) {
                           for (let cols of dataset[key][key2]) {
                               xMax = Number(cols[0]) > xMax ? Number(cols[0]) : xMax;
                               yMax = Number(cols[1]) > yMax ? Number(cols[1]) : yMax;
@@ -338,8 +340,8 @@
                                   },
                               },
                           }, {
-                              name: 'package-info', type: 'scatter', animation: false,
-                              data: dataset[timeRecords[i]]['package-info'],
+                              name: 'package/module-info', type: 'scatter', animation: false,
+                              data: dataset[timeRecords[i]]['info.java'],
                               itemStyle: {color: '#171717',},
                               emphasis: {
                                   label: {

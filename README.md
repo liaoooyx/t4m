@@ -12,17 +12,17 @@ Download the source code to your computer or using:
 git clone https://github.com/liaoooyx/t4m.git
 ```
 
-The executable jar file is placed in the `t4m/run/` directory. 
+The executable jar file is placed in the `t4m/bin/` directory. 
 
 ## How to run
 
-1. Make sure you have Java 11 or higher in your OS.
+1. Prerequisite. Make sure you have Java 11 or higher in your OS.
 
    ```
    java -version
    ```
 
-2. Before run the service, you need to the add the absolute root path of `t4m` root directory to your System Variable.
+2. Preparation. Add the absolute root path of `t4m` root directory to your System Variable.
 
    - For Linux or Mac user: 
 
@@ -48,12 +48,12 @@ The executable jar file is placed in the `t4m/run/` directory.
 
      You can run the command `set T4M_HOME` to check the system variable.
 
-3. Execute the `t4m-web-1.0-SNAPSHOT.jar` file which is placed in the `t4m/run/` directory. 
+3. Start-up. Execute the `t4m-web-1.0-SNAPSHOT.jar` file which is placed in the `t4m/bin/` directory. 
 
    - For Linux or Mac user, assume the root path of `t4m` is `/absolute/path/to/t4m`.
 
      ```
-     cd /absolute/path/to/t4m/run
+     cd /absolute/path/to/t4m/bin
      java -jar t4m-web-1.0-SNAPSHOT.jar
      ```
 
@@ -61,19 +61,19 @@ The executable jar file is placed in the `t4m/run/` directory.
 
      ```
      d:
-     cd absolute\path\to\t4m\run
+     cd absolute\path\to\t4m\bin
      java -jar t4m-web-1.0-SNAPSHOT.jar
      ```
 
 ## How to use
 
-After you run the `t4m-web` Jar file. It will start a web service. You can open the link below  in your browser.
+After you run the `t4m-web` Jar file. It will start a web service for you. You can open the link below in your browser.
 
 ```
 http://localhost:8087/
 ```
 
-The detailed instrcutions of how to use will be shown in the web page.
+The detailed instructions of how to use will be shown on the web page.
 
 ## How to stop
 
@@ -81,11 +81,11 @@ Press `control + c` to stop.
 
 ## How to build
 
-You may want to modified the source code and rebuild the project. We provide a gradle task for you to build the project.
+You may want to modify the source code and rebuild the project. We provide a gradle task for you to rebuild the project.
 
 ```
 ./gradlew buildT4M
 ```
 
-It will build the executable jar file to `[t4mRootDir]/run/` directory.
+It will build a executable jar file to `[t4mRootDir]/bin/` directory.
 

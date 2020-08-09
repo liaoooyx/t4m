@@ -27,14 +27,11 @@ public class CouplingMetric implements ClassLevelMetric, PackageLevelMetric {
 		int fanOut = packageInfo.getActiveDependencyAkaFanOutList().size();
 		packageInfo.setAfferentCoupling(fanIn);
 		packageInfo.setEfferentCoupling(fanOut);
-		String instability = MathUtil.divide(fanOut, fanOut + fanIn);
+		String instability = MathUtil.divide(fanOut, (float) fanOut + fanIn);
 		packageInfo.setInstability(instability);
 		int numOfAllClass = packageInfo.getAllClassList().size();
 		int numOfAbstraction = 0; // interface or abstract
 		for (ClassInfo classInfo : packageInfo.getAllClassList()) {
-			if (classInfo.getClassModifier() == null){
-				System.out.println();
-			}
 			switch (classInfo.getClassModifier()) {
 				case INTERFACE:
 				case ABSTRACT_CLASS:

@@ -60,7 +60,6 @@ subprojects {
     }
 }
 
-
 task buildT4M(type: Copy) {
     dependsOn 't4m-web:build'
     File runDir = new File("${project.rootDir}/run")
@@ -74,14 +73,14 @@ task buildT4M(type: Copy) {
     }
     new File("${project.rootDir}/conf/web.properties") << "CURRENT_PROJECT_IDENTIFIER="
     from 't4m-web/build/libs'
-    into 'run/'
+    into 'bin/'
 }
 
 
-// gradle -q findDependencyClasspath > deps.txt
-task findDependencyClasspath {
+// ./gradlew -q findDependencyPath > deps.txt
+task findDependencyPath {
     project.allprojects.each { module ->
-        tasks.create("findDependencyClasspath_${module.name}", {
+        tasks.create("findDependencyPath_${module.name}", {
             doLast {
                 Set<String> depsSet = new HashSet<>()
                 module.configurations.each { conf ->
@@ -99,7 +98,7 @@ task findDependencyClasspath {
                 new File(module.name + ".deps") << depsString
             }
         })
-        findDependencyClasspath.dependsOn("findDependencyClasspath_${module.name}")
+        findDependencyPath.dependsOn("findDependencyPath_${module.name}")
     }
     doLast {
         Set<String> depsSet = new HashSet<>()

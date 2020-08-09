@@ -25,7 +25,7 @@ public class ClassTypeUtil {
 		series.put("Class", new ArrayList<>());
 		series.put("Enum", new ArrayList<>());
 		series.put("Annotation", new ArrayList<>());
-		series.put("package-info", new ArrayList<>());
+		series.put("info.java", new ArrayList<>());
 	}
 
 	public static List<Object> chooseSeriesByClassModifier(
@@ -43,7 +43,7 @@ public class ClassTypeUtil {
 				case CLASS:
 					return series.get("Class");
 				case NONE:
-					return series.get("package-info");
+					return series.get("info.java");
 			}
 		} else {
 			LOGGER.debug("Should not go into this statement, please use debug and check the program again.");

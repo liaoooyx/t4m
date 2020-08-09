@@ -473,7 +473,7 @@ public class ClassInfo implements Serializable {
 		ANNOTATION("annotation"),
 		ABSTRACT_CLASS("abstract"),
 		INTERFACE("interface"),
-		NONE("package-info");
+		NONE("*-info.java");
 
 		String str;
 

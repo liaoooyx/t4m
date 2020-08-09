@@ -47,7 +47,7 @@ public class ClassScanner implements T4MScanner {
 				classInfo.setClassDeclaration(ClassInfo.ClassDeclaration.PUBLIC_OUTER_CLASS);
 				classInfo.setFullyQualifiedName(pkgFullyQualifiedName + "." + classShortName);
 				classInfo.setPackageFullyQualifiedName(pkgFullyQualifiedName);
-				if ("package-info".equals(classShortName)) {
+				if ("package-info".equals(classShortName) || "module-info".equals(classShortName)) {
 					classInfo.setClassModifier(ClassInfo.ClassModifier.NONE);
 				}
 			} catch (FileNotFoundException e) {

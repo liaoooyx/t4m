@@ -1,5 +1,6 @@
 package com.t4m.extractor.scanner;
 
+import com.github.javaparser.ParseProblemException;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.visitor.VoidVisitor;
@@ -32,6 +33,7 @@ public class JavaParserScanner implements T4MScanner {
 	public static final Logger LOGGER = LoggerFactory.getLogger(JavaParserScanner.class);
 
 	private ProjectInfo projectInfo;
+
 	@Override
 	public void scan(ProjectInfo projectInfo, ScannerChain scannerChain) {
 		this.projectInfo = projectInfo;
@@ -39,7 +41,8 @@ public class JavaParserScanner implements T4MScanner {
 		initParser();
 		LOGGER.info("Creating entities for the missing package-private outer classes and nested classes.");
 		scanVisitor(ClassInfoVisitor.class);
-		LOGGER.info("Adding the missing information of classes. Constructing entities for methods and fields.");
+		LOGGER.info("Resolving the extra information of classes.");
+		LOGGER.info("Constructing entities for methods and fields.");
 		scanVisitor(DeclarationVisitor.class);
 		LOGGER.info("Resolving dependencies for all entities.");
 		scanVisitor(InMethodDependencyVisitor.class);
@@ -54,13 +57,19 @@ public class JavaParserScanner implements T4MScanner {
 				                                               .newInstance(classInfo, projectInfo);
 				methodNameVisitor.visit(cu, null);
 			} catch (FileNotFoundException e) {
-				LOGGER.debug("Cannot find {}. Stop the scanning now. {}", classInfo.getAbsolutePath(), e.toString());
+				LOGGER.error("Cannot find {}. Stop the scanning now. {}", classInfo.getAbsolutePath(), e.toString());
 				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
 				LOGGER.error("Cannot initial Visitor [{}]. Stop the scanning now. {}", visitorClass, e.toString());
 				e.printStackTrace();
+			} catch (ParseProblemException e) {
+				LOGGER.error("{} of file [{}]", e, classInfo.getAbsolutePath(), e);
+				if (!"module-info".equals(classInfo.getShortName())) {
+					e.printStackTrace();
+				}
 			} catch (Exception e) {
-				LOGGER.error("Unexpected error happen. Stop the scanning now.", e);
+				LOGGER.error("Unexpected error happen for path [{}]. Stop the scanning now.",
+				             classInfo.getAbsolutePath(), e);
 				e.printStackTrace();
 			}
 		}
@@ -84,7 +93,7 @@ public class JavaParserScanner implements T4MScanner {
 		}
 		String dependencyPath = projectInfo.getDependencyPath();
 		if (!"".equals(dependencyPath)) {
-			String[] jars = dependencyPath.split(RegularExprUtil.compatibleWithWindows("/"));
+			String[] jars = dependencyPath.split(File.pathSeparator);
 			for (String jarPath : jars) {
 				try {
 					typeSolverList.add(new JarTypeSolver(jarPath));
