@@ -60,7 +60,7 @@ subprojects {
     }
 }
 
-task buildT4M(type: Copy) {
+task buildJarToBin(type: Copy) {
     dependsOn 't4m-web:build'
     File runDir = new File("${project.rootDir}/run")
     if (runDir.exists()) {

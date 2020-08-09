@@ -84,7 +84,7 @@ Press `control + c` to stop.
 You may want to modify the source code and rebuild the project. We provide a gradle task for you to rebuild the project.
 
 ```
-./gradlew buildT4M
+./gradlew buildJarToBin
 ```
 
 It will build a executable jar file to `[t4mRootDir]/bin/` directory.
