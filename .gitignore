@@ -57,7 +57,7 @@ Desktop.ini
 logs/
 
 # Persistence
-db/
+db/*
 
 #dependencies file
 all.deps

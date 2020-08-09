@@ -1,15 +1,12 @@
 package com.t4m.web.controller.dashboard;
 
 import com.t4m.conf.GlobalProperties;
-import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.extractor.entity.ModuleInfo;
-import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.web.dao.ProjectRecordDao;
 import com.t4m.web.service.ClassService;
 import com.t4m.web.service.ModuleService;
 import com.t4m.web.service.PackageService;
 import com.t4m.web.service.ProjectService;
+import com.t4m.web.util.ProjectRecordUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +27,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/dashboard/basic")
 public class BasicController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(BasicController.class);
 
 	@Resource(name = "ProjectService")
 	private ProjectService projectService;
@@ -48,18 +42,17 @@ public class BasicController {
 
 	@GetMapping("")
 	public String overview(Model model) {
-		ProjectInfo[] projectInfos = ProjectRecordDao.getTwoProjectInfoRecordByIndex(-1);
-		// 基本信息
-		model.addAttribute("currentProjectInfo", projectInfos[0]);
-		model.addAttribute("preProjectInfo", projectInfos[1]);
+		// basic
+		model.addAttribute("currentProjectInfo", projectService.getCurrentProjectInfoOfIndex(-1));
+		model.addAttribute("preProjectInfo", projectService.getPreviousProjectInfoOfIndex(-1));
 		model.addAttribute("currentProjectIdentifier", GlobalProperties.getCurrentProjectIdentifier());
-		// 用于趋势图
+		// for the timeline chart
 		model.addAttribute("timeRecords", projectService.getTimeRecords());
-		model.addAttribute("moduleRecords", projectService.getNumOfModuleRecords());
-		model.addAttribute("packageRecords", projectService.getNumOfPackageRecords());
-		model.addAttribute("javaFileRecords", projectService.getNumOfJavaFileRecords());
-		model.addAttribute("classRecords", projectService.getNumOfClassRecords());
-		model.addAttribute("allClassRecords", projectService.getNumOfAllClassRecords());
+		model.addAttribute("moduleRecords", projectService.getNumOfModuleForOverviewChart());
+		model.addAttribute("packageRecords", projectService.getNumOfPackageForOverviewChart());
+		model.addAttribute("javaFileRecords", projectService.getNumOfJavaFileForOverviewChart());
+		model.addAttribute("classRecords", projectService.getNumOfClassForOverviewChart());
+		model.addAttribute("allClassRecords", projectService.getNumOfAllClassForOverviewChart());
 		return "page/dashboard/basic_metric";
 	}
 
@@ -67,55 +60,33 @@ public class BasicController {
 	@ResponseBody
 	public List<Map<String, Object>> selectModuleRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
-		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
-		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
-			Map<String, Object> row = new LinkedHashMap<>();
-			row.put("name", moduleInfo.getRelativePath());
-			row.put("packageNum", moduleInfo.getPackageList().size());
-			row.put("classNum", moduleInfo.getNumberOfJavaFile() + " / " + moduleInfo.getNumberOfAllClass());
-			rows.add(row);
+		ProjectInfo projectInfo = projectService.getCurrentProjectInfoOfIndex(projectRecordIndex);
+		if (projectInfo == null) {
+			return new ArrayList<>();
 		}
-		return rows;
+		return moduleService.getBasicInfoForTable(projectInfo);
 	}
 
 	@GetMapping("/table/package")
 	@ResponseBody
 	public List<Map<String, Object>> selectPackageRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
-		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
-		for (PackageInfo packageInfo : projectInfo.getPackageList()) {
-			Map<String, Object> row = new LinkedHashMap<>();
-			row.put("name", packageInfo.getFullyQualifiedName());
-			row.put("classNum", packageInfo.getNumberOfJavaFile() + " / " + packageInfo.getNumberOfAllClass());
-			row.put("module", packageInfo.getModuleInfo().getShortName());
-			rows.add(row);
+		ProjectInfo projectInfo = projectService.getCurrentProjectInfoOfIndex(projectRecordIndex);
+		if (projectInfo == null) {
+			return new ArrayList<>();
 		}
-		return rows;
+		return packageService.getBasicInfoForTable(projectInfo);
 	}
 
 	@GetMapping("/table/class")
 	@ResponseBody
 	public List<Map<String, Object>> selectClassRecord(
 			@RequestParam(name = "projectRecordIndex", defaultValue = "-1") int projectRecordIndex) {
-		List<Map<String, Object>> rows = new ArrayList<>();
-		ProjectInfo projectInfo = ProjectRecordDao.getTwoProjectInfoRecordByIndex(projectRecordIndex)[0];
-		for (ClassInfo classInfo : projectInfo.getAllClassList()) {
-			Map<String, Object> row = new LinkedHashMap<>();
-			row.put("name", classInfo.getShortName());
-			row.put("type", classInfo.getClassModifier().toString());
-			row.put("declaration", classInfo.getClassDeclaration().toString());
-			row.put("package", classInfo.getPackageFullyQualifiedName());
-			row.put("module", classInfo.getPackageInfo().getModuleInfo().getShortName());
-			row.put("fieldNum", classInfo.getNumberOfFields());
-			row.put("methodNum", classInfo.getNumberOfMethods());
-			row.put("enumConstantsNum", classInfo.getNumberOfEnumConstants());
-			row.put("annotationMembers", classInfo.getNumberOfAnnotationMembers());
-			row.put("qualifiedName", classInfo.getFullyQualifiedName());
-			rows.add(row);
+		ProjectInfo projectInfo = projectService.getCurrentProjectInfoOfIndex(projectRecordIndex);
+		if (projectInfo == null) {
+			return new ArrayList<>();
 		}
-		return rows;
+		return classService.getBasicInfoForTable(projectInfo);
 	}
 
 }

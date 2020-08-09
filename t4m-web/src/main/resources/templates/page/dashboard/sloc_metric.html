@@ -415,7 +415,7 @@
 				<div class="card-header border-0">
 					<div class="row align-items-center">
 						<div class="col-auto">
-							<h6 class="text-uppercase text-muted ls-1 mb0">Project Information</h6>
+							<h6 class="text-uppercase text-muted ls-1 mb0">Details</h6>
 							
 							<!-- dropdown -->
 							<div class="nav-item dropdown">
@@ -748,7 +748,6 @@
         // 异步加载数据
         $.get("/dashboard/sloc/table/chart?name=" + name + "&level=" + level).done(function (data) {
             // 填入数据
-            console.log(data)
             timelineChart2.setOption({
                 dataset: {
                     // 提供一份数据。

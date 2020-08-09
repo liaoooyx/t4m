@@ -2,7 +2,8 @@ package com.t4m.web.aspect;
 
 import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.web.dao.ProjectRecordDao;
+import com.t4m.web.service.ProjectService;
+import com.t4m.web.util.ProjectRecordUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,12 +11,17 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import javax.annotation.Resource;
+
 /**
  * Created by Yuxiang Liao on 2020-07-03 07:24.
  */
 @Component
 @Aspect
 public class AOPHandler {
+
+	@Resource(name = "ProjectService")
+	private ProjectService projectService;
 
 	@Pointcut("execution(public * com.t4m.web.controller.dashboard.*.*(org.springframework.ui.Model))")
 	public void dashboardController() {
@@ -31,44 +37,43 @@ public class AOPHandler {
 
 	@Around("dashboardController()")
 	public Object checkEmptyRecordList(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-		ProjectInfo[] projectInfos = ProjectRecordDao.getTwoProjectInfoRecordByIndex(-1);
+		ProjectInfo projectInfo = projectService.getCurrentProjectInfoOfIndex(-1);
 		Model model = (Model) proceedingJoinPoint.getArgs()[0];
-		if (projectInfos == null || "".equals(GlobalProperties.getCurrentProjectIdentifier())) {
+		addDefaultConfToModel(model);
+		if (projectInfo == null || "".equals(GlobalProperties.getCurrentProjectIdentifier())) {
 			model.addAttribute("disableScan", true);
 			model.addAttribute("triggerNew", true);
-			model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
-			model.addAttribute("defaultDependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 			return "page/dashboard/blank_page";
 		} else {
-			ProjectRecordDao.checkCurrentProjectIdentifier();
-			model.addAttribute("currentProjectIdentifier", GlobalProperties.getCurrentProjectIdentifier());
-			model.addAttribute("currentProjectPath", projectInfos[0].getAbsolutePath());
-			model.addAttribute("projectExcludedPath", projectInfos[0].getExcludedPath());
-			model.addAttribute("projectDependencyPath", projectInfos[0].getDependencyPath());
-			model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
-			model.addAttribute("defaultDependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
+			ProjectRecordUtil.checkCurrentProjectIdentifier();
+			addProjectConfToModel(model, projectInfo);
 			return proceedingJoinPoint.proceed();
 		}
 	}
 
 	@Around("documentController() || homeController()")
 	public Object disableScanButton(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-		ProjectInfo[] projectInfos = ProjectRecordDao.getTwoProjectInfoRecordByIndex(-1);
+		ProjectInfo projectInfo = projectService.getCurrentProjectInfoOfIndex(-1);
 		Model model = (Model) proceedingJoinPoint.getArgs()[0];
-		if (projectInfos == null || "".equals(GlobalProperties.getCurrentProjectIdentifier())) {
+		addDefaultConfToModel(model);
+		if (projectInfo == null || "".equals(GlobalProperties.getCurrentProjectIdentifier())) {
 			model.addAttribute("disableScan", true);
-			model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
-			model.addAttribute("defaultDependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
-			return proceedingJoinPoint.proceed();
 		} else {
-			ProjectRecordDao.checkCurrentProjectIdentifier();
-			model.addAttribute("currentProjectIdentifier", GlobalProperties.getCurrentProjectIdentifier());
-			model.addAttribute("currentProjectPath", projectInfos[0].getAbsolutePath());
-			model.addAttribute("projectExcludedPath", projectInfos[0].getExcludedPath());
-			model.addAttribute("projectDependencyPath", projectInfos[0].getDependencyPath());
-			model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
-			model.addAttribute("defaultDependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
-			return proceedingJoinPoint.proceed();
+			ProjectRecordUtil.checkCurrentProjectIdentifier();
+			addProjectConfToModel(model, projectInfo);
 		}
+		return proceedingJoinPoint.proceed();
+	}
+
+	private void addDefaultConfToModel(Model model) {
+		model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
+		model.addAttribute("defaultDependencyPath", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
+	}
+
+	private void addProjectConfToModel(Model model, ProjectInfo projectInfo) {
+		model.addAttribute("currentProjectIdentifier", GlobalProperties.getCurrentProjectIdentifier());
+		model.addAttribute("currentProjectPath", projectInfo.getAbsolutePath());
+		model.addAttribute("projectExcludedPath", projectInfo.getExcludedPath());
+		model.addAttribute("projectDependencyPath", projectInfo.getDependencyPath());
 	}
 }

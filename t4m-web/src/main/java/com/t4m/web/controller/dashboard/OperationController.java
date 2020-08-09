@@ -7,7 +7,7 @@ import com.t4m.extractor.util.RegularExprUtil;
 import com.t4m.extractor.util.TimeUtil;
 import com.t4m.serializer.T4MProjectInfoSerializer;
 import com.t4m.serializer.T4MSerializer;
-import com.t4m.web.dao.ProjectRecordDao;
+import com.t4m.web.util.ProjectRecordUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +64,7 @@ public class OperationController {
 			String recordFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
 			serializer.serializeTo(projectInfo, recordFileName);
 			// 更新本模块的 ProjectRecord
-			ProjectRecordDao.updateProjectInfoRecord();
+			ProjectRecordUtil.updateProjectInfoRecord();
 		} catch (Exception e) {
 			LOGGER.error("", e);
 			return e.toString();
@@ -77,9 +77,9 @@ public class OperationController {
 			@RequestParam(name = "projectCreatTime") String projectCreatTime,
 			@RequestParam(name = "excludedPath") String excludedPath,
 			@RequestParam(name = "dependencyPath", defaultValue = "") String dependencyPath) {
-		List<ProjectInfo> projectInfoList = ProjectRecordDao.getProjectInfoList();
+		List<ProjectInfo> projectInfoList = ProjectRecordUtil.getProjectInfoList();
 
-		ProjectInfo oldProjectInfo = projectInfoList.get(ProjectRecordDao.getProjectInfoList().size() - 1);
+		ProjectInfo oldProjectInfo = projectInfoList.get(ProjectRecordUtil.getProjectInfoList().size() - 1);
 		// 创建一条新的项目纪录
 		Date createDate;
 		if ("".equals(projectCreatTime)) {
@@ -103,7 +103,7 @@ public class OperationController {
 			String recordFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
 			serializer.serializeTo(projectInfo, recordFileName);
 			// 更新ProjectRecord
-			ProjectRecordDao.updateProjectInfoRecord();
+			ProjectRecordUtil.updateProjectInfoRecord();
 		} catch (Exception e) {
 			LOGGER.error("", e);
 			return e.toString();
@@ -114,7 +114,7 @@ public class OperationController {
 	@GetMapping("search")
 	public Map<String, Object> searchAllProject() {
 		Map<String, Object> data = new HashMap<>();
-		data.put("projectList", ProjectRecordDao.getAllProjectRecordsDirName());
+		data.put("projectList", ProjectRecordUtil.getAllProjectRecordsDirName());
 		data.put("currentProject", GlobalProperties.getCurrentProjectIdentifier());
 		return data;
 	}
@@ -125,7 +125,7 @@ public class OperationController {
 			@RequestParam(name = "projectId") String projectId) {
 		// 更新全局项目指针和项目记录
 		GlobalProperties.updateCurrentProjectPointer(projectName + "#" + projectId);
-		ProjectRecordDao.updateProjectInfoRecord();
+		ProjectRecordUtil.updateProjectInfoRecord();
 		return "success";
 	}
 
@@ -136,7 +136,7 @@ public class OperationController {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		serializer.delete(projectName + "#" + projectId);
 		// 更新全局项目指针和项目记录
-		ProjectRecordDao.updateProjectInfoRecord();
+		ProjectRecordUtil.updateProjectInfoRecord();
 		return "success";
 	}
 

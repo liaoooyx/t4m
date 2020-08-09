@@ -1,7 +1,6 @@
 dependencies {
     implementation project(":t4m-conf")
 
-    implementation 'org.eclipse.jdt:org.eclipse.jdt.core:3.22.0'
     implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.16.1'
 }
 

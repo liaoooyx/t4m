@@ -1,172 +1,93 @@
 package com.t4m.web.service;
 
-import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.util.MathUtil;
 import com.t4m.extractor.util.TimeUtil;
-import com.t4m.web.dao.ProjectRecordDao;
+import com.t4m.web.controller.dashboard.BasicController;
+import com.t4m.web.util.ProjectRecordUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yuxiang Liao on 2020-06-27 02:37.
  */
 @Service("ProjectService")
 public class ProjectService {
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProjectService.class);
 
-	public static final int FLAG_ALL_CLASS = 1;
-	public static final int FLAG_MAIN_PUBLIC_CLASS = 2;
 
-	/**
-	 * 所有记录的创建时间
-	 */
+	public ProjectInfo getCurrentProjectInfoOfIndex(int index) {
+		ProjectInfo[] projectInfos = ProjectRecordUtil.getTwoProjectInfoRecordByIndex(index);
+		if (projectInfos[0] == null) {
+			LOGGER.debug("No record for [{}] in index [{}]", GlobalProperties.getCurrentProjectIdentifier(), index);
+		}
+		return projectInfos[0];
+	}
+
+	public ProjectInfo getPreviousProjectInfoOfIndex(int index) {
+		ProjectInfo[] projectInfos = ProjectRecordUtil.getTwoProjectInfoRecordByIndex(index);
+		if (projectInfos[1] == null) {
+			LOGGER.debug("No previous record for [{}] in index [{}]", GlobalProperties.getCurrentProjectIdentifier(),
+			             index);
+		}
+		return projectInfos[1];
+	}
+
+	public List<ProjectInfo> getAllProjectInfos() {
+		return ProjectRecordUtil.getProjectInfoList();
+	}
+
 	public List<String> getTimeRecords() {
 		List<String> timeRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordUtil.getProjectInfoList()) {
 			timeRecords.add(TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate()));
 		}
 		return timeRecords;
 	}
 
-	/**
-	 * 所有记录的模块数量
-	 */
-	public List<Integer> getNumOfModuleRecords() {
+	public List<Integer> getNumOfModuleForOverviewChart() {
 		List<Integer> numOfModuleRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordUtil.getProjectInfoList()) {
 			numOfModuleRecords.add(projectInfo.getModuleList().size());
 		}
 		return numOfModuleRecords;
 	}
 
-	/**
-	 * 所有记录的包数量
-	 */
-	public List<Integer> getNumOfPackageRecords() {
+	public List<Integer> getNumOfPackageForOverviewChart() {
 		List<Integer> numOfPackageRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordUtil.getProjectInfoList()) {
 			numOfPackageRecords.add(projectInfo.getPackageList().size());
 		}
 		return numOfPackageRecords;
 	}
 
-	/**
-	 * 所有记录的java文件数量
-	 */
-	public List<Integer> getNumOfJavaFileRecords() {
+	public List<Integer> getNumOfJavaFileForOverviewChart() {
 		List<Integer> numOfClassRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordUtil.getProjectInfoList()) {
 			numOfClassRecords.add(projectInfo.getClassList().size());
 		}
 		return numOfClassRecords;
 	}
 
-	/**
-	 * 所有记录的外部类数量
-	 */
-	public List<Integer> getNumOfClassRecords() {
+	public List<Integer> getNumOfClassForOverviewChart() {
 		List<Integer> numOfClassRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordUtil.getProjectInfoList()) {
 			numOfClassRecords.add(projectInfo.getClassList().size() + projectInfo.getExtraClassList().size());
 		}
 		return numOfClassRecords;
 	}
 
-	/**
-	 * 所有记录的类数量（ClassDeclaration中的3种都包括）
-	 */
-	public List<Integer> getNumOfAllClassRecords() {
+	public List<Integer> getNumOfAllClassForOverviewChart() {
 		List<Integer> numOfClassAndInnerClassRecords = new ArrayList<>();
-		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
+		for (ProjectInfo projectInfo : ProjectRecordUtil.getProjectInfoList()) {
 			numOfClassAndInnerClassRecords.add(projectInfo.getAllClassList().size());
 		}
 		return numOfClassAndInnerClassRecords;
 	}
 
-	/**
-	 * 用于Dashboard-SLOC页面中timeline chart的数据集。 第1层：Map，key为创建时间，嵌套List 第2层：Map，key为前端Echart需要的4个series，分别为Interface,
-	 * Abstract Class, Class and Inner Class，嵌套List 第3层：List，包括SLOC-code, SLOC-comment, SLOC-comment / SLOC-code,
-	 * ClassName, OfWhichModule。
-	 *
-	 * @param flag 当为1时，使用所有类（包括内部类和extra类）；当为2时，仅使用与java文件对应的main public类
-	 */
-	public Map<String, Map<String, List<Object>>> getDataSetOfSLOC(int flag) {
-		LinkedHashMap<String, Map<String, List<Object>>> timeline = new LinkedHashMap<>();
-		for (ProjectInfo projectInfo : ProjectRecordDao.getProjectInfoList()) {
-			String time = TimeUtil.formatToStandardDatetime(projectInfo.getCreateDate());
-			Map<String, List<Object>> series = new HashMap<>();
-			series.put("Interface", new ArrayList<>());
-			series.put("Abstract Class", new ArrayList<>());
-			series.put("Class", new ArrayList<>());
-			series.put("Enum", new ArrayList<>());
-			series.put("Annotation", new ArrayList<>());
-			series.put("package-info", new ArrayList<>());
-			if (flag == FLAG_ALL_CLASS) {
-				addDataRow(series, projectInfo.getAllClassList(), flag);
-			} else if (flag == FLAG_MAIN_PUBLIC_CLASS) {
-				addDataRow(series, projectInfo.getClassList(), flag);
-			}
-			timeline.put(time, series);
-		}
-		return timeline;
-	}
-
-	private void addDataRow(Map<String, List<Object>> series, List<ClassInfo> classInfoList, int flag) {
-		for (ClassInfo classInfo : classInfoList) {
-			List<Object> rows = null;
-			// 注意package-info.java的getClassModifier()可能为null
-			ClassInfo.ClassModifier classModifier = classInfo.getClassModifier();
-			if (classModifier != null) {
-				switch (classInfo.getClassModifier()) {
-					case ENUM:
-						rows = series.get("Enum");
-						break;
-					case ANNOTATION:
-						rows = series.get("Annotation");
-						break;
-					case ABSTRACT_CLASS:
-						rows = series.get("Abstract Class");
-						break;
-					case INTERFACE:
-						rows = series.get("Interface");
-						break;
-					case CLASS:
-						rows = series.get("Class");
-						break;
-					case NONE:
-						rows = series.get("package-info");
-						break;
-				}
-			} else {
-				LOGGER.debug("Should not go into this statement, please use debug and check the program again.");
-				throw new RuntimeException(
-						"Should not go into this statement, please use debug and check the program again.");
-			}
-			List<Object> cols = new ArrayList<>();
-			int codeLine = 0;
-			int commentLine = 0;
-			if (flag == FLAG_ALL_CLASS) {
-				Map<ClassInfo.SLOCType, Integer> counterMap = classInfo.getSlocCounterMap();
-				codeLine = counterMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST);
-				commentLine = counterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST);
-			} else if (flag == FLAG_MAIN_PUBLIC_CLASS) {
-				Map<ClassInfo.SLOCType, Integer> counterMap = classInfo.getSlocCounterMap();
-				codeLine = counterMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE);
-				commentLine = counterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE);
-			}
-			cols.add(codeLine); // code line
-			cols.add(commentLine); // comment line
-			String percentage = MathUtil.percentage(commentLine, codeLine + commentLine);
-			cols.add(percentage);
-			cols.add(classInfo.getFullyQualifiedName()); // class qualified name
-			cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module
-			rows.add(cols);
-		}
-	}
 
 }

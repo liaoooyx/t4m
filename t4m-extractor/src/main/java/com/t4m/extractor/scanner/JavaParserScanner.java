@@ -12,9 +12,9 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeS
 import com.t4m.extractor.entity.ClassInfo;
 import com.t4m.extractor.entity.ModuleInfo;
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.scanner.javaparser.No1_ClassInfoVisitor;
-import com.t4m.extractor.scanner.javaparser.No2_DeclarationVisitor;
-import com.t4m.extractor.scanner.javaparser.No3_InMethodDependencyVisitor;
+import com.t4m.extractor.scanner.javaparser.ClassInfoVisitor;
+import com.t4m.extractor.scanner.javaparser.DeclarationVisitor;
+import com.t4m.extractor.scanner.javaparser.InMethodDependencyVisitor;
 import com.t4m.extractor.util.RegularExprUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,11 +38,11 @@ public class JavaParserScanner implements T4MScanner {
 		LOGGER.info("Using JavaParser to resolve the static code.");
 		initParser();
 		LOGGER.info("Creating entities for the missing package-private outer classes and nested classes.");
-		scanVisitor(No1_ClassInfoVisitor.class);
+		scanVisitor(ClassInfoVisitor.class);
 		LOGGER.info("Adding the missing information of classes. Constructing entities for methods and fields.");
-		scanVisitor(No2_DeclarationVisitor.class);
+		scanVisitor(DeclarationVisitor.class);
 		LOGGER.info("Resolving dependencies for all entities.");
-		scanVisitor(No3_InMethodDependencyVisitor.class);
+		scanVisitor(InMethodDependencyVisitor.class);
 		scannerChain.scan(projectInfo);
 	}
 

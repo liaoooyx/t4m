@@ -1,7 +1,6 @@
 package com.t4m.extractor.util;
 
 import java.io.File;
-import java.util.Arrays;
 
 /**
  * Created by Yuxiang Liao on 2020-08-08 07:21.
