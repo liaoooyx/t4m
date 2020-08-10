@@ -3,6 +3,7 @@ package com.t4m.extractor.util;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.t4m.extractor.entity.ClassInfo;
+import com.t4m.extractor.entity.PackageInfo;
 import com.t4m.extractor.entity.ProjectInfo;
 
 /**
@@ -10,8 +11,11 @@ import com.t4m.extractor.entity.ProjectInfo;
  */
 public class JavaParserUtil {
 
+	private JavaParserUtil() {
+	}
+
 	/**
-	 * 返回当前节点所属的ClassInfo
+	 * @return the ClassInfo object to which the node belongs.
 	 */
 	public static ClassInfo resolveCurrentClassInfo(Node node, ProjectInfo projectInfo) {
 		String qualifiedName;
@@ -21,7 +25,12 @@ public class JavaParserUtil {
 			qualifiedName = String.valueOf(node.findAncestor(TypeDeclaration.class).orElse(null).getFullyQualifiedName()
 			                                   .orElse(null));
 		}
-		return EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
+		ClassInfo target = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), qualifiedName);
+		if (target == null) {
+			target = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
+			                                            PackageInfo.EMPTY_IDENTIFIER + "." + qualifiedName);
+		}
+		return target;
 	}
 
 }

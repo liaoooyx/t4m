@@ -7,6 +7,10 @@ import java.util.Date;
  * Created by Yuxiang Liao on 2020-06-25 01:00.
  */
 public class TimeUtil {
+
+	private TimeUtil() {
+	}
+
 	public static String formatToLogFileName(Date date) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");
 		return format.format(date);

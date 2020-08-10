@@ -17,7 +17,7 @@ public class ClassInfo implements Serializable {
 	private PackageInfo packageInfo;
 	private String packageFullyQualifiedName;
 
-	private ClassModifier classModifier;
+	private ClassModifier classModifier = ClassModifier.UNIDENTIFIED;
 	private ClassDeclaration classDeclaration;
 
 	// For the nested class of package private outer class，the reference of mainOuterClass and outerClass are different.
@@ -473,7 +473,8 @@ public class ClassInfo implements Serializable {
 		ANNOTATION("annotation"),
 		ABSTRACT_CLASS("abstract"),
 		INTERFACE("interface"),
-		NONE("*-info.java");
+		NONE("*-info.java"),
+		UNIDENTIFIED("unidentified");
 
 		String str;
 

@@ -11,9 +11,11 @@ class GlobalPropertiesTest {
 	void TestingTheDefaultConfPath() {
 		assertEquals(GlobalProperties.DB_ROOT_PATH, System.getenv("T4M_HOME") + File.separator + "db");
 		assertEquals(GlobalProperties.DEFAULT_EXCLUDED_PATH,
-		             File.separator + "build;" + File.separator + "out;" + File.separator + "output;" + File.separator +
-				             "src" + File.separator + "main" + File.separator + "resource;" + File.separator + "src" +
-				             File.separator + "test");
+		             File.separator + ".;" + File.separator + "src" + File.separator + "main" + File.separator +
+				             "resource;" + File.separator + "src" + File.separator + "test;" + File.separator +
+				             "build;" + File.separator + "out;" + File.separator + "output;" + File.separator +
+				             "dist;" + File.separator + "target;" + File.separator + "nbbuild;" + File.separator +
+				             "nbdist");
 		assertEquals("", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 	}
 

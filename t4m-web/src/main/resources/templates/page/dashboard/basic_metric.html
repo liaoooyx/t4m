@@ -150,10 +150,10 @@
 								<!-- Current Info -->
 								<div class="row">
 									<div class="col">
-										<h5 class="card-title text-uppercase text-muted mb-0">Number Of Class Files / (Declared
-										                                                      Classes)</h5>
+										<h5 class="card-title text-uppercase text-muted mb-0">Number Of Java Files / Declared
+										                                                      Classes</h5>
 										<span class="h2 font-weight-bold mb-0"
-										      th:text="${currentProjectInfo.getClassList().size()} +' / ('+ ${currentProjectInfo.getAllClassList().size()} +')'"></span>
+										      th:text="${currentProjectInfo.getClassList().size()} +' / '+ ${currentProjectInfo.getAllClassList().size()} "></span>
 									</div>
 								</div>
 								<!-- Update Info -->
@@ -165,14 +165,13 @@
 									<span class="text-danger mr-0" th:if="${numDiff} lt '0'">
 										<i class="fa fa-arrow-down"></i>[[${numDiff}]]
 									</span>
-									<span>&nbsp;/&nbsp;&nbsp;(</span>
+									<span>&nbsp;/&nbsp;</span>
 									<span class="text-success ml-0" th:if="${numDiff2} ge '0'">
 										<i class="fa fa-arrow-up"></i>[[${numDiff2}]]
 									</span>
 									<span class="text-danger ml-0" th:if="${numDiff2} lt '0'">
 										<i class="fa fa-arrow-down"></i>[[${numDiff2}]]
 									</span>
-									<span>)</span>
 									<span class="text-nowrap ml-2">
 										Since [[${#dates.format(currentProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}]]
 									</span>

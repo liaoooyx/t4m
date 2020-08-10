@@ -14,12 +14,11 @@ public class T4MExtractor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(T4MExtractor.class);
 
-	private ScannerChain scannerChain = new ScannerChain();
+	private final ScannerChain scannerChain = new ScannerChain();
 
 	public ScannerChain getScannerChain() {
 		return scannerChain;
 	}
-
 
 	public ProjectInfo extract(ProjectInfo projectInfo) {
 		if (scannerChain.isEmpty()) {

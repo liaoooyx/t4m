@@ -61,6 +61,10 @@ public class T4MProjectInfoSerializer implements T4MSerializer {
 	@Override
 	public List<ProjectInfo> deserializeAll() {
 		String currentProjectIdentifier = GlobalProperties.getCurrentProjectIdentifier();
+		if ("".equals(currentProjectIdentifier)){
+			LOGGER.debug("Empty project identifier.");
+			return new ArrayList<>();
+		}
 		File dbDir = new File(GlobalProperties.DB_ROOT_PATH + File.separator + currentProjectIdentifier);
 		List<ProjectInfo> projectInfoList = new ArrayList<>();
 		if (FileUtil.checkDirectory(dbDir)) {
