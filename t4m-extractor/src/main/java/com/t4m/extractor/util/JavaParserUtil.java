@@ -15,6 +15,8 @@ public class JavaParserUtil {
 	}
 
 	/**
+	 * @param node The JavaParser node
+	 * @param projectInfo The current {@code ProjectInfo} object that contains all of the {@code ClassInfo} objects
 	 * @return the ClassInfo object to which the node belongs.
 	 */
 	public static ClassInfo resolveCurrentClassInfo(Node node, ProjectInfo projectInfo) {

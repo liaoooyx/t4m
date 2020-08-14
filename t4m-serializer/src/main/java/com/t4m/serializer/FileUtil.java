@@ -12,9 +12,6 @@ public class FileUtil {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 
-	/**
-	 * 判断目录是否存储，如果不存在则创建目录
-	 */
 	public static boolean checkAndMakeDirectory(String dirPath) {
 		File dir = new File(dirPath);
 		if (!dir.exists()) {

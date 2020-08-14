@@ -34,8 +34,8 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InMethodDependencyVisitor.class);
 
-	private ClassInfo outerClassInfo;
-	private ProjectInfo projectInfo;
+	private final ClassInfo outerClassInfo;
+	private final ProjectInfo projectInfo;
 
 	public InMethodDependencyVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
 		this.outerClassInfo = outerClassInfo;
@@ -115,10 +115,7 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 					n.getDeclarationAsString(), currentClassInfo.getFullyQualifiedName());
 			return;
 		}
-		BlockStmt body = n.getBody().orElse(null);
-		if (body != null) {
-			resolveMetadataForMetric(body, currentClassInfo, currentMethodInfo);
-		}
+		n.getBody().ifPresent(body -> resolveMetadataForMetric(body, currentClassInfo, currentMethodInfo));
 		// Metadata that relevant to RFC metric.
 		try {
 			String methodQualifiedSignature = n.resolve().getQualifiedSignature();
@@ -413,7 +410,6 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			ClassOrInterfaceType classOrInterfaceType, Set<String> dependencySet, List<String> exceptionList) {
 		try {
 			String declaredClassName = classOrInterfaceType.resolve().getQualifiedName();
-			// System.out.println("\tClassOrInterfaceType: " + declaredClassName);
 			dependencySet.add(declaredClassName);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ClassOrInterfaceType: " + e.toString());

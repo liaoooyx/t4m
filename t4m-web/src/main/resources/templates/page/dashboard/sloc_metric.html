@@ -188,12 +188,12 @@
                   let label;
                   if (type === 'allClass') {
                       currentDataset = datasetAllClass;
-                      label = ['Class', '', 'Number of physical code lines',
+                      label = ['Class', '', 'Number of source lines of code',
                           'Number of comment lines', '% of comment lines']
                   } else if (type === 'file') {
                       currentDataset = datasetMainClass;
                       label = ['Source File', '.java',
-                          'Number of physical code lines',
+                          'Number of source lines of code',
                           'Number of comment lines', '% of comment lines']
                   }
                   let dataMax = getMax(currentDataset);
@@ -208,7 +208,7 @@
                               selected: {'package/module-info': false},
                           },
                           xAxis: {
-                              name: 'Physical Code Lines', type: 'value', max: Math.ceil(dataMax[0] / 5) * 5,
+                              name: 'Source Lines of Code', type: 'value', max: Math.ceil(dataMax[0] / 5) * 5,
                               nameLocation: 'center', nameGap: 28
                           },
                           yAxis: {
@@ -377,7 +377,7 @@
                   chart_data_vm.title = timeRecords[currentTimelineIndex];
 
                   let pointValueList = [];
-                  pointValueList.push("Physical Code Lines: " + param.value[0]);
+                  pointValueList.push("Source Lines of Code : " + param.value[0]);
                   pointValueList.push("Comment Lines: " + param.value[1]);
                   pointValueList.push("% of Comment Lines: " + param.value[2] + "%");
                   chart_data_vm.pointValueList = pointValueList;
@@ -531,17 +531,13 @@
         }, {
             field: 'level', title: 'Level', sortable: true
         }, {
-            field: 'logicCodeLinesSF', title: 'Logic Lines of Code<br>(Source File)', sortable: true
-        }, {
-            field: 'physicalCodeLinesSF', title: 'Physical Lines of Code<br>(Source File)', sortable: true
+            field: 'physicalCodeLinesSF', title: 'Source Lines of Code<br>(Source File)', sortable: true
         }, {
             field: 'CommentLinesSF', title: 'Comment Lines<br>(Source File)', sortable: true
         }, {
             field: 'percentageOfCommentSF', title: '% of Comments<br>(Source File)', sortable: true
         }, {
-            field: 'logicCodeLinesJP', title: 'Logic Lines of Code<br>(JavaParser)', sortable: true
-        }, {
-            field: 'physicalCodeLinesJP', title: 'Physical Lines of Code<br>(JavaParser)', sortable: true
+            field: 'physicalCodeLinesJP', title: 'Source Lines of Code<br>(JavaParser)', sortable: true
         }, {
             field: 'CommentLinesJP', title: 'Comment Lines<br>(JavaParser)', sortable: true
         }, {
@@ -589,17 +585,13 @@
         }, {
             field: 'module', title: 'of Which Module', sortable: true
         }, {
-            field: 'logicCodeLinesSF', title: 'Logic Lines of Code<br>(Source File)', sortable: true
-        }, {
-            field: 'physicalCodeLinesSF', title: 'Physical Lines of Code<br>(Source File)', sortable: true
+            field: 'physicalCodeLinesSF', title: 'Source Lines of Code<br>(Source File)', sortable: true
         }, {
             field: 'CommentLinesSF', title: 'Comment Lines<br>(Source File)', sortable: true
         }, {
             field: 'percentageOfCommentSF', title: '% of Comments<br>(Source File)', sortable: true
         }, {
-            field: 'logicCodeLinesJP', title: 'Logic Lines of Code<br>(JavaParser)', sortable: true
-        }, {
-            field: 'physicalCodeLinesJP', title: 'Physical Lines of Code<br>(JavaParser)', sortable: true
+            field: 'physicalCodeLinesJP', title: 'Source Lines of Code<br>(JavaParser)', sortable: true
         }, {
             field: 'CommentLinesJP', title: 'Comment Lines<br>(JavaParser)', sortable: true
         }, {
@@ -680,7 +672,7 @@
         },
         yAxis: [
             {
-                name: "Physical Lines of Code",
+                name: "Source Lines of Code",
                 type: 'value',
                 nameLocation: 'center',
                 nameRotate: 90,
@@ -753,17 +745,14 @@
             level: level
         }, function (data) {
             // 填入数据
+            console.log(data)
             timelineChart2.setOption({
                 dataset: {
                     source: data
                 },
                 series: [
                     {
-                        type: 'line', name: 'Logic Lines f Code (Source File)', yAxisIndex: 0,
-                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
-                    },
-                    {
-                        type: 'line', name: 'Physical Lines of Code (Source File)', yAxisIndex: 0,
+                        type: 'line', name: 'Source Lines of Code (Source File)', yAxisIndex: 0,
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {
@@ -775,11 +764,7 @@
                         lineStyle: {width: 3, type: "dashed"}, emphasis: {label: {show: true}},
                     },
                     {
-                        type: 'line', name: 'Logic Lines of Code (JavaParser)', yAxisIndex: 0,
-                        lineStyle: {width: 3}, emphasis: {label: {show: true}},
-                    },
-                    {
-                        type: 'line', name: 'Physical Lines of Code (JavaParser)', yAxisIndex: 0,
+                        type: 'line', name: 'Source Lines of Code (JavaParser)', yAxisIndex: 0,
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {

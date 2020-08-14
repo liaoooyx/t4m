@@ -96,7 +96,9 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 		private int commentLines;
 
 		/**
-		 * 去掉所有注释内容后，对代码进行判断：即代码行，单独的括号行，空行
+		 * After removing all the comments, classify the line of code: that is,
+		 * the code line, the bracket line, and the blank line
+		 * @param currentLine The content of current line
 		 */
 		private void countNonCommentCodeLine(String currentLine) {
 			if (!"".equals(currentLine)) {
@@ -108,7 +110,10 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 		}
 
 		/**
-		 * 去除单行块注释后，进行内容判断：是否有多行块注释起始符，是否有行注释起始符。注意此方法会改变{@code inBlockComment}
+		 * After removing the inline block comment, classify the content:
+		 * whether there is a multi-line block comment start character, whether there is a line comment start character.
+		 * Note that this method will change the value of {@link #inBlockComment}
+		 * @param currentLine The content of current line
 		 */
 		private void checkRestCodeLineWithoutSingleBlockComment(String currentLine) {
 			if (currentLine.contains(BLOCK_COMMENT_START_MARK)) {
@@ -126,6 +131,9 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 
 		/**
 		 * 判断是否为行注释，单行块注释，或多行块注释，并计数。注意此方法会改变{@code inBlockComment}
+		 * Determine whether it is a line comment, a inline block comment, or a multi-line block comment, and then count.
+		 * Note that this method will change the value of @link SLOCMetric#inBlockComment
+		 * @param currentLine The content of current line
 		 */
 		private void countAndCheckToMeetInBlockComment(String currentLine) {
 			if (currentLine.startsWith(LINE_COMMENT_MARK)) {
@@ -178,9 +186,6 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 			}
 		}
 
-		/**
-		 * 判断代码行的SLOC，并计数。
-		 */
 		public void countSLOCByLine(String sourceLine) {
 			String currentLine = sourceLine.strip();
 			// sloc计数
@@ -210,20 +215,12 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 			}
 		}
 
-		/**
-		 * 此方法应该传入ClassInfo中的slocCounterMap对象。
-		 * 将扫描出来的sloc计数，加入到source_file对应的3个key中。
-		 */
 		public void setSourceFileSLOCToCounterMap(Map<SLOCType, Integer> counterMap) {
 			counterMap.replace(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, logicLines);
 			counterMap.replace(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE, commentLines);
 			counterMap.replace(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE, physicalLines);
 		}
 
-		/**
-		 * 此方法应该传入ClassInfo中的slocCounterMap对象。
-		 * 将扫描出来的sloc计数，加入到ast对应的3个key中。
-		 */
 		public void setASTSLOCToCounterMap(Map<SLOCType, Integer> counterMap) {
 			counterMap.replace(SLOCType.LOGIC_CODE_LINES_FROM_AST, logicLines);
 			counterMap.replace(SLOCType.COMMENT_LINES_FROM_AST, commentLines);

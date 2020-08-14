@@ -27,6 +27,7 @@ public class ProjectRecordUtil {
 
 	/**
 	 * When doing scan, create, and switch operation, update the records cache.
+	 * @return A list of {@code ProjectInfo} objects of current project.
 	 */
 	public static List<ProjectInfo> updateProjectInfoRecord() {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
@@ -42,7 +43,7 @@ public class ProjectRecordUtil {
 	}
 
 	/**
-	 * 检测当前项目指针所指向的路径是否存在，如果不存在则清空该指针
+	 * Check whether the path pointed to by the current project pointer exists, if not, clear the pointer
 	 */
 	public static void checkCurrentProjectIdentifier() {
 		File file = new File(
@@ -53,8 +54,11 @@ public class ProjectRecordUtil {
 	}
 
 	/**
-	 * 如果index大于记录长度或者为-1，那么将默认读取最后一条记录。
-	 * 返回数组：第一个元素为当前记录，第二个元素为上一个记录。 如果只有一条记录，那么返回的2条相同的记录。如果没有记录，则返回空数组。
+	 *
+	 * @param index If index is greater than the record length or -1, then the last record will be read by default.
+	 * @return The first element is the current record, and the second element is the previous record.
+	 * If there is only one record exist, then the 2nd one is a new created but blank {@code ProjectInfo} object.
+	 * If there are no records, an empty array is returned.
 	 */
 	public static ProjectInfo[] getTwoProjectInfoRecordByIndex(int index) {
 		List<ProjectInfo> projInfoList = getProjectInfoList();

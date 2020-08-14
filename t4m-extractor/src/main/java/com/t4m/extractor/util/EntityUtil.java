@@ -68,7 +68,10 @@ public class EntityUtil {
 
 	/**
 	 * Add a entity into list if it does not exist.
-	 * @return the T entity itself.
+	 * @param <T> Should be {@code ModuleInfo}, {@code PackageInfo}, {@code ClassInfo}, {@code MethodInfo} and {@code FieldInfo}
+	 * @param entity The entity that need to be added into the list.
+	 * @param targetList The list to which the entity should add.
+	 * @return The T entity itself.
 	 */
 	public static <T> T safeAddEntityToList(T entity, List<T> targetList) {
 		int index;
@@ -81,7 +84,9 @@ public class EntityUtil {
 	}
 
 	/**
-	 * Add dependencies for both {@code current} and {@code target}
+	 * Add dependencies for both objects of {@code current} and {@code target}
+	 * @param current The class that call the method of {@code target} class
+	 * @param target The class of which method is called by {@code current} class
 	 */
 	public static void addDependency(ClassInfo current, ClassInfo target) {
 		if (!Objects.equals(current, target)) {
@@ -93,15 +98,19 @@ public class EntityUtil {
 
 	/**
 	 * Add dependencies for {@code current} and each element in {@code referenceClassList}
+	 * @param current The class that call the method of {@code target} class
+	 * @param referenceClassList A collection of classes of which methods are called by {@code current} class
 	 */
-	public static void addDependency(ClassInfo currentClassInfo, List<ClassInfo> referenceClassList) {
+	public static void addDependency(ClassInfo current, List<ClassInfo> referenceClassList) {
 		for (ClassInfo referClass : referenceClassList) {
-			addDependency(currentClassInfo, referClass);
+			addDependency(current, referClass);
 		}
 	}
 
 	/**
 	 * Add dependencies for both {@code current} and {@code target}
+	 * @param current The package that point to the {@code target} package
+	 * @param target The package that is pointed by {@code current} package
 	 */
 	public static void addDependency(PackageInfo current, PackageInfo target) {
 		if (!Objects.equals(current, target)) {

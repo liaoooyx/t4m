@@ -65,10 +65,11 @@ public class JavaParserScanner implements T4MScanner {
 			} catch (ParseProblemException e) {
 				LOGGER.error("{} of file [{}]", e, classInfo.getAbsolutePath(), e);
 				if (!"module-info".equals(classInfo.getShortName())) {
+					LOGGER.error("Unexpected file. Stop the scanning now. Please check the code.");
 					e.printStackTrace();
 				}
 			} catch (Exception e) {
-				LOGGER.error("Unexpected error happen for path [{}]. Stop the scanning now.",
+				LOGGER.error("Unexpected error happen for file [{}]. Stop the scanning now. Please check the code.",
 				             classInfo.getAbsolutePath(), e);
 				e.printStackTrace();
 			}

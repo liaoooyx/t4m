@@ -14,7 +14,11 @@ public class ComplexityMetric implements ClassLevelMetric {
 
 	/**
 	 * Recursively calculate the cyclomatic complexity of a method.
-	 * Including stmt: if, while, for, &&, ||, ?:, cases and default of switch, catches of try.
+	 * Including stmt: {@code if}, {@code while}, {@code for}, {@code &&}, {@code ||}, {@code ?:},
+	 * {@code cases and default of switch}, {@code catches of try}.
+	 * @param n nodes of block stmt ant its child stmt.
+	 * @param cyclomaticComplexityCount value of current complexity counted
+	 * @return value of complexity counted at the end of this recursion.
 	 */
 	public static int resolveComplexity(Node n, int cyclomaticComplexityCount) {
 		for (Node childNode : n.getChildNodes()) {

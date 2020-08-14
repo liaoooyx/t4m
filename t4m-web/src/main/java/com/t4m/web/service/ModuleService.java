@@ -21,9 +21,9 @@ public class ModuleService {
 
 	public List<String[]> getSLOCForTableChart(String moduleName) {
 		List<String[]> dataset = new ArrayList<>();
-		dataset.add(new String[]{"time", "Logic Code Lines (Source File)", "Physical Code Lines (Source File)",
-		                         "Comment Lines", "% of Comment Lines (Source File)", "Logic Code Lines (JavaParser)",
-		                         "Physical Code Lines (JavaParser)", "Comment Lines (JavaParser)",
+		dataset.add(new String[]{"time",  "Source Code Lines (Source File)",
+		                         "Comment Lines", "% of Comment Lines (Source File)",
+		                         "Source Code Lines (JavaParser)", "Comment Lines (JavaParser)",
 		                         "% of Comment Lines (JavaParser)"});
 		for (ProjectInfo projectInfo : ProjectRecordUtil.getProjectInfoList()) {
 			ModuleInfo moduleInfo = EntityUtil.getModuleByRelativeName(projectInfo.getModuleList(), moduleName);

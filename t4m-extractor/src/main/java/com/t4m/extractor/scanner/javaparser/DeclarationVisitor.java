@@ -35,8 +35,8 @@ public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeclarationVisitor.class);
 
-	private ClassInfo outerClassInfo;
-	private ProjectInfo projectInfo;
+	private final ClassInfo outerClassInfo;
+	private final ProjectInfo projectInfo;
 
 	public DeclarationVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
 		this.outerClassInfo = outerClassInfo;
@@ -74,7 +74,7 @@ public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		super.visit(n, arg);
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.debug("Cannot resolve current enum declaration. It may be declared within a method.\n", n);
+			LOGGER.debug("Cannot resolve current enum declaration. It may be declared within a method.\n[{}]", n);
 			return;
 		}
 		currentClassInfo.setClassModifier(ClassInfo.ClassModifier.ENUM);
@@ -230,8 +230,6 @@ public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	 * Notice that the comment outside a class may be ignored (JavaDoc will be kept).
 	 */
 	private void countAstSLOCMetaAndAddToClassInfo(Node n, ClassInfo currentClassInfo) {
-		// LexicalPreservingPrinter.setup(n);
-		// LexicalPreservingPrinter.print(n);
 		String[] sourceLines = n.toString().split(System.lineSeparator());
 		SLOCMetric.SLOCCounter slocCounter = new SLOCMetric.SLOCCounter();
 		Arrays.stream(sourceLines).forEach(slocCounter::countSLOCByLine);

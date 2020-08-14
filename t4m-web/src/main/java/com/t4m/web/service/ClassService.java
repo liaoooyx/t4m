@@ -358,13 +358,14 @@ public class ClassService {
 	}
 
 	/**
-	 * 用于Dashboard-SLOC页面中timeline chart的数据集。
-	 * 第1层：Map，key为创建时间，嵌套List
-	 * 第2层：Map，key为前端Echart需要的4个series，分别为Interface, Abstract Class, Class and Inner Class，嵌套List
-	 * 第3层：List，包括SLOC-code, SLOC-comment, SLOC-comment / SLOC-code,
-	 * ClassName, OfWhichModule。
+	 * For Dashboard-SLOC -- overall chart
+	 * 1st level: Map，key is create time. Nested with list
+	 * 2nd level: Map，key are four series that required by Echart: Interface, Abstract Class, Class and Inner Class. Nested with List
+	 * 3rd level: Including SLOC-code, SLOC-comment, SLOC-comment / SLOC-code, ClassName, OfWhichModule.
 	 *
-	 * @param flag 当为1时，使用所有类（包括内部类和extra类）；当为2时，仅使用与java文件对应的main public类
+	 * @param flag When it is 1, use all classes (including inner classes and extra classes);
+	 * when it is 2, use only the main public class corresponding to the java file
+	 * @return The data that repose to the front-end.
 	 */
 	public Map<String, Map<String, List<Object>>> getDataSetOfSLOC(int flag) {
 		LinkedHashMap<String, Map<String, List<Object>>> timeline = new LinkedHashMap<>();

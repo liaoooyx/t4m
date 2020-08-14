@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -22,11 +23,12 @@ public class T4mPropertiesUtil {
 			properties.load(in);
 		} catch (IOException e) {
 			e.printStackTrace();
-			LOGGER.error("",e);
+			LOGGER.error("", e);
 		}
 	}
 
 	/**
+	 * @param key name of the key.
 	 * @return Null, if the property does not exist in the file; Empty string, if the property exists but no value.
 	 */
 	public String getProperty(String key) {
@@ -35,16 +37,15 @@ public class T4mPropertiesUtil {
 
 	/**
 	 * Create a new property or cover the property.
+	 *
 	 * @param key the name of the property.
 	 * @param val the value of the property.
 	 */
 	public void setProperty(String key, String val) {
 		properties.setProperty(key, val);
-		try {
-			try (OutputStream out = new FileOutputStream(new File(filePath))) {
-				properties.store(out, String.format("Add property %s=%s", key, val));
-				LOGGER.debug("Write property [{}={}] to [{}]", key, val, filePath);
-			}
+		try (OutputStream out = new FileOutputStream(new File(filePath))) {
+			properties.store(out, String.format("Add property %s=%s", key, val));
+			LOGGER.debug("Write property [{}={}] to [{}]", key, val, filePath);
 		} catch (Exception e) {
 			LOGGER.error("Error happen when storing properties", e);
 		}

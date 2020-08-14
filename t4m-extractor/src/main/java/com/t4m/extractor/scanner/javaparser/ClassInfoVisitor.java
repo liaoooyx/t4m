@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Yuxiang Liao on 2020-07-16 15:52.
@@ -21,9 +22,9 @@ public class ClassInfoVisitor extends VoidVisitorAdapter<Void> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClassInfoVisitor.class);
 
-	private ClassInfo outerClassInfo;
-	private ProjectInfo projectInfo;
-	private List<ClassInfo> allShownClassInfoList = new ArrayList<>();
+	private final ClassInfo outerClassInfo;
+	private final ProjectInfo projectInfo;
+	private final List<ClassInfo> allShownClassInfoList = new ArrayList<>();
 
 	public ClassInfoVisitor(ClassInfo outerClassInfo, ProjectInfo projectInfo) {
 		this.outerClassInfo = outerClassInfo;
@@ -34,19 +35,28 @@ public class ClassInfoVisitor extends VoidVisitorAdapter<Void> {
 	private void createClassInfo(TypeDeclaration n) {
 		if (n.isNestedType()) {
 			// Need to check which is the previous level
-			TypeDeclaration parentClassNode = (TypeDeclaration) n.findAncestor(TypeDeclaration.class).get();
-			ClassInfo parentClassInfo = EntityUtil.getClassByShortName(allShownClassInfoList,
-			                                                           parentClassNode.getName().getIdentifier());
-			// Create a new ClassInfo object for nested class, connecting to outer class, and added to projectInfo object.
-			String innerClassName = n.getName().toString();
-			ClassInfo innerClassInfo = EntityUtil.safeAddEntityToList(new ClassInfo(innerClassName, parentClassInfo),
-			                                                          parentClassInfo.getNestedClassList());
-			innerClassInfo.setClassDeclaration(ClassInfo.ClassDeclaration.NESTED_CLASS);
-			innerClassInfo.setOuterClass(parentClassInfo);
-			innerClassInfo.setMainPublicClass(outerClassInfo);
-			EntityUtil.safeAddEntityToList(innerClassInfo, projectInfo.getNestedClassList());
-			EntityUtil.safeAddEntityToList(innerClassInfo, innerClassInfo.getPackageInfo().getNestedClassList());
-			allShownClassInfoList.add(innerClassInfo);
+			TypeDeclaration parentClassNode;
+			Optional<TypeDeclaration> optional = n.findAncestor(TypeDeclaration.class);
+			if (optional.isPresent()){
+				parentClassNode = optional.get();
+				ClassInfo parentClassInfo = EntityUtil.getClassByShortName(allShownClassInfoList,
+				                                                           parentClassNode.getName().getIdentifier());
+				// Create a new ClassInfo object for nested class, connecting to outer class, and added to projectInfo object.
+				String innerClassName = n.getName().toString();
+				ClassInfo innerClassInfo = EntityUtil.safeAddEntityToList(new ClassInfo(innerClassName, parentClassInfo),
+				                                                          parentClassInfo.getNestedClassList());
+				innerClassInfo.setClassDeclaration(ClassInfo.ClassDeclaration.NESTED_CLASS);
+				innerClassInfo.setOuterClass(parentClassInfo);
+				innerClassInfo.setMainPublicClass(outerClassInfo);
+				EntityUtil.safeAddEntityToList(innerClassInfo, projectInfo.getNestedClassList());
+				if (innerClassInfo.getPackageInfo() != null) {
+					EntityUtil.safeAddEntityToList(innerClassInfo, innerClassInfo.getPackageInfo().getNestedClassList());
+				} else {
+					LOGGER.error("Cannot get the package to which the inner class {} belongs",
+					             innerClassInfo.getFullyQualifiedName());
+				}
+				allShownClassInfoList.add(innerClassInfo);
+			}
 		} else {
 			// For package private outer classes.
 			String shortName = n.getName().getIdentifier();

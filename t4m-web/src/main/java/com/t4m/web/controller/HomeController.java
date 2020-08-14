@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 
 	/**
-	 * @param model for AOPHandler
+	 * @param model for AOPHandler to insert values
+	 * @return the path of html resource
 	 */
 	@RequestMapping("/")
 	public String home(Model model) {

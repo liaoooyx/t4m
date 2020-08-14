@@ -216,6 +216,7 @@ public class MethodInfo implements Serializable {
 
 	/**
 	 * The values of paramsTypeAsClassInfoListMap are multiple lists, this method will flat them into one list.
+	 * @return a flatten list of {@code ClassInfo} objects
 	 */
 	public List<ClassInfo> getParamsTypeAsClassInfoList() {
 		return paramsTypeAsClassInfoListMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());

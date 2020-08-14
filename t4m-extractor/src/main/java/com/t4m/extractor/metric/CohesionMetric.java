@@ -12,8 +12,6 @@ import java.util.*;
  */
 public class CohesionMetric implements ClassLevelMetric {
 
-
-
 	@Override
 	public void calculate(ClassInfo classInfo) {
 		if (classInfo.getShortName().equals("CohesionClass")) {

@@ -15,6 +15,8 @@ public class RFCMetric implements ClassLevelMetric{
 
 	/**
 	 * Add 1 for the relevant method within countRFCMethodQualifiedSignatureMap.
+	 * @param rfcMethodQualifiedSignatureMap a collection of methods with corresponding RFC values.
+	 * @param methodQualifiedSignature to identify a specific method.
 	 */
 	public static void countRFCMethodQualifiedSignatureMap(
 			Map<String, Integer> rfcMethodQualifiedSignatureMap, String methodQualifiedSignature) {
@@ -28,9 +30,11 @@ public class RFCMetric implements ClassLevelMetric{
 
 	/**
 	 * Recursively calculate all parent classes
+	 * @param currentClassInfo current class
+	 * @param rfcSet a set of unique methods in terms of current class's RFC
 	 */
-	private void accumulateRFCFromExtendsClass(ClassInfo classInfo, Set<String> rfcSet) {
-		for (ClassInfo extendsClass : classInfo.getExtendsClassList()) {
+	private void accumulateRFCFromExtendsClass(ClassInfo currentClassInfo, Set<String> rfcSet) {
+		for (ClassInfo extendsClass : currentClassInfo.getExtendsClassList()) {
 			rfcSet.addAll(extendsClass.getLocalMethodCallQualifiedSignatureMap().keySet());
 			if (!extendsClass.getExtendsClassList().isEmpty()) {
 				accumulateRFCFromExtendsClass(extendsClass, rfcSet);
@@ -45,6 +49,8 @@ public class RFCMetric implements ClassLevelMetric{
 	 * thus can be ensure that the overwritten method is unique.
 	 *
 	 * Need to recursively calculate all parent classes
+	 * @param targetClass the class for which we are computing RFC
+	 * @return a set of unique methods in terms of target class's RFC
 	 */
 	private Set<String> calculateAccumulatedRFCSet(ClassInfo targetClass) {
 		Set<String> accumulatedRfcSet = new HashSet<>(targetClass.getOutClassMethodCallQualifiedSignatureMap().keySet());

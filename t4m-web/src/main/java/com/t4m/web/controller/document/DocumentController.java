@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DocumentController {
 
 	/**
-	 * @param model 用于aop切片
+	 * @param model for AOPHandler to insert values
+	 * @return the path of html resource
 	 */
 	@GetMapping("/introduction")
 	public String introduction(Model model) {
@@ -21,7 +22,8 @@ public class DocumentController {
 	}
 
 	/**
-	 * @param model 用于aop切片
+	 * @param model for AOPHandler to insert values
+	 * @return the path of html resource
 	 */
 	@GetMapping("/how-to-use")
 	public String overview(Model model) {

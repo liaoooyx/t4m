@@ -217,7 +217,7 @@ public class PackageInfo implements Serializable {
 	}
 
 	/**
-	 * 返回所有类，包括唯一公共类，非公共类，嵌套类
+	 * @return a integrated list of @link PackageInfo#classList, @link PackageInfo#nestedClassList and @link PackageInfo#extraClassList
 	 */
 	public List<ClassInfo> getAllClassList() {
 		List<ClassInfo> all = new ArrayList<>();

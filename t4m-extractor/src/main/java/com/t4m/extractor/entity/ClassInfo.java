@@ -449,22 +449,14 @@ public class ClassInfo implements Serializable {
 		this.slocArray = slocArray;
 	}
 
-	/**
-	 * Source File considers a java file as the minimum unit.
-	 * AST considers a ClassInfo object as the minimum unit，excluding the keywords: package and import，
-	 * and will format the source code (statements will be separated into different lines).
-	 * Logic code lines contains will exclude empty lines, symbol-only lines and comments lines.
-	 * Physical code lines will include symbol-only lines and logic code lines.
-	 * Comment lines will include the mixed lines, likes: code;//comment
-	 */
-	public Map<SLOCType, Integer> initSlocCounterMap() {
+
+	private void initSlocCounterMap() {
 		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, 0);
 		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE, 0);
 		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE, 0);
 		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_AST, 0);
 		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_AST, 0);
 		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_AST, 0);
-		return slocCounterMap;
 	}
 
 	public enum ClassModifier {
@@ -488,6 +480,15 @@ public class ClassInfo implements Serializable {
 		}
 	}
 
+	/**
+	 * Source File considers a java file as the minimum unit.
+	 * AST considers a ClassInfo object as the minimum unit，excluding the keywords: package and import,
+	 * and will format the source code (statements will be separated into different lines).
+	 * <p>
+	 * Logic code lines contains will exclude empty lines, symbol-only lines and comments lines.
+	 * Physical code lines will include symbol-only lines and logic code lines.
+	 * Comment lines will include the mixed lines, likes: code;//comment
+	 */
 	public enum SLOCType {
 		LOGIC_CODE_LINES_FROM_SOURCE_FILE,
 		PHYSICAL_CODE_LINES_FROM_SOURCE_FILE,
