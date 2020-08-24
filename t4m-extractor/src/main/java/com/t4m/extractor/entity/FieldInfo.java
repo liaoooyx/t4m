@@ -19,6 +19,11 @@ public class FieldInfo implements Serializable {
 
 	private boolean isStatic = false;
 	private boolean isFinal = false;
+	private boolean isTransient = false;
+	private boolean isAbstract = false;
+	private boolean isSynchronized = false;
+	private boolean isStrictfp = false;
+	private boolean isNative = false;
 	private AccessModifierEnum accessModifierEnum = AccessModifierEnum.DEFAULT;
 
 	// All direct access or indirect access
@@ -103,6 +108,46 @@ public class FieldInfo implements Serializable {
 		isFinal = aFinal;
 	}
 
+	public boolean isTransient() {
+		return isTransient;
+	}
+
+	public void setTransient(boolean aTransient) {
+		isTransient = aTransient;
+	}
+
+	public boolean isAbstract() {
+		return isAbstract;
+	}
+
+	public void setAbstract(boolean anAbstract) {
+		isAbstract = anAbstract;
+	}
+
+	public boolean isSynchronized() {
+		return isSynchronized;
+	}
+
+	public void setSynchronized(boolean aSynchronized) {
+		isSynchronized = aSynchronized;
+	}
+
+	public boolean isStrictfp() {
+		return isStrictfp;
+	}
+
+	public void setStrictfp(boolean aStrictfp) {
+		isStrictfp = aStrictfp;
+	}
+
+	public boolean isNative() {
+		return isNative;
+	}
+
+	public void setNative(boolean aNative) {
+		isNative = aNative;
+	}
+
 	public AccessModifierEnum getAccessModifierEnum() {
 		return accessModifierEnum;
 	}
@@ -135,5 +180,9 @@ public class FieldInfo implements Serializable {
 
 	public void setCohesionMethodSet(Set<MethodInfo> cohesionMethodSet) {
 		this.cohesionMethodSet = cohesionMethodSet;
+	}
+
+	public boolean isInstanceVariable() {
+		return !isAbstract && !isSynchronized && !isStrictfp && !isStatic && !isNative;
 	}
 }

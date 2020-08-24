@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Set the rest info for the classInfo object.
  * Create MethodInfo and FieldInfo entities.
- *
+ * <p>
  * Created by Yuxiang Liao on 2020-07-12 13:38.
  */
 public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
@@ -118,6 +118,11 @@ public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
 		}
 		boolean isStatic = false;
 		boolean isFinal = false;
+		boolean isTransient = false;
+		boolean isAbstract = false;
+		boolean isSynchronized = false;
+		boolean isStrictfp = false;
+		boolean isNative = false;
 		AccessModifierEnum accessModifierEnum = AccessModifierEnum.DEFAULT;
 		for (Modifier modifier : n.getModifiers()) {
 			switch (modifier.getKeyword()) {
@@ -126,6 +131,21 @@ public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
 					break;
 				case STATIC:
 					isStatic = true;
+					break;
+				case NATIVE:
+					isNative = true;
+					break;
+				case STRICTFP:
+					isStrictfp = true;
+					break;
+				case SYNCHRONIZED:
+					isSynchronized = true;
+					break;
+				case ABSTRACT:
+					isAbstract = true;
+					break;
+				case TRANSIENT:
+					isTransient = true;
 					break;
 				case PUBLIC:
 					accessModifierEnum = AccessModifierEnum.PUBLIC;
@@ -147,6 +167,11 @@ public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
 			                                    variableDeclarator.getTypeAsString());
 			fieldInfo.setFinal(isFinal);
 			fieldInfo.setStatic(isStatic);
+			fieldInfo.setTransient(isTransient);
+			fieldInfo.setAbstract(isAbstract);
+			fieldInfo.setStrictfp(isStrictfp);
+			fieldInfo.setSynchronized(isSynchronized);
+			fieldInfo.setNative(isNative);
 			fieldInfo.setAccessModifierEnum(accessModifierEnum);
 			fieldInfo.setTypeAsClassInfoList(typeAsClassInfoList);
 			fieldInfo.setRangeLocator(variableDeclarator.getRange().orElse(null));

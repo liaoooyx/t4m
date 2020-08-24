@@ -389,7 +389,7 @@
                       grid: {
                           bottom: '100'
                       },
-                      legend: {},
+                      legend: {selected: {'Number of all methods': false},},
                       xAxis: {
                           name: "Time", type: 'category', splitArea: {interval: 0},
                           splitLine: {show: true, lineStyle: {type: 'solid'}}, nameLocation: 'center', nameGap: 28
@@ -402,7 +402,7 @@
                           nameLocation: 'center', nameRotate: 270, nameGap: 35
                       }],
                       series: [{
-                          name: 'The method/methods with the specific Cyclomatic Complexity value',
+                          name: 'Methods regarding the Cyclomatic Complexity',
                           type: 'scatter', yAxisIndex: 0, data: methodComplexityDataset,
                           emphasis: {
                               label: {
@@ -413,8 +413,8 @@
                               },
                           },
                       }, {
-                          name: 'Number of All Methods', type: 'bar', yAxisIndex: 1, data:
-                          methodNumDataset,
+                          name: 'Number of all methods', type: 'bar', yAxisIndex: 1,
+		                      data: methodNumDataset,
                           itemStyle: {color: 'rgba(229,229,229,0.8)',},
                           label: {
                               show: true, position: 'top', distance: 20, formatter: '{@[1]}', color: '#000000',

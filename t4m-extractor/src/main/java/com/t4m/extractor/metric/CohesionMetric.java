@@ -31,17 +31,19 @@ public class CohesionMetric implements ClassLevelMetric {
 		// Recursively for all methods.
 		for (FieldInfo fieldInfo : classInfo.getFieldInfoList()) {
 			// Do conditional judgement here if need to filter the static or final keyword.
-
-			if (!isFieldExistInAnyScope(fieldInfo, isolatedScopeFieldsList)) {
-				Set<FieldInfo> scopeFieldSet = new HashSet<>();
-				Set<MethodInfo> scopeMethodSet = new HashSet<>();
-				initScopeField(fieldInfo, scopeFieldSet, scopeMethodSet, new ArrayList<>());
-				if (!scopeMethodSet.isEmpty()) {
-					isolatedScopeFieldsList.add(scopeFieldSet);
-					isolatedScopeMethodsList.add(scopeMethodSet);
+			if (fieldInfo.isInstanceVariable()) {
+				if (!isFieldExistInAnyScope(fieldInfo, isolatedScopeFieldsList)) {
+					Set<FieldInfo> scopeFieldSet = new HashSet<>();
+					Set<MethodInfo> scopeMethodSet = new HashSet<>();
+					initScopeField(fieldInfo, scopeFieldSet, scopeMethodSet, new ArrayList<>());
+					if (!scopeMethodSet.isEmpty()) {
+						isolatedScopeFieldsList.add(scopeFieldSet);
+						isolatedScopeMethodsList.add(scopeMethodSet);
+					}
 				}
+				fillMethodPairFromSet(directlyConnectedMethodPairSet,
+				                      fieldInfo.getBeingPassingAccessedByLocalMethodSet());
 			}
-			fillMethodPairFromSet(directlyConnectedMethodPairSet, fieldInfo.getBeingPassingAccessedByLocalMethodSet());
 		}
 		for (Set<MethodInfo> scopeMethodSet : isolatedScopeMethodsList) {
 			fillMethodPairFromSet(allConnectedMethodPairSet, scopeMethodSet);
@@ -87,6 +89,7 @@ public class CohesionMetric implements ClassLevelMetric {
 
 	/**
 	 * Put all methods that accessing the target field into the same scope. Recursively for all methods.
+	 *
 	 * @param fieldInfo The target field.
 	 * @param scopeFieldSet Add all fields that exists in the same scope to this set.
 	 * @param scopeMethodSet Add all methods that related to the input param {@code fieldInfo} object to this set.
@@ -109,27 +112,36 @@ public class CohesionMetric implements ClassLevelMetric {
 
 	/**
 	 * Start from fields, scan the dependencies upward, to get the direct connections set
+	 *
+	 * @param classInfo the current ClassInfo object
 	 */
 	private void initMethodPassingAccessToField(ClassInfo classInfo) {
 		for (FieldInfo fieldInfo : classInfo.getFieldInfoList()) {
 			// Do conditional judgement here if need to filter the static or final keyword.
-
-			for (MethodInfo afferentMethod : fieldInfo.getBeingAccessedDirectlyByLocalMethodSet()) {
-				initMethodPassingAccessToField(fieldInfo, afferentMethod, new ArrayList<>());
+			if (fieldInfo.isInstanceVariable()) {
+				for (MethodInfo afferentMethod : fieldInfo.getBeingAccessedDirectlyByLocalMethodSet()) {
+					initMethodPassingAccessToField(fieldInfo, afferentMethod, new ArrayList<>());
+				}
 			}
+
 		}
 	}
 
 	/**
 	 * Find all methods that accessing the same fields through the invocation tree.
 	 * Add the result to the metadata variable that declared in {@code FieldInfo} object.
+	 *
+	 * @param targetField current instant variable
+	 * @param currentMethod the method that access to the {@code targetField}
+	 * @param interruptList A list to avoid recursion or dependency circle that leading to infinite loops
 	 */
 	private void initMethodPassingAccessToField(
 			FieldInfo targetField, MethodInfo currentMethod, List<MethodInfo> interruptList) {
 		interruptList.add(currentMethod);
 		targetField.getBeingPassingAccessedByLocalMethodSet().add(currentMethod);
 		for (MethodInfo afferentMethod : currentMethod.getBeingAccessedByLocalMethodSet()) {
-			if (!interruptList.contains(afferentMethod)) { // 避免递归或依赖循环导致死循环 A->...->A
+			if (!interruptList.contains(
+					afferentMethod)) {// Avoid recursion or dependency circle that leading to infinite loops A->...->A
 				initMethodPassingAccessToField(targetField, afferentMethod, interruptList);
 			}
 		}

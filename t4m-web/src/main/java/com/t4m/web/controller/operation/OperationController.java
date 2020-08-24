@@ -1,4 +1,4 @@
-package com.t4m.web.controller.dashboard;
+package com.t4m.web.controller.operation;
 
 import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.T4MExtractor;
@@ -28,6 +28,9 @@ import java.util.Map;
 public class OperationController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationController.class);
+	private static final String PARSE_EXCEPTION_ALERT =
+			"If there are multi modules in your project, you might need to build your project at first. " +
+					"Otherwise, T4M cannot find the jar file of the module on which other modules depends";
 
 	@PostMapping("/new")
 	public String createNewProject(
@@ -48,8 +51,8 @@ public class OperationController {
 			try {
 				createDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(projectCreatTime);
 			} catch (ParseException e) {
-				LOGGER.error("Cannot parse {}, [{}]", projectCreatTime, e.toString(), e);
-				return e.toString();
+				LOGGER.error("Cannot parse {}, [{}]\n" + PARSE_EXCEPTION_ALERT, projectCreatTime, e.toString(), e);
+				return PARSE_EXCEPTION_ALERT + "\nDetailed error: " + e.toString();
 			}
 		}
 
@@ -88,8 +91,8 @@ public class OperationController {
 			try {
 				createDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(projectCreatTime);
 			} catch (ParseException e) {
-				LOGGER.error("Cannot parse {}, [{}]", projectCreatTime, e.toString(), e);
-				return e.toString();
+				LOGGER.error("Cannot parse {}, [{}]\n" + PARSE_EXCEPTION_ALERT, projectCreatTime, e.toString(), e);
+				return PARSE_EXCEPTION_ALERT + "\nDetailed error: " + e.toString();
 			}
 		}
 		ProjectInfo projectInfo = new ProjectInfo(oldProjectInfo.getAbsolutePath(), excludedPath.strip(),

@@ -35,7 +35,11 @@ public class AOPHandler {
 	public void homeController() {
 	}
 
-	@Around("dashboardController()")
+	@Pointcut("execution(public * com.t4m.web.controller.operation.*.*(org.springframework.ui.Model))")
+	public void operationController() {
+	}
+
+	@Around("dashboardController() || operationController()")
 	public Object checkEmptyRecordList(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		ProjectInfo projectInfo = projectService.getCurrentProjectInfoOfIndex(-1);
 		Model model = (Model) proceedingJoinPoint.getArgs()[0];
