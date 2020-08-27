@@ -10,7 +10,6 @@ import java.io.File;
  */
 public class GlobalProperties {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(GlobalProperties.class);
 	public static final String DB_PATH_KEY = "DB_PATH";
 	public static final String EXCLUDED_PATH_KEY = "EXCLUDED_PATH";
 	public static final String DEPENDENCY_PATH_KEY = "DEPENDENCY_PATH";
@@ -65,13 +64,6 @@ public class GlobalProperties {
 				CONF_ROOT_PATH + File.separator + WEB_PROPERTIES_FILE_NAME);
 		webProperties.setProperty(CURRENT_PROJECT_IDENTIFIER_KEY, currentProjectName);
 		currentProjectIdentifier = currentProjectName;
-	}
-
-
-	public static void main(String[] args) {
-		T4mPropertiesUtil t4mProperties = new T4mPropertiesUtil(
-				CONF_ROOT_PATH + File.separator + MAIN_PROPERTIES_FILE_NAME);
-		t4mProperties.setProperty("asd", "asdd2");
 	}
 
 }
