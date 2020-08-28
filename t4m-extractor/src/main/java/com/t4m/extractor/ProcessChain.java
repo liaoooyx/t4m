@@ -1,4 +1,4 @@
-package com.t4m.extractor.processor;
+package com.t4m.extractor;
 
 import com.t4m.extractor.entity.ProjectInfo;
 
