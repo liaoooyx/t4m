@@ -1,7 +1,7 @@
 package com.t4m.extractor;
 
 import com.t4m.extractor.entity.ProjectInfo;
-import com.t4m.extractor.scanner.*;
+import com.t4m.extractor.processor.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,19 +14,19 @@ public class T4MExtractor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(T4MExtractor.class);
 
-	private final ScannerChain scannerChain = new ScannerChain();
+	private final ProcessChain processChain = new ProcessChain();
 
-	public ScannerChain getScannerChain() {
-		return scannerChain;
+	public ProcessChain getProcessChain() {
+		return processChain;
 	}
 
 	public ProjectInfo extract(ProjectInfo projectInfo) {
-		if (scannerChain.isEmpty()) {
+		if (processChain.isEmpty()) {
 			useDefaultScannerChain();
 		}
 		long start = System.currentTimeMillis();
 		LOGGER.info("************************************* Start scanning **************************************");
-		scannerChain.scan(projectInfo);
+		processChain.scan(projectInfo);
 		LOGGER.info("************************************* Finish scanning *************************************");
 		long end = System.currentTimeMillis();
 		LOGGER.info("The scanning process finished in {}s",(end-start)/1000);
@@ -34,17 +34,17 @@ public class T4MExtractor {
 	}
 
 	private void useDefaultScannerChain() {
-		scannerChain.addScanner(new DirectoryFileScanner());
-		scannerChain.addScanner(new ClassScanner());
-		scannerChain.addScanner(new PackageScanner());
-		scannerChain.addScanner(new ModuleScanner());
-		scannerChain.addScanner(new DependencyScanner());
-		scannerChain.addScanner(new JavaParserScanner());
-		scannerChain.addScanner(new MetricsScanner());
+		processChain.addScanner(new DirectoryFileScanner());
+		processChain.addScanner(new ClassScanner());
+		processChain.addScanner(new PackageScanner());
+		processChain.addScanner(new ModuleScanner());
+		processChain.addScanner(new DependencyScanner());
+		processChain.addScanner(new SourceCodeResolver());
+		processChain.addScanner(new MetricsCalculator());
 	}
 
-	public T4MExtractor setCustomScannerChain(T4MScanner... t4MScanners) {
-		Arrays.asList(t4MScanners).forEach(scannerChain::addScanner);
+	public T4MExtractor setCustomScannerChain(ProcessNode... t4MProcesses) {
+		Arrays.asList(t4MProcesses).forEach(processChain::addScanner);
 		return this;
 	}
 
