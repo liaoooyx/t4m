@@ -18,9 +18,9 @@ import java.util.Objects;
 /**
  * Created by Yuxiang Liao on 2020-06-16 01:18.
  */
-public class DependencyScanner implements ProcessNode {
+public class BelongingnessScanner implements ProcessNode {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DependencyScanner.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BelongingnessScanner.class);
 
 	private ProjectInfo projectInfo;
 
@@ -30,13 +30,13 @@ public class DependencyScanner implements ProcessNode {
 		this.projectInfo = projectInfo;
 		DirHierarchyNode rootNode = new DirHierarchyNode(new File(projectInfo.getAbsolutePath()).getName(),
 		                                                 projectInfo.getAbsolutePath());
-		createModuleDependency(rootNode);
-		createPackageDependency();
+		createModuleBelongingness(rootNode);
+		createPackageBelongingness();
 		projectInfo.setRootDirHierarchyNode(rootNode);
 		processChain.scan(projectInfo);
 	}
 
-	private void createModuleDependency(DirHierarchyNode rootNode) {
+	private void createModuleBelongingness(DirHierarchyNode rootNode) {
 		projectInfo.getModuleList().forEach(moduleInfo -> {
 			String moduleSuffixPath = moduleInfo.getAbsolutePath().replace(projectInfo.getAbsolutePath(), "")
 			                                    .replaceFirst(RegularExprUtil.compatibleWithWindows("/"), "").strip();
@@ -60,11 +60,11 @@ public class DependencyScanner implements ProcessNode {
 				initDirectoryNodeLink(excludeRootDir, rootNode, moduleInfo);
 			}
 		});
-		recursiveModuleDependency(rootNode, null);
+		recursiveModuleBelongingness(rootNode, null);
 	}
 
 	/**
-	 * 根据路径，递归创建节点链表
+	 * 根据模块路径，递归创建节点链表
 	 */
 	private void initDirectoryNodeLink(String[] names, DirHierarchyNode previousNode, ModuleInfo moduleInfo) {
 		if (names.length > 0) {
@@ -85,57 +85,57 @@ public class DependencyScanner implements ProcessNode {
 	}
 
 	/**
-	 * 深度优先，递归遍历节点
+	 * Depth-first, recursively traverse nodes
+	 *
+	 * @param currentNode Node pointer
+	 * @param previousModuleInfo Previous module
 	 */
-	private void recursiveModuleDependency(DirHierarchyNode currentNode, ModuleInfo previousModuleInfo) {
+	private void recursiveModuleBelongingness(DirHierarchyNode currentNode, ModuleInfo previousModuleInfo) {
 		if (currentNode.hasModuleInfo()) {
-			// 非根节点
-			if (previousModuleInfo != null) {
+			if (previousModuleInfo != null) { // Not the root node
 				currentNode.getModuleInfo().setPreviousModuleInfo(previousModuleInfo);
 				EntityUtil.safeAddEntityToList(currentNode.getModuleInfo(), previousModuleInfo.getSubModuleList());
 			}
-			// 根节点
-			if (currentNode.hasNextNode()) {
+			if (currentNode.hasNextNode()) { // The root node
 				currentNode.getNextNodeList().forEach(
-						node -> recursiveModuleDependency(node, currentNode.getModuleInfo()));
+						node -> recursiveModuleBelongingness(node, currentNode.getModuleInfo()));
 			}
 		} else {
-			// 当前节点无模块
 			if (currentNode.hasNextNode()) {
-				currentNode.getNextNodeList().forEach(node -> recursiveModuleDependency(node, previousModuleInfo));
+				currentNode.getNextNodeList().forEach(node -> recursiveModuleBelongingness(node, previousModuleInfo));
 			}
 		}
 	}
 
-	/**
-	 * 建立包依赖关系
-	 */
-	private void createPackageDependency() {
-		recursivePackageDependency(new File(projectInfo.getAbsolutePath()), null, projectInfo);
+	private void createPackageBelongingness() {
+		recursivePackageBelongingness(new File(projectInfo.getAbsolutePath()), null, projectInfo);
 	}
 
 	/**
-	 * 从项目根路径开始遍历，以深度优先的方式建立包依赖关系
+	 * Start traversing from the project root path and establish package belonging in a depth-first manner
+	 *
+	 * @param dir Current path
+	 * @param previousPkg The pointer
+	 * @param projectInfo The target project
 	 */
-	private void recursivePackageDependency(File dir, PackageInfo previousPkg, ProjectInfo projectInfo) {
+	private void recursivePackageBelongingness(File dir, PackageInfo previousPkg, ProjectInfo projectInfo) {
 		if (dir.isDirectory()) {
-			//获取当前路径下的包
-			PackageInfo currentPkg = EntityUtil.getPackageInfoByAbsolutePath(projectInfo.getPackageList(),
-			                                                                 dir.getAbsolutePath());
-			//判断当前路径是否有对应的包
+			// Get the package under the current path
+			PackageInfo currentPkg = EntityUtil.getPackageInfoByAbsolutePath(projectInfo.getPackageList(), dir.getAbsolutePath());
+			// Determine whether the current path has a corresponding package
 			if (currentPkg != null) {
+				// Set package belongingness
 				if (previousPkg != null) {
 					EntityUtil.safeAddEntityToList(currentPkg, previousPkg.getSubPackageList());
 					currentPkg.setPreviousPackage(previousPkg);
 				}
-				// 更新父节点，搜索子路径下的其他文件夹
-				Arrays.stream(dir.listFiles()).forEach(f -> recursivePackageDependency(f, currentPkg, projectInfo));
+				// Update the pointer, search for other folders under the subpath
+				Arrays.stream(dir.listFiles()).forEach(f -> recursivePackageBelongingness(f, currentPkg, projectInfo));
 			} else {
-				// 保留父节点，继续搜索子路径下的其他文件夹
-				Arrays.stream(dir.listFiles()).forEach(f -> recursivePackageDependency(f, previousPkg, projectInfo));
+				// Keep the pointer, and continue to search for other folders under the subpath
+				Arrays.stream(dir.listFiles()).forEach(f -> recursivePackageBelongingness(f, previousPkg, projectInfo));
 			}
 		}
-		//TODO 处理：如果root路径下没有文件夹
 	}
 
 }

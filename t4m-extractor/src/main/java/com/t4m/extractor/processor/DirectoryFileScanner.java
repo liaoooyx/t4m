@@ -32,6 +32,10 @@ public class DirectoryFileScanner implements ProcessNode {
 	/**
 	 * Start from the project root path，recursively search for all .java file.
 	 * The {@link ProjectInfo#getExcludedPath()} will be excluded.
+	 *
+	 * @param file Target directory
+	 * @param javaList Storing all java files
+	 * @param projectInfo Target project
 	 */
 	private void getAllJavaFiles(File file, List<File> javaList, ProjectInfo projectInfo) {
 		if (file.isDirectory()) {

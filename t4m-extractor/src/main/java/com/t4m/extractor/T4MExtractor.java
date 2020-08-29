@@ -38,7 +38,7 @@ public class T4MExtractor {
 		processChain.addScanner(new ClassScanner());
 		processChain.addScanner(new PackageScanner());
 		processChain.addScanner(new ModuleScanner());
-		processChain.addScanner(new DependencyScanner());
+		processChain.addScanner(new BelongingnessScanner());
 		processChain.addScanner(new SourceCodeResolver());
 		processChain.addScanner(new MetricsCalculator());
 	}

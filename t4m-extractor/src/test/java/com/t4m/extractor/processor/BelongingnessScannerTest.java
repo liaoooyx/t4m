@@ -15,7 +15,7 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class DependencyScannerTest {
+class BelongingnessScannerTest {
 
 	static ProjectInfo projectInfo;
 
@@ -25,7 +25,7 @@ class DependencyScannerTest {
 		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor();
 		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner(), new ClassScanner(), new PackageScanner(),
-		                                   new ModuleScanner(), new DependencyScanner()).extract(projectInfo);
+		                                   new ModuleScanner(), new BelongingnessScanner()).extract(projectInfo);
 
 	}
 

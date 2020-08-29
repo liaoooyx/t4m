@@ -27,7 +27,7 @@ class MetricsCalculatorTest {
 		T4MExtractor t4MExtractor = new T4MExtractor();
 		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner(), new ClassScanner(),
 		                                   new PackageScanner(), new ModuleScanner(),
-		                                   new DependencyScanner(), new SourceCodeResolver(),
+		                                   new BelongingnessScanner(), new SourceCodeResolver(),
 		                                   new MetricsCalculator()).extract(projectInfo);
 	}
 

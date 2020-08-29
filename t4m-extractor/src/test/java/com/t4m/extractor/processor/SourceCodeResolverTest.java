@@ -24,7 +24,7 @@ class SourceCodeResolverTest {
 		projectInfo = new ProjectInfo(path, "/build;/out;/output;", GlobalProperties.DEFAULT_DEPENDENCY_PATH);
 		T4MExtractor t4MExtractor = new T4MExtractor();
 		t4MExtractor.setCustomScannerChain(new DirectoryFileScanner(), new ClassScanner(), new PackageScanner(),
-		                                   new ModuleScanner(), new DependencyScanner(), new SourceCodeResolver())
+		                                   new ModuleScanner(), new BelongingnessScanner(), new SourceCodeResolver())
 		            .extract(projectInfo);
 	}
 

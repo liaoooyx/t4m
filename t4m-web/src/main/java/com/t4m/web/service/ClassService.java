@@ -34,7 +34,7 @@ public class ClassService {
 		                         "Physical Code Lines (JavaParser)", "Comment Lines (JavaParser)",
 		                         "% of Comment Lines (JavaParser)"});
 		for (ProjectInfo projectInfo : ProjectRecordUtil.getProjectInfoList()) {
-			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getClassList(), className);
+			ClassInfo classInfo = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), className);
 			String[] tempRow;
 			if (classInfo == null) {
 				tempRow = SLOCDatasetUtil.formatRowForTableChart(projectInfo.getCreateDate());

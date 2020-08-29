@@ -42,7 +42,6 @@ public class ProcessChain {
 		}
 		ProcessNode scanner = getNextScanner();
 		scanner.scan(projectInfo, this);
-
 	}
 
 
