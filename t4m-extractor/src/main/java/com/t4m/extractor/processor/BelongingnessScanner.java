@@ -118,6 +118,7 @@ public class BelongingnessScanner implements ProcessNode {
 	 * @param previousPkg The pointer
 	 * @param projectInfo The target project
 	 */
+
 	private void recursivePackageBelongingness(File dir, PackageInfo previousPkg, ProjectInfo projectInfo) {
 		if (dir.isDirectory()) {
 			// Get the package under the current path

@@ -48,8 +48,7 @@ public class MethodInfo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MethodInfo{" + "rangeLocator=" + rangeLocator + ", methodDeclarationString='" +
-				methodDeclarationString + '\'' + '}';
+		return "MethodInfo{" + "rangeLocator=" + rangeLocator + ", methodDeclarationString='" + methodDeclarationString + '\'' + '}';
 	}
 
 	@Override
@@ -59,13 +58,12 @@ public class MethodInfo implements Serializable {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		MethodInfo that = (MethodInfo) o;
-		return Objects.equals(fullyQualifiedName, that.fullyQualifiedName) && Objects.equals(rangeLocator,
-		                                                                                     that.rangeLocator);
+		return Objects.equals(fullyQualifiedName, that.fullyQualifiedName) && Objects.equals(rangeLocator, that.rangeLocator);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fullyQualifiedName, rangeLocator);
+		return Objects.hashCode(fullyQualifiedName) + Objects.hashCode(rangeLocator);
 	}
 
 	public String getShortName() {
@@ -216,6 +214,7 @@ public class MethodInfo implements Serializable {
 
 	/**
 	 * The values of paramsTypeAsClassInfoListMap are multiple lists, this method will flat them into one list.
+	 *
 	 * @return a flatten list of {@code ClassInfo} objects
 	 */
 	public List<ClassInfo> getParamsTypeAsClassInfoList() {

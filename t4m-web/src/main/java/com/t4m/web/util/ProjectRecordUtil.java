@@ -32,7 +32,7 @@ public class ProjectRecordUtil {
 	public static List<ProjectInfo> updateProjectInfoRecord() {
 		T4MSerializer serializer = new T4MProjectInfoSerializer();
 		projectInfoList = serializer.deserializeAll();
-		return serializer.deserializeAll();
+		return projectInfoList;
 	}
 
 	public static List<ProjectInfo> getProjectInfoList() {

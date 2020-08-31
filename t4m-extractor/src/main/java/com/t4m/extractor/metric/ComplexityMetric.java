@@ -34,10 +34,8 @@ public class ComplexityMetric implements ClassLevelMetric {
 			} else if (childNode instanceof IfStmt) {
 				cyclomaticComplexityCount += 1;
 			} else if (childNode instanceof SwitchEntry) {
-				// default case does not have label.
-				cyclomaticComplexityCount += ((SwitchEntry) childNode).getLabels().isEmpty() ? 1
-				                                                                             : ((SwitchEntry) childNode)
-						                             .getLabels().size();
+				// hidden default case does not have label.
+				cyclomaticComplexityCount += ((SwitchEntry) childNode).getLabels().isEmpty() ? 1 : ((SwitchEntry) childNode).getLabels().size();
 			} else if (childNode instanceof CatchClause) {
 				cyclomaticComplexityCount += 1;
 			} else if (childNode instanceof BinaryExpr) {

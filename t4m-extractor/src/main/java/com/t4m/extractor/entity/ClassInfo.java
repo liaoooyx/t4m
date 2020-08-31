@@ -59,11 +59,13 @@ public class ClassInfo implements Serializable {
 	0--SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE；
 	1--SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
 	2--SLOCType.COMMENT_LINES_FROM_SOURCE_FILE；
-	3--SLOCType.LOGIC_CODE_LINES_FROM_AST；
-	4--SLOCType.PHYSICAL_CODE_LINES_FROM_AST；
-	5--SLOCType.COMMENT_LINES_FROM_AST
+	3--SLOCType.TOTAL_LINES_FROM_SOURCE_FILE；
+	4--SLOCType.LOGIC_CODE_LINES_FROM_AST；
+	5--SLOCType.PHYSICAL_CODE_LINES_FROM_AST；
+	6--SLOCType.COMMENT_LINES_FROM_AST
+	7--SLOCType.TOTAL_LINES_FROM_AST
 	*/
-	private int[] slocArray = new int[6];
+	private int[] slocArray = new int[8];
 	// Response For a Class
 	private int responseForClass;
 	// Inheritance
@@ -454,9 +456,11 @@ public class ClassInfo implements Serializable {
 		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, 0);
 		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE, 0);
 		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE, 0);
+		this.slocCounterMap.put(SLOCType.TOTAL_LINES_FROM_SOURCE_FILE, 0);
 		this.slocCounterMap.put(SLOCType.LOGIC_CODE_LINES_FROM_AST, 0);
 		this.slocCounterMap.put(SLOCType.COMMENT_LINES_FROM_AST, 0);
 		this.slocCounterMap.put(SLOCType.PHYSICAL_CODE_LINES_FROM_AST, 0);
+		this.slocCounterMap.put(SLOCType.TOTAL_LINES_FROM_AST, 0);
 	}
 
 	public enum ClassModifier {
@@ -493,9 +497,11 @@ public class ClassInfo implements Serializable {
 		LOGIC_CODE_LINES_FROM_SOURCE_FILE,
 		PHYSICAL_CODE_LINES_FROM_SOURCE_FILE,
 		COMMENT_LINES_FROM_SOURCE_FILE,
+		TOTAL_LINES_FROM_SOURCE_FILE,
 		LOGIC_CODE_LINES_FROM_AST,
 		PHYSICAL_CODE_LINES_FROM_AST,
-		COMMENT_LINES_FROM_AST
+		COMMENT_LINES_FROM_AST,
+		TOTAL_LINES_FROM_AST
 	}
 
 	public enum ClassDeclaration {

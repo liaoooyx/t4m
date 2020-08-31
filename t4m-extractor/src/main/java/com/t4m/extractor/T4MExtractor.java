@@ -1,5 +1,6 @@
 package com.t4m.extractor;
 
+import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.entity.ProjectInfo;
 import com.t4m.extractor.processor.*;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class T4MExtractor {
 		processChain.scan(projectInfo);
 		LOGGER.info("************************************* Finish scanning *************************************");
 		long end = System.currentTimeMillis();
-		LOGGER.info("The scanning process finished in {}s",(end-start)/1000);
+		LOGGER.info("The scanning process finished in {}s", (end - start) / 1000);
 		return projectInfo;
 	}
 
@@ -46,6 +47,14 @@ public class T4MExtractor {
 	public T4MExtractor setCustomScannerChain(ProcessNode... t4MProcesses) {
 		Arrays.asList(t4MProcesses).forEach(processChain::addScanner);
 		return this;
+	}
+
+	public static void main(String[] args) {
+		ProjectInfo projectInfo = new ProjectInfo("/Users/liao/myProjects/IdeaProjects/t4m", GlobalProperties.DEFAULT_EXCLUDED_PATH,
+		                                          GlobalProperties.DEFAULT_DEPENDENCY_PATH);
+		T4MExtractor t4MExtractor = new T4MExtractor();
+		t4MExtractor.extract(projectInfo);
+		System.out.println();
 	}
 
 }

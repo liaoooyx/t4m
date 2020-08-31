@@ -390,18 +390,21 @@ public class ClassService {
 			List<Object> cols = new ArrayList<>();
 			int codeLine = 0;
 			int commentLine = 0;
+			int totalLine = 0;
 			if (flag == FLAG_ALL_CLASS) {
 				Map<ClassInfo.SLOCType, Integer> counterMap = classInfo.getSlocCounterMap();
 				codeLine = counterMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_AST);
 				commentLine = counterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_AST);
+				totalLine = counterMap.get(ClassInfo.SLOCType.TOTAL_LINES_FROM_AST);
 			} else if (flag == FLAG_MAIN_PUBLIC_CLASS) {
 				Map<ClassInfo.SLOCType, Integer> counterMap = classInfo.getSlocCounterMap();
 				codeLine = counterMap.get(ClassInfo.SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE);
 				commentLine = counterMap.get(ClassInfo.SLOCType.COMMENT_LINES_FROM_SOURCE_FILE);
+				totalLine = counterMap.get(ClassInfo.SLOCType.TOTAL_LINES_FROM_SOURCE_FILE);
 			}
 			cols.add(codeLine); // code line
 			cols.add(commentLine); // comment line
-			String percentage = MathUtil.percentage(commentLine, (float) codeLine + commentLine);
+			String percentage = MathUtil.percentage(commentLine, totalLine);
 			cols.add(percentage);
 			cols.add(classInfo.getFullyQualifiedName()); // class qualified name
 			cols.add(classInfo.getPackageInfo().getModuleInfo().getRelativePath()); // of which module

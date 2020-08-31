@@ -108,9 +108,11 @@ class MetricsCalculatorTest {
 		assertEquals(10, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
 		assertEquals(12, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
 		assertEquals(16, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
-		assertEquals(8, slocArray[3]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
-		assertEquals(10, slocArray[4]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
-		assertEquals(19, slocArray[5]); //SLOCType.COMMENT_LINES_FROM_AST
+		assertEquals(18, slocArray[3]); //SLOCType.TOTAL_LINES_FROM_SOURCE_FILE
+		assertEquals(8, slocArray[4]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
+		assertEquals(10, slocArray[5]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
+		assertEquals(19, slocArray[6]); //SLOCType.COMMENT_LINES_FROM_AST
+		assertEquals(28, slocArray[7]); //SLOCType.TOTAL_LINES_FROM_AST
 	}
 
 	@Test
@@ -133,22 +135,27 @@ class MetricsCalculatorTest {
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(),
 			                                                               "com.simulation.core");
 			int[] slocArray = packageInfo.getSlocArrayForCurrentPkg();
-			assertEquals(65, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
-			assertEquals(87, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
-			assertEquals(39, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
-			assertEquals(61, slocArray[3]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
-			assertEquals(83, slocArray[4]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
-			assertEquals(41, slocArray[5]); //SLOCType.COMMENT_LINES_FROM_AST
+			assertEquals(72, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
+			assertEquals(95, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+			assertEquals(37, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
+			assertEquals(108, slocArray[3]); //SLOCType.TOTAL_LINES_FROM_SOURCE_FILE
+			assertEquals(67, slocArray[4]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
+			assertEquals(89, slocArray[5]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
+			assertEquals(39, slocArray[6]); //SLOCType.COMMENT_LINES_FROM_AST
+			assertEquals(125, slocArray[7]); //SLOCType.TOTAL_LINES_FROM_AST
+
 		}, () -> {
 			PackageInfo packageInfo = EntityUtil.getPackageByQualifiedName(projectInfo.getPackageList(),
 			                                                               "com.simulation.core");
 			int[] slocArray = packageInfo.getSlocArrayForCurrentAndSubPkg();
-			assertEquals(230, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
-			assertEquals(306, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
-			assertEquals(94, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
-			assertEquals(218, slocArray[3]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
-			assertEquals(311, slocArray[4]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
-			assertEquals(97, slocArray[5]); //SLOCType.COMMENT_LINES_FROM_AST
+			assertEquals(237, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
+			assertEquals(314, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+			assertEquals(92, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
+			assertEquals(380, slocArray[3]); //SLOCType.TOTAL_LINES_FROM_SOURCE_FILE
+			assertEquals(224, slocArray[4]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
+			assertEquals(317, slocArray[5]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
+			assertEquals(95, slocArray[6]); //SLOCType.COMMENT_LINES_FROM_AST
+			assertEquals(409, slocArray[7]); //SLOCType.TOTAL_LINES_FROM_AST
 		});
 	}
 
@@ -157,12 +164,14 @@ class MetricsCalculatorTest {
 	void testModuleLevelSLOC() {
 		ModuleInfo moduleInfo = EntityUtil.getModuleByShortName(projectInfo.getModuleList(), "JSimulation");
 		int[] slocArray = moduleInfo.getSlocArray();
-		assertEquals(230, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
-		assertEquals(306, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
-		assertEquals(94, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
-		assertEquals(218, slocArray[3]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
-		assertEquals(311, slocArray[4]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
-		assertEquals(97, slocArray[5]); //SLOCType.COMMENT_LINES_FROM_AST
+		assertEquals(237, slocArray[0]); //SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE
+		assertEquals(314, slocArray[1]); //SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE
+		assertEquals(92, slocArray[2]); //SLOCType.COMMENT_LINES_FROM_SOURCE_FILE
+		assertEquals(380, slocArray[3]); //SLOCType.TOTAL_LINES_FROM_SOURCE_FILE
+		assertEquals(224, slocArray[4]); //SLOCType.LOGIC_CODE_LINES_FROM_AST
+		assertEquals(317, slocArray[5]); //SLOCType.PHYSICAL_CODE_LINES_FROM_AST
+		assertEquals(95, slocArray[6]); //SLOCType.COMMENT_LINES_FROM_AST
+		assertEquals(409, slocArray[7]); //SLOCType.TOTAL_LINES_FROM_AST
 	}
 
 	@Test

@@ -3,21 +3,25 @@ package com.simulation.core;
 public class CohesionClass {
 
 	int a,b,c,d,e,f,g;
-	
+	static int x;
+
 	void a() {
 		System.out.println(a);
 		System.out.println(b);
+		System.out.println(x);
 	}
-	
+
 	void b() {
 		System.out.println(a);
 		System.out.println(b);
+		System.out.println(x);
 	}
-	
+
 	void c() {
 		b();
 		System.out.println(c);
 		c();
+		System.out.println(x);
 	}
 	
 	void d() {
@@ -39,6 +43,7 @@ public class CohesionClass {
 	void h() {
 		System.out.println(e);
 		System.out.println(g);
+		System.out.println(x);
 	}
-	
 }
+

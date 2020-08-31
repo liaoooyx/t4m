@@ -102,4 +102,10 @@ public class T4MProjectInfoSerializer implements T4MSerializer {
 			LOGGER.debug("Failed to delete file [{}]", file.getAbsolutePath(), e);
 		}
 	}
+
+	public static void main(String[] args) {
+		T4MSerializer serializer = new T4MProjectInfoSerializer();
+		List<ProjectInfo> projectInfoList = serializer.deserializeAll();
+		System.out.println();
+	}
 }

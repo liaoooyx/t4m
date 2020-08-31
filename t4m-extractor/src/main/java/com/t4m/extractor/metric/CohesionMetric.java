@@ -14,9 +14,6 @@ public class CohesionMetric implements ClassLevelMetric {
 
 	@Override
 	public void calculate(ClassInfo classInfo) {
-		if (classInfo.getShortName().equals("CohesionClass")) {
-			System.out.println();
-		}
 		for (MethodInfo methodInfo : classInfo.getMethodInfoList()) {
 			initDirectCallingConnection(methodInfo);
 		}
@@ -41,8 +38,7 @@ public class CohesionMetric implements ClassLevelMetric {
 						isolatedScopeMethodsList.add(scopeMethodSet);
 					}
 				}
-				fillMethodPairFromSet(directlyConnectedMethodPairSet,
-				                      fieldInfo.getBeingPassingAccessedByLocalMethodSet());
+				fillMethodPairFromSet(directlyConnectedMethodPairSet, fieldInfo.getBeingPassingAccessedByLocalMethodSet());
 			}
 		}
 		for (Set<MethodInfo> scopeMethodSet : isolatedScopeMethodsList) {
@@ -53,7 +49,7 @@ public class CohesionMetric implements ClassLevelMetric {
 		int numberOfDirectConnections = directlyConnectedMethodPairSet.size();
 		int numberOfAllConnections = allConnectedMethodPairSet.size();
 		int numberOfMethods = classInfo.getNumberOfMethods();
-		int numberOfPossibleConnections = numberOfMethods * (numberOfMethods - 1) / 2;
+		float numberOfPossibleConnections = (float) numberOfMethods * (numberOfMethods - 1) / 2;
 		String tcc = MathUtil.divide(numberOfDirectConnections, numberOfPossibleConnections);
 		String lcc = MathUtil.divide(numberOfAllConnections, numberOfPossibleConnections);
 		classInfo.setLackOfCohesionOfMethods4(lcom);
@@ -69,7 +65,10 @@ public class CohesionMetric implements ClassLevelMetric {
 		if (methodInfos.length > 1) {
 			for (int i = 0; i < methodInfos.length - 1; i++) {
 				for (int j = i + 1; j < methodInfos.length; j++) {
-					methodPairSet.add(new MethodPair(methodInfos[i], methodInfos[j]));
+					MethodPair methodPair = new MethodPair(methodInfos[i], methodInfos[j]);
+					if (!methodPairSet.contains(methodPair)) {
+						methodPairSet.add(methodPair);
+					}
 				}
 			}
 		}
@@ -96,8 +95,7 @@ public class CohesionMetric implements ClassLevelMetric {
 	 * @param interruptList Avoid cycle dependency.
 	 */
 	private void initScopeField(
-			FieldInfo fieldInfo, Set<FieldInfo> scopeFieldSet, Set<MethodInfo> scopeMethodSet,
-			List<FieldInfo> interruptList) {
+			FieldInfo fieldInfo, Set<FieldInfo> scopeFieldSet, Set<MethodInfo> scopeMethodSet, List<FieldInfo> interruptList) {
 		interruptList.add(fieldInfo);
 		scopeFieldSet.add(fieldInfo);
 		scopeMethodSet.addAll(fieldInfo.getBeingPassingAccessedByLocalMethodSet());
@@ -123,7 +121,6 @@ public class CohesionMetric implements ClassLevelMetric {
 					initMethodPassingAccessToField(fieldInfo, afferentMethod, new ArrayList<>());
 				}
 			}
-
 		}
 	}
 
@@ -140,8 +137,7 @@ public class CohesionMetric implements ClassLevelMetric {
 		interruptList.add(currentMethod);
 		targetField.getBeingPassingAccessedByLocalMethodSet().add(currentMethod);
 		for (MethodInfo afferentMethod : currentMethod.getBeingAccessedByLocalMethodSet()) {
-			if (!interruptList.contains(
-					afferentMethod)) {// Avoid recursion or dependency circle that leading to infinite loops A->...->A
+			if (!interruptList.contains(afferentMethod)) {// Avoid recursion or dependency circle that leading to infinite loops A->...->A
 				initMethodPassingAccessToField(targetField, afferentMethod, interruptList);
 			}
 		}
@@ -179,14 +175,13 @@ public class CohesionMetric implements ClassLevelMetric {
 			if (o == null || getClass() != o.getClass())
 				return false;
 			MethodPair methodPair = (MethodPair) o;
-			return (Objects.equals(m1, methodPair.m1) && Objects.equals(m2, methodPair.m2)) || (Objects.equals(m1,
-			                                                                                                   methodPair.m2) &&
-					Objects.equals(m2, methodPair.m1));
+			return (Objects.equals(m1, methodPair.m1) && Objects.equals(m2, methodPair.m2)) || (Objects.equals(m1, methodPair.m2) && Objects.equals(
+					m2, methodPair.m1));
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(m1, m2);
+			return m1.hashCode() + m2.hashCode();
 		}
 	}
 

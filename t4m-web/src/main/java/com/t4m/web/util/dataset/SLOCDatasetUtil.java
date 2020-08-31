@@ -34,21 +34,21 @@ public class SLOCDatasetUtil {
 	public static void insertCommonRowsForTableChart(String[] tempRow, int[] slocArray) {
 		tempRow[1] = String.valueOf(slocArray[1]);
 		tempRow[2] = String.valueOf(slocArray[2]);
-		tempRow[3] = MathUtil.percentage(slocArray[2], slocArray[1]);
-		tempRow[4] = String.valueOf(slocArray[4]);
-		tempRow[5] = String.valueOf(slocArray[5]);
-		tempRow[6] = MathUtil.percentage(slocArray[5], slocArray[4]);
+		tempRow[3] = MathUtil.percentage(slocArray[2], slocArray[3]);
+		tempRow[4] = String.valueOf(slocArray[5]);
+		tempRow[5] = String.valueOf(slocArray[6]);
+		tempRow[6] = MathUtil.percentage(slocArray[6], slocArray[7]);
 	}
 
 	public static void insertCommonRowsForTable(Map<String, Object> row, int[] slocArray) {
 		row.put("logicCodeLinesSF", slocArray[0]);
 		row.put("physicalCodeLinesSF", slocArray[1]);
 		row.put("CommentLinesSF", slocArray[2]);
-		row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], (float) slocArray[1] + slocArray[2]));
-		row.put("logicCodeLinesJP", slocArray[3]);
-		row.put("physicalCodeLinesJP", slocArray[4]);
-		row.put("CommentLinesJP", slocArray[5]);
-		row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[5], (float) slocArray[4] + slocArray[5]));
+		row.put("percentageOfCommentSF", MathUtil.percentage(slocArray[2], slocArray[3]));
+		row.put("logicCodeLinesJP", slocArray[4]);
+		row.put("physicalCodeLinesJP", slocArray[5]);
+		row.put("CommentLinesJP", slocArray[6]);
+		row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[6], slocArray[7]));
 	}
 
 

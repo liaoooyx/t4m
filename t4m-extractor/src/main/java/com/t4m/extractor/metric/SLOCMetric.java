@@ -17,7 +17,7 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 
 	@Override
 	public void calculate(ClassInfo classInfo) {
-		int[] slocArray = new int[6];
+		int[] slocArray = new int[8];
 		Arrays.fill(slocArray, 0);
 		sumSLOC(slocArray, classInfo.getSlocCounterMap());
 		classInfo.setSlocArray(slocArray);
@@ -33,7 +33,7 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 
 	@Override
 	public void calculate(ModuleInfo moduleInfo) {
-		int[] slocArray = new int[6];
+		int[] slocArray = new int[8];
 		Arrays.fill(slocArray, 0);
 		for (PackageInfo packageInfo : moduleInfo.getPackageList()) {
 			sumSLOC(slocArray, packageInfo.getSlocArrayForCurrentPkg());
@@ -45,9 +45,11 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 		slocArray[0] += slocMap.get(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE);
 		slocArray[1] += slocMap.get(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE);
 		slocArray[2] += slocMap.get(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE);
-		slocArray[3] += slocMap.get(SLOCType.LOGIC_CODE_LINES_FROM_AST);
-		slocArray[4] += slocMap.get(SLOCType.PHYSICAL_CODE_LINES_FROM_AST);
-		slocArray[5] += slocMap.get(SLOCType.COMMENT_LINES_FROM_AST);
+		slocArray[3] += slocMap.get(SLOCType.TOTAL_LINES_FROM_SOURCE_FILE);
+		slocArray[4] += slocMap.get(SLOCType.LOGIC_CODE_LINES_FROM_AST);
+		slocArray[5] += slocMap.get(SLOCType.PHYSICAL_CODE_LINES_FROM_AST);
+		slocArray[6] += slocMap.get(SLOCType.COMMENT_LINES_FROM_AST);
+		slocArray[7] += slocMap.get(SLOCType.TOTAL_LINES_FROM_AST);
 	}
 
 	private void sumSLOC(int[] slocArray, int[] inputSLOC) {
@@ -57,10 +59,12 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 		slocArray[3] += inputSLOC[3];
 		slocArray[4] += inputSLOC[4];
 		slocArray[5] += inputSLOC[5];
+		slocArray[6] += inputSLOC[6];
+		slocArray[7] += inputSLOC[7];
 	}
 
 	private int[] sumSLOCForCurrentPkg(PackageInfo packageInfo) {
-		int[] slocArray = new int[6];
+		int[] slocArray = new int[8];
 		Arrays.fill(slocArray, 0);
 		for (ClassInfo classInfo : packageInfo.getAllClassList()) {
 			sumSLOC(slocArray, classInfo.getSlocArray());
@@ -94,10 +98,12 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 		private int logicLines;
 		private int physicalLines;
 		private int commentLines;
+		private int totalLines;
 
 		/**
 		 * After removing all the comments, classify the line of code: that is,
 		 * the code line, the bracket line, and the blank line
+		 *
 		 * @param currentLine The content of current line
 		 */
 		private void countNonCommentCodeLine(String currentLine) {
@@ -113,6 +119,7 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 		 * After removing the inline block comment, classify the content:
 		 * whether there is a multi-line block comment start character, whether there is a line comment start character.
 		 * Note that this method will change the value of {@link #inBlockComment}
+		 *
 		 * @param currentLine The content of current line
 		 */
 		private void checkRestCodeLineWithoutSingleBlockComment(String currentLine) {
@@ -131,8 +138,10 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 
 		/**
 		 * 判断是否为行注释，单行块注释，或多行块注释，并计数。注意此方法会改变{@code inBlockComment}
-		 * Determine whether it is a line comment, a inline block comment, or a multi-line block comment, and then count.
+		 * Determine whether it is a line comment, a inline block comment, or a multi-line block comment, and then
+		 * count.
 		 * Note that this method will change the value of @link SLOCMetric#inBlockComment
+		 *
 		 * @param currentLine The content of current line
 		 */
 		private void countAndCheckToMeetInBlockComment(String currentLine) {
@@ -190,6 +199,7 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 			String currentLine = sourceLine.strip();
 			// sloc计数
 			if (!"".equals(currentLine)) {
+				totalLines++;
 				// 将引号内容删除：".*?"
 				currentLine = currentLine.replaceAll("\".*?\"", "foo");
 				if (inBlockComment) {
@@ -219,12 +229,14 @@ public class SLOCMetric implements ClassLevelMetric, PackageLevelMetric, ModuleL
 			counterMap.replace(SLOCType.LOGIC_CODE_LINES_FROM_SOURCE_FILE, logicLines);
 			counterMap.replace(SLOCType.COMMENT_LINES_FROM_SOURCE_FILE, commentLines);
 			counterMap.replace(SLOCType.PHYSICAL_CODE_LINES_FROM_SOURCE_FILE, physicalLines);
+			counterMap.replace(SLOCType.TOTAL_LINES_FROM_SOURCE_FILE, totalLines);
 		}
 
 		public void setASTSLOCToCounterMap(Map<SLOCType, Integer> counterMap) {
 			counterMap.replace(SLOCType.LOGIC_CODE_LINES_FROM_AST, logicLines);
 			counterMap.replace(SLOCType.COMMENT_LINES_FROM_AST, commentLines);
 			counterMap.replace(SLOCType.PHYSICAL_CODE_LINES_FROM_AST, physicalLines);
+			counterMap.replace(SLOCType.TOTAL_LINES_FROM_AST, totalLines);
 		}
 	}
 

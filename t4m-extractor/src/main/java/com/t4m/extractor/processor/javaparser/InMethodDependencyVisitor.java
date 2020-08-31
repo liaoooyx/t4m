@@ -68,17 +68,15 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	public void visit(ConstructorDeclaration n, Void arg) {
 		ClassInfo currentClassInfo = JavaParserUtil.resolveCurrentClassInfo(n, projectInfo);
 		if (currentClassInfo == null) {
-			LOGGER.debug(
-					"Cannot resolve current constructor declaration. It may be declared in the class within a method.");
+			LOGGER.debug("Cannot resolve current constructor declaration. It may be declared in the class within a method.");
 			return;
 		}
-		MethodInfo currentMethodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(
-				currentClassInfo.getMethodInfoList(),
-				currentClassInfo.getFullyQualifiedName() + "." + n.getNameAsString(), n.getRange().orElse(null));
+		MethodInfo currentMethodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(currentClassInfo.getMethodInfoList(),
+		                                                                                  currentClassInfo.getFullyQualifiedName() + "." +
+				                                                                                  n.getNameAsString(), n.getRange().orElse(null));
 		if (currentMethodInfo == null) {
-			LOGGER.error(
-					"Need to check the code：Cannot resolve current constructor declaration to MethodInfo: [{}] in [{}].",
-					n.getDeclarationAsString(), currentClassInfo.getFullyQualifiedName());
+			LOGGER.error("Need to check the code：Cannot resolve current constructor declaration to MethodInfo: [{}] in [{}].",
+			             n.getDeclarationAsString(), currentClassInfo.getFullyQualifiedName());
 			return;
 		}
 		BlockStmt body = n.getBody();
@@ -88,14 +86,12 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		// Metadata that relevant to RFC metric.
 		try {
 			String methodQualifiedSignature = n.resolve().getQualifiedSignature();
-			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(),
-			                                              methodQualifiedSignature);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(), methodQualifiedSignature);
 		} catch (UnsolvedSymbolException e) {
 			// For RFC: cannot locate the method precisely.
 			// Using the short path method name as signature, may have chance to resolve the overloaded method.
 			currentClassInfo.getUnresolvedExceptionList().add("When resolving ConstructorDeclaration: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(),
-			                                              n.getSignature().toString());
+			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(), n.getSignature().toString());
 		}
 	}
 
@@ -106,27 +102,24 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 			LOGGER.debug("Cannot resolve current method declaration. It may be declared in the class within a method.");
 			return;
 		}
-		MethodInfo currentMethodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(
-				currentClassInfo.getMethodInfoList(),
-				currentClassInfo.getFullyQualifiedName() + "." + n.getNameAsString(), n.getRange().orElse(null));
+		MethodInfo currentMethodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(currentClassInfo.getMethodInfoList(),
+		                                                                                  currentClassInfo.getFullyQualifiedName() + "." +
+				                                                                                  n.getNameAsString(), n.getRange().orElse(null));
 		if (currentMethodInfo == null) {
-			LOGGER.error(
-					"Need to check the code：Cannot resolve current method declaration to MethodInfo: [{}] in [{}].",
-					n.getDeclarationAsString(), currentClassInfo.getFullyQualifiedName());
+			LOGGER.error("Need to check the code：Cannot resolve current method declaration to MethodInfo: [{}] in [{}].", n.getDeclarationAsString(),
+			             currentClassInfo.getFullyQualifiedName());
 			return;
 		}
 		n.getBody().ifPresent(body -> resolveMetadataForMetric(body, currentClassInfo, currentMethodInfo));
 		// Metadata that relevant to RFC metric.
 		try {
 			String methodQualifiedSignature = n.resolve().getQualifiedSignature();
-			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(),
-			                                              methodQualifiedSignature);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(), methodQualifiedSignature);
 		} catch (UnsolvedSymbolException e) {
 			// For RFC: cannot locate the method precisely.
 			// Using the short path method name as signature, may have chance to resolve the overloaded method.
 			currentClassInfo.getUnresolvedExceptionList().add("When resolving MethodDeclaration: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(),
-			                                              n.getSignature().toString());
+			RFCMetric.countRFCMethodQualifiedSignatureMap(currentClassInfo.getLocalMethodCallQualifiedSignatureMap(), n.getSignature().toString());
 		}
 	}
 
@@ -144,11 +137,10 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		Set<FieldInfo> fieldInfoSet = currentMethodInfo.getFieldAccessSet();
 		// RFC的所有方法全限定签名：只包括方法内的调用
 		// RFC metadata: qualified method signatures that invoked in the method blocks.
-		Map<String, Integer> rfcMethodQualifiedSignatureMap =
-				currentClassInfo.getOutClassMethodCallQualifiedSignatureMap();
+		Map<String, Integer> rfcMethodQualifiedSignatureMap = currentClassInfo.getOutClassMethodCallQualifiedSignatureMap();
 
-		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet,
-		                                 fieldInfoSet, rfcMethodQualifiedSignatureMap);
+		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet, fieldInfoSet,
+		                                 rfcMethodQualifiedSignatureMap);
 	}
 
 	/**
@@ -166,26 +158,23 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		// Ignored
 		Map<String, Integer> rfcMethodQualifiedSignatureMap = new HashMap<>();
 
-		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet,
-		                                 fieldInfoSet, rfcMethodQualifiedSignatureMap);
+		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet, fieldInfoSet,
+		                                 rfcMethodQualifiedSignatureMap);
 	}
 
 	/**
 	 * Scan the children nodes and add dependencies after scanning.
 	 */
 	private void commonOperationToResolveMetaInfo(
-			Node body, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
-			Set<MethodInfo> localMethodInfoList, Set<FieldInfo> fieldInfoSet,
-			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+			Node body, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList, Set<MethodInfo> localMethodInfoList,
+			Set<FieldInfo> fieldInfoSet, Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 
 		// Scan the children nodes
-		scanChildNode(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList, fieldInfoSet,
-		              rfcMethodQualifiedSignatureMap);
+		scanChildNode(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoList, fieldInfoSet, rfcMethodQualifiedSignatureMap);
 
 		// Add dependencies
 		for (String dependencyClassName : dependencySet) {
-			ClassInfo referenceClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
-			                                                              dependencyClassName);
+			ClassInfo referenceClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(), dependencyClassName);
 			if (referenceClass != null) {
 				EntityUtil.addDependency(currentClassInfo, referenceClass);
 			}
@@ -196,36 +185,32 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 * Recursively scan the child nodes, storing the necessary metadata to the input parameters.
 	 */
 	private void scanChildNode(
-			Node n, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
-			Set<MethodInfo> localMethodInfoSet, Set<FieldInfo> fieldInfoSet,
-			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+			Node n, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList, Set<MethodInfo> localMethodInfoSet,
+			Set<FieldInfo> fieldInfoSet, Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		if (n.getChildNodes().isEmpty()) {
 			return;
 		}
 		for (Node node : n.getChildNodes()) {
 			if (node instanceof MethodCallExpr) {
-				resolveMethodCallExpr((MethodCallExpr) node, currentClassInfo, dependencySet, exceptionList,
-				                      localMethodInfoSet, rfcMethodQualifiedSignatureMap);
+				resolveMethodCallExpr((MethodCallExpr) node, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet,
+				                      rfcMethodQualifiedSignatureMap);
 			} else if (node instanceof MethodReferenceExpr) {
-				resolveMethodReferenceExpr((MethodReferenceExpr) node, currentClassInfo, dependencySet, exceptionList,
-				                           localMethodInfoSet, rfcMethodQualifiedSignatureMap);
+				resolveMethodReferenceExpr((MethodReferenceExpr) node, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet,
+				                           rfcMethodQualifiedSignatureMap);
 			} else if (node instanceof ObjectCreationExpr) {
-				resolveObjectCreationExpr((ObjectCreationExpr) node, currentClassInfo, dependencySet, exceptionList,
-				                          localMethodInfoSet, rfcMethodQualifiedSignatureMap);
+				resolveObjectCreationExpr((ObjectCreationExpr) node, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet,
+				                          rfcMethodQualifiedSignatureMap);
 			} else if (node instanceof ExplicitConstructorInvocationStmt) {
-				resolveExplicitConstructorInvocationStmt((ExplicitConstructorInvocationStmt) node, currentClassInfo,
-				                                         dependencySet, exceptionList, localMethodInfoSet,
-				                                         rfcMethodQualifiedSignatureMap);
+				resolveExplicitConstructorInvocationStmt((ExplicitConstructorInvocationStmt) node, currentClassInfo, dependencySet, exceptionList,
+				                                         localMethodInfoSet, rfcMethodQualifiedSignatureMap);
 			} else if (node instanceof FieldAccessExpr) {
-				resolveFieldAccessExpr((FieldAccessExpr) node, currentClassInfo, dependencySet, exceptionList,
-				                       fieldInfoSet);
+				resolveFieldAccessExpr((FieldAccessExpr) node, currentClassInfo, dependencySet, exceptionList, fieldInfoSet);
 			} else if (node instanceof NameExpr) {
 				resolveNameExpr((NameExpr) node, currentClassInfo, dependencySet, exceptionList, fieldInfoSet);
 			} else if (node instanceof ClassOrInterfaceType) {
 				resolveClassOrInterfaceType((ClassOrInterfaceType) node, dependencySet, exceptionList);
 			}
-			scanChildNode(node, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet, fieldInfoSet,
-			              rfcMethodQualifiedSignatureMap);
+			scanChildNode(node, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet, fieldInfoSet, rfcMethodQualifiedSignatureMap);
 		}
 	}
 
@@ -241,26 +226,22 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 * That return type is the class to which the method of current MethodCallExpr node belongs.
 	 */
 	private void resolveMethodCallExpr(
-			MethodCallExpr methodCallExpr, ClassInfo currentClassInfo, Set<String> dependencySet,
-			List<String> exceptionList, Set<MethodInfo> localMethodInfoList,
-			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+			MethodCallExpr methodCallExpr, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
+			Set<MethodInfo> localMethodInfoList, Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		try {
 			ResolvedMethodDeclaration resolvedMethodDeclaration = methodCallExpr.resolve();
-			methodCallOrReference(resolvedMethodDeclaration, currentClassInfo, dependencySet, localMethodInfoList,
-			                      rfcMethodQualifiedSignatureMap);
+			methodCallOrReference(resolvedMethodDeclaration, currentClassInfo, dependencySet, localMethodInfoList, rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving MethodCallExpr: " + e.toString());
 			// For RFC: cannot locate the method precisely.
 			// Using the short path method name as signature, may have chance to resolve the overloaded method.
-			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, RFCMetric.UNSOLVED_METHOD_INVOCATION);
 			LOGGER.debug("Error occurred when resolving MethodCallExpr: {}", e.toString(), e);
 		} catch (Exception e) {
 			// For RFC: cannot locate the method precisely.
 			// Using the short path method name as signature, may have chance to resolve the overloaded method.
 			exceptionList.add("When resolving MethodCallExpr: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, RFCMetric.UNSOLVED_METHOD_INVOCATION);
 			LOGGER.debug("Unexpected error occurred when resolving MethodCallExpr: {}", e.toString(), e);
 		}
 	}
@@ -270,76 +251,63 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 * typically shown as a method parameter or at the right-hand side of the lambda expression.
 	 */
 	private void resolveMethodReferenceExpr(
-			MethodReferenceExpr methodReferenceExpr, ClassInfo currentClassInfo, Set<String> dependencySet,
-			List<String> exceptionList, Set<MethodInfo> localMethodInfoList,
-			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+			MethodReferenceExpr methodReferenceExpr, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
+			Set<MethodInfo> localMethodInfoList, Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		try {
 			ResolvedMethodDeclaration resolvedMethodDeclaration = methodReferenceExpr.resolve();
-			methodCallOrReference(resolvedMethodDeclaration, currentClassInfo, dependencySet, localMethodInfoList,
-			                      rfcMethodQualifiedSignatureMap);
+			methodCallOrReference(resolvedMethodDeclaration, currentClassInfo, dependencySet, localMethodInfoList, rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving MethodReferenceExpr: " + e.toString());
 			// For RFC: cannot locate the method precisely.
 			// Using the short path method name as signature, may have chance to resolve the overloaded method.
-			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, RFCMetric.UNSOLVED_METHOD_INVOCATION);
 			LOGGER.debug("Error occurred when resolving MethodReferenceExpr: {}", e.toString(), e);
 		} catch (Exception e) {
 			// For RFC: cannot locate the method precisely.
 			// Using the short path method name as signature, may have chance to resolve the overloaded method.
 			exceptionList.add("When resolving MethodReferenceExpr: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, RFCMetric.UNSOLVED_METHOD_INVOCATION);
 			LOGGER.debug("Unexpected error occurred when resolving MethodReferenceExpr: {}", e.toString(), e);
 		}
 	}
 
 	private void resolveObjectCreationExpr(
-			ObjectCreationExpr objectCreationExpr, ClassInfo currentClassInfo, Set<String> dependencySet,
-			List<String> exceptionList, Set<MethodInfo> localMethodInfoList,
-			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+			ObjectCreationExpr objectCreationExpr, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
+			Set<MethodInfo> localMethodInfoList, Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		try {
-			// Notice The child node of ObjectCreationExpr, ClassOrInterfaceType, is unresolvable.
+			// Notice that the child node of ObjectCreationExpr, ClassOrInterfaceType, is unresolvable.
 			ResolvedConstructorDeclaration constructorDeclaration = objectCreationExpr.resolve();
-			constructorCall(constructorDeclaration, currentClassInfo, dependencySet, localMethodInfoList,
-			                rfcMethodQualifiedSignatureMap);
+			constructorCall(constructorDeclaration, currentClassInfo, dependencySet, localMethodInfoList, rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			// For RFC: cannot locate the method precisely.
 			// Using the short path method name as signature, may have chance to resolve the overloaded method.
 			exceptionList.add("When resolving ObjectCreationExpr: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, RFCMetric.UNSOLVED_METHOD_INVOCATION);
 			LOGGER.debug("Error occurred when resolving ObjectCreationExpr: {}", e.toString(), e);
 		} catch (Exception e) {
 			// For RFC: cannot locate the method precisely.
 			// Using the short path method name as signature, may have chance to resolve the overloaded method.
 			exceptionList.add("When resolving ObjectCreationExpr: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, RFCMetric.UNSOLVED_METHOD_INVOCATION);
 			LOGGER.debug("Unexpected error occurred when resolving ObjectCreationExpr: {}", e.toString(), e);
 		}
 	}
 
 	private void resolveExplicitConstructorInvocationStmt(
-			ExplicitConstructorInvocationStmt constructorInvocationStmt, ClassInfo currentClassInfo,
-			Set<String> dependencySet, List<String> exceptionList, Set<MethodInfo> localMethodInfoList,
-			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+			ExplicitConstructorInvocationStmt constructorInvocationStmt, ClassInfo currentClassInfo, Set<String> dependencySet,
+			List<String> exceptionList, Set<MethodInfo> localMethodInfoList, Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		try {
 			// ExplicitConstructorInvocationStmt does not have child nodes
 			ResolvedConstructorDeclaration constructorDeclaration = constructorInvocationStmt.resolve();
-			constructorCall(constructorDeclaration, currentClassInfo, dependencySet, localMethodInfoList,
-			                rfcMethodQualifiedSignatureMap);
+			constructorCall(constructorDeclaration, currentClassInfo, dependencySet, localMethodInfoList, rfcMethodQualifiedSignatureMap);
 		} catch (UnsolvedSymbolException e) {
 			exceptionList.add("When resolving ExplicitConstructorInvocationStmt: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, RFCMetric.UNSOLVED_METHOD_INVOCATION);
 			LOGGER.debug("Error occurred when resolving ExplicitConstructorInvocationStmt: {}", e.toString(), e);
 		} catch (Exception e) {
 			exceptionList.add("When resolving ExplicitConstructorInvocationStmt: " + e.toString());
-			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap,
-			                                              RFCMetric.UNSOLVED_METHOD_INVOCATION);
-			LOGGER.debug("Unexpected error occurred when resolving ExplicitConstructorInvocationStmt: {}", e.toString(),
-			             e);
+			RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, RFCMetric.UNSOLVED_METHOD_INVOCATION);
+			LOGGER.debug("Unexpected error occurred when resolving ExplicitConstructorInvocationStmt: {}", e.toString(), e);
 		}
 	}
 
@@ -347,8 +315,8 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 * Field access. May be accessing the field of other classes, such as System.out
 	 */
 	private void resolveFieldAccessExpr(
-			FieldAccessExpr fieldAccessExpr, ClassInfo currentClassInfo, Set<String> dependencySet,
-			List<String> exceptionList, Set<FieldInfo> fieldInfoSet) {
+			FieldAccessExpr fieldAccessExpr, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
+			Set<FieldInfo> fieldInfoSet) {
 		try {
 			ResolvedValueDeclaration valueDeclaration = fieldAccessExpr.resolve();
 			ResolvedType resolvedType = valueDeclaration.getType();
@@ -356,8 +324,7 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 				String declaredClassName = resolvedType.asReferenceType().getQualifiedName();
 				dependencySet.add(declaredClassName);
 			}
-			FieldInfo fieldInfo = EntityUtil.getFieldByShortName(currentClassInfo.getFieldInfoList(),
-			                                                     valueDeclaration.getName());
+			FieldInfo fieldInfo = EntityUtil.getFieldByShortName(currentClassInfo.getFieldInfoList(), valueDeclaration.getName());
 			if (fieldInfo != null) {
 				fieldInfoSet.add(fieldInfo);
 			}
@@ -376,8 +343,7 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 * If the previous node is a method call, it can also locate the class to which the method belongs
 	 */
 	private void resolveNameExpr(
-			NameExpr nameExpr, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList,
-			Set<FieldInfo> fieldInfoSet) {
+			NameExpr nameExpr, ClassInfo currentClassInfo, Set<String> dependencySet, List<String> exceptionList, Set<FieldInfo> fieldInfoSet) {
 		try {
 			ResolvedValueDeclaration valueDeclaration = nameExpr.resolve();
 			ResolvedType resolvedType = valueDeclaration.getType();
@@ -386,8 +352,7 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 				dependencySet.add(declaredClassName);
 			}
 			if (valueDeclaration.isField()) {
-				FieldInfo fieldInfo = EntityUtil.getFieldByShortName(currentClassInfo.getFieldInfoList(),
-				                                                     valueDeclaration.getName());
+				FieldInfo fieldInfo = EntityUtil.getFieldByShortName(currentClassInfo.getFieldInfoList(), valueDeclaration.getName());
 				if (fieldInfo != null) {
 					fieldInfoSet.add(fieldInfo);
 				}
@@ -403,7 +368,7 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 
 	/**
 	 * For example, ClassA.class or ClassA a.
-	 *
+	 * <p>
 	 * The class that appears in the child class of MethodReferenceExpr, TypeExpr, will be resolved here at last.
 	 */
 	private void resolveClassOrInterfaceType(
@@ -437,11 +402,10 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		// Find out all local method calls for Cohesion
 		if (declaringClassName.equals(currentClassInfo.getFullyQualifiedName())) {
 			resolvedMethodDeclaration.toAst().ifPresent(methodDeclaration -> {
-				String methodQualifiedName =
-						currentClassInfo.getFullyQualifiedName() + "." + methodDeclaration.getNameAsString();
+				String methodQualifiedName = currentClassInfo.getFullyQualifiedName() + "." + methodDeclaration.getNameAsString();
 				Range range = methodDeclaration.getRange().orElse(null);
-				MethodInfo methodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(
-						currentClassInfo.getMethodInfoList(), methodQualifiedName, range);
+				MethodInfo methodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(currentClassInfo.getMethodInfoList(), methodQualifiedName,
+				                                                                           range);
 				localMethodInfoList.add(methodInfo);
 			});
 		}
@@ -460,9 +424,8 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 	 * To deal with objectCreationExpr or ExplicitConstructorInvocationStmt (this and super keywords)
 	 */
 	private void constructorCall(
-			ResolvedConstructorDeclaration resolvedConstructorDeclaration, ClassInfo currentClassInfo,
-			Set<String> dependencySet, Set<MethodInfo> localMethodInfoList,
-			Map<String, Integer> rfcMethodQualifiedSignatureMap) {
+			ResolvedConstructorDeclaration resolvedConstructorDeclaration, ClassInfo currentClassInfo, Set<String> dependencySet,
+			Set<MethodInfo> localMethodInfoList, Map<String, Integer> rfcMethodQualifiedSignatureMap) {
 		// Locate the method for RFC
 		String methodQualifiedSignature = resolvedConstructorDeclaration.getQualifiedSignature();
 		RFCMetric.countRFCMethodQualifiedSignatureMap(rfcMethodQualifiedSignatureMap, methodQualifiedSignature);
@@ -475,11 +438,10 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		if (declaringClassName.equals(currentClassInfo.getFullyQualifiedName())) {
 			// If there is no declared constructor, isPresent will not be executed.
 			resolvedConstructorDeclaration.toAst().ifPresent(constructorDeclaration -> {
-				String methodQualifiedName =
-						currentClassInfo.getFullyQualifiedName() + "." + constructorDeclaration.getNameAsString();
+				String methodQualifiedName = currentClassInfo.getFullyQualifiedName() + "." + constructorDeclaration.getNameAsString();
 				Range range = constructorDeclaration.getRange().orElse(null);
-				MethodInfo methodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(
-						currentClassInfo.getMethodInfoList(), methodQualifiedName, range);
+				MethodInfo methodInfo = EntityUtil.getMethodByQualifiedNameAndRangeLocator(currentClassInfo.getMethodInfoList(), methodQualifiedName,
+				                                                                           range);
 				localMethodInfoList.add(methodInfo);
 			});
 		}

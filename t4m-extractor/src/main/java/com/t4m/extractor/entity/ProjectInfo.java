@@ -17,8 +17,6 @@ public class ProjectInfo implements Serializable {
 
 	private static final long serialVersionUID = 3553544572450478178L;
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(ProjectInfo.class);
-
 	private Date createDate;
 
 	private String absolutePath;

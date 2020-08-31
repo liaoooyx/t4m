@@ -23,7 +23,9 @@ public class ProjectService {
 	public ProjectInfo getCurrentProjectInfoOfIndex(int index) {
 		ProjectInfo[] projectInfos = ProjectRecordUtil.getTwoProjectInfoRecordByIndex(index);
 		if (projectInfos[0] == null) {
-			LOGGER.debug("No record for [{}] in index [{}]", GlobalProperties.getCurrentProjectIdentifier(), index);
+			LOGGER.debug("No record for [{}] in index [{}]. If you modified any entity class, please check them.\n " +
+					             "It usually caused by NullPointerException when derializing from the object files",
+			             GlobalProperties.getCurrentProjectIdentifier(), index);
 		}
 		return projectInfos[0];
 	}
@@ -31,8 +33,7 @@ public class ProjectService {
 	public ProjectInfo getPreviousProjectInfoOfIndex(int index) {
 		ProjectInfo[] projectInfos = ProjectRecordUtil.getTwoProjectInfoRecordByIndex(index);
 		if (projectInfos[1] == null) {
-			LOGGER.debug("No previous record for [{}] in index [{}]", GlobalProperties.getCurrentProjectIdentifier(),
-			             index);
+			LOGGER.debug("No previous record for [{}] in index [{}]", GlobalProperties.getCurrentProjectIdentifier(), index);
 		}
 		return projectInfos[1];
 	}
