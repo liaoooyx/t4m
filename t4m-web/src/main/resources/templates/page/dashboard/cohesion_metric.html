@@ -28,71 +28,6 @@
 	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
-				
-				<!-- Header -->
-				<div class="header bg-primary">
-					<div class="container-fluid">
-						<!-- Header container -->
-						<div class="container-fluid d-flex align-items-center">
-							<div class="row">
-								<div class="col-lg-10 col-md-10 mt-5 mb-3">
-									<h1 class="display-2 text-white">Complexity Metrics set</h1>
-									<p class="text-white text-justify mb-3">
-										There are three metrics relevant to inheritance include Lack of Cohesion in Methods (Hitz &
-										Montazeri), Tight and Loose Class Cohesion.
-									</p>
-									<p class="text-justify text-white mb-1 ml-4">
-										<span class="text-bold">Lack of Cohesion in Methods (Hitz & Montazeri)</span><span>, </span>
-										which is so-called LCOM4, is counting the number of distinct components within a class. A component
-										is a set of related methods that both access the same field or have any direct or indirect
-										invocation between them. There are lots of definitions of whether include the private classes or
-										whether include the class variables. Currently, T4M uses all methods and variables to compute this
-										metric.
-									</p>
-									<p class="text-white text-justify mb-3 ml-4">
-										Detailed descriptions and influences:
-										<a class="text-yellow text-link"
-										   href="https://maisqual.squoring.com/wiki/index.php/Lack_of_Cohesion_in_Methods">
-											Maisqual - Lack of Cohesion in Methods</a>,
-										<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node116.html">
-											ARiSA - Lack of Cohesion in Methods</a>,
-										<a class="text-yellow text-link"
-										   href="https://www.aivosto.com/project/help/pm-oo-cohesion.html">
-											Aivosto - Cohesion metrics</a>,
-										<a class="text-yellow text-link"
-										   href="https://objectscriptquality.com/docs/metrics/lack-cohesion-methods-lcom4">
-											objectscriptquality.com - Lack of Cohesion in Methods (LCOM4)</a>,
-										<a class="text-yellow text-link"
-										   href="http://www.tusharma.in/technical/revisiting-lcom/">
-											tusharma.in - Revisiting LCOM</a>.
-									</p>
-									
-									<div class="collapse" id="collapse_description">
-										<p class="text-justify text-white mb-1 ml-4">
-											<span class="text-bold">Tight Class Cohesion & Loose Class Cohesion</span><span>, </span>
-											which are the ratio of the connected method pairs to all possible method pairs. For TCC
-											the connected method pairs are only direct connections. For LCC it contains both direct and
-											indirect connections. A direct connection means that both methods access the same field or they
-											access the same field through the invocation tree. An indirect connection means that they do not
-											have a direct connection but being contained within the same component as mentioned in LCOM4.
-										</p>
-										<p class="text-white text-justify mb-3 ml-4">
-											Detailed descriptions and influences:
-											<a class="text-yellow text-link"
-											   href="https://www.aivosto.com/project/help/pm-oo-cohesion.html">
-												Aivosto - Cohesion metrics</a>.
-										</p>
-									</div>
-									<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
-									   role="button" aria-expanded="false" aria-controls="collapse_description">
-										<i class="fas fa-sort"></i> Expand / Collapse
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
 				<div class="row col-auto justify-content-end align-items-center m-0">
 					<div class="col-auto">
 						<ul class="navbar-nav align-items-center">
@@ -110,14 +45,72 @@
 						</ul>
 					</div>
 				</div>
-			
 			</div>
 		</div>
 	</nav>
 	
 	<!-- Header -->
-	<div class="header bg-primary pb-6">
+	<div class="header bg-primary">
 		<div class="container-fluid">
+			<!-- Header -->
+			<!-- Header container -->
+			<div class="container-fluid d-flex align-items-center">
+				<div class="row">
+					<div class="col-lg-10 col-md-10 mt-3 mb-8">
+						<h1 class="display-2 text-white">Complexity Metrics</h1>
+						<p class="text-white text-justify mb-3">
+							There are three metrics relevant to inheritance include Lack of Cohesion in Methods (Hitz &
+							Montazeri), Tight and Loose Class Cohesion.
+						</p>
+						<p class="text-justify text-white mb-1 ml-4">
+							<span class="text-bold">Lack of Cohesion in Methods (Hitz & Montazeri)</span><span>, </span>
+							which is so-called LCOM4, is counting the number of distinct components within a class. A component
+							is a set of related methods that both access the same instance variable or have any direct or indirect
+							invocation between them. There are lots of definitions of whether include the private classes or
+							whether include the class variables. Currently, T4M uses all methods and variables to compute this
+							metric.
+						</p>
+						<p class="text-white text-justify mb-3 ml-4">
+							Detailed descriptions and influences:
+							<a class="text-yellow text-link"
+							   href="https://maisqual.squoring.com/wiki/index.php/Lack_of_Cohesion_in_Methods">
+								Maisqual - Lack of Cohesion in Methods</a>,
+							<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node116.html">
+								ARiSA - Lack of Cohesion in Methods</a>,
+							<a class="text-yellow text-link"
+							   href="https://www.aivosto.com/project/help/pm-oo-cohesion.html">
+								Aivosto - Cohesion metrics</a>,
+							<a class="text-yellow text-link"
+							   href="https://objectscriptquality.com/docs/metrics/lack-cohesion-methods-lcom4">
+								objectscriptquality.com - Lack of Cohesion in Methods (LCOM4)</a>,
+							<a class="text-yellow text-link"
+							   href="http://www.tusharma.in/technical/revisiting-lcom/">
+								tusharma.in - Revisiting LCOM</a>.
+						</p>
+						
+						<div class="collapse" id="collapse_description">
+							<p class="text-justify text-white mb-1 ml-4">
+								<span class="text-bold">Tight Class Cohesion & Loose Class Cohesion</span><span>, </span>
+								which are the ratio of the connected method pairs to all possible method pairs. For TCC
+								the connected method pairs are only direct connections. For LCC it contains both direct and
+								indirect connections. A direct connection means that both methods access the same instance variable or
+								they access the same instance variable through the invocation tree. An indirect connection means that they do not
+								have a direct connection but being contained within the same component as mentioned in LCOM4.
+							</p>
+							<p class="text-white text-justify mb-3 ml-4">
+								Detailed descriptions and influences:
+								<a class="text-yellow text-link"
+								   href="https://www.aivosto.com/project/help/pm-oo-cohesion.html">
+									Aivosto - Cohesion metrics</a>.
+							</p>
+						</div>
+						<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
+						   role="button" aria-expanded="false" aria-controls="collapse_description">
+							<i class="fas fa-sort"></i> Expand / Collapse
+						</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	
@@ -325,7 +318,7 @@
               timelineChart.on('timelinechanged', function (params) {
                   currentTimelineIndex = params.currentIndex
               });
-              timelineChart.on('click','series.scatter', function (param) {
+              timelineChart.on('click', 'series.scatter', function (param) {
                   chart_data_vm.title = timeRecords[currentTimelineIndex];
 
                   let pointValueList = [];

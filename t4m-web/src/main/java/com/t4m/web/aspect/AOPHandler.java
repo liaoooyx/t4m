@@ -44,10 +44,13 @@ public class AOPHandler {
 		ProjectInfo projectInfo = projectService.getCurrentProjectInfoOfIndex(-1);
 		Model model = (Model) proceedingJoinPoint.getArgs()[0];
 		addDefaultConfToModel(model);
-		System.out.println(projectInfo);
 		if (projectInfo == null || "".equals(GlobalProperties.getCurrentProjectIdentifier())) {
 			model.addAttribute("disableScan", true);
-			model.addAttribute("triggerNew", true);
+			if (ProjectRecordUtil.getAllProjectRecordsDirName().isEmpty()) {
+				model.addAttribute("triggerBtn", "new");
+			}else {
+				model.addAttribute("triggerBtn", "switch");
+			}
 			return "page/dashboard/blank_page";
 		} else {
 			ProjectRecordUtil.checkCurrentProjectIdentifier();

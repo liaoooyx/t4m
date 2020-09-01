@@ -284,7 +284,7 @@
 	<script th:src="@{/assets/js/common.js}"></script>
 	
 	<script th:inline="javascript">
-      var triggerNewModal = [[${triggerNew}]];
+      var triggerBtn = [[${triggerBtn}]];
       var disableScan = [[${disableScan}]];
       let currentProjectPath = [[${currentProjectPath}]];
 
@@ -293,8 +293,10 @@
               elem: '#project_create_time',
               lang: 'en', type: 'datetime', theme: '#5e72e4',
           });
-          if (triggerNewModal) {
+          if (triggerBtn === "new") {
               $("#new_project_btn").trigger("click");
+          }else if(triggerBtn === "switch"){
+              $("#switch_project_btn").trigger("click");
           }
           if (disableScan) {
               $('#scan_current_project_btn').attr("disabled", "");

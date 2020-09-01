@@ -28,32 +28,6 @@
 	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
-				
-				<!-- Header -->
-				<div class="header bg-primary">
-					<div class="container-fluid">
-						<!-- Header container -->
-						<div class="container-fluid d-flex align-items-center">
-							<div class="row">
-								<div class="col-lg-7 col-md-10 mt-5">
-									<h1 class="display-2 text-white">Basic information</h1>
-									<p class="text-white text-justify mb-3">
-										Here is the basic information of your project
-										<code th:text="${currentProjectIdentifier.split('#')[0]}"></code>,
-										including the number of modules, packages, classes, methods and fields. There are two
-										statistical measurements for classes: class file and declared class.
-										The class file represents the .java files in your project.
-										The declared class is classified as a public outer class, a package-private outer class or a
-										<a class="text-yellow text-link"
-										   href="https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"> nested class</a>,
-										with six types: class, enum, abstract class, interface, annotation, and package-info file.
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
 				<div class="row col-auto justify-content-end align-items-center m-0">
 					<!-- Navbar links -->
 					<div class="col-auto">
@@ -72,7 +46,6 @@
 						</ul>
 					</div>
 				</div>
-			
 			</div>
 		</div>
 	</nav>
@@ -80,6 +53,24 @@
 	<!-- Header -->
 	<div class="header bg-primary pb-6">
 		<div class="container-fluid">
+			<div class="container-fluid d-flex align-items-center">
+				<div class="row">
+					<div class="col-lg-7 col-md-10 mt-3">
+						<h1 class="display-2 text-white">Basic information</h1>
+						<p class="text-white text-justify mb-3">
+							Here is the basic information of your project
+							<code th:text="${currentProjectIdentifier.split('#')[0]}"></code>,
+							including the number of modules, packages, classes, methods and fields. There are two
+							statistical measurements for classes: class file and declared class.
+							The class file represents the .java files in your project.
+							The declared class is classified as a public outer class, a package-private outer class or a
+							<a class="text-yellow text-link"
+							   href="https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"> nested class</a>,
+							with six types: class, enum, abstract class, interface, annotation, and package-info file.
+						</p>
+					</div>
+				</div>
+			</div>
 			<!-- Header container -->
 			<div class="header-body">
 				<!-- Card stats -->

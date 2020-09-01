@@ -28,104 +28,6 @@
 	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
-				
-				<!-- Header -->
-				<div class="header bg-primary">
-					<div class="container-fluid">
-						<!-- Header container -->
-						<div class="container-fluid d-flex align-items-center">
-							<div class="row">
-								<div class="col-lg-10 col-md-10 mt-5 mb-3">
-									<h1 class="display-2 text-white">Complexity Metrics set</h1>
-									<p class="text-white text-justify mb-3">
-										This page is showing the metrics relevant to the coupling, including:
-									</p>
-									<p class="text-justify text-white mb-1 ml-4">
-										<span class="text-bold">Afferent Coupling</span><span>, </span>
-										which is the number of other components that invoke a specific component. A
-										component could be a package or class.
-									</p>
-									<p class="text-white text-justify mb-3 ml-4">
-										Detailed descriptions and influences:
-										<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node104.html">
-											ARiSA - Afferent Coupling</a>,
-										<a class="text-yellow text-link"
-										   href="https://kariera.future-processing.pl/blog/object-oriented-metrics-by-robert-martin/">
-											Artur Ogonowski - Object-oriented metrics by Robert Martin</a>.
-									</p>
-									<p class="text-justify text-white mb-1 ml-4">
-										<span class="text-bold">Efferent Coupling</span><span>, </span>
-										which, on the contrary, is the number of other components to which a specific
-										component invoke. A component could be a package or class.
-									</p>
-									<p class="text-white text-justify mb-3 ml-4">
-										Detailed descriptions and influences:
-										<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node108.html">
-											ARiSA - Efferent Coupling</a>,
-										<a class="text-yellow text-link"
-										   href="https://kariera.future-processing.pl/blog/object-oriented-metrics-by-robert-martin/">
-											Artur Ogonowski - Object-oriented metrics by Robert Martin</a>.
-									</p>
-									<div class="collapse" id="collapse_description">
-										<p class="text-justify text-white mb-1 ml-4">
-											<span class="text-bold">Instability</span><span>, </span>
-											which is the ratio of Efferent Coupling to the sum of Afferent Coupling and Efferent Coupling.
-										</p>
-										<p class="text-white text-justify mb-3 ml-4">
-											Detailed descriptions and influences:
-											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node111.html">
-												ARiSA - Instability</a>,
-											<a class="text-yellow text-link"
-											   href="https://kariera.future-processing.pl/blog/object-oriented-metrics-by-robert-martin/">
-												Artur Ogonowski - Object-oriented metrics by Robert Martin</a>.
-										</p>
-										<p class="text-justify text-white mb-3 ml-4">
-											<span class="text-bold">Abstractness</span><span>, </span>
-											which is one of the measurements for the packages. It is the ratio of abstract class
-											and interfaces to all of the classes.
-										</p>
-										<p class="text-justify text-white mb-3 ml-4">
-											<span class="text-bold">Distance from Main Sequence</span><span>, </span>
-											which is computed by the following formulation: D = Instability +
-											Abstractness -1. We expect the mean and variance of D to be close to zero.
-										</p>
-										<p class="text-justify text-white mb-1 ml-4">
-											<span class="text-bold">Coupling Between Objects</span><span>, </span>
-											which is happened when a method declared in one class invokes a method
-											or instance variable defined in another class. It will occur in the following situations: method
-											invokes, method reference, inheritance, implementation, parameter reference, return type,
-											exception. T4M considers the constructors as methods.
-										</p>
-										<p class="text-white text-justify mb-3 ml-4">
-											Detailed descriptions and influences:
-											<a class="text-yellow text-link"
-											   href="https://maisqual.squoring.com/wiki/index.php/Coupling_Between_Objects">
-												Maisqual - Coupling Between Objects</a>,
-											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node105.html">
-												ARiSA - Coupling Between Objects</a>.
-										</p>
-										<p class="text-justify text-white mb-1 ml-4">
-											<span class="text-bold">Message Passing Coupling</span><span>, </span>
-											which is the number of other classes' methods invoked by the local
-											methods of a class. We take all of the legal method invocations into account, including
-											in the initial blocks, fields declaration, methods, constructors.
-										</p>
-										<p class="text-white text-justify mb-3 ml-4">
-											Detailed descriptions and influences:
-											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node113.html">
-												ARiSA - Message Passing Coupling</a>.
-										</p>
-									</div>
-									<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
-									   role="button" aria-expanded="false" aria-controls="collapse_description">
-										<i class="fas fa-sort"></i> Expand / Collapse
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
 				<div class="row col-auto justify-content-end align-items-center m-0">
 					<div class="col-auto">
 						<ul class="navbar-nav align-items-center">
@@ -143,14 +45,118 @@
 						</ul>
 					</div>
 				</div>
-			
 			</div>
 		</div>
 	</nav>
 	
 	<!-- Header -->
-	<div class="header bg-primary pb-6">
+	<div class="header bg-primary">
 		<div class="container-fluid">
+			<!-- Header container -->
+			<div class="container-fluid d-flex align-items-center">
+				<div class="row">
+					<div class="col-lg-10 col-md-10 mt-3 mb-8">
+						<h1 class="display-2 text-white">Complexity Metrics</h1>
+						<p class="text-white text-justify mb-3">
+							This page is showing the metrics relevant to the coupling, including:
+						</p>
+						<p class="text-justify text-white mb-1 ml-4">
+							<span class="text-bold">Afferent Coupling</span><span>, </span>
+							If a class outside the package
+							depends on a class in the package (incoming dependencies), it belongs to Afferent
+							Coupling.
+						</p>
+						<p class="text-white text-justify mb-3 ml-4">
+							Detailed descriptions and influences:
+							<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node104.html">
+								ARiSA - Afferent Coupling</a>,
+							<a class="text-yellow text-link"
+							   href="https://kariera.future-processing.pl/blog/object-oriented-metrics-by-robert-martin/">
+								Artur Ogonowski - Object-oriented metrics by Robert Martin</a>.
+						</p>
+						<p class="text-justify text-white mb-1 ml-4">
+							<span class="text-bold">Efferent Coupling</span><span>, </span>
+							On the contrary, if a class in a package depends on a class outside the
+							package (outgoing dependencies), it belongs to Efferent Coupling.
+						</p>
+						<p class="text-white text-justify mb-3 ml-4">
+							Detailed descriptions and influences:
+							<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node108.html">
+								ARiSA - Efferent Coupling</a>,
+							<a class="text-yellow text-link"
+							   href="https://kariera.future-processing.pl/blog/object-oriented-metrics-by-robert-martin/">
+								Artur Ogonowski - Object-oriented metrics by Robert Martin</a>.
+						</p>
+						<div class="collapse" id="collapse_description">
+							<p class="text-justify text-white mb-1 ml-4">
+								<span class="text-bold">Instability</span><span>, </span>
+								which is measuring whether a package is stable or not. It is the ratio
+								of Afferent Coupling to the sum of Afferent Coupling and Efferent Coupling.
+								In good practices, the value of instability of component should decrease follow
+								the direction of dependency graph. In other word, a component should
+								always depends on more stable components.
+							</p>
+							<p class="text-white text-justify mb-3 ml-4">
+								Detailed descriptions and influences:
+								<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node111.html">
+									ARiSA - Instability</a>,
+								<a class="text-yellow text-link"
+								   href="https://kariera.future-processing.pl/blog/object-oriented-metrics-by-robert-martin/">
+									Artur Ogonowski - Object-oriented metrics by Robert Martin</a>.
+							</p>
+							<p class="text-justify text-white mb-3 ml-4">
+								<span class="text-bold">Abstractness</span><span>, </span>
+								This metric calculates the proportion of abstract
+								components (i.e. abstract classes and interfaces type) in a package in all components
+								(types) in the package, which describing the abstractness of a package. This metric is usually used
+								with Instability to indicate whether the package is
+								desirable or not.
+							</p>
+							<p class="text-justify text-white mb-3 ml-4">
+								<span class="text-bold">Distance from Main Sequence</span><span>, </span>
+								For a desirable package, it could have maximum abstractness with zero instability, and
+								vice versa. Moreover, it could also reasonable to achieve balance concerning its
+								Abstractness and Instability. Martin (1994) introduced a line, the Main Sequence, to
+								represent this set of desirable value pairs. The Distance from the Main Sequence is
+								measuring in what distance a package is from this ideal. The metric
+								ranges between [0,1].
+							</p>
+							<p class="text-justify text-white mb-1 ml-4">
+								<span class="text-bold">Coupling Between Objects</span><span>, </span>
+								The coupling between object classes
+								indicates the number of other classes to which it is coupled. In other word, it happens
+								when a method declared in one class invokes a method or instance variable defined in
+								another class. In practice, the coupling will occur in the following situations: method
+								invocations, method references, field accesses, extends, implementations, method
+								parameters, return types and exceptions.
+							</p>
+							<p class="text-white text-justify mb-3 ml-4">
+								Detailed descriptions and influences:
+								<a class="text-yellow text-link"
+								   href="https://maisqual.squoring.com/wiki/index.php/Coupling_Between_Objects">
+									Maisqual - Coupling Between Objects</a>,
+								<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node105.html">
+									ARiSA - Coupling Between Objects</a>.
+							</p>
+							<p class="text-justify text-white mb-1 ml-4">
+								<span class="text-bold">Message Passing Coupling</span><span>, </span>
+								A message is passing among the objects of the classes when the object invokes a method
+								of another object. In practice, this metric counts the number of
+								method invocations from a class to other classes.
+							</p>
+							<p class="text-white text-justify mb-3 ml-4">
+								Detailed descriptions and influences:
+								<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node113.html">
+									ARiSA - Message Passing Coupling</a>.
+							</p>
+						</div>
+						<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
+						   role="button" aria-expanded="false" aria-controls="collapse_description">
+							<i class="fas fa-sort"></i> Expand / Collapse
+						</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	

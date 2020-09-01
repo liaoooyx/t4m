@@ -35,7 +35,7 @@ public class OperationController {
 	@PostMapping("/new")
 	public String createNewProject(
 			@RequestParam(name = "projectPath") String projectPath,
-			@RequestParam(name = "projectCreatTime") String projectCreatTime,
+			@RequestParam(name = "projectCreatTime", defaultValue = "") String projectCreatTime,
 			@RequestParam(name = "excludedPath") String excludedPath,
 			@RequestParam(name = "dependencyPath", defaultValue = "") String dependencyPath) {
 		// 更新t4m.properties中的当前项目名称

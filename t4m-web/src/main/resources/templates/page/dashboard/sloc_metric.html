@@ -28,61 +28,6 @@
 	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
-				
-				<!-- Header -->
-				<div class="header bg-primary">
-					<div class="container-fluid">
-						<!-- Header container -->
-						<div class="container-fluid d-flex align-items-center">
-							<div class="row">
-								<div class="col-lg-10 col-md-10 mt-5 mb-3">
-									<h1 class="display-2 text-white">Lines of Code</h1>
-									<p class="text-white text-justify mb-3">
-										LOC is a metrics to calculate the lines of you project. Currently, T4M only count the number of
-										lines of java source code. T4M provides two statistical methods for counting the LOC, which is
-										based on the source file or based on declared class.
-									</p>
-									<p class="text-white text-justify mb-3">
-										For the methods based on the source file, the java file will be the minimum unit that T4M analysis.
-										Each line will be counted without any formatting.
-									</p>
-									<div class="collapse" id="collapse_description">
-										<p class="text-white text-justify mb-3">
-											For the method based on declared class, the minimum unit that T4M analysis is a finer grain than
-											java file. Recall that a java file can declare one public outer class, multiple package-private
-											classes and multiple nested classes. The class will be formatted by
-											<a class="text-yellow text-link" href="http://javaparser.org/">JavaParser</a> before being
-											analysed, which split the code statement and the comment into different lines. Besides, the import
-											and package statement will be excluded.
-										</p>
-										<p class="text-white text-justify mb-3">
-											T4M has four measurements for LOC, including the Physical Line of Code (lines that are not empty
-											or
-											not comment-only), the Logical Line of Code (lines that are not empty, not comment-only or not
-											symbol-only) and the Comment Line (lines that contain comments) and the Percentage of Comment Line
-											(the ratio of comment lines to non-empty lines). Empty lines are excluded.
-										</p>
-										<p class="text-white text-justify mb-3">
-											Detailed definitions and influences of LOC/SLOC:
-											<a class="text-yellow text-link"
-											   href="https://maisqual.squoring.com/wiki/index.php/Source_Lines_of_Code">
-												Maisqual - Source Lines of Code</a>,
-											<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node91.html">
-												ARiSA - Lines of Code</a>,
-											<a class="text-yellow text-link" href="https://en.wikipedia.org/wiki/Source_lines_of_code">
-												Wiki - Source lines of code</a>.
-										</p>
-									</div>
-									<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
-									   role="button" aria-expanded="false" aria-controls="collapse_description">
-										<i class="fas fa-sort"></i> Expand / Collapse
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
 				<div class="row col-auto justify-content-end align-items-center m-0">
 					<div class="col-auto">
 						<ul class="navbar-nav align-items-center">
@@ -100,14 +45,58 @@
 						</ul>
 					</div>
 				</div>
-			
 			</div>
 		</div>
 	</nav>
 	
 	<!-- Header -->
-	<div class="header bg-primary pb-6">
+	<div class="header bg-primary">
 		<div class="container-fluid">
+			<!-- Header container -->
+			<div class="container-fluid d-flex align-items-center">
+				<div class="row">
+					<div class="col-lg-10 col-md-10 mt-3 mb-8">
+						<h1 class="display-2 text-white">Lines of Code or Comments</h1>
+						<p class="text-white text-justify mb-3">
+							These metrics calculate the lines of you project. Currently, T4M only count the number of
+							lines of java source code. T4M provides two statistical methods for counting the LOC, which is
+							based on the source files or based on declared class.
+						</p>
+						<p class="text-white text-justify mb-3">
+							For the methods based on the source file, the java file will be the minimum unit that T4M analysis.
+							Each line will be counted without any formatting.
+						</p>
+						<div class="collapse" id="collapse_description">
+							<p class="text-white text-justify mb-3">
+								For the method based on declared class, the minimum unit that T4M analysis is classes rather than
+								java files. Recall that a java file can declare one public outer class, multiple package-private
+								classes and multiple nested classes. The class will be formatted by
+								<a class="text-yellow text-link" href="http://javaparser.org/">JavaParser</a> before being
+								analysed, which split the code statement and the comment into different lines. Besides, the import
+								and package statement will be excluded.
+							</p>
+							<p class="text-white text-justify mb-3">
+								There are three metrics here, Source Lines of Code, Number of Comment Lines and Percentage of
+								Comment Lines. Notice that the empty lines are excluded.
+							</p>
+							<p class="text-white text-justify mb-3">
+								Detailed definitions and influences of LOC/SLOC:
+								<a class="text-yellow text-link"
+								   href="https://maisqual.squoring.com/wiki/index.php/Source_Lines_of_Code">
+									Maisqual - Source Lines of Code</a>,
+								<a class="text-yellow text-link" href="http://www.arisa.se/compendium/node91.html">
+									ARiSA - Lines of Code</a>,
+								<a class="text-yellow text-link" href="https://en.wikipedia.org/wiki/Source_lines_of_code">
+									Wiki - Source lines of code</a>.
+							</p>
+						</div>
+						<a class="text-white text-link" data-toggle="collapse" href="#collapse_description"
+						   role="button" aria-expanded="false" aria-controls="collapse_description">
+							<i class="fas fa-sort"></i> Expand / Collapse
+						</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	
