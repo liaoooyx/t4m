@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -22,13 +21,14 @@ public class T4mPropertiesUtil {
 			properties = new Properties();
 			properties.load(in);
 		} catch (IOException e) {
+			LOGGER.error("Error happened when loading properties from {}", filePath);
 			e.printStackTrace();
-			LOGGER.error("", e);
 		}
 	}
 
 	/**
 	 * @param key name of the key.
+	 *
 	 * @return Null, if the property does not exist in the file; Empty string, if the property exists but no value.
 	 */
 	public String getProperty(String key) {

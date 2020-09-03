@@ -25,7 +25,7 @@
 <!-- Main content -->
 <div class="main-content" id="panel">
 	<!-- Topnav -->
-	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom d-md-none">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -55,12 +55,13 @@
 			<!-- Header container -->
 			<div class="container-fluid d-flex align-items-center">
 				<div class="row">
-					<div class="col-lg-10 col-md-10 mt-3 mb-8">
+					<div class="col-lg-10 col-md-10 mt-5 mb-8">
 						<h1 class="display-2 text-white">Lines of Code or Comments</h1>
 						<p class="text-white text-justify mb-3">
 							These metrics calculate the lines of you project. Currently, T4M only count the number of
-							lines of java source code. T4M provides two statistical methods for counting the LOC, which is
-							based on the source files or based on declared class.
+							lines of java source code. T4M provides two statistical methods for counting the LOC, including
+							<code>Per Class</code> that is based on the source files
+							and <code>Per File</code> that is based on declared classes.
 						</p>
 						<p class="text-white text-justify mb-3">
 							For the methods based on the source file, the java file will be the minimum unit that T4M analysis.
@@ -111,8 +112,8 @@
 							<div class="col">
 								<h6 class="text-muted text-uppercase ls-1 mb-1">Overview</h6>
 								<h5 class="h3 mb-0">
-									The distribution of classes on the number of physical code lines and number of comment lines,
-									and the evolution during developing.
+									The distribution of classes on the Source Lines of Code and Number of Comment Lines,
+									and its evolution during developing.
 								</h5>
 							</div>
 							<div class="col">
@@ -121,14 +122,14 @@
 										<a href="javascript:void(0);" class="nav-link py-2 px-3"
 										   data-toggle="tab"
 										   onclick="changeDataSet('allClass')">
-											<span class="d-none d-md-block">Class Level (AST Format)</span>
+											<span class="d-none d-md-block">Per Class (JavaParser Format)</span>
 											<span class="d-md-none">C</span>
 										</a>
 									</li>
 									<li class="nav-item">
 										<a id='sloc_timeline_chart' href="javascript:void(0);" class="nav-link py-2 px-3 active"
 										   data-toggle="tab" onclick="changeDataSet('file')">
-											<span class="d-none d-md-block">File Level (Raw)</span>
+											<span class="d-none d-md-block">Per File (Original format)</span>
 											<span class="d-md-none">F</span>
 										</a>
 									</li>
@@ -201,7 +202,7 @@
                               nameLocation: 'center', nameGap: 28
                           },
                           yAxis: {
-                              name: 'Comment Lines', type: 'value', max: Math.ceil(dataMax[1] / 5) * 5,
+                              name: 'Number of Comment Lines', type: 'value', max: Math.ceil(dataMax[1] / 5) * 5,
                               nameLocation: 'center', nameRotate: 90, nameGap: 30
                           },
                           timeline: {
@@ -209,6 +210,11 @@
                               playInterval: 1000, symbol: 'circle', data: timeRecords,
                               controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
                               checkpointStyle: {animation: false},
+                              label: {
+                                  formatter: function (value, index) {
+                                      return value.split(" ")[0];
+                                  }
+                              }
                           },
                           tooltip: {
                               padding: 10, borderWidth: 1,
@@ -242,6 +248,10 @@
                                       return value + "%"; // 范围标签显示内容。
                                   }
                               },
+                          ],
+                          dataZoom: [
+                              {type: 'inside', xAxisIndex: 0, start: 0, end: 100},
+                              {type: 'inside', yAxisIndex: 0, start: 0, end: 100},
                           ],
                       },
                   };
@@ -433,7 +443,7 @@
 			</div>
 			<!--表格-->
 			<div class="col-xl-12">
-				<div class="card">
+				<div class="card table-outline">
 					<div class="table-responsive">
 						<div id="toolbar">
 							<div class="form-inline" role="form">
@@ -469,10 +479,10 @@
 						</div>
 					</div>
 				</div>
-			
 			</div>
-		
 		</div>
+		<!--common modals-->
+		<modal th:replace="fragments/common :: modals"></modal>
 		<!-- Footer -->
 		<footer th:replace="fragments/common :: footer"></footer>
 	</div>
@@ -522,15 +532,15 @@
         }, {
             field: 'physicalCodeLinesSF', title: 'Source Lines of Code<br>(Source File)', sortable: true
         }, {
-            field: 'CommentLinesSF', title: 'Comment Lines<br>(Source File)', sortable: true
+            field: 'CommentLinesSF', title: 'Number of Comment Lines<br>(Source File)', sortable: true
         }, {
-            field: 'percentageOfCommentSF', title: '% of Comments<br>(Source File)', sortable: true
+            field: 'percentageOfCommentSF', title: '% of Comment Lines<br>(Source File)', sortable: true
         }, {
             field: 'physicalCodeLinesJP', title: 'Source Lines of Code<br>(JavaParser)', sortable: true
         }, {
-            field: 'CommentLinesJP', title: 'Comment Lines<br>(JavaParser)', sortable: true
+            field: 'CommentLinesJP', title: 'Number of Comment Lines<br>(JavaParser)', sortable: true
         }, {
-            field: 'percentageOfCommentJP', title: '% of Comments<br>(JavaParser)', sortable: true
+            field: 'percentageOfCommentJP', title: '% of Comment Lines<br>(JavaParser)', sortable: true
         }];
         $.get("/dashboard/sloc/table/module?projectRecordIndex=" + projectRecordIndex).done(function (data) {
             let dataset = data;
@@ -576,15 +586,15 @@
         }, {
             field: 'physicalCodeLinesSF', title: 'Source Lines of Code<br>(Source File)', sortable: true
         }, {
-            field: 'CommentLinesSF', title: 'Comment Lines<br>(Source File)', sortable: true
+            field: 'CommentLinesSF', title: 'Number of Comment Lines<br>(Source File)', sortable: true
         }, {
-            field: 'percentageOfCommentSF', title: '% of Comments<br>(Source File)', sortable: true
+            field: 'percentageOfCommentSF', title: '% of Comment Lines<br>(Source File)', sortable: true
         }, {
             field: 'physicalCodeLinesJP', title: 'Source Lines of Code<br>(JavaParser)', sortable: true
         }, {
-            field: 'CommentLinesJP', title: 'Comment Lines<br>(JavaParser)', sortable: true
+            field: 'CommentLinesJP', title: 'Number of Comment Lines<br>(JavaParser)', sortable: true
         }, {
-            field: 'percentageOfCommentJP', title: '% of Comments<br>(JavaParser)', sortable: true
+            field: 'percentageOfCommentJP', title: '% of Comment Lines<br>(JavaParser)', sortable: true
         }];
         let requestPath;
         if (isNameOfModule) {
@@ -661,7 +671,7 @@
         },
         yAxis: [
             {
-                name: "Source Lines of Code",
+                name: "Number of Lines (SLOC/NOCL)",
                 type: 'value',
                 nameLocation: 'center',
                 nameRotate: 90,
@@ -671,7 +681,7 @@
                 type: 'value',
                 nameLocation: 'center',
                 nameRotate: 270,
-                nameGap: 40,
+                nameGap: 35,
             }
         ],
         tooltip: {
@@ -697,14 +707,14 @@
             {
                 type: 'slider',
                 yAxisIndex: 0,
-                left: 20,
+                left: 0,
                 start: 0,
                 end: 100
             },
             {
                 type: 'slider',
                 yAxisIndex: 1,
-                right: 20,
+                right: 0,
                 start: 0,
                 end: 100
             }
@@ -745,7 +755,7 @@
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {
-                        type: 'line', name: 'Comment Lines (Source File)', yAxisIndex: 0,
+                        type: 'line', name: 'Number of Comment Lines (Source File)', yAxisIndex: 0,
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {
@@ -757,7 +767,7 @@
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {
-                        type: 'line', name: 'Comment Lines (JavaParser)', yAxisIndex: 0,
+                        type: 'line', name: 'Number of Comment Lines (JavaParser)', yAxisIndex: 0,
                         lineStyle: {width: 3}, emphasis: {label: {show: true}},
                     },
                     {

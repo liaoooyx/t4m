@@ -1,5 +1,6 @@
 package com.t4m.web.controller.document;
 
+import com.t4m.conf.GlobalProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class DocumentController {
 	 */
 	@GetMapping("/how-to-use")
 	public String overview(Model model) {
+		model.addAttribute("defaultExcludedPath", GlobalProperties.DEFAULT_EXCLUDED_PATH);
 		return "page/document/how_to_use";
 	}
 

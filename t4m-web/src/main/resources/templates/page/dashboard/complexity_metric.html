@@ -25,7 +25,7 @@
 <!-- Main content -->
 <div class="main-content" id="panel">
 	<!-- Topnav -->
-	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom d-md-none">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -46,7 +46,7 @@
 					</div>
 				</div>
 				<!-- Header -->
-				
+			
 			</div>
 		</div>
 	</nav>
@@ -57,7 +57,7 @@
 			<!-- Header container -->
 			<div class="container-fluid d-flex align-items-center">
 				<div class="row">
-					<div class="col-lg-10 col-md-10 mt-3 mb-8">
+					<div class="col-lg-10 col-md-10 mt-5 mb-8">
 						<h1 class="display-2 text-white">Complexity Metrics</h1>
 						<p class="text-white text-justify mb-3">
 							This page is showing the metrics relevant to the complexity, including:
@@ -208,16 +208,18 @@
               let methodComplexityDataset = /*[[${methodComplexityDataset}]]*/;
               let methodNumDataset = /*[[${methodNumDataset}]]*/;
               let currentChartLevel = 'class';
+              let seriesName = ["Classes regarding the Average Complexity metric", "Classes regarding the Response For a Class metric",
+                  "Classes regarding the Weighted Methods Count metric", "Classes regarding the Maximum Complexity metric"]
 
               let vm_for_timeline_chart_title = new Vue({
                   el: '#timeline_chart_title',
                   data: {
-                      title: "The distribution of the classes on the number of its methods and four different metrics."
+                      title: "The distribution of the classes on the number of its methods and four complexity metrics."
                   }
               })
 
               function showTimelineChartForClass() {
-                  vm_for_timeline_chart_title.title = "The distribution of the classes on the number of its methods and four different metrics."
+                  vm_for_timeline_chart_title.title = "The distribution of the classes on the number of its methods and four complexity metrics."
                   currentChartLevel = 'class';
                   let option = {
                       options: initOptions(),
@@ -265,10 +267,26 @@
                                   nameLocation: 'center', nameRotate: 90, nameGap: 30
                               },
                           ],
+                          dataZoom: [
+                              {type: 'inside', xAxisIndex: 0, start: 0, end: 100},
+                              {type: 'inside', yAxisIndex: 0, start: 0, end: 100},
+                              {type: 'inside', xAxisIndex: 1, start: 0, end: 100},
+                              {type: 'inside', yAxisIndex: 1, start: 0, end: 100},
+                              {type: 'inside', xAxisIndex: 2, start: 0, end: 100},
+                              {type: 'inside', yAxisIndex: 2, start: 0, end: 100},
+                              {type: 'inside', xAxisIndex: 3, start: 0, end: 100},
+                              {type: 'inside', yAxisIndex: 3, start: 0, end: 100},
+                          ],
                           timeline: {
                               axisType: 'category', loop: true, autoPlay: false, currentIndex: timeRecords.length - 1,
                               playInterval: 1000, symbol: 'circle', data: timeRecords, animation: false,
                               controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
+                              checkpointStyle: {animation: false},
+                              label: {
+                                  formatter: function (value, index) {
+                                      return value.split(" ")[0];
+                                  }
+                              }
                           },
                           tooltip: {
                               padding: 10, borderWidth: 1,
@@ -306,7 +324,7 @@
                       options[i] = {
                           series: [
                               {
-                                  name: 'Classes regarding the Average Complexity metric', animation: false,
+                                  name: seriesName[0], animation: false,
                                   type: 'scatter', xAxisIndex: 0, yAxisIndex: 0,
                                   data: avgComplexityOfClassDataset[timeRecords[i]],
                                   emphasis: {
@@ -322,7 +340,7 @@
                                   },
                               },
                               {
-                                  name: 'Classes regarding the Response For a Class metric', animation: false,
+                                  name: seriesName[1], animation: false,
                                   type: 'scatter', xAxisIndex: 1, yAxisIndex: 1,
                                   data: responseForClassDataset[timeRecords[i]],
                                   emphasis: {
@@ -338,7 +356,7 @@
                                   },
                               },
                               {
-                                  name: 'Classes regarding the Weighted Methods Count metric', animation: false,
+                                  name: seriesName[2], animation: false,
                                   type: 'scatter', xAxisIndex: 2, yAxisIndex: 2,
                                   data: weightedMethodsCountDataset[timeRecords[i]],
                                   emphasis: {
@@ -354,7 +372,7 @@
                                   },
                               },
                               {
-                                  name: 'Classes regarding the Maximum Complexity metric', animation: false,
+                                  name: seriesName[3], animation: false,
                                   type: 'scatter', xAxisIndex: 3, yAxisIndex: 3,
                                   data: maxComplexityOfClassDataset[timeRecords[i]],
                                   emphasis: {
@@ -385,8 +403,13 @@
                       },
                       legend: {selected: {'Number of all methods': false},},
                       xAxis: {
-                          name: "Time", type: 'category', splitArea: {interval: 0},
-                          splitLine: {show: true, lineStyle: {type: 'solid'}}, nameLocation: 'center', nameGap: 28
+                          name: "The Date of Record", type: 'category', splitArea: {interval: 0},
+                          splitLine: {show: true, lineStyle: {type: 'solid'}}, nameLocation: 'center', nameGap: 28,
+                          axisLabel: {
+                              formatter: function (value, index) {
+                                  return value.split(" ")[0];
+                              }
+                          }
                       },
                       yAxis: [{
                           name: "The Cyclomatic Complexity of methods", type: 'value',
@@ -408,7 +431,7 @@
                           },
                       }, {
                           name: 'Number of all methods', type: 'bar', yAxisIndex: 1,
-		                      data: methodNumDataset,
+                          data: methodNumDataset,
                           itemStyle: {color: 'rgba(229,229,229,0.8)',},
                           label: {
                               show: true, position: 'top', distance: 20, formatter: '{@[1]}', color: '#000000',
@@ -479,13 +502,13 @@
                       pointValueList.push(param.seriesName + ": " + param.value[1]);
                       chart_data_vm.pointValueList = pointValueList;
 
-                      if (param.seriesName === "Avg Complexity of Class") {
+                      if (param.seriesName === seriesName[0]) {
                           targetDataset = avgComplexityOfClassDataset;
-                      } else if (param.seriesName === "Response for Class") {
+                      } else if (param.seriesName === seriesName[1]) {
                           targetDataset = responseForClassDataset;
-                      } else if (param.seriesName === "Weighted Methods Count") {
+                      } else if (param.seriesName === seriesName[2]) {
                           targetDataset = weightedMethodsCountDataset;
-                      } else if (param.seriesName === "Max Complexity of Class") {
+                      } else if (param.seriesName === seriesName[3]) {
                           targetDataset = maxComplexityOfClassDataset;
                       }
                       let pointDescriptionList = [];
@@ -564,7 +587,7 @@
 			</div>
 			<!--表格-->
 			<div class="col-xl-12">
-				<div class="card">
+				<div class="card table-outline">
 					<div class="table-responsive">
 						<div id="toolbar">
 							<div class="form-inline" role="form">
@@ -604,6 +627,8 @@
 			</div>
 		
 		</div>
+		<!--common modals-->
+		<modal th:replace="fragments/common :: modals"></modal>
 		<!-- Footer -->
 		<footer th:replace="fragments/common :: footer"></footer>
 	</div>

@@ -25,7 +25,7 @@
 <!-- Main content -->
 <div class="main-content" id="panel">
 	<!-- Topnav -->
-	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom d-md-none">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -55,7 +55,7 @@
 		<div class="container-fluid">
 			<div class="container-fluid d-flex align-items-center">
 				<div class="row">
-					<div class="col-lg-7 col-md-10 mt-3">
+					<div class="col-lg-7 col-md-10 mt-5">
 						<h1 class="display-2 text-white">Basic information</h1>
 						<p class="text-white text-justify mb-3">
 							Here is the basic information of your project
@@ -66,7 +66,7 @@
 							The declared class is classified as a public outer class, a package-private outer class or a
 							<a class="text-yellow text-link"
 							   href="https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html"> nested class</a>,
-							with six types: class, enum, abstract class, interface, annotation, and package-info file.
+							with six types: class, enum, abstract class, interface, annotation, and package/module-info file.
 						</p>
 					</div>
 				</div>
@@ -98,7 +98,7 @@
 										<i class="fa fa-arrow-down"></i>[[${numDiff}]]
 									</span>
 									<span class="text-nowrap">
-										Since [[${#dates.format(currentProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}]]
+										Since [[${#dates.format(preProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}]]
 									</span>
 								</p>
 							</div>
@@ -127,7 +127,7 @@
 										<i class="fa fa-arrow-down"></i>[[${numDiff}]]
 									</span>
 									<span class="text-nowrap">
-										Since [[${#dates.format(currentProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}]]
+										Since [[${#dates.format(preProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}]]
 									</span>
 								</p>
 							</div>
@@ -164,7 +164,7 @@
 										<i class="fa fa-arrow-down"></i>[[${numDiff2}]]
 									</span>
 									<span class="text-nowrap ml-2">
-										Since [[${#dates.format(currentProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}]]
+										Since [[${#dates.format(preProjectInfo.getCreateDate(), 'yyyy-MM-dd HH:mm:ss')}]]
 									</span>
 								</p>
 							</div>
@@ -236,9 +236,12 @@
                   },
                   // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
                   xAxis: {
-                      type: 'category',
-                      axisLabel: {interval: 0, rotate: 15},
-                      splitLine: {show: true},
+                      type: 'category', splitLine: {show: true},
+                      axisLabel: {
+                          formatter: function (value, index) {
+                              return value.split(" ")[0];
+                          }
+                      }
                   },
                   yAxis: {},
                   tooltip: {
@@ -299,7 +302,6 @@
 					<div class="row align-items-center">
 						<div class="col-auto">
 							<h6 class="text-uppercase text-muted ls-1 mb0">Details</h6>
-							
 							<!-- dropdown -->
 							<div class="nav-item dropdown">
 								<a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -317,15 +319,36 @@
 									</a>
 								</div>
 							</div>
-						
 						</div>
-					
+						<div class="col">
+							<ul class="nav nav-pills justify-content-end">
+								<li class="nav-item mr-2 mr-md-0">
+									<a href="#" class="nav-link py-2 px-3 active" data-toggle="tab"
+									   onclick="showModuleBasic()">
+										<span class="d-none d-md-block">Module</span>
+										<span class="d-md-none">M</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="#" class="nav-link py-2 px-3" data-toggle="tab" onclick="showPackageBasic()">
+										<span class="d-none d-md-block">Package</span>
+										<span class="d-md-none">P</span>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="#" class="nav-link py-2 px-3" data-toggle="tab" onclick="showClassBasic()">
+										<span class="d-none d-md-block">Class</span>
+										<span class="d-md-none">C</span>
+									</a>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
 			<!--表格-->
 			<div class="col-xl-12">
-				<div class="card">
+				<div class="card table-outline">
 					<div class="table-responsive">
 						<div id="toolbar">
 							<div class="form-inline" role="form">
@@ -335,13 +358,13 @@
 									< previous</a>
 							</div>
 						</div>
-						<table id="table1"></table>
-						<table id="table2"></table>
-						<table id="table3"></table>
+						<table id="table"></table>
 					</div>
 				</div>
 			</div>
 		</div>
+		<!--common modals-->
+		<modal th:replace="fragments/common :: modals"></modal>
 		<!-- Footer -->
 		<footer th:replace="fragments/common :: footer"></footer>
 	</div>
@@ -350,13 +373,13 @@
 <script th:replace="fragments/common :: footer_imports"></script>
 <script>
 
+    let tableFlag = "module";
+
     $(function () {
-        // 首次渲染图表
-        // showTimelineChartForClass();
         // 首次渲染表格
         showModuleBasic();
-        showPackageBasic();
-        showClassBasic();
+        // showPackageBasic();
+        // showClassBasic();
     })
 
     let projectRecordIndex = -1;
@@ -368,43 +391,50 @@
         $('#current_record_time').text(newTime)
         $(obj).siblings().removeClass("active")
         $(obj).addClass("active");
-        showModuleBasic();
-        showPackageBasic();
-        showClassBasic();
+        if (tableFlag === "module") {
+            showModuleBasic();
+        } else if (tableFlag === "package") {
+            showPackageBasic();
+        } else {
+            showClassBasic();
+        }
     }
 
     //表格：类级别的度量数据
     function showModuleBasic() {
+        tableFlag = "module"
         let columns = [{
             field: 'name', title: 'Module Name', sortable: true
         }, {
-            field: 'packageNum', title: 'Packages', sortable: true
+            field: 'packageNum', title: 'Number of Packages', sortable: true
         }, {
-            field: 'classNum', title: 'Java Files / Declared Classes', sortable: true
+            field: 'classNum', title: 'Number of Java Files / Declared Classes', sortable: true
         }];
         $.get("/dashboard/basic/table/module?projectRecordIndex=" + projectRecordIndex).done(function (data) {
-            buildTable($('#table1'), data, columns, 1, 0, 310)
+            buildTable($('#table'), data, columns, 0, 0, 500)
             $("#previous-btn").addClass("invisible");
         });
     }
 
     //表格：类级别的度量数据
     function showPackageBasic() {
+        tableFlag = "package"
         let columns = [{
             field: 'name', title: 'Package Name', sortable: true
         }, {
-            field: 'classNum', title: 'Java Files / Declared Classes', sortable: true
+            field: 'classNum', title: 'Number of Java Files / Declared Classes', sortable: true
         }, {
             field: 'module', title: 'of Which Module', sortable: true
         }];
         $.get("/dashboard/basic/table/package?projectRecordIndex=" + projectRecordIndex).done(function (data) {
-            buildTable($('#table2'), data, columns, 1, 0, 400)
+            buildTable($('#table'), data, columns, 1, 0, 500)
             $("#previous-btn").addClass("invisible");
         });
     }
 
     //表格：类级别的度量数据
     function showClassBasic() {
+        tableFlag = "class"
         let columns = [{
             field: 'name', title: 'Class Name', sortable: true
         }, {
@@ -425,7 +455,7 @@
             field: 'module', title: 'of Which Module', sortable: true
         }];
         $.get("/dashboard/basic/table/class?projectRecordIndex=" + projectRecordIndex).done(function (data) {
-            buildTable($('#table3'), data, columns, 1, 0, 500)
+            buildTable($('#table'), data, columns, 1, 0, 500)
             $("#previous-btn").addClass("invisible");
         });
     }

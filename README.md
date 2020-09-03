@@ -73,7 +73,7 @@ After you run the `t4m-web` Jar file. It will start a web service for you. You c
 http://localhost:8087/
 ```
 
-The detailed instructions of how to use will be shown on the web page.
+**The detailed instructions of how to use will be shown on the web page.**
 
 ## How to stop
 

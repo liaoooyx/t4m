@@ -20,7 +20,7 @@ public class CouplingMetric implements ClassLevelMetric, PackageLevelMetric {
 		classInfo.setCouplingBetweenObjects(fanIn + fanOut);
 		classInfo.setAfferentCoupling(fanIn);
 		classInfo.setEfferentCoupling(fanOut);
-		String instability = MathUtil.divide(fanOut, fanOut + fanIn);
+		String instability = MathUtil.divide(fanOut, (float) fanOut + fanIn);
 		classInfo.setInstability(instability);
 		classInfo.setMessagePassingCoupling(classInfo.getOutClassMethodCallQualifiedSignatureMap().keySet().size());
 	}

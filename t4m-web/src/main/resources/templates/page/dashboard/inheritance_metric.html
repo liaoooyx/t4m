@@ -25,7 +25,7 @@
 <!-- Main content -->
 <div class="main-content" id="panel">
 	<!-- Topnav -->
-	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom d-md-none">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -57,7 +57,7 @@
 			<!-- Header container -->
 			<div class="container-fluid d-flex align-items-center">
 				<div class="row">
-					<div class="col-lg-10 col-md-10 mt-3 mb-8">
+					<div class="col-lg-10 col-md-10 mt-5 mb-8">
 						<h1 class="display-2 text-white">Inheritance</h1>
 						<p class="text-white text-justify mb-3">
 							There are two metrics relevant to inheritance include:
@@ -153,7 +153,12 @@
                       xAxis: {
                           type: 'category',
                           splitLine: {show: true, lineStyle: {type: 'solid'}},
-                          splitArea: {interval: 0,}
+                          splitArea: {interval: 0,},
+                          axisLabel: {
+                              formatter: function (value, index) {
+                                  return value.split(" ")[0];
+                              }
+                          }
                       },
                       yAxis: [{
                           name: "Deep of Inheritance Tree", type: 'value', nameLocation: 'center',
@@ -290,7 +295,7 @@
 			</div>
 			<!--表格-->
 			<div class="col-xl-12">
-				<div class="card">
+				<div class="card table-outline">
 					<div class="table-responsive">
 						<div id="toolbar">
 							<div class="form-inline" role="form">
@@ -329,6 +334,8 @@
 			</div>
 		
 		</div>
+		<!--common modals-->
+		<modal th:replace="fragments/common :: modals"></modal>
 		<!-- Footer -->
 		<footer th:replace="fragments/common :: footer"></footer>
 	</div>

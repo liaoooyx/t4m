@@ -11,7 +11,7 @@ import java.util.Objects;
 public class PackageInfo implements Serializable {
 
 	private static final long serialVersionUID = 1661151854125377881L;
-	public static String EMPTY_IDENTIFIER = "(null)";
+	public static final String EMPTY_IDENTIFIER = "(null)";
 
 	private String fullyQualifiedName; // = (null), if cannot resolve package from the path of java file.
 	private String absolutePath;

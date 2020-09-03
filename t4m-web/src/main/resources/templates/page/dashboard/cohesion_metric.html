@@ -25,7 +25,7 @@
 <!-- Main content -->
 <div class="main-content" id="panel">
 	<!-- Topnav -->
-	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom d-md-none">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -56,7 +56,7 @@
 			<!-- Header container -->
 			<div class="container-fluid d-flex align-items-center">
 				<div class="row">
-					<div class="col-lg-10 col-md-10 mt-3 mb-8">
+					<div class="col-lg-10 col-md-10 mt-5 mb-8">
 						<h1 class="display-2 text-white">Complexity Metrics</h1>
 						<p class="text-white text-justify mb-3">
 							There are three metrics relevant to inheritance include Lack of Cohesion in Methods (Hitz &
@@ -94,7 +94,8 @@
 								which are the ratio of the connected method pairs to all possible method pairs. For TCC
 								the connected method pairs are only direct connections. For LCC it contains both direct and
 								indirect connections. A direct connection means that both methods access the same instance variable or
-								they access the same instance variable through the invocation tree. An indirect connection means that they do not
+								they access the same instance variable through the invocation tree. An indirect connection means that
+								they do not
 								have a direct connection but being contained within the same component as mentioned in LCOM4.
 							</p>
 							<p class="text-white text-justify mb-3 ml-4">
@@ -175,6 +176,11 @@
                               playInterval: 1000, symbol: 'circle', data: timeRecords,
                               controlStyle: {showNextBtn: true, showPrevBtn: true, showPlayBtn: true},
                               checkpointStyle: {animation: false},
+                              label: {
+                                  formatter: function (value, index) {
+                                      return value.split(" ")[0];
+                                  }
+                              }
                           },
                           legend: {
                               data: ['Class', 'Enum', 'Annotation', 'Interface', 'Abstract Class', 'package-info'],
@@ -185,6 +191,10 @@
                               name: 'Loose Class Cohesion', type: 'value',
                               nameLocation: 'center', nameRotate: 90, nameGap: 30
                           },
+                          dataZoom: [
+                              {type: 'inside', xAxisIndex: 0, start: 0, end: 100},
+                              {type: 'inside', yAxisIndex: 0, start: 0, end: 100},
+                          ],
                           tooltip: {
                               padding: 10, borderWidth: 1,
                               show: true, enterable: true, trigger: 'item', confine: true,
@@ -386,7 +396,7 @@
 					</div>
 					<!--表格-->
 					<div class="col-xl-12">
-						<div class="card">
+						<div class="card table-outline">
 							<div class="table-responsive">
 								<div id="toolbar">
 									<div class="form-inline" role="form">
@@ -426,6 +436,8 @@
 					</div>
 				
 				</div>
+				<!--common modals-->
+				<modal th:replace="fragments/common :: modals"></modal>
 				<!-- Footer -->
 				<footer th:replace="fragments/common :: footer"></footer>
 			</div>

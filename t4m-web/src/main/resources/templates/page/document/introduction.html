@@ -25,7 +25,7 @@
 <!-- Main content -->
 <div class="main-content" id="panel">
 	<!-- Topnav -->
-	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+	<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom d-md-none">
 		<div class="container-fluid">
 			<div class="collapse navbar-collapse row justify-content-between" id="navbarSupportedContent">
 				<div class="row col-auto justify-content-end align-items-center m-0">
@@ -138,7 +138,7 @@
 						<ul>
 							<li>
 								<div class="row align-items-center mx-0 pb-2">
-									<span class="mr-2">Lines of Code</span>
+									<span class="mr-2">Source Lines of Code</span>
 									<span class="badge badge-primary badge-pill">module</span>
 									<span class="badge badge-primary badge-pill">package</span>
 									<span class="badge badge-primary badge-pill">class</span>
@@ -146,7 +146,15 @@
 							</li>
 							<li>
 								<div class="row align-items-center mx-0 pb-2">
-									<span class="mr-2">Percentage of Comments</span>
+									<span class="mr-2">Number of Comment Lines</span>
+									<span class="badge badge-primary badge-pill">module</span>
+									<span class="badge badge-primary badge-pill">package</span>
+									<span class="badge badge-primary badge-pill">class</span>
+								</div>
+							</li>
+							<li>
+								<div class="row align-items-center mx-0 pb-2">
+									<span class="mr-2">Percentage of Comment Lines</span>
 									<span class="badge badge-primary badge-pill">module</span>
 									<span class="badge badge-primary badge-pill">package</span>
 									<span class="badge badge-primary badge-pill">class</span>
@@ -189,21 +197,18 @@
 								<div class="row align-items-center mx-0 pb-2">
 									<span class="mr-2">Afferent Coupling</span>
 									<span class="badge badge-primary badge-pill">package</span>
-									<span class="badge badge-primary badge-pill">class</span>
 								</div>
 							</li>
 							<li>
 								<div class="row align-items-center mx-0 pb-2">
 									<span class="mr-2">Efferent Coupling</span>
 									<span class="badge badge-primary badge-pill">package</span>
-									<span class="badge badge-primary badge-pill">class</span>
 								</div>
 							</li>
 							<li>
 								<div class="row align-items-center mx-0 pb-2">
 									<span class="mr-2">Instability</span>
 									<span class="badge badge-primary badge-pill">package</span>
-									<span class="badge badge-primary badge-pill">class</span>
 								</div>
 							</li>
 							<li>
@@ -278,14 +283,15 @@
 						<h2 class="mb-3">PS.</h2>
 						<p class="text-justify">
 							T4M is was born from my MSc project within two months development thus it is immature. If you have any
-							issue, please put it to the
+							issue, please put it on the
 							<a class="text-link" href="https://github.com/liaoooyx/t4m/issues">github</a>,
-							I will try my best to solve it. Bear me.</p>
+							I will try my best to solve it. Bear me!</p>
 					</div>
 				</div>
 			</div>
 		</div>
-		
+		<!--common modals-->
+		<modal th:replace="fragments/common :: modals"></modal>
 		<!-- Footer -->
 		<footer th:replace="fragments/common :: footer"></footer>
 	</div>

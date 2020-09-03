@@ -1,7 +1,6 @@
 package com.t4m.web.util.dataset;
 
 import com.t4m.extractor.entity.ClassInfo;
-import com.t4m.web.service.ClassService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

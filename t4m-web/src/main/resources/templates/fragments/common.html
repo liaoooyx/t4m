@@ -41,7 +41,8 @@
 				<!-- Nav items -->
 				<ul class="navbar-nav px-2">
 					<li class="nav-item">
-						<button id="scan_current_project_btn" type="button"
+						<button id="scan_current_project_btn" type="button" data-toggle="modal"
+						        data-target="#modal_to_scan_project"
 						        class="col-auto btn btn-block btn-outline-primary text-uppercase"
 						        onclick="showScanModal('scan')">
 							<span class="btn-inner--icon"><i class="fas fa-search-plus"></i></span>
@@ -49,13 +50,12 @@
 						</button>
 						<div class="btn-group btn-block" role="group" aria-label="New project">
 							<button id="new_project_btn" type="button" class="col-auto btn btn-outline-default text-uppercase"
-							        onclick="showScanModal('new')">
+							        onclick="showScanModal('new')" data-toggle="modal" data-target="#modal_to_scan_project">
 								<span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
 								<span class="btn-inner--text">New</span>
 							</button>
 							<button id="switch_project_btn" type="button" class="col-auto btn btn-outline-default text-uppercase"
-							        data-toggle="modal"
-							        data-target="#modal_to_switch_project">
+							        data-toggle="modal" data-target="#modal_to_switch_project">
 								<span class="btn-inner--icon"><i class="fas fa-exchange-alt"></i></span>
 								<span class="btn-inner--text">Switch</span>
 							</button>
@@ -144,14 +144,16 @@
 						</a>
 					</li>
 				</ul>
-			
 			</div>
 		</div>
 	</div>
-	
+</nav>
+
+<modal th:fragment="modals">
 	<!-- Modal to create new project -->
 	<div class="modal fade" id="modal_to_scan_project" tabindex="-1" role="dialog"
-	     aria-labelledby="modal_to_scan_project_label" aria-hidden="true">
+	     aria-labelledby="modal_to_scan_project_label" aria-hidden="true"
+	     style="cursor: pointer">
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -165,7 +167,7 @@
 						<div class="form-group" v-html="projectNameHTML"></div>
 						<div class="form-group">
 							<div class="custom-control justify-content-between mb-2 pl-0">
-								<label class="custom-label">Custom recording time</label>
+								<label class="custom-label">Custom date and time</label>
 								<div class="custom-control custom-checkbox float-right">
 									<input type="checkbox" class="custom-control-input" id="enable_project_create_time">
 									<label class="custom-control-label" for="enable_project_create_time">Enable</label>
@@ -182,20 +184,21 @@
 							<label for="excluded_path">Excluded path</label>
 							<textarea class="form-control" id="excluded_path" rows="2">{{modalFlag==='scan'?projectExcludedPath:defaultExcludedPath}}</textarea>
 							<small class="form-text text-muted">
-								The path that should not be included in scanning."
+								The path that should not be included in scanning.
 							</small>
 							<small class="form-text text-muted">
-								Each path should start with your system file separator, and separated by ";"
+								Each path should start with your system file separator (<code>/</code> for Mac, <code>\</code>for
+								Windows), and separated by <code>;</code>
 							</small>
 						</div>
 						<div class="form-group">
 							<label for="dependency_path">Dependency path</label>
 							<textarea class="form-control" id="dependency_path" rows="2">{{modalFlag==='scan'?projectDependencyPath:defaultDependencyPath}}</textarea>
 							<small class="form-text text-muted">
-								The external .jar file path of the project.
+								The external paths of <code>.jar</code> files of your project.
 							</small>
 							<small class="form-text text-muted">
-								The external class can not be resolved if lacking the dependency path, leading some extends of
+								The external classes can not be resolved if lacking relevant classpaths, leading some extends of
 								inaccuracy to the metrics.
 							</small>
 						</div>
@@ -235,8 +238,7 @@
 			</div>
 		</div>
 	</div>
-	
-</nav>
+</modal>
 
 <footer th:fragment="footer" class="footer pt-0">
 	<div class="row align-items-center justify-content-lg-between">
@@ -277,7 +279,6 @@
 	<!-- Bootstrap-table -->
 	<script th:src="@{/assets/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
 	<script th:src="@{/assets/plugins/bootstrap-table/fixed-columns/bootstrap-table-fixed-columns.min.js}"></script>
-	<script th:src="@{/assets/plugins/bootstrap-table/group-by-v2/bootstrap-table-group-by.min.js}"></script>
 	<!-- Argon JS -->
 	<script th:src="@{/assets/plugins/argon/argon.min.js}"></script>
 	<!--common.js-->
@@ -295,7 +296,7 @@
           });
           if (triggerBtn === "new") {
               $("#new_project_btn").trigger("click");
-          }else if(triggerBtn === "switch"){
+          } else if (triggerBtn === "switch") {
               $("#switch_project_btn").trigger("click");
           }
           if (disableScan) {
@@ -340,7 +341,7 @@
 
       $('#enable_project_create_time').click(function () {
           let enable_custom_time = document.getElementById("enable_project_create_time").checked
-          document.getElementById("project_create_time").value="";
+          document.getElementById("project_create_time").value = "";
           document.getElementById("project_create_time").disabled = !enable_custom_time;
       })
 
