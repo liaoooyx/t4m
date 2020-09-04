@@ -106,7 +106,9 @@ public class SLOCController {
 			return packageService.getSLOCForTableChart(name, false);
 		} else if ("class".equals(level)) {
 			return classService.getSLOCForTableChart(name);
-		} else {
+		} else if ("project".equals(level)){
+			return projectService.getSLOCForTableChart();
+		}else {
 			LOGGER.error("Unexpected type received [{}] where record name is [{}]", level, name);
 			return new ArrayList<>();
 		}

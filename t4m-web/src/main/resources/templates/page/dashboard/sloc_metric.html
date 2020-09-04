@@ -523,9 +523,13 @@
         }, {
             field: 'name', title: 'Module Name', sortable: true,
             formatter: function (value, row) {
-                return '<a href="javascript:void(0);" ' +
-                    'onclick="showPackageSloc(\'' + row.name.replace(/\\/g, "\\\\") + '\',true,true)">' +
-                    value + '</a>';
+                if (row.level === "module") {
+                    return '<a href="javascript:void(0);" ' +
+                        'onclick="showPackageSloc(\'' + row.name.replace(/\\/g, "\\\\") + '\',true,true)">' +
+                        value + '</a>';
+                } else {
+                    return value;
+                }
             },
         }, {
             field: 'level', title: 'Level', sortable: true

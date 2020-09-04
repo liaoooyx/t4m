@@ -49,5 +49,15 @@ public class SLOCDatasetUtil {
 		row.put("percentageOfCommentJP", MathUtil.percentage(slocArray[6], slocArray[7]));
 	}
 
+	public static void sumSLOC(int[] slocArray, int[] inputSLOC) {
+		slocArray[0] += inputSLOC[0];
+		slocArray[1] += inputSLOC[1];
+		slocArray[2] += inputSLOC[2];
+		slocArray[3] += inputSLOC[3];
+		slocArray[4] += inputSLOC[4];
+		slocArray[5] += inputSLOC[5];
+		slocArray[6] += inputSLOC[6];
+		slocArray[7] += inputSLOC[7];
+	}
 
 }
