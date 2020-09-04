@@ -405,7 +405,7 @@
                               let value = params.data
                               return '<div style="border-bottom: 1px solid rgba(255,255,255,.3) ;padding-bottom: 7px;margin-bottom: 7px">'
                                   + 'Class: ' + value[2] + '<br>' + 'of Module: ' + value[3] + '<br>'
-                                  + params.seriesName + ": " + value[1]
+                                  + params.seriesName.replace("Classes regarding the ", "") + ": " + value[1]
                                   + '</div>'
                                   + 'Click the point to see all overlapped data.';
                           }

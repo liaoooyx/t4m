@@ -174,7 +174,10 @@
               let datasetKeyArray = ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation', 'info.java']
               let currentDataset;
 
+              let chartLevel = "file";
+
               function changeDataSet(type) {
+                  chartLevel = type;
                   let label;
                   if (type === 'allClass') {
                       currentDataset = datasetAllClass;
@@ -389,10 +392,18 @@
                           for (let key2 of ['Interface', 'Abstract Class', 'Class', 'Enum', 'Annotation']) {
                               for (let row of currentDataset[key][key2]) {
                                   if (row[0] === x && row[1] === y) {
-                                      let text = '<span style="font: 12px">'
-                                          + key2 + ': ' + row[3] + '</span>' + '<br>'
-                                          + '<span style="font: 12px">'
-                                          + 'Of module: ' + row[4] + '</span>' + '<br>';
+                                      let text;
+                                      if (chartLevel === "file") {
+                                          text = '<span style="font: 12px">'
+                                              + 'File: ' + row[3] + '.java</span>' + '<br>'
+                                              + '<span style="font: 12px">'
+                                              + 'Of module: ' + row[4] + '</span>' + '<br>';
+                                      } else {
+                                          text = '<span style="font: 12px">'
+                                              + key2 + ': ' + row[3] + '</span>' + '<br>'
+                                              + '<span style="font: 12px">'
+                                              + 'Of module: ' + row[4] + '</span>' + '<br>';
+                                      }
                                       pointDescriptionList.push(text);
                                   }
                               }
