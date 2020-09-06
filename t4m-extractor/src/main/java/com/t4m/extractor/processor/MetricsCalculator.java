@@ -23,6 +23,11 @@ public class MetricsCalculator implements ProcessNode {
 	@Override
 	public void scan(ProjectInfo projectInfo, ProcessChain processChain) {
 		LOGGER.info("Calculating the values of metrics based on the resolved metadata.");
+		calculateMetrics(projectInfo);
+		processChain.scan(projectInfo);
+	}
+
+	public void calculateMetrics(ProjectInfo projectInfo){
 		List<ClassLevelMetric> classLevelMetricList = initClassLevelMetric();
 		List<PackageLevelMetric> packageLevelMetricList = initPackageLevelMetric();
 		List<ModuleLevelMetric> moduleLevelMetricList = initModuleLevelMetric();
@@ -35,8 +40,6 @@ public class MetricsCalculator implements ProcessNode {
 		for (ModuleInfo moduleInfo : projectInfo.getModuleList()) {
 			moduleLevelMetricList.forEach(moduleLevelMetric -> moduleLevelMetric.calculate(moduleInfo));
 		}
-
-		processChain.scan(projectInfo);
 	}
 
 	private List<ClassLevelMetric> initClassLevelMetric() {

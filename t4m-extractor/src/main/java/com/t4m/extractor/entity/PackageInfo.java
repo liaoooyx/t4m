@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 根据{@code absolutePath}来判断对象是否一致
+ * Created by Yuxiang Liao on 2020-07-07 18:35.
  */
 public class PackageInfo implements Serializable {
 

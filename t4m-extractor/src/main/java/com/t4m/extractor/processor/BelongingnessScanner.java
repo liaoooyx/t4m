@@ -64,7 +64,7 @@ public class BelongingnessScanner implements ProcessNode {
 	}
 
 	/**
-	 * 根据模块路径，递归创建节点链表
+	 * According to the module path, recursively create a linked list of nodes
 	 */
 	private void initDirectoryNodeLink(String[] names, DirHierarchyNode previousNode, ModuleInfo moduleInfo) {
 		if (names.length > 0) {
