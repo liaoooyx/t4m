@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 用于调整模块的依赖关系， Created by Yuxiang Liao on 2020-06-12 15:36.
+ * Used to adjust the dependency of the module， Created by Yuxiang Liao on 2020-06-12 15:36.
  */
 public class DirHierarchyNode implements Serializable {
 

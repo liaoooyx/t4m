@@ -44,8 +44,8 @@ public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
 	}
 
 	/**
-	 * Set class modifier, inheritance relationship and relevant dependencies, and SLOC metadata.
-	 */
+     * Set class modifier, inheritance relationship and relevant dependencies, and SLOC metadata.
+     */
 	@Override
 	public void visit(ClassOrInterfaceDeclaration n, Void arg) {
 		super.visit(n, arg);
@@ -299,7 +299,10 @@ public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
 				ClassInfo implementedClass = EntityUtil.getClassByQualifiedName(projectInfo.getAllClassList(),
 				                                                                implementedType.resolve()
 				                                                                               .getQualifiedName());
-				EntityUtil.safeAddEntityToList(implementedClass, currentClassInfo.getImplementsClassList());
+				if(implementedClass != null){
+					EntityUtil.safeAddEntityToList(implementedClass, currentClassInfo.getImplementsClassList());
+					EntityUtil.addDependency(currentClassInfo, implementedClass);
+				}
 			} catch (UnsolvedSymbolException e) {
 				//无法解析，说明不是项目内定义的类，使用类名创建单独的的ClassInfo
 				EntityUtil.safeAddEntityToList(new ClassInfo(implementedType.getNameAsString(), ""),
@@ -322,6 +325,7 @@ public class DeclarationVisitor extends VoidVisitorAdapter<Void> {
 				} else {
 					EntityUtil.safeAddEntityToList(extendedClass, currentClassInfo.getExtendsClassList());
 					EntityUtil.safeAddEntityToList(currentClassInfo, extendedClass.getImmediateSubClassList());
+					EntityUtil.addDependency(currentClassInfo, extendedClass);
 				}
 			} catch (UnsolvedSymbolException e) {
 				//无法解析，说明不是项目内定义的类，使用类名创建单独的的ClassInfo

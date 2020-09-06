@@ -137,6 +137,7 @@ public class InMethodDependencyVisitor extends VoidVisitorAdapter<Void> {
 		Set<FieldInfo> fieldInfoSet = currentMethodInfo.getFieldAccessSet();
 		// RFC的所有方法全限定签名：只包括方法内的调用
 		// RFC metadata: qualified method signatures that invoked in the method blocks.
+		// Should filter local method call in calculation process.
 		Map<String, Integer> rfcMethodQualifiedSignatureMap = currentClassInfo.getOutClassMethodCallQualifiedSignatureMap();
 
 		commonOperationToResolveMetaInfo(body, currentClassInfo, dependencySet, exceptionList, localMethodInfoSet, fieldInfoSet,

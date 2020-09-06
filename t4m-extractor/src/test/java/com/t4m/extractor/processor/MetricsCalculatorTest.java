@@ -82,7 +82,8 @@ class MetricsCalculatorTest {
 			                                                         "com.simulation.core.foo.ComplexClassA");
 			assertEquals(15, classInfo.getCouplingBetweenObjects());
 			assertEquals(1, classInfo.getAfferentCoupling());
-			assertEquals(14, classInfo.getEfferentCoupling());
+			assertEquals(15, classInfo.getEfferentCoupling());
+			assertEquals(17, classInfo.getMessagePassingCoupling());
 		});
 	}
 

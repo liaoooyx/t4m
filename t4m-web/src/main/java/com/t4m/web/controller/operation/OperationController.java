@@ -3,6 +3,7 @@ package com.t4m.web.controller.operation;
 import com.t4m.conf.GlobalProperties;
 import com.t4m.extractor.T4MExtractor;
 import com.t4m.extractor.entity.ProjectInfo;
+import com.t4m.extractor.processor.MetricsCalculator;
 import com.t4m.extractor.util.RegularExprUtil;
 import com.t4m.extractor.util.TimeUtil;
 import com.t4m.serializer.T4MProjectInfoSerializer;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.PrinterInfo;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -141,6 +143,18 @@ public class OperationController {
 		// 更新全局项目指针和项目记录
 		ProjectRecordUtil.updateProjectInfoRecord();
 		return "success";
+	}
+
+	public static void main(String[] args) {
+		GlobalProperties.setCurrentProjectIdentifier("t4m#1598965273568");
+		T4MSerializer serializer = new T4MProjectInfoSerializer();
+		List<ProjectInfo> allRecord = serializer.deserializeAll();
+		for (ProjectInfo projectInfo: allRecord){
+			System.out.println(projectInfo.getProjectDirName()+"#"+projectInfo.getCreateDate());
+			new MetricsCalculator().calculateMetrics(projectInfo);
+			String recordFileName = TimeUtil.formatToLogFileName(projectInfo.getCreateDate());
+			serializer.serializeTo(projectInfo, recordFileName);
+		}
 	}
 
 }

@@ -42,7 +42,7 @@ The executable jar file is placed in the `t4m/bin/` directory.
 
      Follow steps: `This PC -> Right Click -> Properties -> Advanced system settings -> Environment Variables -> System Variable -> New`. 
 
-     ![windows-systeem-variable](doc/imgs/windows-systeem-variable.png)
+     ![windows-systeem-variable](docs/imgs/windows-systeem-variable.png)
 
      Save it and remember to restart your CMD. 
 

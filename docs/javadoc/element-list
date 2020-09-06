@@ -1,0 +1,17 @@
+com.t4m.conf
+com.t4m.extractor
+com.t4m.extractor.entity
+com.t4m.extractor.metric
+com.t4m.extractor.processor
+com.t4m.extractor.processor.javaparser
+com.t4m.extractor.util
+com.t4m.serializer
+com.t4m.web
+com.t4m.web.aspect
+com.t4m.web.controller
+com.t4m.web.controller.dashboard
+com.t4m.web.controller.document
+com.t4m.web.controller.operation
+com.t4m.web.service
+com.t4m.web.util
+com.t4m.web.util.dataset
