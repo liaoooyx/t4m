@@ -89,9 +89,6 @@ public class EntityUtil {
 	 */
 	public static void addDependency(ClassInfo current, ClassInfo target) {
 		if (!Objects.equals(current, target)) {
-			if (current == null || target == null || current.getActiveDependencyAkaFanOutList()==null || target.getPassiveDependencyAkaFanInList()==null ){
-				System.out.println();
-			}
 			EntityUtil.safeAddEntityToList(target, current.getActiveDependencyAkaFanOutList());
 			EntityUtil.safeAddEntityToList(current, target.getPassiveDependencyAkaFanInList());
 			addDependency(current.getPackageInfo(), target.getPackageInfo());
